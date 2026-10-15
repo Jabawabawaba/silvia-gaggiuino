@@ -142,7 +142,7 @@ ul.plain{margin:0;padding-left:20px;display:grid;gap:6px;font-size:15.5px}
       <div class="d"><span class="k">Custom harness</span><p>The stock wiring isn't integrated; the harness is rebuilt from realNiche's diagram. The DPST power switch stays on mains and breaks both line and neutral. The brew, steam and hot water switches move to low voltage.</p></div>
       <div class="d"><span class="k">M3 thermocouple</span><p>The thermostats are clamped to the boiler with M3 screws, and the thermocouple screws into one of those holes: M3, not the M4 in the official BOM. GaggiMate's Silvia guide suggests the middle or left-most hole. Thermal paste, finger tight, lead free to rotate.</p></div>
       <div class="d"><span class="k">Hot water switch on J5 B15</span><p>Gaggias trigger hot water with brew plus steam. The Silvia's dedicated switch goes to B15, which the public STM32 firmware reads as the water switch; not yet confirmed on Gen 3 firmware. Keep it low voltage; never leave the stock mains hot water wiring in place.</p></div>
-      <div class="d"><span class="k">Pressure sensor plumbing</span><p>No tap block fits. Builders put the transducer on a 1/8" tee at the OPV through a 1/4"F to 1/8"M elbow, sealed with Loctite 55 on the tapered threads. The transducer seals on a flat 11 × 6 mm O-ring pressed flush into the elbow, not on its thread. Some used the 3-way valve's bottom port instead. <small>Open question: which is preferred now.</small></p></div>
+      <div class="d"><span class="k">Pressure sensor plumbing</span><p>No tap block fits. Builders put the transducer on a 1/8" tee at the OPV through a 1/4"F to 1/8"M elbow, sealed with Loctite 55 on the tapered threads. The transducer seals on a flat 11 × 6 mm O-ring pressed flush into the elbow, not on its thread. Some builds use the 3-way valve's bottom port instead (Talon's does). Both work; the OPV tee has an exact parts list.</p></div>
       <div class="d"><span class="k">Settings</span><p>DreamSteam off (the official manual says so for the Silvia), Brew Delta off, Offset 5, HPWR 100, Main Divider 5, Brew Divider 3 as starting values from the Discord thread. Max steam 150 °C: the steam thermostat is off the heater line whether or not it stays in the boiler.</p></div>
       <div class="d"><span class="k">Screen and prints</span><p>The Gen 3 screen housing with the funnel mount has been used on a Silvia; it needs a longer screen cable than a Gaggia front mount. The Printables "Silvia Nextion" enclosures are Gen 2 only.</p></div>
       <div class="d"><span class="k">Extras</span><p>Hardware scales use 1 kg cells on Joscha's "beefy" mount (Printables 1277828). The tank is deeper (~200 mm) and covered, so ToF-only with ranges set in the ToFnLED settings. The switch lamps go dark on low voltage; the LED mod brings them back.</p></div>
@@ -166,10 +166,9 @@ ul.plain{margin:0;padding-left:20px;display:grid;gap:6px;font-size:15.5px}
     <div class="sec-h"><h2 id="h-open">Still open</h2><span class="sum">answers welcome on Discord</span></div>
     <ul class="plain">
       <li>Does Gen 3 read the Silvia's own hot water switch on J5 B15? The public Gen 2 firmware does; the Gen 3 manual only describes the Gaggia's brew-plus-steam combination.</li>
-      <li>Is the OPV tee still the preferred transducer spot, or the 3-way valve's bottom port?</li>
       <li>Which funnel-mount combination fits a Silvia V6 funnel, and how long does the screen cable need to be?</li>
-      <li>Is the "3-way valve clip, opposite direction" in the old BOM a real Silvia part?</li>
-      <li>Which latching power switch do Silvia E builders fit in place of the push button and energy-saver module?</li>
+      <li>Which latching power switch do Silvia E builders fit in place of the push button and energy-saver module, and does anything else on the E need bypassing? gblur's V6 E build thread in #help-silvia is the place to check.</li>
+      <li>Does a stock Silvia OPV pass [UT] Test OPV (10.5 to 13 bar), or do builders usually raise it?</li>
       <li>Real harness lengths from more builds; the ones here are from one builder and an untested older diagram.</li>
     </ul>
   </section>

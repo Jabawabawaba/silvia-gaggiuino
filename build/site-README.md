@@ -44,7 +44,7 @@ This conversion involves mains voltage. Work only with the cord out of the wall 
 
 - There is no validated Silvia schematic. `wiring.html` is a redraw of realNiche's community diagram; check each run against [his original](https://github.com/thejobbitt/gaggiuino_resources/tree/main/wiring_diagrams/rancilio_silvia).
 - Harness lengths come from one builder's harness and an older untested diagram. Cut long, trim.
-- The transducer location (OPV tee vs the 3-way valve's bottom port) and the screen cable length for a funnel mount are still open on Discord.
+- Also still open on Discord: the screen cable length for a funnel mount, which power switch Silvia E builders fit (and whether anything else on the E needs bypassing), and whether a stock OPV needs raising. The home page keeps the current list.
 - The hot water switch on J5 B15 is from the public STM32 firmware's PCB pin definitions as read in October 2026, not from official install docs, and isn't yet confirmed on Gen 3 firmware.
 - The Learn pages describe the heating and pump control from the public Gen 2 firmware, because Gen 3's source isn't published; Gen 3 uses the same settings. The PCB details come from the work-in-progress PCB v4 schematic. The stock circuit is redrawn from GaggiMate's diagram of the Silvia harness.
 

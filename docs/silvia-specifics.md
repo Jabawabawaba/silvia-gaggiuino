@@ -72,6 +72,6 @@ Per the official Gen 3 manual: fill the boiler with Flush until water runs 5+ se
 
 1. Whether Gen 3 reads the Silvia's own hot water switch on J5 B15 (the public Gen 2 firmware does).
 2. The screen cable length a V6 funnel mount needs.
-3. Whether the V6 Model E/M auto-off board needs any bypass under the custom harness. gblur's "[gblur][Silvia V6 E][PCB v4]" build thread in #help-silvia and his walkthrough video are the place to check.
-4. Whether the stock OPV setting suits profiling or needs raising.
+3. Which latching double-pole switch Silvia E builders fit in place of the push button and energy-saver module, and whether anything else on the E needs bypassing under the custom harness. gblur's "[gblur][Silvia V6 E][PCB v4]" build thread in #help-silvia and his walkthrough video are the place to check.
+4. Whether a stock Silvia OPV passes [UT] Test OPV (10.5 to 13 bar) or usually needs raising.
 5. More real harness lengths.
