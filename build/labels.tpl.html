@@ -1,0 +1,261 @@
+<title>Silvia Wire Labels</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Layout: rating-plate header, a settings bar (what to include, paper, download), the how-to steps beside the hand-marking list, then a true-to-scale preview of each sheet. */
+:root{
+  --bg:#ECEEF0; --surface:#F9FAFA; --surface-2:#E2E5E8; --ink:#16191C; --muted:#59616A; --line:#CBD0D5;
+  --accent:#D98400; --accent-ink:#965300; --accent-soft:#F4E1C0; --on-accent:#1A1206;
+  --bad:#B13A2F; --good:#2D7A4C;
+  --paper:#FFFFFF; --paper-ink:#16191C; --paper-muted:#5A6068; --paper-line:#9AA0A6;
+  --f-display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  --f-body:"Barlow",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#111316; --surface:#1A1D21; --surface-2:#252A30; --ink:#E7E9EB; --muted:#9BA2AA; --line:#30363D;
+    --accent:#F2A33A; --accent-ink:#F5B566; --accent-soft:#3B2B13; --on-accent:#1A1206; --bad:#EC7064; --good:#63C08A;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#111316; --surface:#1A1D21; --surface-2:#252A30; --ink:#E7E9EB; --muted:#9BA2AA; --line:#30363D;
+  --accent:#F2A33A; --accent-ink:#F5B566; --accent-soft:#3B2B13; --on-accent:#1A1206; --bad:#EC7064; --good:#63C08A;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:var(--accent-ink);text-underline-offset:3px}
+button,input{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:980px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 64px}
+.top{display:grid;gap:14px;margin-bottom:22px}
+.plate{display:inline-flex;align-items:center;flex-wrap:wrap;gap:6px 12px;justify-self:start;max-width:100%;border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:7px 12px;font:500 11.5px/1.3 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.plate .rivet{width:6px;height:6px;border-radius:50%;background:var(--line);box-shadow:inset 0 0 0 1px var(--muted);opacity:.7}
+.plate b{color:var(--ink);font-weight:600}
+/* rivets pinned to the plate's ends so a wrapped plate never leaves one on a line of its own */
+.plate{position:relative;padding:7px 26px}.plate .rivet{position:absolute;top:calc(50% - 3px);left:10px}.plate .rivet:last-child{left:auto;right:10px}
+h1{font:700 clamp(36px,6.4vw,56px)/.95 var(--f-display);letter-spacing:.01em;margin:0;text-transform:uppercase;text-wrap:balance}
+h2{font:600 22px/1.1 var(--f-display);letter-spacing:.05em;text-transform:uppercase;margin:0}
+.lede{margin:0;color:var(--muted);max-width:66ch;font-size:17px}
+
+.panel{border:1px solid var(--line);border-radius:14px;background:var(--surface);display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);}
+.panel > div{padding:16px 18px;min-width:0;display:grid;gap:12px;align-content:start}
+.panel > div + div{border-left:1px solid var(--line)}
+@media (max-width:760px){.panel{grid-template-columns:minmax(0,1fr)}.panel > div + div{border-left:0;border-top:1px solid var(--line)}}
+.k{font:600 11px var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{position:relative;display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 13px 7px 11px;font:600 14px var(--f-body);cursor:pointer;min-height:38px}
+.chip input{position:absolute;opacity:0;pointer-events:none}
+.chip .box{width:16px;height:16px;border-radius:4px;border:1.5px solid var(--muted);display:grid;place-items:center;flex:none}
+.chip .n{font:500 12px var(--f-mono);color:var(--muted)}
+.chip:has(input:checked){background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.chip:has(input:checked) .box{border-color:var(--bg);background:var(--bg)}
+.chip:has(input:checked) .box::after{content:"";width:8px;height:4px;border-left:2px solid var(--ink);border-bottom:2px solid var(--ink);transform:rotate(-45deg) translate(1px,-1px)}
+.chip:has(input:checked) .n{color:var(--bg);opacity:.75}
+.chip:has(input:focus-visible){outline:2px solid var(--accent);outline-offset:2px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;justify-self:start}
+.seg button{appearance:none;border:0;background:var(--surface);padding:8px 16px;font:600 14px var(--f-body);cursor:pointer;min-height:38px}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.stat{display:grid;gap:0}
+.stat .v{font:600 24px/1.1 var(--f-mono);font-variant-numeric:tabular-nums}
+.stat .s{font-size:13px;color:var(--muted)}
+.btn{appearance:none;border:1px solid var(--accent);background:var(--accent);color:var(--on-accent);border-radius:10px;padding:12px 16px;font:600 16px var(--f-body);cursor:pointer;min-height:48px;display:inline-flex;align-items:center;justify-content:center;gap:10px}
+.btn[disabled]{opacity:.55;cursor:default}
+.msg{margin:0;font-size:14px;color:var(--muted);min-height:1.4em}
+.msg.bad{color:var(--bad)}.msg.ok{color:var(--good)}
+
+.how{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:24px;margin-top:30px}
+@media (max-width:760px){.how{grid-template-columns:minmax(0,1fr)}}
+.sec-h{border-bottom:2px solid var(--ink);padding-bottom:6px;margin-bottom:10px}
+ol.steps{margin:0;padding:0;list-style:none;counter-reset:s;display:grid;gap:10px}
+ol.steps li{counter-increment:s;display:grid;grid-template-columns:28px minmax(0,1fr);gap:10px;align-items:start;font-size:15.5px}
+ol.steps li::before{content:counter(s);font:600 13px/26px var(--f-mono);text-align:center;width:26px;height:26px;border-radius:50%;background:var(--surface-2)}
+.hand{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.hand li{display:flex;gap:10px;align-items:baseline;font-size:15px;padding:6px 0;border-bottom:1px solid var(--line)}
+.hand b{font:600 14px var(--f-mono);min-width:4.5ch}
+.note{font-size:14px;color:var(--muted);margin:8px 0 0}
+
+.sheets{margin-top:34px;display:grid;gap:22px}
+.sheet{display:grid;gap:6px}
+.sheet .cap{font:600 11px var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.sheet svg{display:block;width:100%;height:auto;background:var(--paper);border:1px solid var(--line);border-radius:4px;box-shadow:0 1px 0 var(--line)}
+.sheet svg text{font-family:Helvetica,Arial,sans-serif}
+.foot{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);display:grid;gap:8px}
+.links{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:15px}
+.fine{margin:0;font-size:14px;color:var(--muted);max-width:80ch}
+a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="plate" aria-label="Build spec">
+      <span class="rivet" aria-hidden="true"></span>
+      <span><b>Wire labels</b></span><span>Rancilio Silvia</span><span>Gaggiuino harness</span>
+      <span class="rivet" aria-hidden="true"></span>
+    </div>
+    <h1>Silvia Wire Labels</h1>
+    <p class="lede">A flag label for each end of every harness run, using the IDs from the <a href="%%LINK_WIRING%%" target="_blank" rel="noopener">wiring reference</a>. Each label says which end it sits on and where the other end goes, so you can check a wire without tracing it.</p>
+  </header>
+
+  <section class="panel" aria-label="Label settings">
+    <div>
+      <span class="k">Include</span>
+      <div class="chips" id="groups"></div>
+      <span class="k">Paper</span>
+      <div class="seg" id="paper" role="group" aria-label="Paper size">
+        <button type="button" data-paper="letter">US Letter</button><button type="button" data-paper="a4">A4</button>
+      </div>
+    </div>
+    <div>
+      <div class="stats">
+        <div class="stat"><span class="v" id="s-runs">0</span><span class="s">runs</span></div>
+        <div class="stat"><span class="v" id="s-labels">0</span><span class="s">labels</span></div>
+        <div class="stat"><span class="v" id="s-sheets">0</span><span class="s" id="s-sheets-s">sheets</span></div>
+      </div>
+      <button class="btn" id="dl" type="button">Download PDF to print</button>
+      <p class="msg" id="msg" aria-live="polite"></p>
+    </div>
+  </section>
+
+  <section class="how">
+    <div>
+      <div class="sec-h"><h2>Print and fit</h2></div>
+      <ol class="steps">
+        <li><span>Print the PDF at 100% (actual size), not "fit to page". The bar at the top right of each sheet should measure 50 mm.</span></li>
+        <li><span>Plain paper with clear tape over it works. Full-sheet sticker paper is quicker.</span></li>
+        <li><span>Cut on the solid lines. Label each wire as you cut and crimp it, before it goes into the machine.</span></li>
+        <li><span>Wrap the blank middle strip around the wire about 3 cm from the end, fold the two halves together, text outward. Seal with tape if it's plain paper.</span></li>
+        <li><span>Each row is one run: the left label goes on the first-named end, the right label on the other.</span></li>
+      </ol>
+    </div>
+    <div>
+      <div class="sec-h"><h2>Mark by hand</h2></div>
+      <ul class="hand" id="hand"></ul>
+      <p class="note">These ends sit on the boiler, where paper and tape adhesive won't last. Write the ID on the silicone jacket with an oil-based permanent marker, which the official guide recommends for silicone.</p>
+    </div>
+  </section>
+
+  <section class="sheets" id="sheets" aria-label="Sheet preview"></section>
+
+  <footer class="foot">
+    <div class="links">
+      <a href="%%LINK_WIRING%%" target="_blank" rel="noopener">Wiring reference</a>
+      <a href="%%LINK_CHECKS%%" target="_blank" rel="noopener">Power-on checks</a>
+      <a href="%%LINK_RUNBOOK%%" target="_blank" rel="noopener">Install runbook</a>
+    </div>
+    <p class="fine">Run IDs and lengths come from the wiring reference, which is redrawn from realNiche's community Silvia diagram and Talon's harness on the Gaggiuino Discord.</p>
+  </footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+%%CORE%%
+(function(){
+  var RUNS=%%RUNS%%;
+  var GROUPS=[['mains','Mains',['L','H','N']],['earth','Earth',['E']],['lv','Low voltage',['LV','LVG','S']],['opt','Optional add-ons',['OPT']]];
+  var KEY='silvia-wire-labels-v1';
+  var prefs={groups:{mains:true,earth:true,lv:true,opt:false},paper:'letter'};
+  try{var s=JSON.parse(localStorage.getItem(KEY)||'null');if(s&&s.groups){prefs.groups=Object.assign(prefs.groups,s.groups);if(s.paper==='a4'||s.paper==='letter')prefs.paper=s.paper}}catch(e){}
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(prefs))}catch(e){}}
+  function $(id){return document.getElementById(id)}
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+  function selected(){
+    var sys=[];GROUPS.forEach(function(g){if(prefs.groups[g[0]])sys=sys.concat(g[2])});
+    return RUNS.filter(function(r){return sys.indexOf(r.sys)>=0});
+  }
+  function rgb(c){return 'rgb('+c.join(',')+')'}
+
+  $('groups').innerHTML=GROUPS.map(function(g){
+    var n=RUNS.filter(function(r){return g[2].indexOf(r.sys)>=0}).length;
+    return '<label class="chip"><input type="checkbox" id="g-'+g[0]+'" data-g="'+g[0]+'"'+(prefs.groups[g[0]]?' checked':'')+'><span class="box" aria-hidden="true"></span>'+g[1]+' <span class="n">'+n+'</span></label>';
+  }).join('');
+
+  function sheetSvg(S,pg,pi,total){
+    var P=S.paper,L=S.L,o=[];
+    o.push('<svg viewBox="0 0 '+P.w+' '+P.h+'" role="img" aria-label="Sheet '+(pi+1)+' of '+total+'">');
+    o.push('<text x="'+S.left+'" y="10" font-size="3.2" font-weight="700" fill="var(--paper-ink)">Silvia wire labels</text>');
+    o.push('<text x="'+S.left+'" y="14" font-size="2.6" fill="var(--paper-ink)">Sheet '+(pi+1)+' of '+total+'  |  Print at 100% (actual size). Cut on solid lines, fold on dashed lines around the wire, text outward.</text>');
+    var bx=P.w-S.left-50;
+    o.push('<path d="M'+bx+',8 h50 M'+bx+',6.8 v2.4 M'+(bx+50)+',6.8 v2.4" stroke="var(--paper-ink)" stroke-width=".4" fill="none"/>');
+    o.push('<text x="'+bx+'" y="11.5" font-size="2.3" fill="var(--paper-ink)">This bar should measure 50 mm</text>');
+    pg.rows.forEach(function(row){
+      row.cells.forEach(function(c){
+        var r=row.run,col=rgb(LabelCore.COLOR[r.sys]||LabelCore.COLOR.LVG);
+        if(c.hot){
+          o.push('<rect x="'+c.x+'" y="'+c.y+'" width="'+L.w+'" height="'+L.h+'" fill="none" stroke="var(--paper-line)" stroke-width=".2" stroke-dasharray=".6 .9"/>');
+          o.push('<text x="'+(c.x+3)+'" y="'+(c.y+5.4)+'" font-size="2.8" font-weight="700" fill="var(--paper-muted)">'+esc(r.id)+'  at '+esc(c.here)+'</text>');
+          o.push('<text x="'+(c.x+3)+'" y="'+(c.y+9.6)+'" font-size="2.3" fill="var(--paper-muted)">Boiler end: no paper label. Write '+esc(r.id)+' on the jacket with an oil-based marker.</text>');
+          return;
+        }
+        o.push('<rect x="'+c.x+'" y="'+c.y+'" width="'+L.w+'" height="'+L.h+'" fill="none" stroke="var(--paper-ink)" stroke-width=".25"/>');
+        o.push('<path d="M'+(c.x+L.half)+','+c.y+' v'+L.h+' M'+(c.x+L.half+L.wrap)+','+c.y+' v'+L.h+'" stroke="var(--paper-line)" stroke-width=".2" stroke-dasharray="1 1"/>');
+        [c.x,c.x+L.half+L.wrap].forEach(function(hx){
+          o.push('<rect x="'+hx+'" y="'+c.y+'" width="1.8" height="'+L.h+'" fill="'+col+'"/>');
+          o.push('<text x="'+(hx+3.4)+'" y="'+(c.y+5.2)+'" font-size="4.2" font-weight="700" fill="var(--paper-ink)">'+esc(r.id)+'</text>');
+          o.push('<text x="'+(hx+L.half-1.2)+'" y="'+(c.y+3.6)+'" font-size="2" text-anchor="end" fill="var(--paper-muted)">'+esc(r.gauge)+'</text>');
+          o.push('<text x="'+(hx+3.4)+'" y="'+(c.y+8.5)+'" font-size="2.25" fill="var(--paper-ink)">this end: '+esc(c.here)+'</text>');
+          o.push('<text x="'+(hx+3.4)+'" y="'+(c.y+11.4)+'" font-size="2.1" fill="var(--paper-muted)">to: '+esc(c.there)+'</text>');
+        });
+      });
+    });
+    o.push('</svg>');
+    return o.join('');
+  }
+
+  function render(){
+    var runs=selected(),S=LabelCore.sheets(runs,prefs.paper);
+    var hot=[],labels=0;
+    runs.forEach(function(r){var e=LabelCore.ends(r);[0,1].forEach(function(i){
+      var isHot=r.hot==='both'||(r.hot==='a'&&i===0)||(r.hot==='b'&&i===1);
+      if(isHot)hot.push([r.id,e[i]]);else labels++;
+    })});
+    $('s-runs').textContent=runs.length;
+    $('s-labels').textContent=labels;
+    $('s-sheets').textContent=S.pages.length;
+    $('s-sheets-s').textContent=(S.pages.length===1?'sheet':'sheets')+' of '+S.paper.name;
+    $('hand').innerHTML=hot.length?hot.map(function(h){return '<li><b>'+esc(h[0])+'</b><span>at '+esc(h[1])+'</span></li>'}).join(''):'<li><span>None in this selection.</span></li>';
+    $('sheets').innerHTML=S.pages.length?S.pages.map(function(pg,i){return '<div class="sheet"><span class="cap">Sheet '+(i+1)+' of '+S.pages.length+' · '+S.paper.name+' · preview</span>'+sheetSvg(S,pg,i,S.pages.length)+'</div>'}).join(''):'<p class="note">Pick at least one group to see the sheets.</p>';
+    Array.prototype.forEach.call(document.querySelectorAll('[data-paper]'),function(b){b.setAttribute('aria-pressed',String(b.getAttribute('data-paper')===prefs.paper))});
+    $('dl').disabled=!runs.length;
+  }
+
+  $('groups').addEventListener('change',function(e){var g=e.target.getAttribute('data-g');if(!g)return;prefs.groups[g]=e.target.checked;save();render()});
+  $('paper').addEventListener('click',function(e){var b=e.target.closest('[data-paper]');if(!b)return;prefs.paper=b.getAttribute('data-paper');save();render()});
+
+  var downloads=null,busy=false;
+  function msg(t,cls){var m=$('msg');m.textContent=t;m.className='msg'+(cls?' '+cls:'')}
+  try{
+    if(window.claude&&typeof window.claude.use==='function'){
+      window.claude.use('downloads').then(function(d){downloads=d;if(!d)msg('Downloading isn\'t available in this view. Open this page on claude.ai in a browser to get the PDF.','bad')}).catch(function(){msg('Downloading isn\'t available in this view.','bad')});
+    }
+  }catch(e){}
+  $('dl').addEventListener('click',function(){
+    if(busy)return;
+    if(!window.jspdf||!window.jspdf.jsPDF){msg('The PDF maker didn\'t load. Check your connection and reload the page.','bad');return}
+    var plain=!(window.claude&&typeof window.claude.use==='function');
+    if(!downloads&&!plain){msg('Downloading isn\'t available in this view. Open this page on claude.ai in a browser to get the PDF.','bad');return}
+    busy=true;$('dl').disabled=true;msg('Making the PDF…');
+    var blob,fname='silvia-wire-labels-'+prefs.paper+'.pdf';
+    try{blob=LabelCore.drawPdf(window.jspdf.jsPDF,selected(),prefs.paper).output('blob')}catch(e){busy=false;$('dl').disabled=false;msg('Couldn\'t make the PDF. Reload the page and try again.','bad');return}
+    if(plain){
+      try{var u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=fname;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},4000);msg('Saved. Print it at 100% scale.','ok')}catch(e){msg('Couldn\'t start the download in this browser.','bad')}
+      busy=false;$('dl').disabled=!selected().length;return;
+    }
+    downloads.save({filename:fname,data:blob}).then(function(){
+      msg('Saved. Print it at 100% scale.','ok');
+    }).catch(function(e){
+      var c=e&&e.code;
+      if(c==='declined')msg('Download cancelled.');
+      else if(c==='rate_limited')msg('A save prompt is already open. Finish that one first.','bad');
+      else msg('Downloading isn\'t available in this view.','bad');
+    }).then(function(){busy=false;$('dl').disabled=!selected().length});
+  });
+
+  render();
+})();
+</script>

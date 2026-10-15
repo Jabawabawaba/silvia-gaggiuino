@@ -1,0 +1,166 @@
+/* cutaway drawing */
+.cut{display:block;width:100%;height:auto;color:var(--ink)}
+.cut .dot{fill:var(--line)}
+.cut .shell{fill:var(--surface);fill-opacity:.55;stroke:var(--muted);stroke-opacity:.55;stroke-width:1.5}
+.cut .shell-top{fill:var(--surface-2);stroke:var(--muted);stroke-opacity:.5}
+.cut .foot{fill:var(--muted);opacity:.6}
+.cut .lbl{font:600 11px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;fill:var(--muted)}
+.cut .mini{font:600 9.5px var(--f-mono);letter-spacing:.04em;fill:var(--muted)}
+.cut .tank{fill:var(--blue-soft);fill-opacity:.5;stroke:var(--blue);stroke-opacity:.6;stroke-width:1.5}
+.cut .tankwater{fill:var(--blue);fill-opacity:.22}
+.cut .wave{fill:none;stroke:var(--blue);stroke-opacity:.6;stroke-width:1.5}
+.cut .pipes path{fill:none;stroke:var(--muted);stroke-opacity:.45;stroke-width:7;stroke-linecap:round;stroke-linejoin:round}
+.cut .pump{fill:var(--surface-2);stroke:var(--muted);stroke-width:1.5}
+.cut .coil{fill:#2F3439;stroke:#16181B}
+.cut .windings line{stroke:#B98F45;stroke-width:2}
+.cut .nipple{fill:var(--muted)}
+.cut .brass-s{stroke:#6E5420;stroke-width:1.2}
+.cut .spring{fill:none;stroke:#3B2C0E;stroke-width:1.3}
+.cut .boilerwater{fill:var(--blue);fill-opacity:.25}
+.cut .element{fill:none;stroke:#7A5A1E;stroke-width:3.5;stroke-linejoin:round;stroke-linecap:round}
+.cut .tst rect{fill:var(--surface);stroke:var(--muted);stroke-width:1.3}
+.cut .tst.safety circle{fill:var(--bad)}
+.cut .chrome-s{stroke:#5E656C;stroke-width:1.2}
+.cut .screen{stroke:#5E656C;stroke-width:2;stroke-dasharray:3 3}
+.cut .solcoil{fill:#2F3439;stroke:#16181B}
+.cut .wind2{stroke:#B98F45;stroke-width:2}
+.cut .handle{fill:#202326;stroke:#0C0E10}
+.cut .spout{fill:#8C949B}
+.cut .tray{fill:var(--surface-2);stroke:var(--muted);stroke-width:1.3}
+.cut .grate{stroke:var(--muted);stroke-opacity:.5;stroke-width:1.2;fill:none}
+.cut .cup,.cut .jug{fill:var(--surface);fill-opacity:.4;stroke:var(--muted);stroke-width:1.5}
+.cut .knob{fill:#202326}
+.cut .knobmark{stroke:#ECEEF0;stroke-width:2;stroke-linecap:round}
+.cut .wand{fill:none;stroke:#9AA2A9;stroke-width:7;stroke-linecap:round}
+.cut .panel{fill:var(--surface-2);stroke:var(--muted);stroke-width:1.2}
+.cut .sw{fill:#202326;stroke:#0C0E10}
+.cut .sw.on{fill:#F2A33A;filter:drop-shadow(0 0 4px #F2A33A)}
+.cut .inlet{fill:#2B2F34}
+.cut .cord{fill:none;stroke:#2B2F34;stroke-width:5;stroke-linecap:round}
+/* flows */
+.cut .flow{fill:none;stroke-linecap:round;stroke-linejoin:round;opacity:0;transition:opacity .35s}
+.cut .flow.water{stroke:#2F8FD8;stroke-width:4;stroke-dasharray:9 9}
+.cut .flow.water.thin{stroke-width:2.5}
+.cut .flow.coffee{stroke:#6B3A17;stroke-width:3;stroke-dasharray:6 6}
+.cut .flow.steam{stroke:#B9C3CC;stroke-width:5;stroke-dasharray:3 12}
+/* each moving line slides exactly one repeat of its own dash pattern per loop, so the loop never shows a jump:
+   cutflow for 9+9 dashes, fl12 for patterns that repeat every 12 units, fl15 every 15, fl16 every 16 */
+.cut .flow.on{opacity:1;animation:cutflow .7s linear infinite}
+.cut .flow.coffee.on{animation-name:fl12;animation-duration:.4s}
+.cut .flow.steam.on{animation-name:fl15;animation-duration:.375s}
+@keyframes cutflow{to{stroke-dashoffset:-18}}
+@keyframes fl12{to{stroke-dashoffset:-12}}
+@keyframes fl15{to{stroke-dashoffset:-15}}
+@keyframes fl16{to{stroke-dashoffset:-16}}
+.cut .puffs circle{fill:#E3E8EC;opacity:0}
+.cut .puffs.on circle{animation:puff 1.4s ease-out infinite}
+.cut .puffs.on circle:nth-child(2){animation-delay:.45s}.cut .puffs.on circle:nth-child(3){animation-delay:.9s}
+@keyframes puff{0%{opacity:.85;transform:translate(0,0) scale(.6)}100%{opacity:0;transform:translate(-14px,30px) scale(1.6)}}
+.cut .puffs circle{transform-box:fill-box;transform-origin:50% 50%}
+.cut .pumpbody.on{animation:buzz .09s linear infinite}
+@keyframes buzz{0%{transform:translateX(0)}50%{transform:translateX(1.6px)}100%{transform:translateX(0)}}
+.cut .element.hot{stroke:#FF8A2A;filter:drop-shadow(0 0 5px #FF8A2A)}
+.cut .solcoil.on{fill:#7A3A10;stroke:#F2A33A}
+#knob{transition:transform .5s;transform-box:fill-box;transform-origin:50% 50%}
+#knob.open{transform:rotate(-90deg)}
+#jug{transition:opacity .4s}
+/* hotspots */
+.cut .hot{cursor:pointer;outline:none}
+.cut .hot circle{fill:var(--ink);stroke:var(--bg);stroke-width:2.5;transition:fill .15s}
+.cut .hot text{font:700 14px var(--f-mono);fill:var(--bg);text-anchor:middle;pointer-events:none}
+.cut .hot:hover circle,.cut .hot:focus-visible circle{fill:var(--accent)}
+.cut .hot.sel circle{fill:var(--accent);stroke:var(--accent-soft);stroke-width:5}
+.cut .part{transition:opacity .25s}
+.cut.focus .part{opacity:.35}
+.cut.focus .part.lit{opacity:1}
+@media (prefers-reduced-motion:reduce){.cut .flow.on,.cut .puffs.on circle,.cut .pumpbody.on{animation:none}.cut .puffs.on circle{opacity:.6}}
+/* ---------- mini figures ---------- */
+.mini{margin:0;border:1px solid var(--line);border-radius:14px;background:var(--surface);overflow:hidden}
+.mini svg{display:block;width:100%;max-width:480px;height:auto;margin:0 auto;padding:10px 12px 0}
+@media (max-width:600px){.mini svg{padding:8px 6px 0}}
+.mini figcaption{padding:8px 16px 13px;font-size:14px;color:var(--muted);line-height:1.5}
+.mini .cap{font:500 11.5px var(--f-mono);fill:var(--muted)}
+.mini-ctl{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;padding:12px 16px 0}
+.mini-note{font-size:14px;color:var(--muted)}
+.mini-ctl input[type=range]{flex:1 1 160px;accent-color:var(--accent)}
+.mini-ctl output{font:600 15px var(--f-mono);min-width:6ch}
+.mini .pipe{fill:none;stroke:var(--muted);stroke-opacity:.35;stroke-width:12;stroke-linecap:round;stroke-linejoin:round}
+.mini .pipe.thin{stroke-width:8}
+.mini .sflow{fill:none;stroke:#2F8FD8;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:9 9;opacity:0;transition:opacity .3s}
+.mini .sflow.on{opacity:1;animation:cutflow .7s linear infinite}
+/* pump */
+#mini-pump .axis{stroke:var(--line);stroke-width:1.5}
+#mini-pump .sine{fill:none;stroke:var(--muted);stroke-width:2}
+#mini-pump .half.on{fill:var(--accent);fill-opacity:.28}
+#mini-pump .half.off{fill:none}
+#mini-pump .cursor{stroke:var(--accent);stroke-width:2;animation:pcur 3.2s linear infinite}
+@keyframes pcur{from{transform:translateX(0)}to{transform:translateX(300px)}}
+#mini-pump .bore{fill:var(--blue-soft);stroke:var(--muted);stroke-opacity:.5}
+#mini-pump .check{fill:var(--muted)}
+#mini-pump .coilx{fill:#2F3439;stroke:#16181B;animation:pcoil 1.6s steps(1) infinite}
+@keyframes pcoil{0%{fill:#7A3A10}50%{fill:#2F3439}}
+#mini-pump .wind line{stroke:#B98F45;stroke-width:2}
+#mini-pump .piston rect{fill:#8C949B;stroke:#4A5057}
+#mini-pump .piston{animation:pist 1.6s ease-in-out infinite}
+@keyframes pist{0%{transform:translateX(0)}25%{transform:translateX(-16px)}50%{transform:translateX(-16px)}75%{transform:translateX(0)}100%{transform:translateX(0)}}
+#mini-pump .springx{fill:none;stroke:var(--muted);stroke-width:2;transform-box:fill-box;transform-origin:100% 50%;animation:spr 1.6s ease-in-out infinite}
+@keyframes spr{0%{transform:scaleX(1)}25%{transform:scaleX(1.35)}50%{transform:scaleX(1.35)}75%{transform:scaleX(1)}}
+#mini-pump .wflow{fill:none;stroke:#2F8FD8;stroke-width:4;stroke-dasharray:8 8;stroke-linecap:round}
+#mini-pump .wflow.in{animation:fl16 .71s linear infinite}
+#mini-pump .wflow.out{animation:fl16 .71s linear infinite}
+/* thermostat */
+#mini-tstat .housing{fill:var(--surface-2);stroke:var(--muted);stroke-width:1.4}
+#mini-tstat .boilertop{fill:url(#cut-brass);stroke:#6E5420}
+#mini-tstat .term{stroke:var(--muted);stroke-width:3;stroke-linecap:round}
+#mini-tstat .contact{fill:#C99A4A;stroke:#6E5420}
+#mini-tstat .armline{stroke:var(--ink);stroke-width:3;stroke-linecap:round}
+#mini-tstat .pin{stroke:var(--muted);stroke-width:3}
+#mini-tstat .disc{fill:none;stroke:var(--accent);stroke-width:4;stroke-linecap:round}
+#mini-tstat .graph{fill:none;stroke:var(--line)}
+#mini-tstat .limit{stroke:var(--accent);stroke-dasharray:4 4;stroke-width:1.2;opacity:.8}
+#mini-tstat .trace{fill:none;stroke:var(--w-l);stroke-width:2.4;stroke-linejoin:round}
+#mini-tstat .now{fill:var(--w-l)}
+#mini-tstat .arm{transition:transform .12s}
+#mini-tstat .pin{transition:transform .12s}
+/* solenoid */
+#mini-sol .vbody{fill:url(#cut-brass);stroke:#6E5420}
+#mini-sol .vcoil{fill:#2F3439;stroke:#16181B;transition:fill .2s}
+#mini-sol.on .vcoil{fill:#7A3A10}
+#mini-sol .vwind line{stroke:#B98F45;stroke-width:2}
+#mini-sol .plunger rect{fill:#8C949B;stroke:#4A5057}
+#mini-sol .plunger .seal{fill:#2B2F34}
+#mini-sol .plunger{transition:transform .2s}
+#mini-sol.on .plunger{transform:translateY(-20px)}
+/* opv */
+#mini-opv .vbody{fill:url(#cut-brass);stroke:#6E5420}
+#mini-opv .seal{fill:#2B2F34}
+#mini-opv .stem{stroke:#4A5057;stroke-width:4}
+#mini-opv .opvspring{fill:none;stroke:var(--muted);stroke-width:2}
+#mini-opv .nut{fill:#8C949B}
+#mini-opv .gauge{fill:var(--surface-2);stroke:var(--muted);stroke-width:1.5}
+#mini-opv .gscale{fill:none;stroke:var(--line);stroke-width:5}
+#mini-opv .needle{stroke:var(--w-l);stroke-width:3;stroke-linecap:round}
+
+/* group: a shot in section. Water in from the 3-way valve, out along the dispersion channel, down through the
+   shower screen as a spread of drops, slowly through the puck, and out of the basket and spouts as coffee.
+   Every line runs on fl12 (patterns repeat every 12 units); the script-free phases are set in the markup. */
+#mini-group .gbody,#mini-group .ginlet{fill:url(#cut-chrome);stroke:#5E656C}
+#mini-group .gcav{fill:#2B3036;opacity:.5}
+#mini-group .gasket{fill:#2B2F34}
+#mini-group .gscreen{stroke:#5E656C;stroke-width:3;stroke-dasharray:4 3}
+#mini-group .basket{fill:var(--surface-2);stroke:var(--muted)}
+#mini-group .gholes{stroke:var(--muted);stroke-width:2;stroke-dasharray:3 4}
+#mini-group .puck{fill:#5A3A22}
+#mini-group .pfbody{fill:url(#cut-chrome);stroke:#5E656C}
+#mini-group .spoutx{fill:#8C949B}
+#mini-group .pfhandle{stroke:#202326;stroke-width:14;stroke-linecap:round}
+#mini-group .gcup{fill:var(--surface);fill-opacity:.4;stroke:var(--muted);stroke-width:1.5}
+#mini-group .gcoffee{fill:#5A3A22}
+#mini-group .gcrema{stroke:#C08A4E;stroke-width:2}
+#mini-group .gf{fill:none;stroke-linecap:round;animation:fl12 .4s linear infinite}
+#mini-group .gf.w{stroke:#2F8FD8;stroke-width:3;stroke-dasharray:6 6}
+#mini-group .gf.rain{stroke:#2F8FD8;stroke-width:2;stroke-dasharray:3 9}
+#mini-group .gf.perc{stroke:#D9A46C;stroke-width:2;stroke-dasharray:2 10;animation-duration:1.2s;opacity:.8}
+#mini-group .gf.coll{stroke:#A86B35;stroke-width:2.4;stroke-dasharray:4 8;animation-duration:.6s}
+#mini-group .gf.pour{stroke:#A86B35;stroke-width:3.4;stroke-dasharray:8 4;animation-duration:.3s}
+@media (prefers-reduced-motion:reduce){#mini-pump .cursor,#mini-pump .coilx,#mini-pump .piston,#mini-pump .springx,#mini-pump .wflow,#mini-group .gf,.mini .sflow.on{animation:none}}

@@ -1,0 +1,594 @@
+<title>Used Silvia Checklist</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Layout: phone-first single column. A list of machines you've looked at, then one machine at a time: listing facts, price check, and the checklist as big tap targets. */
+:root{
+  --bg:#ECEEF0;
+  --surface:#F9FAFA;
+  --surface-2:#E2E5E8;
+  --ink:#16191C;
+  --muted:#59616A;
+  --line:#CBD0D5;
+  --accent:#D98400;
+  --accent-ink:#965300;
+  --accent-soft:#F4E1C0;
+  --on-accent:#1A1206;
+  --good:#2D7A4C; --good-soft:#DCEFE3;
+  --warn:#9A6510; --warn-soft:#F4E6C8;
+  --bad:#B13A2F;  --bad-soft:#F6DEDA;
+  --f-display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  --f-body:"Barlow",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --radius:10px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#111316; --surface:#1A1D21; --surface-2:#252A30; --ink:#E7E9EB; --muted:#9BA2AA; --line:#30363D;
+    --accent:#F2A33A; --accent-ink:#F5B566; --accent-soft:#3B2B13; --on-accent:#1A1206;
+    --good:#63C08A; --good-soft:#17301F; --warn:#E3AB52; --warn-soft:#362813; --bad:#EC7064; --bad-soft:#3A1C19;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#111316; --surface:#1A1D21; --surface-2:#252A30; --ink:#E7E9EB; --muted:#9BA2AA; --line:#30363D;
+  --accent:#F2A33A; --accent-ink:#F5B566; --accent-soft:#3B2B13; --on-accent:#1A1206;
+  --good:#63C08A; --good-soft:#17301F; --warn:#E3AB52; --warn-soft:#362813; --bad:#EC7064; --bad-soft:#3A1C19;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:var(--accent-ink);text-underline-offset:3px}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.wrap{max-width:760px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px 64px}
+
+.top{display:grid;gap:12px;margin-bottom:24px}
+.plate{display:inline-flex;align-items:center;flex-wrap:wrap;gap:6px 12px;justify-self:start;max-width:100%;border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:7px 12px;font:500 11.5px/1.3 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.plate .rivet{width:6px;height:6px;border-radius:50%;background:var(--line);box-shadow:inset 0 0 0 1px var(--muted);opacity:.7}
+.plate b{color:var(--ink);font-weight:600}
+h1{font:700 clamp(36px,8vw,54px)/.95 var(--f-display);letter-spacing:.01em;margin:0;text-transform:uppercase;text-wrap:balance}
+h2{font:600 22px/1.1 var(--f-display);letter-spacing:.05em;text-transform:uppercase;margin:0}
+.lede{margin:0;color:var(--muted);max-width:60ch;font-size:17px}
+.toprow{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+
+.status{font:500 12px var(--f-mono);color:var(--muted);display:inline-flex;align-items:center;gap:7px}
+.lamp{width:8px;height:8px;border-radius:50%;background:var(--line);flex:none}
+.status.ok .lamp{background:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+
+.btn{appearance:none;border:1px solid var(--line);background:var(--surface);border-radius:9px;padding:10px 14px;font-weight:600;font-size:15px;cursor:pointer;min-height:44px}
+.btn:hover{border-color:var(--muted)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn.danger{color:var(--bad);border-color:var(--line)}
+.btn.danger.armed{background:var(--bad);border-color:var(--bad);color:var(--surface)}
+.linkbtn{appearance:none;border:0;background:none;padding:6px 0;font:500 14px var(--f-body);color:var(--accent-ink);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+
+/* reference strip */
+.ref{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);margin-bottom:26px}
+.ref div{padding:12px 14px;border-left:1px solid var(--line);min-width:0}
+.ref div:first-child{border-left:0}
+.ref .k{font:600 11px var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.ref .v{font:600 18px/1.3 var(--f-mono);font-variant-numeric:tabular-nums;margin-top:2px}
+@media (max-width:520px){.ref{grid-template-columns:minmax(0,1fr)}.ref div{border-left:0;border-top:1px solid var(--line)}.ref div:first-child{border-top:0}}
+
+.list-h{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;border-bottom:2px solid var(--ink);padding-bottom:8px;margin-bottom:14px}
+.cards{display:grid;gap:12px}
+.mcard{appearance:none;text-align:left;width:100%;display:grid;gap:8px;padding:14px 16px;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);cursor:pointer;border-left:4px solid var(--line)}
+.mcard:hover{border-color:var(--muted)}
+.mcard.v-buy{border-left-color:var(--good)} .mcard.v-offer{border-left-color:var(--warn)} .mcard.v-walk{border-left-color:var(--bad)}
+.mc-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.mc-name{font-weight:600;font-size:17px;line-height:1.3;min-width:0;overflow-wrap:anywhere}
+.mc-price{font:600 18px var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.mc-meta{font-size:14px;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font:600 11px/1 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;padding:5px 7px;border-radius:5px;background:var(--surface-2);color:var(--muted)}
+.chip.good{background:var(--good-soft);color:var(--good)}
+.chip.warn{background:var(--warn-soft);color:var(--warn)}
+.chip.bad{background:var(--bad-soft);color:var(--bad)}
+.chip.ex{background:var(--accent-soft);color:var(--accent-ink)}
+.empty{border:1px dashed var(--line);border-radius:var(--radius);padding:22px 18px;color:var(--muted);display:grid;gap:6px}
+.empty b{color:var(--ink);font-size:17px}
+
+.versions{margin-top:28px;border-top:1px solid var(--line);padding-top:16px}
+.versions summary{cursor:pointer;font:600 18px var(--f-display);letter-spacing:.05em;text-transform:uppercase}
+.vtable{width:100%;border-collapse:collapse;margin-top:10px;font-size:15px}
+.vtable td{padding:7px 0;border-bottom:1px solid var(--line)}
+.vtable td:first-child{font:600 14px var(--f-mono);width:56px}
+.vtable td:last-child{color:var(--muted);text-align:right;font-variant-numeric:tabular-nums}
+.fine{font-size:13px;color:var(--muted);margin:10px 0 0;line-height:1.45}
+
+/* detail */
+.dhead{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.banner{border:1px solid var(--accent);background:var(--accent-soft);border-radius:var(--radius);padding:10px 14px;font-size:14.5px;margin-bottom:16px}
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-bottom:22px}
+.fields .full{grid-column:1 / -1}
+@media (max-width:520px){.fields{grid-template-columns:minmax(0,1fr)}}
+.field{display:grid;gap:5px;min-width:0}
+.field label{font:600 11.5px var(--f-mono);letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.input,.select,.textarea{width:100%;border:1px solid var(--line);border-radius:9px;background:var(--surface);padding:10px 12px;min-height:46px;font-size:16px}
+.input:focus,.select:focus,.textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.textarea{min-height:84px;resize:vertical;line-height:1.45}
+.money{display:flex;align-items:center;border:1px solid var(--line);border-radius:9px;background:var(--surface);padding:0 12px;min-height:46px}
+.money span{font:500 16px var(--f-mono);color:var(--muted)}
+.money input{border:0;background:transparent;font:500 17px var(--f-mono);width:100%;padding:0 6px;outline:none;font-variant-numeric:tabular-nums;min-width:0}
+.money:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.money input::-webkit-outer-spin-button,.money input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.money input[type=number]{-moz-appearance:textfield}
+.hint{font-size:13px;color:var(--muted)}
+
+.panel{border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:16px;display:grid;gap:12px;margin-bottom:22px}
+.panel-h{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.gauge{position:relative;height:56px;margin-top:4px}
+.track{position:absolute;left:0;right:0;top:14px;height:12px;border-radius:3px;background:var(--surface-2)}
+.band{position:absolute;top:14px;height:12px}
+.band.used{background:var(--accent-soft);box-shadow:inset 0 0 0 1px var(--accent)}
+.band.new{background:repeating-linear-gradient(135deg,var(--line) 0 4px,var(--surface-2) 4px 8px);box-shadow:inset 0 0 0 1px var(--muted)}
+.band-l{position:absolute;top:0;font:600 10px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);white-space:nowrap;transform:translateX(-50%)}
+.tickl{position:absolute;top:32px;font:500 11.5px var(--f-mono);color:var(--muted);transform:translateX(-50%);font-variant-numeric:tabular-nums}
+.marker{position:absolute;top:8px;width:3px;height:24px;margin-left:-1.5px;background:var(--ink);border-radius:2px;transition:left .25s}
+.pmsg{margin:0;font-size:15px;padding-left:10px;border-left:3px solid var(--line)}
+.pmsg.good{border-left-color:var(--good)} .pmsg.warn{border-left-color:var(--warn)} .pmsg.bad{border-left-color:var(--bad)}
+.ptot{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-size:14.5px;color:var(--muted);flex-wrap:wrap}
+.ptot b{font:600 15px var(--f-mono);color:var(--ink);font-variant-numeric:tabular-nums}
+
+.progress{position:sticky;top:env(safe-area-inset-top,0px);z-index:3;background:var(--bg);padding-block:10px;margin-bottom:8px;border-bottom:1px solid var(--line);display:grid;gap:8px}
+.pbar{display:flex;height:8px;border-radius:3px;overflow:hidden;background:var(--surface-2);gap:2px}
+.pbar span{display:block;height:100%}
+.ptext{display:flex;flex-wrap:wrap;gap:6px 14px;font:500 13px var(--f-mono);color:var(--muted);font-variant-numeric:tabular-nums}
+.ptext .bad{color:var(--bad);font-weight:600}
+
+.sec{margin-top:22px}
+.sec-h{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-bottom:2px solid var(--ink);padding-bottom:6px}
+.sec-h .n{font:500 13px var(--f-mono);color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.sec-intro{margin:8px 0 0;color:var(--muted);font-size:14.5px}
+.item{padding:14px 0 14px 14px;border-bottom:1px solid var(--line);border-left:3px solid transparent;display:grid;gap:8px}
+.item[data-state="ok"]{border-left-color:var(--good)}
+.item[data-state="issue"]{border-left-color:var(--bad);background:linear-gradient(90deg,var(--bad-soft),transparent 60%)}
+.item[data-state="skip"]{border-left-color:var(--line)}
+.ihead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.ititle{font-weight:600;font-size:16.5px;line-height:1.35;min-width:0}
+.sev{flex:none;font:600 10.5px/1 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;padding:5px 6px;border-radius:5px;white-space:nowrap}
+.sev.deal{background:var(--bad-soft);color:var(--bad)}
+.sev.haggle{background:var(--warn-soft);color:var(--warn)}
+.sev.note{background:var(--surface-2);color:var(--muted)}
+.iwhy{margin:0;color:var(--muted);font-size:14.5px;line-height:1.45;max-width:62ch}
+.irow{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px}
+.seg{display:inline-grid;grid-auto-flow:column;grid-auto-columns:1fr;border:1px solid var(--line);border-radius:9px;overflow:hidden;background:var(--surface)}
+.seg label{position:relative;display:block;cursor:pointer}
+.seg input{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+.seg span{display:block;padding:10px 14px;min-width:78px;min-height:44px;text-align:center;font-weight:600;font-size:14px;border-left:1px solid var(--line);line-height:24px}
+.seg label:first-child span{border-left:0}
+.seg input:checked + span.ok{background:var(--good-soft);color:var(--good)}
+.seg input:checked + span.issue{background:var(--bad-soft);color:var(--bad)}
+.seg input:checked + span.skip{background:var(--surface-2);color:var(--ink)}
+.seg input:focus-visible + span{outline:2px solid var(--accent);outline-offset:-2px}
+
+.verdict{margin-top:30px}
+.vseg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--surface);margin:12px 0 16px}
+.vseg label{position:relative;cursor:pointer;min-width:0}
+.vseg input{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+.vseg span{display:block;padding:12px 6px;min-height:48px;text-align:center;font-weight:600;font-size:14.5px;border-left:1px solid var(--line)}
+.vseg label:first-child span{border-left:0}
+.vseg input:checked + span{background:var(--surface-2);color:var(--ink)}
+.vseg input:checked + span.buy{background:var(--good-soft);color:var(--good)}
+.vseg input:checked + span.offer{background:var(--warn-soft);color:var(--warn)}
+.vseg input:checked + span.walk{background:var(--bad-soft);color:var(--bad)}
+.vseg input:focus-visible + span{outline:2px solid var(--accent);outline-offset:-2px}
+@media (max-width:460px){.vseg{grid-template-columns:repeat(2,minmax(0,1fr))}.vseg label:nth-child(3) span{border-left:0}.vseg label:nth-child(n+3) span{border-top:1px solid var(--line)}}
+.dfoot{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:26px;padding-top:16px;border-top:1px solid var(--line)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="plate" aria-label="Buying spec">
+      <span class="rivet" aria-hidden="true"></span>
+      <span><b>Buying used</b></span><span>Rancilio Silvia</span><span>Single boiler</span><span>120 V ~ 60 Hz</span>
+      <span class="rivet" aria-hidden="true"></span>
+    </div>
+    <h1>Used Silvia Checklist</h1>
+    <p class="lede">One entry per machine you look at. Send the questions before you go, run the machine in person, then compare. Gaggiuino replaces the control electronics, so what you are really buying is the boiler, element, pump, group and case.</p>
+  </header>
+
+  <section id="list-view">
+    <div class="ref" aria-label="Price reference">
+      <div><div class="k">Used, typical</div><div class="v">$400 – $800</div></div>
+      <div><div class="k">New Silvia M</div><div class="v">$900 – $1,000</div></div>
+      <div><div class="k">Build adds</div><div class="v">$370 – $490</div></div>
+    </div>
+
+    <div class="list-h">
+      <h2>Machines you've looked at</h2>
+      <button class="btn primary" id="add" type="button">Add a machine</button>
+    </div>
+    <div class="cards" id="cards"></div>
+    <div class="empty" id="empty">
+      <b id="empty-title">Loading your machines</b>
+      <span id="empty-body">Each listing you check shows up here with its asking price, problems found and your verdict.</span>
+    </div>
+    <div class="toprow" style="margin-top:14px"><span class="status" id="status"><span class="lamp"></span><span class="status-text">Loading</span></span></div>
+
+    <details class="versions">
+      <summary>Silvia versions by year</summary>
+      <table class="vtable">
+        <tbody>
+          <tr><td>V1</td><td>First version</td><td>1997 – 2006</td></tr>
+          <tr><td>V2</td><td></td><td>2006 – 2009</td></tr>
+          <tr><td>V3</td><td>Improved steam wand</td><td>2009 – 2014</td></tr>
+          <tr><td>V4</td><td></td><td>2014 – 2016</td></tr>
+          <tr><td>V5</td><td>Also sold as Silvia E</td><td>2016 – 2020</td></tr>
+          <tr><td>V6</td><td>Current. US model is the Silvia M</td><td>2020 – now</td></tr>
+        </tbody>
+      </table>
+      <p class="fine">All six are single-boiler machines with the 3-way solenoid, and the Discord Silvia notes cover each of them. The Silvia Pro and Pro X are different machines and are not covered. "Build adds" is the Gaggiuino kit, Silvia parts and missing tools from your budget plan. Prices checked October 14, 2026.</p>
+    </details>
+  </section>
+
+  <section id="detail-view" hidden>
+    <div class="dhead">
+      <button class="btn" id="back" type="button">All machines</button>
+      <span class="status" id="status-d"><span class="lamp"></span><span class="status-text">Saved</span></span>
+    </div>
+    <div id="detail"></div>
+  </section>
+</div>
+
+<script>
+(function(){
+  var SECTIONS=[
+    {id:'ask',title:'Ask before you go',intro:'Message the seller first. A wrong answer on the first two saves you the trip.',items:[
+      {id:'ask-voltage',t:'Is it a 120 V US machine?',w:"Ask for a photo of the rating plate. A 230 V import won't run here, and the whole build plan assumes 120 V.",sev:'deal'},
+      {id:'ask-model',t:'Single-boiler Silvia, not a Silvia Pro or Pro X?',w:'The Pro models are dual-boiler machines. None of the Gaggiuino Silvia notes apply to them.',sev:'deal'},
+      {id:'ask-version',t:'Which version is it, and when was it bought?',w:'Put the answer in the version field above.',sev:'note'},
+      {id:'ask-descale',t:'How often was it descaled, and with what water?',w:'Heavy scale shortens the life of the element and boiler.',sev:'haggle'},
+      {id:'ask-mods',t:'Any mods, like a PID? Were the stock thermostats and wiring kept?',w:'A PID is fine; it comes out during the Gaggiuino install anyway.',sev:'note'},
+      {id:'ask-repairs',t:'Any repairs or replaced parts?',w:'A recent pump, element or group gasket is a plus. Repeated repairs of the same part are a warning sign.',sev:'haggle'},
+      {id:'ask-warm',t:'Can it be filled and warmed up before you arrive?',w:'You need it hot to test steam, and a cold machine can hide leaks.',sev:'note'}
+    ]},
+    {id:'look',title:'Look it over',items:[
+      {id:'look-plate',t:'Rating plate reads 120 V, 60 Hz',w:'Check the plate itself, not the listing.',sev:'deal'},
+      {id:'look-cord',t:'Comes with a grounded three-prong power cord',w:'The install needs a grounded machine. A missing cord is cheap to replace.',sev:'haggle'},
+      {id:'look-case',t:'No rust or heavy dents on the case and frame',w:'Rust around the base and drip tray often means water has been escaping.',sev:'haggle'},
+      {id:'look-parts',t:'Portafilter, baskets and drip tray included',w:'They cost extra to replace, so price any missing ones into your offer.',sev:'haggle'}
+    ]},
+    {id:'run',title:'Run it',intro:'With the tank full and the machine warmed up.',items:[
+      {id:'run-heat',t:'Heats up, and the heating lamp cycles on and off',w:'No heat can mean a failed element or thermostat. Either is a repair to price in.',sev:'haggle'},
+      {id:'run-flow',t:'Pump primes and water flows from the group',w:'Steady flow with the brew switch on. A pump that buzzes without moving water needs work.',sev:'haggle'},
+      {id:'run-sound',t:'Pump sounds steady, not rattling or straining',w:'Vibration pumps are loud, but the sound should be even.',sev:'note'},
+      {id:'run-gasket',t:'No water escaping around the portafilter while brewing',w:'A leaking group gasket is a cheap fix and a fair bargaining point.',sev:'haggle'},
+      {id:'run-solenoid',t:'Releases pressure into the drip tray when the brew switch goes off',w:"That's the 3-way solenoid working. The build mounts its pressure sensor on this valve.",sev:'haggle'},
+      {id:'run-water',t:'Hot water switch delivers water from the wand',w:'Confirms the hot water switch and circuit work.',sev:'note'},
+      {id:'run-steam',t:'Steam builds strong and dry',w:"Strong steam is the Silvia's main advantage over a Gaggia Classic.",sev:'haggle'}
+    ]},
+    {id:'leak',title:'Check for leaks inside',intro:'Only lift the top cover with the machine unplugged and cooled down, and only if the seller is fine with it.',items:[
+      {id:'leak-boiler',t:'No water or mineral trails under the boiler',w:'Trails point to a leaking boiler gasket or fitting.',sev:'deal'},
+      {id:'leak-scale',t:'No heavy crust on the boiler or its fittings',w:'Visible scale outside usually means more inside.',sev:'haggle'},
+      {id:'leak-wiring',t:'Boiler wiring and spades show no heat damage',w:'All of it gets replaced in the install, but it shows how the machine was treated.',sev:'note'},
+      {id:'leak-added',t:'Anything added inside (PID, extra wiring, relays) is noted',w:'Useful to know before you plan the teardown.',sev:'note'}
+    ]},
+    {id:'home',title:'At home, with a multimeter',intro:'After you buy it, with the machine unplugged. These confirm the element before you start the build.',items:[
+      {id:'home-ohms',t:'Element reads roughly 10 to 15 ohms',w:'The expected range for a ~1,100 W 120 V element.',sev:'note'},
+      {id:'home-short',t:'No continuity from either element terminal to the boiler body',w:'Continuity here means the element is shorted to the boiler and has to be replaced.',sev:'deal'}
+    ]}
+  ];
+  var SEV={deal:'Deal-breaker',haggle:'Bargaining point',note:'Note'};
+  var VERDICTS=[['undecided','Undecided'],['buy','Buy it'],['offer','Make an offer'],['walk','Walk away']];
+  var VERSIONS=[['','Not sure yet'],['V1','V1 (1997 to 2006)'],['V2','V2 (2006 to 2009)'],['V3','V3 (2009 to 2014)'],['V4','V4 (2014 to 2016)'],['V5','V5 (2016 to 2020)'],['V6','V6 (2020 to now)']];
+  var ALL=[];SECTIONS.forEach(function(s){s.items.forEach(function(i){ALL.push(i)})});
+  var BUILD_LO=370,BUILD_HI=490;
+  var KEY='used-silvia-checklist-v1';
+
+  function $(id){return document.getElementById(id)}
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+  function fmt(n){return '$'+Math.round(n).toLocaleString('en-US')}
+  function clone(o){return JSON.parse(JSON.stringify(o))}
+  function today(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+  function niceDate(s){
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(s||''))return '';
+    var p=s.split('-').map(Number),d=new Date(p[0],p[1]-1,p[2]);
+    return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+  }
+  function num(v){return (typeof v==='number'&&isFinite(v)&&v>=0)?v:null}
+  function newId(){return 'm'+Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+
+  function normalize(d){
+    d=d&&typeof d==='object'?d:{};
+    var checks={},notes={};
+    if(d.checks&&typeof d.checks==='object')Object.keys(d.checks).forEach(function(k){if(['ok','issue','skip'].indexOf(d.checks[k])>=0)checks[k]=d.checks[k]});
+    if(d.notes&&typeof d.notes==='object')Object.keys(d.notes).forEach(function(k){if(typeof d.notes[k]==='string'&&d.notes[k])notes[k]=d.notes[k]});
+    return {
+      label:typeof d.label==='string'?d.label:'',
+      url:typeof d.url==='string'?d.url:'',
+      asking:num(d.asking),offer:num(d.offer),
+      version:typeof d.version==='string'?d.version:'',
+      seen:typeof d.seen==='string'?d.seen:'',
+      checks:checks,notes:notes,
+      verdict:['undecided','buy','offer','walk'].indexOf(d.verdict)>=0?d.verdict:'undecided',
+      summary:typeof d.summary==='string'?d.summary:'',
+      example:d.example===true,
+      createdAt:typeof d.createdAt==='number'?d.createdAt:0,
+      updatedAt:typeof d.updatedAt==='number'?d.updatedAt:0
+    };
+  }
+  function tally(m){
+    var t={ok:0,issue:0,skip:0,deal:0,total:ALL.length};
+    ALL.forEach(function(i){var s=m.checks[i.id];if(s)t[s]++;if(s==='issue'&&i.sev==='deal')t.deal++});
+    t.done=t.ok+t.issue+t.skip;return t;
+  }
+  function priceVerdict(a){
+    if(a==null)return {cls:'',msg:'Enter the asking price to see how it compares.'};
+    if(a<400)return {cls:'good',msg:"Below the usual used range. Good if it checks out; find out why it's cheap."};
+    if(a<700)return {cls:'good',msg:'Inside the usual used range of $400 to $800.'};
+    if(a<=800)return {cls:'warn',msg:'Near the top of the used range. At this price it should be a V5 or V6 in excellent shape.'};
+    if(a<900)return {cls:'warn',msg:'Above the usual used range and close to new. Only worth it with real extras or a near-new V6.'};
+    return {cls:'bad',msg:'At or above the price of a new Silvia M ($900 at Whole Latte Love). Buying new makes more sense.'};
+  }
+  var GMIN=300,GMAX=1100;
+  function gpos(x){return Math.max(0,Math.min(100,(x-GMIN)/(GMAX-GMIN)*100))}
+
+  /* ---------- store ---------- */
+  var docs={},mode='loading',col=null,readOnly=false,currentId=null,pendingCreate={},timers={},chains={};
+  function setStatus(kind){
+    var txt={loading:'Loading',local:'Saved on this device',saving:'Saving',saved:'Saved',readonly:'View only: changes stay on this screen'}[kind]||'';
+    ['status','status-d'].forEach(function(id){var el=$(id);el.querySelector('.status-text').textContent=txt;el.classList.toggle('ok',kind==='saved')});
+  }
+  function loadLocal(){try{var s=localStorage.getItem(KEY);var o=s?JSON.parse(s):{};var out={};Object.keys(o).forEach(function(k){out[k]=normalize(o[k])});return out}catch(e){return {}}}
+  function saveLocal(){if(mode!=='local')return;try{localStorage.setItem(KEY,JSON.stringify(docs))}catch(e){}}
+  function writeOnce(ref,body){
+    return ref.set(body).catch(function(e){
+      if(e&&e.code==='unavailable')return new Promise(function(r){setTimeout(r,700+Math.random()*900)}).then(function(){return ref.set(body)});
+      throw e;
+    });
+  }
+  function onWriteError(e){
+    if(e&&e.code==='quota_exceeded'){setStatus('local');alertInline('The saved list is full. Delete a machine you no longer need, then try again.');return}
+    if(e&&(e.code==='invalid_argument'||e.code==='not_granted'||e.code==='revoked'||e.code==='capability_disabled'||e.code==='capability_removed')){readOnly=true;setStatus('readonly');return}
+    setStatus('local');
+  }
+  function alertInline(msg){var b=$('save-error');if(b){b.textContent=msg;b.hidden=false}}
+  function flush(id){
+    var body=docs[id];if(!body)return;
+    if(mode!=='db'){saveLocal();setStatus('local');return}
+    if(readOnly){setStatus('readonly');return}
+    body=clone(body);
+    chains[id]=(chains[id]||Promise.resolve()).then(function(){return writeOnce(col.doc(id),body)})
+      .then(function(){delete pendingCreate[id];if(!readOnly)setStatus('saved')})
+      .catch(onWriteError);
+  }
+  function scheduleSave(id,now){
+    clearTimeout(timers[id]);
+    if(mode==='db'&&!readOnly)setStatus('saving');
+    if(now){flush(id);return}
+    timers[id]=setTimeout(function(){timers[id]=null;flush(id)},600);
+  }
+  function touch(){var m=docs[currentId];if(!m)return;m.updatedAt=Date.now();scheduleSave(currentId)}
+
+  function startLocal(){
+    mode='local';docs=loadLocal();setStatus('local');renderList();
+  }
+  function connect(){
+    var p;
+    try{p=(window.claude&&typeof window.claude.use==='function')?window.claude.use('db'):Promise.resolve(null)}catch(e){p=Promise.resolve(null)}
+    Promise.resolve(p).then(function(db){
+      if(!db){startLocal();return}
+      mode='db';col=db.collection('inspections');
+      col.onSnapshot(function(snap){
+        var next={};
+        snap.docs.forEach(function(d){next[d.id]=normalize(d.data())});
+        Object.keys(pendingCreate).forEach(function(id){if(!next[id]&&docs[id])next[id]=docs[id]});
+        var reopen=false;
+        if(currentId){
+          var local=docs[currentId],remote=next[currentId];
+          if(!remote){currentId=null}
+          else if(local&&remote.updatedAt<=local.updatedAt){next[currentId]=local}
+          else if(local&&remote.updatedAt>local.updatedAt){reopen=true}
+        }
+        docs=next;
+        if(!currentId&&!$('detail-view').hidden)showList();
+        renderList();
+        if(reopen)renderDetail();
+        if(!readOnly&&!Object.keys(timers).some(function(k){return timers[k]}))setStatus('saved');
+      },function(e){
+        if(e&&e.code==='unavailable'){connect();return}
+        startLocal();
+      });
+    }).catch(startLocal);
+  }
+
+  /* ---------- list ---------- */
+  function verdictChip(v){
+    var map={buy:['good','Buy it'],offer:['warn','Make an offer'],walk:['bad','Walk away']};
+    return map[v]?'<span class="chip '+map[v][0]+'">'+map[v][1]+'</span>':'<span class="chip">Undecided</span>';
+  }
+  function renderList(){
+    var ids=Object.keys(docs).sort(function(a,b){return (docs[b].updatedAt||0)-(docs[a].updatedAt||0)});
+    $('cards').innerHTML=ids.map(function(id){
+      var m=docs[id],t=tally(m);
+      var meta=[];
+      if(m.version)meta.push(esc(m.version));
+      if(m.seen)meta.push('Seen '+esc(niceDate(m.seen)));
+      meta.push(t.done+' of '+t.total+' checked');
+      var chips=(m.example?'<span class="chip ex">Example</span>':'')+verdictChip(m.verdict)+
+        (t.deal?'<span class="chip bad">Deal-breaker</span>':'')+
+        (t.issue?'<span class="chip warn">'+t.issue+' problem'+(t.issue===1?'':'s')+'</span>':'');
+      return '<button class="mcard v-'+m.verdict+'" type="button" data-open="'+esc(id)+'">'+
+        '<span class="mc-top"><span class="mc-name">'+esc(m.label||'Untitled machine')+'</span><span class="mc-price">'+(m.asking!=null?fmt(m.asking):'No price')+'</span></span>'+
+        '<span class="mc-meta">'+meta.join(' · ')+'</span>'+
+        '<span class="chips">'+chips+'</span>'+
+      '</button>';
+    }).join('');
+    var empty=$('empty');
+    if(ids.length){empty.hidden=true}
+    else{
+      empty.hidden=false;
+      if(mode==='loading'){$('empty-title').textContent='Loading your machines';$('empty-body').textContent='Each listing you check shows up here with its asking price, problems found and your verdict.'}
+      else{$('empty-title').textContent='No machines yet';$('empty-body').textContent='When you find a listing, tap Add a machine and send the seller the first few questions before you go.'}
+    }
+  }
+
+  /* ---------- detail ---------- */
+  function segHtml(item,state){
+    var opts=[['ok','OK'],['issue','Problem'],['skip','Skip']];
+    return '<div class="seg" role="radiogroup" aria-label="'+esc(item.t)+'">'+opts.map(function(o){
+      return '<label><input type="radio" name="c-'+item.id+'" value="'+o[0]+'"'+(state===o[0]?' checked':'')+'><span class="'+o[0]+'">'+o[1]+'</span></label>';
+    }).join('')+'</div>';
+  }
+  function itemHtml(item,m){
+    var st=m.checks[item.id]||'',note=m.notes[item.id]||'';
+    return '<div class="item" data-item="'+item.id+'" data-state="'+st+'">'+
+      '<div class="ihead"><div class="ititle">'+esc(item.t)+'</div><span class="sev '+item.sev+'">'+SEV[item.sev]+'</span></div>'+
+      '<p class="iwhy">'+esc(item.w)+'</p>'+
+      '<div class="irow">'+segHtml(item,st)+'<button class="linkbtn" type="button" data-addnote="'+item.id+'"'+(note?' hidden':'')+'>Add note</button></div>'+
+      '<textarea class="textarea" id="n-'+item.id+'" data-note="'+item.id+'" rows="2" placeholder="What you saw or heard"'+(note?'':' hidden')+' aria-label="Note for: '+esc(item.t)+'">'+esc(note)+'</textarea>'+
+    '</div>';
+  }
+  function renderDetail(){
+    var m=docs[currentId];if(!m){showList();return}
+    var html='';
+    if(m.example)html+='<div class="banner">This is a made-up example so you can see how a filled-in check looks. Delete it once you add your own.</div>';
+    html+='<div class="banner" id="save-error" hidden></div>';
+    html+='<div class="fields">'+
+      '<div class="field full"><label for="f-label">Listing</label><input class="input" id="f-label" type="text" placeholder="e.g. Marketplace, black V5 with bottomless portafilter" value="'+esc(m.label)+'"></div>'+
+      '<div class="field"><label for="f-asking">Asking price</label><div class="money"><span>$</span><input id="f-asking" type="number" inputmode="decimal" min="0" step="1" placeholder="0" value="'+(m.asking!=null?m.asking:'')+'"></div></div>'+
+      '<div class="field"><label for="f-version">Version</label><select class="select" id="f-version">'+VERSIONS.map(function(v){return '<option value="'+v[0]+'"'+(m.version===v[0]?' selected':'')+'>'+v[1]+'</option>'}).join('')+'</select></div>'+
+      '<div class="field"><label for="f-seen">Date seen</label><input class="input" id="f-seen" type="date" value="'+esc(m.seen)+'"></div>'+
+      '<div class="field"><label for="f-url">Listing link</label><input class="input" id="f-url" type="url" inputmode="url" placeholder="https://" value="'+esc(m.url)+'"><span class="hint" id="f-url-open"></span></div>'+
+    '</div>';
+    html+='<div class="panel" aria-labelledby="pc-h">'+
+      '<div class="panel-h"><h2 id="pc-h">Price check</h2></div>'+
+      '<div class="gauge" aria-hidden="true">'+
+        '<div class="track"></div>'+
+        '<div class="band used" style="left:'+gpos(400)+'%;width:'+(gpos(800)-gpos(400))+'%"></div>'+
+        '<div class="band new" style="left:'+gpos(900)+'%;width:'+(gpos(1000)-gpos(900))+'%"></div>'+
+        '<span class="band-l" style="left:'+gpos(600)+'%">Used, typical</span>'+
+        '<span class="band-l" style="left:'+gpos(950)+'%">New</span>'+
+        [400,600,800,1000].map(function(x){return '<span class="tickl" style="left:'+gpos(x)+'%">'+fmt(x)+'</span>'}).join('')+
+        '<div class="marker" id="g-marker" hidden></div>'+
+      '</div>'+
+      '<p class="pmsg" id="p-msg"></p>'+
+      '<div class="ptot" id="p-tot"></div>'+
+    '</div>';
+    html+='<div class="progress" id="progress"><div class="pbar" id="pbar"></div><div class="ptext" id="ptext"></div></div>';
+    SECTIONS.forEach(function(s){
+      html+='<section class="sec" aria-labelledby="s-'+s.id+'">'+
+        '<div class="sec-h"><h2 id="s-'+s.id+'">'+esc(s.title)+'</h2><span class="n" data-secn="'+s.id+'"></span></div>'+
+        (s.intro?'<p class="sec-intro">'+esc(s.intro)+'</p>':'')+
+        s.items.map(function(i){return itemHtml(i,m)}).join('')+
+      '</section>';
+    });
+    html+='<section class="verdict" aria-labelledby="v-h">'+
+      '<div class="sec-h"><h2 id="v-h">Your verdict</h2></div>'+
+      '<div class="vseg" role="radiogroup" aria-labelledby="v-h">'+VERDICTS.map(function(v){
+        return '<label><input type="radio" name="verdict" value="'+v[0]+'"'+(m.verdict===v[0]?' checked':'')+'><span class="'+v[0]+'">'+v[1]+'</span></label>';
+      }).join('')+'</div>'+
+      '<div class="fields">'+
+        '<div class="field"><label for="f-offer">Your offer</label><div class="money"><span>$</span><input id="f-offer" type="number" inputmode="decimal" min="0" step="1" placeholder="0" value="'+(m.offer!=null?m.offer:'')+'"></div></div>'+
+        '<div class="field full"><label for="f-summary">Notes</label><textarea class="textarea" id="f-summary" rows="3" placeholder="Overall impression, what the seller said, anything to follow up on">'+esc(m.summary)+'</textarea></div>'+
+      '</div>'+
+    '</section>';
+    html+='<div class="dfoot"><button class="btn" id="back2" type="button">All machines</button><button class="btn danger" id="del" type="button">Delete this machine</button></div>';
+    $('detail').innerHTML=html;
+    updateDetail();
+  }
+  function updateDetail(){
+    var m=docs[currentId];if(!m)return;
+    var a=m.asking,pv=priceVerdict(a),mk=$('g-marker');
+    if(a!=null){mk.hidden=false;mk.style.left=gpos(a)+'%'}else mk.hidden=true;
+    var pm=$('p-msg');pm.textContent=pv.msg;pm.className='pmsg '+pv.cls;
+    var tot='';
+    if(a!=null)tot+='<span>Build total at this price</span><b>'+fmt(a+BUILD_LO)+' – '+fmt(a+BUILD_HI)+'</b>';
+    if(m.offer!=null)tot+='<span style="flex-basis:100%;height:0"></span><span>At your offer</span><b>'+fmt(m.offer+BUILD_LO)+' – '+fmt(m.offer+BUILD_HI)+'</b>';
+    $('p-tot').innerHTML=tot;$('p-tot').hidden=!tot;
+    var u=(m.url||'').trim();
+    $('f-url-open').innerHTML=/^https?:\/\/\S+$/i.test(u)?'<a href="'+esc(u)+'" target="_blank" rel="noopener">Open listing</a>':'';
+    var t=tally(m);
+    $('pbar').innerHTML=
+      (t.ok?'<span style="flex-grow:'+t.ok+';background:var(--good)"></span>':'')+
+      (t.issue?'<span style="flex-grow:'+t.issue+';background:var(--bad)"></span>':'')+
+      (t.skip?'<span style="flex-grow:'+t.skip+';background:var(--muted)"></span>':'')+
+      ((t.total-t.done)?'<span style="flex-grow:'+(t.total-t.done)+';background:transparent"></span>':'');
+    $('ptext').innerHTML='<span>'+t.done+' of '+t.total+' checked</span><span>'+t.ok+' OK</span><span>'+t.issue+' problem'+(t.issue===1?'':'s')+'</span>'+(t.deal?'<span class="bad">'+t.deal+' deal-breaker'+(t.deal===1?'':'s')+'</span>':'');
+    SECTIONS.forEach(function(s){
+      var d=s.items.filter(function(i){return m.checks[i.id]}).length;
+      var el=document.querySelector('[data-secn="'+s.id+'"]');if(el)el.textContent=d+' / '+s.items.length;
+    });
+  }
+
+  /* ---------- navigation ---------- */
+  function openDetail(id){
+    currentId=id;$('list-view').hidden=true;$('detail-view').hidden=false;
+    renderDetail();window.scrollTo(0,0);
+  }
+  function showList(){
+    var id=currentId;currentId=null;
+    if(id&&timers[id]){clearTimeout(timers[id]);timers[id]=null;flush(id)}
+    $('detail-view').hidden=true;$('list-view').hidden=false;renderList();window.scrollTo(0,0);
+  }
+
+  /* ---------- events ---------- */
+  $('add').addEventListener('click',function(){
+    if(mode==='loading')return;
+    var id=newId(),now=Date.now();
+    docs[id]=normalize({label:'',seen:today(),createdAt:now,updatedAt:now});
+    pendingCreate[id]=true;
+    openDetail(id);scheduleSave(id,true);
+    var f=$('f-label');if(f)f.focus();
+  });
+  $('cards').addEventListener('click',function(e){var b=e.target.closest('[data-open]');if(b)openDetail(b.getAttribute('data-open'))});
+  $('back').addEventListener('click',showList);
+
+  var detail=$('detail');
+  detail.addEventListener('input',function(e){
+    var m=docs[currentId];if(!m)return;var t=e.target;
+    if(t.id==='f-label')m.label=t.value;
+    else if(t.id==='f-url')m.url=t.value;
+    else if(t.id==='f-summary')m.summary=t.value;
+    else if(t.id==='f-asking'||t.id==='f-offer'){
+      var key=t.id==='f-asking'?'asking':'offer';
+      if(t.value===''){m[key]=null}else{var n=Number(t.value);if(!isFinite(n)||n<0)return;m[key]=Math.round(n)}
+    }
+    else if(t.hasAttribute('data-note')){var k=t.getAttribute('data-note');if(t.value)m.notes[k]=t.value;else delete m.notes[k]}
+    else return;
+    touch();updateDetail();
+  });
+  detail.addEventListener('change',function(e){
+    var m=docs[currentId];if(!m)return;var t=e.target;
+    if(t.id==='f-version')m.version=t.value;
+    else if(t.id==='f-seen')m.seen=t.value;
+    else if(t.name==='verdict')m.verdict=t.value;
+    else if(t.name&&t.name.indexOf('c-')===0){
+      var k=t.name.slice(2);m.checks[k]=t.value;
+      var it=detail.querySelector('[data-item="'+k+'"]');if(it)it.setAttribute('data-state',t.value);
+    }
+    else return;
+    touch();updateDetail();
+  });
+  var armTimer=null;
+  detail.addEventListener('click',function(e){
+    var t=e.target;
+    var an=t.closest('[data-addnote]');
+    if(an){var k=an.getAttribute('data-addnote');an.hidden=true;var ta=$('n-'+k);ta.hidden=false;ta.focus();return}
+    if(t.id==='back2'){showList();return}
+    if(t.id==='del'){
+      if(!t.classList.contains('armed')){
+        t.classList.add('armed');t.textContent='Tap again to delete';
+        clearTimeout(armTimer);armTimer=setTimeout(function(){t.classList.remove('armed');t.textContent='Delete this machine'},4000);
+        return;
+      }
+      clearTimeout(armTimer);
+      var id=currentId;clearTimeout(timers[id]);timers[id]=null;
+      delete docs[id];delete pendingCreate[id];currentId=null;
+      if(mode==='db'&&!readOnly){
+        (chains[id]||Promise.resolve()).then(function(){return col.doc(id).delete()}).catch(onWriteError);
+      }else saveLocal();
+      showList();
+    }
+  });
+
+  renderList();setStatus('loading');
+  connect();
+})();
+</script>

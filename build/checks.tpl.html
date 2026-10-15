@@ -1,0 +1,489 @@
+<title>Silvia Power-On Checks</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Layout: rating-plate header and the unplugged warning, a gate readout (ready or not), run picker and meter setup, then seven sections of checks. Each check: probe points, switch position, expected reading, the reading you got, and an automatic pass or fail. */
+:root{
+  --bg:#ECEEF0; --surface:#F9FAFA; --surface-2:#E2E5E8; --ink:#16191C; --muted:#59616A; --line:#CBD0D5;
+  --accent:#D98400; --accent-ink:#965300; --accent-soft:#F4E1C0; --on-accent:#1A1206;
+  --good:#2D7A4C; --good-soft:#DCEFE3; --bad:#B13A2F; --bad-soft:#F6DEDB;
+  --f-display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  --f-body:"Barlow",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#111316; --surface:#1A1D21; --surface-2:#252A30; --ink:#E7E9EB; --muted:#9BA2AA; --line:#30363D;
+    --accent:#F2A33A; --accent-ink:#F5B566; --accent-soft:#3B2B13; --on-accent:#1A1206;
+    --good:#63C08A; --good-soft:#17301F; --bad:#EC7064; --bad-soft:#3A1D1A;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#111316; --surface:#1A1D21; --surface-2:#252A30; --ink:#E7E9EB; --muted:#9BA2AA; --line:#30363D;
+  --accent:#F2A33A; --accent-ink:#F5B566; --accent-soft:#3B2B13; --on-accent:#1A1206;
+  --good:#63C08A; --good-soft:#17301F; --bad:#EC7064; --bad-soft:#3A1D1A;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:var(--accent-ink);text-underline-offset:3px}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.wrap{max-width:980px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 64px}
+.top{display:grid;gap:14px;margin-bottom:20px}
+.plate{display:inline-flex;align-items:center;flex-wrap:wrap;gap:6px 12px;justify-self:start;max-width:100%;border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:7px 12px;font:500 11.5px/1.3 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.plate .rivet{width:6px;height:6px;border-radius:50%;background:var(--line);box-shadow:inset 0 0 0 1px var(--muted);opacity:.7}
+.plate b{color:var(--ink);font-weight:600}
+/* rivets pinned to the plate's ends so a wrapped plate never leaves one on a line of its own */
+.plate{position:relative;padding:7px 26px}.plate .rivet{position:absolute;top:calc(50% - 3px);left:10px}.plate .rivet:last-child{left:auto;right:10px}
+h1{font:700 clamp(36px,6.4vw,56px)/.95 var(--f-display);letter-spacing:.01em;margin:0;text-transform:uppercase;text-wrap:balance}
+h2{font:600 22px/1.1 var(--f-display);letter-spacing:.05em;text-transform:uppercase;margin:0}
+.lede{margin:0;color:var(--muted);max-width:66ch;font-size:17px}
+.warn{border:1px solid var(--bad);background:var(--bad-soft);border-radius:10px;padding:12px 16px;display:grid;gap:4px}
+.warn strong{font:600 13px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--bad)}
+.warn p{margin:0;font-size:15.5px}
+
+.gate{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:14px 18px;border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:16px 18px;margin:22px 0 12px}
+.gate .lampbig{width:22px;height:22px;border-radius:50%;background:var(--surface-2);box-shadow:inset 0 0 0 2px var(--line)}
+.gate.ready .lampbig{background:var(--good);box-shadow:0 0 0 5px var(--good-soft)}
+.gate.failed .lampbig{background:var(--bad);box-shadow:0 0 0 5px var(--bad-soft)}
+.gate.going .lampbig{background:var(--accent);box-shadow:0 0 0 5px var(--accent-soft)}
+.gate .g-t{font:600 20px/1.2 var(--f-display);letter-spacing:.04em;text-transform:uppercase}
+.gate .g-s{font-size:14.5px;color:var(--muted)}
+.counts{display:flex;gap:16px;font:500 13px var(--f-mono);font-variant-numeric:tabular-nums;color:var(--muted);flex-wrap:wrap;justify-content:flex-end}
+.counts b{font-weight:600;color:var(--ink);font-size:18px;display:block;line-height:1.1}
+@media (max-width:640px){.gate{grid-template-columns:auto minmax(0,1fr)}.counts{grid-column:1 / -1;justify-content:flex-start}}
+.bar{display:flex;height:8px;border-radius:3px;overflow:hidden;background:var(--surface-2);gap:2px;margin-bottom:22px}
+.bar span{display:block;height:100%}
+
+.setup{border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:14px 18px;display:grid;gap:14px}
+.runrow{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px}
+.runchip{appearance:none;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 13px;font:600 14px var(--f-body);cursor:pointer;min-height:36px}
+.runchip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.linkbtn{appearance:none;border:0;background:none;padding:6px 2px;font:500 14px var(--f-body);color:var(--accent-ink);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.linkbtn.danger{color:var(--bad)}
+.status{margin-left:auto;font:500 12px var(--f-mono);color:var(--muted);display:inline-flex;align-items:center;gap:7px}
+.lamp{width:8px;height:8px;border-radius:50%;background:var(--line)}
+.status.ok .lamp{background:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 18px}
+@media (max-width:640px){.fields{grid-template-columns:minmax(0,1fr)}}
+.f{display:grid;gap:4px;min-width:0}
+.k{font:600 11px var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.unitbox{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:8px;background:var(--surface);height:40px;padding:0 10px;max-width:100%}
+.unitbox input{border:0;background:transparent;width:11ch;font:500 15px var(--f-mono);outline:none;font-variant-numeric:tabular-nums}
+.unitbox span{font:500 13px var(--f-mono);color:var(--muted)}
+.unitbox:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.f small{font-size:13px;color:var(--muted)}
+.f .unitbox{justify-self:start}
+
+.sec{margin-top:30px}
+.sec-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;border-bottom:2px solid var(--ink);padding-bottom:6px}
+.sec-h .sum{font:500 13px var(--f-mono);color:var(--muted);white-space:nowrap}
+.sec-intro{margin:8px 0 0;color:var(--muted);font-size:15px;max-width:72ch}
+.item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 18px;padding:14px 0 14px 14px;border-bottom:1px solid var(--line);border-left:3px solid var(--line)}
+.item[data-r="pass"]{border-left-color:var(--good)}
+.item[data-r="fail"]{border-left-color:var(--bad)}
+.i-main{min-width:0;display:grid;gap:4px}
+.i-title{font-weight:600;font-size:16.5px;line-height:1.35}
+.i-how{margin:0;color:var(--muted);font-size:14.5px;max-width:62ch}
+.i-tags{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.tag{font:600 10.5px/1 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;padding:4px 6px;border-radius:4px;background:var(--surface-2);color:var(--muted)}
+.tag.on{background:var(--accent-soft);color:var(--accent-ink)}
+.exp{font:500 13px var(--f-mono);color:var(--ink)}
+.i-side{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:8px;align-content:start}
+.read{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:8px;background:var(--surface);height:40px;overflow:hidden}
+.read input{border:0;background:transparent;width:8ch;padding:0 8px;font:500 15px var(--f-mono);outline:none;font-variant-numeric:tabular-nums}
+.read select{border:0;border-left:1px solid var(--line);background:var(--surface-2);height:100%;padding:0 6px;font:500 13px var(--f-mono);cursor:pointer}
+.read:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.olbtn,.pf{appearance:none;border:1px solid var(--line);background:var(--surface);border-radius:8px;height:40px;padding:0 12px;font:600 13px var(--f-mono);cursor:pointer;letter-spacing:.05em}
+.olbtn[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.pf[aria-pressed="true"][data-v="pass"]{background:var(--good-soft);border-color:var(--good);color:var(--good)}
+.pf[aria-pressed="true"][data-v="fail"]{background:var(--bad-soft);border-color:var(--bad);color:var(--bad)}
+.res{font:600 12px var(--f-mono);letter-spacing:.07em;text-transform:uppercase;min-width:8.5ch;text-align:center;padding:6px 8px;border-radius:999px;background:var(--surface-2);color:var(--muted)}
+.res.pass{background:var(--good-soft);color:var(--good)}
+.res.fail{background:var(--bad-soft);color:var(--bad)}
+.fix{grid-column:1 / -1;margin:0;font-size:14.5px;color:var(--bad);max-width:74ch}
+@media (max-width:640px){.item{grid-template-columns:minmax(0,1fr)}.i-side{justify-content:flex-start}}
+
+.notes{margin-top:30px;display:grid;gap:6px}
+.textarea{width:100%;min-height:90px;border:1px solid var(--line);border-radius:9px;background:var(--surface);padding:10px 12px;font-size:15px;line-height:1.45;resize:vertical}
+.textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.foot{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);display:grid;gap:8px}
+.links{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:15px}
+.fine{margin:0;font-size:14px;color:var(--muted);max-width:80ch}
+a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
+a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
+.hdr-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.pbtn{appearance:none;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 16px;font:600 15px var(--f-body);cursor:pointer;min-height:44px}
+.print-only{display:none}
+@media print{
+  :root,:root[data-theme="dark"],:root:not([data-theme="light"]){--bg:#fff;--surface:#fff;--surface-2:#eee;--ink:#000;--muted:#333;--line:#888;--accent:#000;--accent-ink:#000;--accent-soft:#fff;--good:#000;--good-soft:#fff;--bad:#000;--bad-soft:#fff;color-scheme:light}
+  @page{margin:12mm 11mm}
+  body{background:#fff;color:#000;font-size:10pt;line-height:1.3}
+  .wrap{max-width:none;padding:0}
+  .lede,.bar,.runrow,.i-side,.foot,[data-print],.fix{display:none!important}
+  .print-only{display:block}
+  #print-for{display:block;font-size:10pt}
+  h1{font-size:22pt}
+  .top{gap:6px;margin-bottom:4mm}
+  .warn{border:1pt solid #000;padding:2mm 3mm}
+  .warn strong,.warn p{color:#000}
+  .gate{margin:3mm 0;padding:2mm 3mm;border:1pt solid #000;border-radius:2mm}
+  .gate .lampbig{display:none}
+  .setup{border:1pt solid #000;padding:2mm 3mm;gap:2mm}
+  .fields{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .unitbox{border:.6pt solid #000;height:7mm}
+  input::placeholder{color:transparent}
+  .sec{margin-top:5mm}
+  .sec-h{border-bottom:1.2pt solid #000;break-after:avoid}
+  .sec-intro{font-size:9pt;margin:1mm 0 0;break-after:avoid}
+  .item{grid-template-columns:minmax(0,1fr);padding:1.8mm 0 1.8mm 2mm;border-left:.8pt solid #000;break-inside:avoid;gap:1mm}
+  .i-title{font-size:10.5pt}
+  .i-how{font-size:9pt;color:#222}
+  .tag{border:.5pt solid #000;background:#fff;color:#000}
+  .exp{font-size:9pt}
+  .pline{font-size:9.5pt}
+  .pblank{display:inline-block;width:32mm;border-bottom:.6pt solid #000;margin-right:4mm;vertical-align:-1mm}
+  .pbx{display:inline-block;width:3.6mm;height:3.6mm;border:.8pt solid #000;vertical-align:-.7mm;margin:0 1mm 0 3mm}
+  .notes{break-inside:avoid}
+  .textarea{border:.6pt solid #000;min-height:30mm;background:repeating-linear-gradient(to bottom,transparent 0,transparent 6.6mm,#bbb 6.6mm,#bbb 6.9mm)}
+}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="plate" aria-label="Build spec">
+      <span class="rivet" aria-hidden="true"></span>
+      <span><b>Pre-power-on</b></span><span>Rancilio Silvia</span><span>Unplugged</span><span>Multimeter</span>
+      <span class="rivet" aria-hidden="true"></span>
+    </div>
+    <h1>Silvia Power&#8209;On Checks</h1>
+    <p class="lede">Every check to pass before the rebuilt Silvia is plugged in for the first time. Type in what the meter shows and each check marks itself pass or fail. Run IDs like AC3 match the <a href="%%LINK_WIRING%%" target="_blank" rel="noopener">wiring reference</a>.</p>
+    <div class="warn" role="note">
+      <strong>Unplugged for every step</strong>
+      <p>Pull the cord from the wall and from the machine's inlet before you start, and keep it out until every check passes. A basic multimeter catches shorts, open circuits and wrong connections, but it can't test insulation under voltage. For first power-on, use a <span data-mtext="outlet">GFCI-protected outlet</span> and keep the covers on.</p>
+    </div>
+    <div class="hdr-actions"><button type="button" class="pbtn" data-print hidden>Print the checklist</button><span class="print-only" id="print-for"></span>
+    </div>
+  </header>
+
+  <section class="gate" id="gate" aria-live="polite">
+    <span class="lampbig" aria-hidden="true"></span>
+    <div><div class="g-t" id="g-t">Not started</div><div class="g-s" id="g-s"></div></div>
+    <div class="counts"><span><b id="c-pass">0</b>passed</span><span><b id="c-fail">0</b>failed</span><span><b id="c-left">0</b>to do</span></div>
+  </section>
+  <div class="bar" id="bar" aria-hidden="true"></div>
+
+  <section class="setup" aria-label="Run and meter setup">
+    <div class="runrow">
+      <span class="k">Run</span>
+      <span id="runs"></span>
+      <button class="linkbtn" id="newrun" type="button">Start a new run</button>
+      <button class="linkbtn danger" id="delrun" type="button">Delete this run</button>
+      <span class="status" id="status"><span class="lamp"></span><span id="status-text">Loading</span></span>
+    </div>
+    <div class="fields">
+      <div class="f"><label class="k" for="leads">Meter leads touched together</label><span class="unitbox"><input id="leads" type="number" inputmode="decimal" min="0" step="0.01" placeholder="0.2"><span>Ω</span></span><small>Subtracted from the "under 1 Ω" checks.</small></div>
+      <div class="f"><label class="k" for="watts">Element power, from the rating plate</label><span class="unitbox"><input id="watts" type="number" inputmode="numeric" min="100" step="10" placeholder="e.g. 1100"><span>W</span></span><small id="watts-s">Sets the expected element resistance.</small></div>
+      <div class="f"><label class="k" for="volts">Rated voltage</label><span class="unitbox"><input id="volts" type="number" inputmode="numeric" min="100" step="1" placeholder="120/230"><span>V</span></span><small id="volts-s">From the same plate: 120 V in North America, 230 V in most other places.</small></div>
+    </div>
+  </section>
+
+  <div id="sections"></div>
+
+  <section class="notes">
+    <label class="k" for="notes">Notes for this run</label>
+    <textarea class="textarea" id="notes" placeholder="What failed, what you changed, who double-checked the harness"></textarea>
+  </section>
+
+  <footer class="foot">
+    <div class="links">
+      <a href="%%LINK_RUNBOOK%%" target="_blank" rel="noopener">Install runbook</a>
+      <a href="%%LINK_WIRING%%" target="_blank" rel="noopener">Wiring reference</a>
+      <a href="%%LINK_LABELS%%" target="_blank" rel="noopener">Wire labels</a>
+    </div>
+    <p class="fine">Built from section 8 of the build plan, the official Gaggiuino custom wiring, PCB and grounding guides, and realNiche's Silvia diagram. Expected readings are what a sound circuit shows on a basic meter; when a reading looks odd but passes, trust the odd feeling and trace it.</p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var SECTIONS=[
+    {id:'a',name:'Before you measure',intro:'Get the machine safe and the meter ready.',items:[
+      {id:'a1',t:'Cord out of the wall and out of the machine',how:'Both ends. The inlet pins are your probe points for the next sections.',type:'check'},
+      {id:'a2',t:'Meter set to resistance or continuity',how:'Lowest Ω range. Touch the leads together and enter that reading under Meter leads above.',type:'check'},
+      {id:'a3',t:'Harness complete and every spade seated',how:'All runs fitted, including the PCB spades J10 to J13. The PCB stays connected unless a check says otherwise.',type:'check'}
+    ]},
+    {id:'b',name:'Earth',intro:'Earth must reach every exposed metal part and must stay off the 5 V side.',items:[
+      {id:'b1',t:'Inlet earth pin ↔ bare chassis metal',how:'Use a screw head or a scratch-free bare spot on the frame.',type:'low',fix:'Earth isn\'t reaching the chassis. Check the inlet earth lead (G1) and its spades.'},
+      {id:'b2',t:'Inlet earth pin ↔ boiler ground spade',how:'Through G1.',type:'low',fix:'Check G1 and its boiler-end spade.'},
+      {id:'b3',t:'Inlet earth pin ↔ solenoid ground spade',how:'Through G1 and G2.',type:'low',fix:'Check G2 and its spades at the solenoid and boiler.'},
+      {id:'b4',t:'Inlet earth pin ↔ group head',how:'Where the portafilter locks in.',type:'low',fix:'The group isn\'t earthed through the boiler. Find the break before going further.'},
+      {id:'b5',t:'Inlet earth pin ↔ PCB 5 V ground (J7 GND pin)',how:'Earth and the 5 V ground must never meet; the DC side floats so the thermocouple reads correctly.',type:'open',fix:'Something joins earth to the 5 V ground. Look for a grounded thermocouple, a pinched low-voltage wire, or a sensor touching metal.'},
+      {id:'b6',t:'Thermocouple lead ↔ boiler body',how:'Unclamp the thermocouple wires from J4 and probe either wire against the boiler. Fold them over again when they go back in.',type:'open',tags:['J4 unclamped'],fix:'This is a grounded thermocouple, or its insulation is damaged. Gaggiuino needs the ungrounded type.'}
+    ]},
+    {id:'c',name:'Shorts',intro:'With the power switch ON (still unplugged), mains must not reach earth or the 5 V side.',items:[
+      {id:'c1',t:'Inlet L ↔ inlet earth',how:'Highest Ω range.',type:'open',tags:['Power ON'],fix:'Line touches earth somewhere. Look for a bare spade or crushed insulation against the frame.'},
+      {id:'c2',t:'Inlet N ↔ inlet earth',how:'Highest Ω range.',type:'open',tags:['Power ON'],fix:'Neutral touches earth somewhere.'},
+      {id:'c3',t:'Inlet L ↔ J7 GND (5 V side)',how:'Highest Ω range.',type:'open',tags:['Power ON'],fix:'Mains reaches the 5 V side. Don\'t power it. Check the switch wiring and anything near the PCB.'},
+      {id:'c4',t:'Inlet N ↔ J7 GND (5 V side)',how:'Highest Ω range.',type:'open',tags:['Power ON'],fix:'Mains reaches the 5 V side. Don\'t power it.'},
+      {id:'c6',t:'PCB J12 spade ↔ inlet earth',how:'The pump output, checked directly because the pump\'s diode can hide a fault on this side.',type:'open',fix:'The pump output or its wiring touches earth.'},
+      {id:'c7',t:'PCB J13 spade ↔ inlet earth',how:'The solenoid output.',type:'open',fix:'The solenoid output or its wiring touches earth.'},
+      {id:'c5',t:'Inlet L ↔ inlet N',how:'May read OL, or a high value that climbs as the PCB\'s supply charges.',type:'notshort',tags:['Power ON'],fix:'Under 100 Ω means a short, or the element bypassing the SSR: a reading near the element\'s expected resistance (shown under Element power) means the SSR is passing current or the element is wired around it. Find it before plugging in.'}
+    ]},
+    {id:'d',name:'Path continuity',intro:'Each mains path is whole, and the power switch breaks both line and neutral.',items:[
+      {id:'d1',t:'Inlet L ↔ PCB J11 spade',how:'AC1, the switch, AC3, SSR terminal 1, AC4.',type:'low',tags:['Power ON'],fix:'Break in the line path. Check each spade on AC1, AC3 and AC4 and the shared fork at SSR terminal 1.'},
+      {id:'d2',t:'Inlet N ↔ PCB J10 spade',how:'AC2, the switch, then the neutral chain AC8, AC10, AC11, AC12.',type:'low',tags:['Power ON'],fix:'Break in the neutral chain. Check each doubled spade along it.'},
+      {id:'d3',t:'Inlet N ↔ element terminal 2',how:'AC2, the switch, AC9.',type:'low',tags:['Power ON'],fix:'Check AC9 and its boiler-end spade.'},
+      {id:'d4',t:'SSR load terminal 2 ↔ element terminal 1',how:'AC5, the safety thermostat, AC6.',type:'low',fix:'Open safety thermostat or a bad crimp on AC5 or AC6. Never bridge the thermostat.'},
+      {id:'d5',t:'PCB J13 ↔ solenoid coil spade',how:'AC13.',type:'low',fix:'Check AC13.'},
+      {id:'d6',t:'PCB J12 ↔ pump coil terminal',how:'AC14.',type:'low',fix:'Check AC14.'},
+      {id:'d7',t:'Inlet L ↔ PCB J11 spade',how:'Same as above, switch off. Should now be open.',type:'open',tags:['Power OFF'],fix:'The switch isn\'t breaking line. Check that the inlet goes to the outer spades and the loads to the center spades.'},
+      {id:'d8',t:'Inlet N ↔ PCB J10 spade',how:'Switch off. Should now be open.',type:'open',tags:['Power OFF'],fix:'The switch isn\'t breaking neutral.'}
+    ]},
+    {id:'e',name:'Components',intro:'Readings worth keeping. Take one lead off where it says so, so other paths don\'t skew the number.',items:[
+      {id:'e1',t:'Boiler element, across its two terminals',how:'One element lead off. If the element has its own wattage stamped on it, use that above rather than the machine plate, which includes the pump.',type:'range',tags:['One lead off'],fix:'Far from the expected value suggests a damaged element or a reading through another path. Recheck with both leads off.'},
+      {id:'e2',t:'Element terminal ↔ boiler body',how:'Either terminal.',type:'open',fix:'The element is leaking to its sheath. Don\'t power it; the element needs replacing.'},
+      {id:'e3',t:'Safety thermostat (165 °C), across it, cold',how:'Leads can stay on.',type:'low',fix:'Open when cold: tripped or failed. Some have a reset button; otherwise replace it. Never bypass it.'},
+      {id:'e4',t:'Pump thermal fuse, across it',how:'The fuse on the pump\'s neutral side; realNiche\'s diagram shows a 110 °C one. No fuse on yours: measure from the AC10 spade to the pump terminal instead.',type:'low',fix:'An open pump fuse needs replacing before the pump will run.'},
+      {id:'e5',t:'Pump coil',how:'Across the pump\'s two terminals, leads off. Ulka pumps have a diode in series, so measure with the probes one way, then swapped, and enter the lower reading. OL one way is normal; press OL only if it reads OL both ways.',type:'coil',tags:['Leads off','Both ways'],fix:'OL both ways means an open coil or fuse; near zero means a shorted coil.'},
+      {id:'e6',t:'Solenoid coil',how:'Across its two coil spades, leads off. Record the value.',type:'coil',tags:['Leads off'],fix:'OL means an open coil; near zero means a shorted coil.'},
+      {id:'e7',t:'Thermocouple loop',how:'Across its two wires, unclamped from J4. A few ohms is normal.',type:'tc',tags:['J4 unclamped'],fix:'OL means a broken thermocouple or lead.'}
+    ]},
+    {id:'f',name:'Low-voltage inputs',intro:'Unplug the J7, J5 and J9 plugs from the PCB and probe the plug pins, so the board itself isn\'t in the reading.',items:[
+      {id:'f1',t:'Brew ON: J7 B ↔ J7 GND',how:'LV2 and the ground chain.',type:'low',tags:['Brew ON','Plugs off'],fix:'Check LV2, the brew switch ground pole and the ground chain.'},
+      {id:'f2',t:'Brew OFF: J7 B ↔ J7 GND',how:'',type:'open',tags:['Brew OFF','Plugs off'],fix:'Signal and ground are on spades that are always connected. Signal goes on the center spade and ground on the outer spade of the same pole.'},
+      {id:'f3',t:'Steam ON: J7 S ↔ J7 GND',how:'LV1 and the ground chain.',type:'low',tags:['Steam ON','Plugs off'],fix:'Check LV1 and the steam switch ground pole.'},
+      {id:'f4',t:'Steam OFF: J7 S ↔ J7 GND',how:'',type:'open',tags:['Steam OFF','Plugs off'],fix:'Signal and ground are on the wrong spades.'},
+      {id:'f5',t:'Hot water ON: J5 B15 ↔ J7 GND',how:'LV3 and the ground chain. B15, not A12.',type:'low',tags:['Hot water ON','Plugs off'],fix:'Check LV3, that it\'s on B15, and the ground chain.'},
+      {id:'f6',t:'Hot water OFF: J5 B15 ↔ J7 GND',how:'',type:'open',tags:['Hot water OFF','Plugs off'],fix:'Signal and ground are on the wrong spades.'},
+      {id:'f7',t:'J9 R1 pin ↔ SSR + terminal',how:'LV7.',type:'low',tags:['Plugs off'],fix:'R1 must go to the SSR\'s + control terminal.'},
+      {id:'f8',t:'J9 GND pin ↔ SSR − terminal',how:'LV8.',type:'low',tags:['Plugs off'],fix:'GND must go to the SSR\'s − control terminal.'},
+      {id:'f9',t:'Each switch signal pin ↔ chassis',how:'J7 S, J7 B and J5 B15 against bare metal.',type:'open',tags:['Plugs off'],fix:'A low-voltage wire touches the frame. Find the pinch.'}
+    ]},
+    {id:'g',name:'Look and pull',intro:'The checks a meter can\'t do.',items:[
+      {id:'g1',t:'Every boiler spade is uninsulated and wrapped in silicone tape',how:'No nylon-insulated spade within reach of the boiler; nylon is rated to 105 °C.',type:'check'},
+      {id:'g2',t:'Doubled terminals use spades sized for two 18 AWG wires',how:'Never two wires in a red spade. SSR terminal 1, the safety thermostat, the power switch neutral spade, the lamp, the pump, the solenoid and the boiler ground.',type:'check'},
+      {id:'g3',t:'Every crimp survives a firm tug',how:'Redo any that move.',type:'check'},
+      {id:'g4',t:'SSR: fork spades on all four terminals, screws tight',how:'Mounted on the left wall, clear of the pump.',type:'check'},
+      {id:'g5',t:'Safety thermostat sits between the SSR and the element',how:'And the pump thermal fuse is still in the pump path.',type:'check'},
+      {id:'g6',t:'J10 neutral, J11 line, J12 pump, J13 solenoid',how:'Checked against realNiche\'s diagram, spades pushed fully home.',type:'check'},
+      {id:'g7',t:'Nothing but 200 °C silicone wire touches the boiler or steam wand',how:'Mains routed high, low voltage low and to the right, not bundled together.',type:'check'},
+      {id:'g8',t:'Thermocouple finger tight, lead free to rotate',how:'Ungrounded type, routed around the front of the boiler.',type:'check'},
+      {id:'g9',t:'Screen cable protected at the vent; strain relief at the SSR',how:'An unshrunk heat-shrink sleeve where the cable passes the sharp vent edge.',type:'check'},
+      {id:'g10',t:'No stray strands or bare metal anywhere',how:'Every splice and spade covered.',type:'check'},
+      {id:'g11',t:'Plumbing snug and dry',how:'Loctite 55 on the tee and elbow threads only; the transducer seals on the flat O-ring pressed flush into its fitting, hand tight plus at most a quarter turn. Nothing kinked or resting on hot metal. The real leak test comes under pressure at first power-on.',type:'check'},
+      {id:'g12',t:'Someone else traced the harness against the wiring reference',how:'A second set of eyes, run by run.',type:'check'},
+      {id:'g13',t:'Everything plugged back in',how:'J4 thermocouple reclamped with the same + and − as on the bench, then J5, J7 and J9. Recheck J9 R1 to SSR + and GND to SSR − with the plug in.',type:'check'},
+      {id:'g15',t:'The power switch latches on and off by itself',how:'The harness relies on it breaking both line and neutral. The E model\'s push-button switch doesn\'t latch; it needs a double-pole rocker like the M model\'s.',type:'check'},
+      {id:'g14',t:'Stop immediately if the temperature falls while heating',how:'At first power-on, the reading must rise while the SSR light is on. If it falls, the thermocouple is reversed and the controller will heat nonstop. Switch off, unplug, swap the J4 wires.',type:'check'}
+    ]}
+  ];
+  var ITEMS={};SECTIONS.forEach(function(s){s.items.forEach(function(i){ITEMS[i.id]=i})});
+  var UNITS={'Ω':1,'kΩ':1e3,'MΩ':1e6};
+  var KEY='silvia-power-on-checks-v1';
+  function $(id){return document.getElementById(id)}
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+  function num(v){return (typeof v==='number'&&isFinite(v)&&v>=0)?v:null}
+  function today(){var d=new Date();return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}
+  function newId(){return 'r'+Date.now().toString(36)+Math.random().toString(36).slice(2,5)}
+
+  /* ---------- state ---------- */
+  function blankRun(n,prev){return {id:newId(),label:'Run '+n,created:today(),leads:prev?prev.leads:null,watts:prev?prev.watts:null,volts:prev?prev.volts:null,vals:{},notes:''}}
+  function defaults(){var r=blankRun(1);return {runs:[r],cur:r.id,updatedAt:0}}
+  function normalize(s){
+    if(!s||typeof s!=='object'||!Array.isArray(s.runs)||!s.runs.length)return defaults();
+    var out={runs:[],cur:'',updatedAt:typeof s.updatedAt==='number'?s.updatedAt:0};
+    s.runs.slice(0,40).forEach(function(r,i){
+      if(!r||typeof r!=='object')return;
+      var o={id:typeof r.id==='string'&&/^r[a-z0-9]+$/.test(r.id)?r.id:newId(),label:typeof r.label==='string'?r.label.slice(0,40):'Run '+(i+1),created:typeof r.created==='string'?r.created.slice(0,40):'',leads:num(r.leads),watts:num(r.watts),volts:num(r.volts),vals:{},notes:typeof r.notes==='string'?r.notes.slice(0,4000):''};
+      if(r.vals&&typeof r.vals==='object')Object.keys(r.vals).forEach(function(k){
+        if(!ITEMS[k])return;var v=r.vals[k];if(!v||typeof v!=='object')return;
+        var x={};if(num(v.v)!=null)x.v=num(v.v);if(UNITS[v.u])x.u=v.u;if(v.ol===true)x.ol=true;if(v.m==='pass'||v.m==='fail')x.m=v.m;
+        o.vals[k]=x;
+      });
+      out.runs.push(o);
+    });
+    if(!out.runs.length)return defaults();
+    out.cur=out.runs.some(function(r){return r.id===s.cur})?s.cur:out.runs[out.runs.length-1].id;
+    return out;
+  }
+  function run(){for(var i=0;i<state.runs.length;i++)if(state.runs[i].id===state.cur)return state.runs[i];return state.runs[0]}
+
+  /* ---------- evaluation ---------- */
+  function profVolts(){var m=window.SilviaMachine,p=m&&m.get();return p?p.volts:null}
+  function expectedR(r){var w=r.watts,v=r.volts||profVolts();return (w&&v)?(v*v/w):null}
+  function outlet(){var m=window.SilviaMachine;return m?m.text('outlet'):'GFCI-protected outlet (an RCD outside North America)'}
+  function plineHtml(it,r){
+    var v=r.vals[it.id]||{},res=result(it,r);
+    if(it.type==='check')return v.m?('<b>'+(v.m==='pass'?'✓ Pass':'✗ Fail')+'</b>'):'<span class="pbx"></span> Pass <span class="pbx"></span> Fail';
+    var read=v.ol?'OL':(v.v!=null?(v.v+' '+(v.u||'Ω')):'');
+    return read?('Reading: <b>'+esc(read)+'</b>'+(res?' · <b>'+(res==='pass'?'Pass':'Fail')+'</b>':'')):'Reading: <span class="pblank"></span> <span class="pbx"></span> Pass <span class="pbx"></span> Fail';
+  }
+  function expText(it,r){
+    switch(it.type){
+      case 'low':return 'Expect under 1 Ω';
+      case 'open':return 'Expect OL (open)';
+      case 'notshort':return 'Expect OL or over 100 Ω';
+      case 'range':var e=expectedR(r);return e?('Expect about '+e.toFixed(1)+' Ω (±15%)'):'Enter the element power and rated voltage above';
+      case 'coil':return 'Expect a steady value, not OL or 0';
+      case 'tc':return 'Expect a few Ω, not OL';
+      default:return '';
+    }
+  }
+  function result(it,r){
+    var v=r.vals[it.id]||{};
+    if(it.type==='check')return v.m||null;
+    if(v.ol){return (it.type==='open'||it.type==='notshort')?'pass':'fail'}
+    if(v.v==null)return null;
+    var ohm=v.v*(UNITS[v.u]||1),leads=r.leads||0,net=Math.max(0,ohm-leads);
+    switch(it.type){
+      case 'low':return net<=1?'pass':'fail';
+      case 'open':return ohm>=1e6?'pass':'fail';
+      case 'notshort':return ohm>=100?'pass':'fail';
+      case 'range':var e=expectedR(r);if(!e)return null;return Math.abs(net-e)<=e*0.15?'pass':'fail';
+      case 'coil':return (net>=1&&net<=1e5)?'pass':'fail';
+      case 'tc':return (net<1000)?'pass':'fail';
+    }
+    return null;
+  }
+
+  /* ---------- render ---------- */
+  function itemHtml(it,r){
+    var v=r.vals[it.id]||{},res=result(it,r);
+    var tags=(it.tags||[]).map(function(t){return '<span class="tag'+(/ON$/.test(t)?' on':'')+'">'+esc(t)+'</span>'}).join('');
+    var side='';
+    if(it.type==='check'){
+      side='<button type="button" class="pf" data-pf="'+it.id+'" data-v="pass" aria-pressed="'+(v.m==='pass')+'">Pass</button><button type="button" class="pf" data-pf="'+it.id+'" data-v="fail" aria-pressed="'+(v.m==='fail')+'">Fail</button>';
+    }else{
+      var u=v.u||'Ω';
+      side='<span class="read"><label class="vh" for="v-'+it.id+'">Reading for '+esc(it.t)+'</label><input id="v-'+it.id+'" data-v="'+it.id+'" type="number" inputmode="decimal" min="0" step="any" placeholder="—" value="'+(v.v!=null&&!v.ol?v.v:'')+'"'+(v.ol?' disabled':'')+'>'+
+        '<label class="vh" for="u-'+it.id+'">Unit</label><select id="u-'+it.id+'" data-u="'+it.id+'"'+(v.ol?' disabled':'')+'>'+Object.keys(UNITS).map(function(k){return '<option'+(k===u?' selected':'')+'>'+k+'</option>'}).join('')+'</select></span>'+
+        '<button type="button" class="olbtn" data-ol="'+it.id+'" aria-pressed="'+(!!v.ol)+'">OL</button>'+
+        '<span class="res '+(res||'')+'" data-res="'+it.id+'">'+(res==='pass'?'Pass':res==='fail'?'Fail':'—')+'</span>';
+    }
+    return '<div class="item" data-item="'+it.id+'" data-r="'+(res||'')+'">'+
+      '<div class="i-main"><div class="i-title">'+esc(it.t)+'</div>'+(it.how?'<p class="i-how">'+esc(it.how)+'</p>':'')+
+      '<div class="i-tags">'+tags+(it.type!=='check'?'<span class="exp" data-exp="'+it.id+'">'+esc(expText(it,r))+'</span>':'')+'</div></div>'+
+      '<div class="i-side">'+side+'</div>'+
+      '<div class="pline print-only" data-pline="'+it.id+'">'+plineHtml(it,r)+'</div>'+
+      '<p class="fix" data-fix="'+it.id+'"'+(res==='fail'&&it.fix?'':' hidden')+'>'+esc(it.fix||'')+'</p></div>';
+  }
+  function renderAll(){
+    var r=run();
+    $('runs').innerHTML=state.runs.map(function(x){return '<button type="button" class="runchip" data-run="'+x.id+'" aria-pressed="'+(x.id===r.id)+'">'+esc(x.label)+(x.created?' · '+esc(x.created):'')+'</button>'}).join(' ');
+    $('delrun').hidden=state.runs.length<2;
+    $('leads').value=r.leads!=null?r.leads:'';
+    $('watts').value=r.watts!=null?r.watts:'';
+    $('volts').value=r.volts!=null?r.volts:'';
+    $('notes').value=r.notes||'';
+    $('sections').innerHTML=SECTIONS.map(function(s){
+      return '<section class="sec" aria-labelledby="h-'+s.id+'"><div class="sec-h"><h2 id="h-'+s.id+'">'+esc(s.name)+'</h2><span class="sum" data-ssum="'+s.id+'"></span></div><p class="sec-intro">'+esc(s.intro)+'</p>'+s.items.map(function(it){return itemHtml(it,r)}).join('')+'</section>';
+    }).join('');
+    update();
+  }
+  function update(){
+    var r=run(),p=0,f=0,t=0;
+    SECTIONS.forEach(function(s){
+      var sp=0;
+      s.items.forEach(function(it){
+        t++;var res=result(it,r);
+        if(res==='pass'){p++;sp++}else if(res==='fail')f++;
+        var row=document.querySelector('[data-item="'+it.id+'"]');if(!row)return;
+        row.setAttribute('data-r',res||'');
+        var rs=row.querySelector('[data-res]');if(rs){rs.className='res '+(res||'');rs.textContent=res==='pass'?'Pass':res==='fail'?'Fail':'—'}
+        var fx=row.querySelector('[data-fix]');if(fx)fx.hidden=!(res==='fail'&&it.fix);
+        var ex=row.querySelector('[data-exp]');if(ex)ex.textContent=expText(it,r);
+        var pl=row.querySelector('[data-pline]');if(pl)pl.innerHTML=plineHtml(it,r);
+      });
+      var ss=document.querySelector('[data-ssum="'+s.id+'"]');if(ss)ss.textContent=sp+' of '+s.items.length;
+    });
+    var left=t-p-f;
+    $('c-pass').textContent=p;$('c-fail').textContent=f;$('c-left').textContent=left;
+    var g=$('gate');g.className='gate '+(f?'failed':(left?(p?'going':''):'ready'));
+    $('g-t').textContent=f?'Not ready to plug in':(left?(p?'Keep going':'Not started'):'Ready for first power-on');
+    $('g-s').textContent=f?(f+' check'+(f===1?' failed':'s failed')+'. Fix each one, then recheck it.'):(left?(left+' check'+(left===1?'':'s')+' still to do, all unplugged.'):'Every check passed. Plug into a '+outlet()+', covers on, and follow Phase 5 of the runbook.');
+    $('bar').innerHTML=[[p,'var(--good)'],[f,'var(--bad)']].map(function(x){return x[0]?'<span style="flex-grow:'+x[0]+';background:'+x[1]+'"></span>':''}).join('')+(left?'<span style="flex-grow:'+left+';background:transparent"></span>':'');
+    var e=expectedR(r);$('watts-s').textContent=e?('Expected element resistance: about '+e.toFixed(1)+' Ω'+(r.volts?'':' at '+profVolts()+' V, from Your Silvia')+'.'):(r.watts?'Enter the rated voltage too; the expected resistance depends on it.':'Sets the expected element resistance.');
+    var pv=profVolts();$('volts').placeholder=pv?String(pv):'120/230';
+    var pf=$('print-for');if(pf){var m=window.SilviaMachine;pf.textContent=(m&&m.get()?'For a '+m.label()+' Silvia. ':'')+'Run: '+run().label+(run().created?' · '+run().created:'')+'. Checked by: ______________'}
+  }
+  window.addEventListener('silvia-machine',function(){update()});
+
+  /* ---------- persistence ---------- */
+  var state=defaults(),dbRef=null,mode='local',readOnly=false,saveTimer=null,chain=Promise.resolve();
+  function loadLocal(){try{var s=localStorage.getItem(KEY);return s?normalize(JSON.parse(s)):null}catch(e){return null}}
+  function saveLocal(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
+  function setStatus(kind){
+    var txt={loading:'Loading',local:'Saved on this device',saving:'Saving',saved:'Saved',readonly:'View only: changes stay on this screen',full:'Storage is full: changes stay on this device'}[kind]||'';
+    $('status-text').textContent=txt;$('status').classList.toggle('ok',kind==='saved');
+  }
+  function writeOnce(body){return dbRef.set(body).catch(function(e){if(e&&e.code==='unavailable')return new Promise(function(r){setTimeout(r,700+Math.random()*900)}).then(function(){return dbRef.set(body)});throw e})}
+  function onWriteError(e){
+    if(e&&e.code==='quota_exceeded'){setStatus('full');return}
+    if(e&&(e.code==='invalid_argument'||e.code==='not_granted'||e.code==='revoked'||e.code==='capability_disabled'||e.code==='capability_removed')){readOnly=true;setStatus('readonly');return}
+    setStatus('local');
+  }
+  function scheduleSave(){
+    clearTimeout(saveTimer);
+    if(mode!=='db'){setStatus('local');return}
+    if(readOnly){setStatus('readonly');return}
+    setStatus('saving');
+    saveTimer=setTimeout(function(){var body=JSON.parse(JSON.stringify(state));chain=chain.then(function(){return writeOnce(body)}).then(function(){if(!readOnly)setStatus('saved')}).catch(onWriteError)},700);
+  }
+  function changed(){state.updatedAt=Date.now();saveLocal();update();scheduleSave()}
+  function setVal(id,patch){var r=run(),cur=Object.assign({},r.vals[id]||{},patch);Object.keys(cur).forEach(function(k){if(cur[k]==null||cur[k]===false)delete cur[k]});if(Object.keys(cur).length)r.vals[id]=cur;else delete r.vals[id];changed()}
+  function connect(){
+    var p;
+    try{p=(window.claude&&typeof window.claude.use==='function')?window.claude.use('db'):Promise.resolve(null)}catch(e){p=Promise.resolve(null)}
+    Promise.resolve(p).then(function(db){
+      if(!db){mode='local';setStatus('local');return}
+      dbRef=db.doc('checks/state');mode='db';
+      return dbRef.get().then(function(snap){
+        if(snap.exists){var remote=normalize(snap.data());if(remote.updatedAt>=state.updatedAt){state=remote;saveLocal();renderAll();setStatus('saved')}else scheduleSave()}
+        else if(state.updatedAt>0)scheduleSave();else setStatus('saved');
+      }).catch(function(e){if(e&&e.code==='unavailable'){mode='local';setStatus('local')}else onWriteError(e)});
+    }).catch(function(){mode='local';setStatus('local')});
+  }
+
+  /* ---------- events ---------- */
+  var sec=$('sections');
+  sec.addEventListener('input',function(e){
+    var id=e.target.getAttribute('data-v');if(!id)return;
+    var t=e.target.value;if(t===''){setVal(id,{v:null});return}
+    var n=Number(t);if(!isFinite(n)||n<0)return;setVal(id,{v:n,ol:null});
+  });
+  sec.addEventListener('change',function(e){var id=e.target.getAttribute('data-u');if(id)setVal(id,{u:e.target.value})});
+  sec.addEventListener('click',function(e){
+    var b=e.target.closest('[data-ol]');
+    if(b){var id=b.getAttribute('data-ol'),on=b.getAttribute('aria-pressed')!=='true';b.setAttribute('aria-pressed',String(on));
+      var inp=$('v-'+id),u=$('u-'+id);if(inp){inp.disabled=on;if(on)inp.value=''}if(u)u.disabled=on;
+      setVal(id,on?{ol:true,v:null}:{ol:null});return}
+    var pf=e.target.closest('[data-pf]');
+    if(pf){var pid=pf.getAttribute('data-pf'),val=pf.getAttribute('data-v'),cur=(run().vals[pid]||{}).m,next=cur===val?null:val;
+      Array.prototype.forEach.call(document.querySelectorAll('[data-pf="'+pid+'"]'),function(x){x.setAttribute('aria-pressed',String(x.getAttribute('data-v')===next))});
+      setVal(pid,{m:next})}
+  });
+  function setupNum(id,key){$(id).addEventListener('input',function(){var t=this.value,r=run();if(t===''){r[key]=null}else{var n=Number(t);if(!isFinite(n)||n<0)return;r[key]=n}changed()})}
+  setupNum('leads','leads');setupNum('watts','watts');setupNum('volts','volts');
+  $('notes').addEventListener('input',function(){run().notes=this.value.slice(0,4000);state.updatedAt=Date.now();saveLocal();scheduleSave()});
+  $('runs').addEventListener('click',function(e){var b=e.target.closest('[data-run]');if(!b)return;state.cur=b.getAttribute('data-run');state.updatedAt=Date.now();saveLocal();renderAll();scheduleSave()});
+  $('newrun').addEventListener('click',function(){var r=blankRun(state.runs.length+1,run());state.runs.push(r);state.cur=r.id;state.updatedAt=Date.now();saveLocal();renderAll();scheduleSave()});
+  var delArm=null;
+  $('delrun').addEventListener('click',function(){
+    var b=this;if(state.runs.length<2)return;
+    if(!delArm){b.textContent='Tap again to delete';delArm=setTimeout(function(){delArm=null;b.textContent='Delete this run'},4000);return}
+    clearTimeout(delArm);delArm=null;b.textContent='Delete this run';
+    var id=state.cur;state.runs=state.runs.filter(function(x){return x.id!==id});state.cur=state.runs[state.runs.length-1].id;
+    state.updatedAt=Date.now();saveLocal();renderAll();scheduleSave();
+  });
+
+  state=loadLocal()||defaults();
+  renderAll();setStatus('loading');
+  connect();
+})();
+</script>

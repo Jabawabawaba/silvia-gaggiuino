@@ -1,0 +1,575 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui}img{max-width:100%}[hidden]{display:none!important}</style><title>Silvia Wire Labels</title>
+<style>
+.site-nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;font:500 14px/1.35 "Barlow",system-ui,sans-serif;background:var(--surface,#F9FAFA);color:var(--ink,#16191C);border-bottom:1px solid var(--line,#CBD0D5);transition:transform .22s ease,box-shadow .22s ease}
+/* it slides away while you read down the page and comes back as soon as you scroll up a little (NAV_JS) */
+.site-nav.nav-hide{transform:translateY(calc(-100% - env(safe-area-inset-top,0px)))}
+.site-nav.nav-float{box-shadow:0 6px 18px rgba(0,0,0,.16)}
+@media (prefers-reduced-motion:reduce){.site-nav{transition:none}}
+.site-nav .in{max-width:1300px;margin:0 auto;padding:8px max(16px,env(safe-area-inset-right,0px)) 8px max(16px,env(safe-area-inset-left,0px));display:flex;align-items:center;gap:6px 16px;flex-wrap:wrap}
+.site-nav a{color:var(--ink,#16191C);text-decoration:none;padding:4px 0;white-space:nowrap}
+.site-nav a:hover,.site-nav a[aria-current]{text-decoration:underline;text-underline-offset:3px}
+.site-nav .brand{font-weight:700;letter-spacing:.01em;padding:8px 0}
+.site-nav .brand small{font-weight:500;color:var(--muted,#59616A);margin-left:6px;font-size:12px}
+.site-nav .nav-links{display:flex;flex-wrap:wrap;align-items:center;gap:2px 16px;flex:1 1 auto;min-width:0}
+.site-nav .grp{display:inline-flex;flex-wrap:wrap;align-items:center;gap:2px 12px}
+.site-nav .gl{font:600 10.5px var(--f-mono,ui-monospace,monospace);letter-spacing:.1em;text-transform:uppercase;color:var(--muted,#59616A)}
+.site-nav button{font:inherit;color:inherit}
+.nav-toggle{display:none;appearance:none;border:1px solid var(--line,#CBD0D5);background:var(--surface,#F9FAFA);border-radius:8px;padding:6px 12px;cursor:pointer;margin-left:auto}
+.nav-toggle[aria-expanded="true"]{background:var(--ink,#16191C);color:var(--bg,#ECEEF0);border-color:var(--ink,#16191C)}
+.mchip{appearance:none;border:1px solid var(--accent,#D98400);background:var(--accent-soft,#F4E1C0);color:var(--accent-ink,#965300);border-radius:999px;padding:6px 12px;min-height:36px;cursor:pointer;font-weight:600;white-space:nowrap}
+.mchip b{color:var(--ink,#16191C);font-weight:600;margin-left:4px}
+/* desktop: brand and Your Silvia on the first row, every page on the second */
+@media (min-width:1061px){
+  .site-nav .nav-links{order:3;flex-basis:100%}
+  .mchip{margin-left:auto}
+}
+/* tablets and phones: brand, Your Silvia and the Pages button on one row; the page list opens below */
+@media (max-width:1060px){
+  .site-nav .brand{order:1}
+  .mchip{order:2;margin-left:auto;min-height:40px}
+  .nav-toggle{display:inline-block;order:3;margin-left:0;min-height:40px}
+  .site-nav .nav-links{display:none;order:5;flex-basis:100%;flex-direction:column;align-items:flex-start;gap:6px;padding:6px 0 6px}
+  .site-nav .nav-links.open{display:flex;position:absolute;left:0;right:0;top:100%;background:var(--surface,#F9FAFA);border-top:1px solid var(--line,#CBD0D5);border-bottom:1px solid var(--line,#CBD0D5);box-shadow:0 12px 24px rgba(0,0,0,.18);padding:4px max(16px,env(safe-area-inset-right,0px)) 12px max(16px,env(safe-area-inset-left,0px));max-height:calc(100vh - 120px);max-height:calc(100svh - 120px);overflow-y:auto;overscroll-behavior:contain}
+  .site-nav .grp{gap:0 18px}
+  .site-nav .nav-links a{display:inline-flex;align-items:center;min-height:40px}
+}
+@media (max-width:480px){
+  .site-nav .in{gap:6px 10px}
+  .site-nav .brand small{display:none}
+  .mchip:not(.set) #mchip-l{display:none}
+  .mchip.set .mchip-k{display:none}
+  .mchip.set b{margin-left:0}
+}
+/* the page list (phones) and the Your Silvia panel open over the page, so nothing below them jumps */
+.mpanel{position:absolute;left:0;right:0;top:100%;border-top:1px solid var(--line,#CBD0D5);border-bottom:1px solid var(--line,#CBD0D5);background:var(--surface,#F9FAFA);box-shadow:0 12px 24px rgba(0,0,0,.18);max-height:calc(100vh - 120px);max-height:calc(100svh - 120px);overflow-y:auto;overscroll-behavior:contain}
+.mpanel .in{display:grid;gap:12px;padding-block:14px 16px}
+/* behind an open page list or panel: dims the page, and a tap on it closes them instead of following whatever link was under it */
+.nav-scrim{position:fixed;inset:0;z-index:49;background:rgba(10,14,18,.3);-webkit-tap-highlight-color:transparent}
+.mrow{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}
+.mk{font:600 11px var(--f-mono,ui-monospace,monospace);letter-spacing:.1em;text-transform:uppercase;color:var(--muted,#59616A);min-width:7ch}
+.mseg{display:inline-flex;flex-wrap:wrap;border:1px solid var(--line,#CBD0D5);border-radius:999px;overflow:hidden}
+.mseg button{appearance:none;border:0;border-right:1px solid var(--line,#CBD0D5);background:var(--surface,#F9FAFA);padding:7px 13px;cursor:pointer;font-weight:600;min-height:36px}
+.mseg button:last-child{border-right:0}
+.mseg button[aria-pressed="true"]{background:var(--ink,#16191C);color:var(--bg,#ECEEF0)}
+.mseg button[disabled]{opacity:.4;cursor:default}
+.mh{font-size:13px;color:var(--muted,#59616A)}
+#m-summary{margin:0;font-size:14px;color:var(--muted,#59616A);max-width:80ch}
+.mact{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px}
+.mact a{color:var(--accent-ink,#965300);text-decoration:underline}
+.mact button{appearance:none;border:1px solid var(--line,#CBD0D5);background:var(--surface,#F9FAFA);border-radius:8px;padding:6px 12px;cursor:pointer}
+.mact button#m-done{background:var(--ink,#16191C);color:var(--bg,#ECEEF0);border-color:var(--ink,#16191C)}
+.vtag{display:inline-block;font:600 10.5px/1 var(--f-mono,ui-monospace,monospace);letter-spacing:.06em;text-transform:uppercase;padding:4px 6px;border-radius:4px;background:var(--accent-soft,#F4E1C0);color:var(--accent-ink,#965300);vertical-align:2px;margin-left:6px;white-space:nowrap}
+.site-foot{font:400 13.5px/1.5 "Barlow",system-ui,sans-serif;color:var(--muted,#59616A);border-top:1px solid var(--line,#CBD0D5);background:var(--bg,#ECEEF0)}
+.site-foot .in{max-width:1300px;margin:0 auto;padding:16px max(16px,env(safe-area-inset-right,0px)) 28px max(16px,env(safe-area-inset-left,0px));display:grid;gap:6px}
+.site-foot a{color:var(--accent-ink,#965300)}
+.site-foot p{margin:0;max-width:95ch}
+/* every page ends with the full page list, so the next page is one tap away at the bottom too */
+.foot-nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 24px;min-width:0;padding-bottom:14px;margin-bottom:8px;border-bottom:1px solid var(--line,#CBD0D5)}
+@media (min-width:640px){.foot-nav{grid-template-columns:repeat(4,minmax(0,180px))}}
+.foot-nav .fn-home{grid-column:1/-1;justify-self:start;font-weight:700;color:var(--ink,#16191C);text-decoration:none;padding:4px 0}
+.foot-nav .fn-g{display:flex;flex-direction:column;align-items:flex-start;gap:0;min-width:0}
+.foot-nav .gl{font:600 11.5px var(--f-mono,ui-monospace,monospace);letter-spacing:.1em;text-transform:uppercase;color:var(--muted,#59616A);margin-bottom:2px}
+.foot-nav .fn-g a{color:var(--ink,#16191C);text-decoration:none;padding:3px 0}
+.foot-nav a:hover,.foot-nav a[aria-current]{text-decoration:underline;text-underline-offset:3px}
+@media (pointer:coarse){.foot-nav .fn-g a,.foot-nav .fn-home{padding:8px 0}}
+@media print{.site-nav,.site-foot,.swipe-hint,.nav-scrim{display:none!important}}
+/* phones: inputs fill their boxes, small text buttons get a bigger tap area, wide drawings say they scroll */
+.read input,.money input,.unitbox input{align-self:stretch}
+@media (pointer:coarse){
+  .linkbtn{min-height:40px}
+  summary{min-height:40px}
+  .mact a,.foot .links a{display:inline-block;padding:10px 0}
+  input.mm{min-height:36px}
+  input[type=range]{height:32px}
+}
+@media (max-width:600px){
+  .plate{font-size:12px}
+  .vtag{font-size:11px}
+}
+.swipe-hint{margin:6px 0 0;font:500 12.5px "Barlow",system-ui,sans-serif;color:var(--muted,#59616A);display:flex;align-items:center;gap:6px}
+.swipe-hint::before{content:"";width:18px;height:10px;background:linear-gradient(90deg,transparent 0 3px,currentColor 3px 15px,transparent 15px) center/100% 2px no-repeat;opacity:.7}
+</style></head><body><nav class="site-nav" aria-label="Site"><div class="in"><a class="brand" href="index.html">Silvia × Gaggiuino<small>unofficial</small></a><button type="button" class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="nav-links">Pages</button><div class="nav-links" id="nav-links"><span class="grp"><span class="gl">Learn</span><a href="conversion.html">The conversion</a><a href="how-silvia-works.html">How the Silvia works</a><a href="how-gaggiuino-works.html">How Gaggiuino works</a><a href="glossary.html">Glossary</a></span><span class="grp"><span class="gl">Plan</span><a href="budget.html">Budget</a><a href="used-checklist.html">Used Silvia check</a><a href="which-silvia.html">Which Silvia</a><a href="parts-tracker.html">Parts tracker</a></span><span class="grp"><span class="gl">Install</span><a href="runbook.html">Runbook</a><a href="wiring.html">Wiring</a><a href="cut-list.html">Cut list</a><a href="wire-labels.html" aria-current="page">Wire labels</a><a href="power-on-checks.html">Power-on checks</a></span><span class="grp"><span class="gl">After</span><a href="troubleshooting.html">Troubleshooting</a><a href="led-mod.html">LED switch mod</a></span></div><button type="button" class="mchip" id="mchip" aria-expanded="false" aria-controls="mpanel" aria-label="Your Silvia: not set"><span class="mchip-k">Your Silvia</span><b id="mchip-l">Set it</b></button></div><div class="mpanel" id="mpanel" hidden><div class="in"><div class="mrow"><span class="mk">Version</span><div class="mseg" role="group" aria-label="Version"><button type="button" data-mv="V1" aria-pressed="false">V1</button><button type="button" data-mv="V2" aria-pressed="false">V2</button><button type="button" data-mv="V3" aria-pressed="false">V3</button><button type="button" data-mv="V4" aria-pressed="false">V4</button><button type="button" data-mv="V5" aria-pressed="false">V5</button><button type="button" data-mv="V6" aria-pressed="false">V6</button></div><label class="mh" id="m-early-w" hidden><input type="checkbox" id="m-early"> Boiler made before May 2000</label></div><div class="mrow"><span class="mk">Model</span><div class="mseg" role="group" aria-label="Model"><button type="button" data-mm="M" aria-pressed="false">M, manual off</button><button type="button" data-mm="E" aria-pressed="false">E, auto-off</button></div><span class="mh" id="m-model-hint">E and M only exist from V5 on.</span></div><div class="mrow"><span class="mk">Mains</span><div class="mseg" role="group" aria-label="Mains voltage"><button type="button" data-mvolt="120" aria-pressed="false">120 V</button><button type="button" data-mvolt="230" aria-pressed="false">230 V</button></div></div><p id="m-summary"></p><div class="mact"><a href="which-silvia.html">Not sure which you have? Identify your Silvia</a><button type="button" id="m-clear">Clear</button><button type="button" id="m-done">Done</button></div></div></div></nav><div class="nav-scrim" id="nav-scrim" hidden></div><script>(function(){var n=(performance.getEntriesByType&&performance.getEntriesByType('navigation')[0])||{};if(n.type==='back_forward')return;var moved=false;['wheel','touchstart','keydown'].forEach(function(t){addEventListener(t,function(){moved=true},{once:true,passive:true})});function go(){if(moved)return;try{var h=location.hash;if(h){var t=document.getElementById(decodeURIComponent(h.slice(1)));if(t&&t.scrollIntoView)t.scrollIntoView({block:'start'});return}window.scrollTo(0,0);var e=document.body&&document.body.firstElementChild;if(e&&e.scrollIntoView)e.scrollIntoView({block:'start'})}catch(x){}}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',go);else go();addEventListener('load',go)})();</script><script>(function(){var nav=document.querySelector('.site-nav');if(!nav)return;var root=document.documentElement,last=0,acc=0,ticking=false,hidden=false,hold=0,touched=false;function h(){return nav.offsetHeight}function fv(a){try{return a.matches(':focus-visible')}catch(e){return true}}function busy(){var t=document.getElementById('nav-toggle'),p=document.getElementById('mpanel'),a=document.activeElement;return (t&&t.getAttribute('aria-expanded')==='true')||(p&&!p.hidden)||(a&&a!==document.body&&nav.contains(a)&&fv(a))}function cover(){root.style.setProperty('--nav-cover',hidden?'0px':h()+'px')}function set(hide){hidden=hide;nav.classList.toggle('nav-hide',hide);cover()}function Y(){var y=window.pageYOffset||0,m=Math.max(0,root.scrollHeight-innerHeight);return y<0?0:y>m?m:y}function update(){ticking=false;var y=Y(),d=y-last;last=y;nav.classList.toggle('nav-float',y>2);if(y<=h()||busy()){acc=0;if(hidden)set(false);return}if(Date.now()<hold||Math.abs(d)>innerHeight*0.8){acc=0;if(!hidden)set(true);return}if((d>0)!==(acc>0))acc=0;acc+=d;if(acc>10&&!hidden)set(true);else if(acc<-24&&hidden)set(false)}function jump(){last=Y();acc=0;if(last>h()&&!busy())set(true)}addEventListener('scroll',function(){if(!ticking){ticking=true;requestAnimationFrame(update)}},{passive:true});addEventListener('hashchange',function(){hold=Date.now()+600;jump()});document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[href*="#"]');if(a&&a.hash&&a.pathname===location.pathname&&a.host===location.host){hold=Date.now()+600;setTimeout(jump,0)}},true);nav.addEventListener('focusin',function(e){if(hidden&&fv(e.target))set(false)});['wheel','touchstart','keydown'].forEach(function(t){addEventListener(t,function(){touched=true},{once:true,passive:true})});if(window.ResizeObserver)new ResizeObserver(function(){if(!hidden)cover()}).observe(nav);set(false);function init(){last=Y();if(location.hash&&last>h()&&!touched)set(true)}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();addEventListener('load',init)})();</script><script>/* Site-wide "your Silvia" profile: version, E/M model, mains voltage. Every field is optional.
+   Elements with data-when="ver:V5,V6;model:E;volts:230;early" show only when every condition matches.
+   A field the user hasn't set never hides anything: with no version, every version's notes show; with no
+   voltage, both voltages' notes show and the wording stays generic. Nothing is ever filled in for them.
+   Elements with data-mtext="gfci|outlet|volts" get voltage-specific wording. */
+(function(){
+  var KEY='silvia-machine-v1',VERS=['V1','V2','V3','V4','V5','V6'];
+  var TEXT={
+    gfci:{'120':'GFCI','230':'RCD','':'GFCI (RCD outside North America)'},
+    outlet:{'120':'GFCI-protected outlet','230':'socket with RCD protection','':'GFCI- or RCD-protected outlet'},
+    volts:{'120':'120 V','230':'230 V','':'your mains voltage'}
+  };
+  function newer(v){return v==='V5'||v==='V6'}
+  function clean(s){
+    if(!s||typeof s!=='object')return null;
+    var ver=VERS.indexOf(s.ver)>=0?s.ver:null;
+    var model=newer(ver)&&(s.model==='E'||s.model==='M')?s.model:null;
+    var v=Number(s.volts),volts=v===230?230:v===120?120:null;
+    if(!ver&&!volts)return null;
+    return {ver:ver,model:model,volts:volts,early:ver==='V1'&&s.early===true};
+  }
+  function read(){try{return clean(JSON.parse(localStorage.getItem(KEY)||'null'))}catch(e){return null}}
+  var prof=read();
+  function conds(when){
+    return String(when||'').split(';').map(function(c){
+      c=c.trim();var i=c.indexOf(':');return {k:i<0?c:c.slice(0,i),vals:i<0?[]:c.slice(i+1).split(',')};
+    }).filter(function(c){return c.k});
+  }
+  /* true unless the profile rules the element out; unknown fields never rule anything out */
+  function matches(when){
+    if(!when||!prof)return true;
+    return conds(when).every(function(c){
+      if(c.k==='ver')return !prof.ver||c.vals.indexOf(prof.ver)>=0;
+      if(c.k==='model'){
+        if(!prof.ver)return true;
+        if(!newer(prof.ver))return c.vals.indexOf('M')>=0;   /* no E before V5 */
+        return !prof.model||c.vals.indexOf(prof.model)>=0;
+      }
+      if(c.k==='volts')return !prof.volts||c.vals.indexOf(String(prof.volts))>=0;
+      if(c.k==='early')return !prof.ver||prof.early;
+      return true;
+    });
+  }
+  /* true when the profile pins down every field the condition depends on (so a "which machines" tag adds nothing) */
+  function decided(when){
+    if(!prof)return false;
+    return conds(when).every(function(c){
+      if(c.k==='ver'||c.k==='early')return !!prof.ver;
+      if(c.k==='model')return !!prof.ver&&(!newer(prof.ver)||!!prof.model);
+      if(c.k==='volts')return !!prof.volts;
+      return true;
+    });
+  }
+  function text(key){var t=TEXT[key];if(!t)return '';return prof&&prof.volts?t[String(prof.volts)]:t['']}
+  function label(p){
+    p=p||prof;if(!p)return 'Set it';
+    var a=[];if(p.ver)a.push(p.ver+(newer(p.ver)&&p.model?' '+p.model:''));if(p.volts)a.push(p.volts+' V');
+    return a.join(', ');
+  }
+  function missing(p){
+    p=p||prof;if(!p)return [];var m=[];
+    if(!p.ver)m.push('version');else if(newer(p.ver)&&!p.model)m.push('model');
+    if(!p.volts)m.push('mains voltage');
+    return m;
+  }
+  function summary(p){
+    p=p||prof;
+    if(!p)return 'Pick your version and voltage. Until you do, every page shows all the version notes, each tagged with the machines it applies to.';
+    var m=missing(p);
+    return 'Pages now show the steps and notes for a '+label(p)+' Silvia.'+(m.length?' Add your '+m.join(' and ')+' to narrow them down; until then those notes all show.':'');
+  }
+  function apply(root){
+    root=root||document;
+    Array.prototype.forEach.call(root.querySelectorAll('[data-when]'),function(el){el.hidden=!matches(el.getAttribute('data-when'))});
+    Array.prototype.forEach.call(root.querySelectorAll('[data-mtext]'),function(el){var t=text(el.getAttribute('data-mtext'));if(t)el.textContent=t});
+    var l=document.getElementById('mchip-l');if(l)l.textContent=label();
+    var ch=document.getElementById('mchip');if(ch){ch.classList.toggle('set',!!prof);ch.setAttribute('aria-label','Your Silvia: '+(prof?label():'not set'))}
+    syncPanel();
+  }
+  function set(p){
+    prof=p?clean(p):null;
+    try{if(prof)localStorage.setItem(KEY,JSON.stringify(prof));else localStorage.removeItem(KEY)}catch(e){}
+    apply();
+    try{window.dispatchEvent(new CustomEvent('silvia-machine',{detail:prof}))}catch(e){}
+  }
+  /* start from what's saved, never from guesses */
+  function current(){return Object.assign({ver:null,model:null,volts:null,early:false},prof||{})}
+  /* ---- nav panel ---- */
+  function syncPanel(){
+    var pan=document.getElementById('mpanel');if(!pan)return;
+    var p=prof||{},nw=newer(p.ver);
+    Array.prototype.forEach.call(pan.querySelectorAll('[data-mv]'),function(b){b.setAttribute('aria-pressed',String(b.getAttribute('data-mv')===p.ver))});
+    Array.prototype.forEach.call(pan.querySelectorAll('[data-mm]'),function(b){b.disabled=!nw;b.setAttribute('aria-pressed',String(nw&&b.getAttribute('data-mm')===p.model))});
+    Array.prototype.forEach.call(pan.querySelectorAll('[data-mvolt]'),function(b){b.setAttribute('aria-pressed',String(Number(b.getAttribute('data-mvolt'))===p.volts))});
+    var ew=document.getElementById('m-early-w');if(ew)ew.hidden=p.ver!=='V1';
+    var ec=document.getElementById('m-early');if(ec)ec.checked=!!p.early;
+    var mh=document.getElementById('m-model-hint');if(mh)mh.hidden=nw;
+    var s=document.getElementById('m-summary');if(s)s.textContent=summary();
+  }
+  function wire(){
+    var chip=document.getElementById('mchip'),pan=document.getElementById('mpanel');
+    var nt=document.getElementById('nav-toggle'),nl=document.getElementById('nav-links');
+    /* the page list and the Your Silvia panel open over the page, one at a time; a tap outside or Escape closes them */
+    var scrim=document.getElementById('nav-scrim');
+    function sync(){if(scrim)scrim.hidden=!((nl&&nl.classList.contains('open'))||(pan&&!pan.hidden))}
+    function closeMenu(){if(nt&&nl&&nl.classList.contains('open')){nt.setAttribute('aria-expanded','false');nl.classList.remove('open');sync();return true}}
+    function closePanel(){if(chip&&pan&&!pan.hidden){pan.hidden=true;chip.setAttribute('aria-expanded','false');sync();return true}}
+    if(scrim)scrim.addEventListener('click',function(){closeMenu();closePanel()});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape'&&closeMenu())nt.focus()});
+    if(chip&&pan){
+      chip.addEventListener('click',function(){var open=pan.hidden;pan.hidden=!open;chip.setAttribute('aria-expanded',String(open));if(open)closeMenu();sync()});
+      pan.addEventListener('click',function(e){
+        var b=e.target.closest('button');if(!b||b.disabled)return;
+        var p=current();
+        if(b.hasAttribute('data-mv'))p.ver=b.getAttribute('data-mv');
+        else if(b.hasAttribute('data-mm'))p.model=b.getAttribute('data-mm');
+        else if(b.hasAttribute('data-mvolt'))p.volts=Number(b.getAttribute('data-mvolt'));
+        else if(b.id==='m-clear'){set(null);return}
+        else if(b.id==='m-done'){pan.hidden=true;chip.setAttribute('aria-expanded','false');sync();chip.focus();return}
+        else return;
+        set(p);
+      });
+      var ec=document.getElementById('m-early');
+      if(ec)ec.addEventListener('change',function(){var p=current();p.early=ec.checked;set(p)});
+      document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!pan.hidden){pan.hidden=true;chip.setAttribute('aria-expanded','false');sync()}});
+    }
+    if(nt&&nl)nt.addEventListener('click',function(){var open=nt.getAttribute('aria-expanded')!=='true';nt.setAttribute('aria-expanded',String(open));nl.classList.toggle('open',open);if(open)closePanel();sync()});
+    Array.prototype.forEach.call(document.querySelectorAll('[data-setmachine]'),function(b){
+      b.addEventListener('click',function(){
+        var p=current();p.ver=b.getAttribute('data-setmachine');set(p);
+      });
+    });
+    var inViewer=typeof window.claude!=='undefined';
+    var pb=document.querySelectorAll('[data-print]');
+    if(!inViewer)Array.prototype.forEach.call(pb,function(b){b.hidden=false;b.addEventListener('click',function(){window.print()})});
+    apply();
+    hints();window.addEventListener('resize',hints);
+  }
+  /* "swipe sideways" under drawings and tables that are wider than the screen */
+  function hints(){
+    Array.prototype.forEach.call(document.querySelectorAll('.scroll,.tablewrap,.table-wrap'),function(el){
+      var over=el.scrollWidth>el.clientWidth+8,h=el.nextElementSibling&&el.nextElementSibling.classList.contains('swipe-hint')?el.nextElementSibling:null;
+      if(over&&!h){h=document.createElement('p');h.className='swipe-hint';h.textContent=el.querySelector('svg')?'Swipe sideways to see the whole drawing':'Swipe sideways to see every column';el.parentNode.insertBefore(h,el.nextSibling)}
+      else if(!over&&h)h.remove();
+    });
+  }
+  window.SilviaMachine={get:function(){return prof},set:set,current:current,matches:matches,decided:decided,text:text,label:label,missing:missing,summary:summary,apply:apply};
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',wire);else wire();
+})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Layout: rating-plate header, a settings bar (what to include, paper, download), the how-to steps beside the hand-marking list, then a true-to-scale preview of each sheet. */
+:root{
+  --bg:#ECEEF0; --surface:#F9FAFA; --surface-2:#E2E5E8; --ink:#16191C; --muted:#59616A; --line:#CBD0D5;
+  --accent:#D98400; --accent-ink:#965300; --accent-soft:#F4E1C0; --on-accent:#1A1206;
+  --bad:#B13A2F; --good:#2D7A4C;
+  --paper:#FFFFFF; --paper-ink:#16191C; --paper-muted:#5A6068; --paper-line:#9AA0A6;
+  --f-display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  --f-body:"Barlow",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#111316; --surface:#1A1D21; --surface-2:#252A30; --ink:#E7E9EB; --muted:#9BA2AA; --line:#30363D;
+    --accent:#F2A33A; --accent-ink:#F5B566; --accent-soft:#3B2B13; --on-accent:#1A1206; --bad:#EC7064; --good:#63C08A;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#111316; --surface:#1A1D21; --surface-2:#252A30; --ink:#E7E9EB; --muted:#9BA2AA; --line:#30363D;
+  --accent:#F2A33A; --accent-ink:#F5B566; --accent-soft:#3B2B13; --on-accent:#1A1206; --bad:#EC7064; --good:#63C08A;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:var(--accent-ink);text-underline-offset:3px}
+button,input{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:980px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 64px}
+.top{display:grid;gap:14px;margin-bottom:22px}
+.plate{display:inline-flex;align-items:center;flex-wrap:wrap;gap:6px 12px;justify-self:start;max-width:100%;border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:7px 12px;font:500 11.5px/1.3 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.plate .rivet{width:6px;height:6px;border-radius:50%;background:var(--line);box-shadow:inset 0 0 0 1px var(--muted);opacity:.7}
+.plate b{color:var(--ink);font-weight:600}
+/* rivets pinned to the plate's ends so a wrapped plate never leaves one on a line of its own */
+.plate{position:relative;padding:7px 26px}.plate .rivet{position:absolute;top:calc(50% - 3px);left:10px}.plate .rivet:last-child{left:auto;right:10px}
+h1{font:700 clamp(36px,6.4vw,56px)/.95 var(--f-display);letter-spacing:.01em;margin:0;text-transform:uppercase;text-wrap:balance}
+h2{font:600 22px/1.1 var(--f-display);letter-spacing:.05em;text-transform:uppercase;margin:0}
+.lede{margin:0;color:var(--muted);max-width:66ch;font-size:17px}
+
+.panel{border:1px solid var(--line);border-radius:14px;background:var(--surface);display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);}
+.panel > div{padding:16px 18px;min-width:0;display:grid;gap:12px;align-content:start}
+.panel > div + div{border-left:1px solid var(--line)}
+@media (max-width:760px){.panel{grid-template-columns:minmax(0,1fr)}.panel > div + div{border-left:0;border-top:1px solid var(--line)}}
+.k{font:600 11px var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{position:relative;display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 13px 7px 11px;font:600 14px var(--f-body);cursor:pointer;min-height:38px}
+.chip input{position:absolute;opacity:0;pointer-events:none}
+.chip .box{width:16px;height:16px;border-radius:4px;border:1.5px solid var(--muted);display:grid;place-items:center;flex:none}
+.chip .n{font:500 12px var(--f-mono);color:var(--muted)}
+.chip:has(input:checked){background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.chip:has(input:checked) .box{border-color:var(--bg);background:var(--bg)}
+.chip:has(input:checked) .box::after{content:"";width:8px;height:4px;border-left:2px solid var(--ink);border-bottom:2px solid var(--ink);transform:rotate(-45deg) translate(1px,-1px)}
+.chip:has(input:checked) .n{color:var(--bg);opacity:.75}
+.chip:has(input:focus-visible){outline:2px solid var(--accent);outline-offset:2px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;justify-self:start}
+.seg button{appearance:none;border:0;background:var(--surface);padding:8px 16px;font:600 14px var(--f-body);cursor:pointer;min-height:38px}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.stat{display:grid;gap:0}
+.stat .v{font:600 24px/1.1 var(--f-mono);font-variant-numeric:tabular-nums}
+.stat .s{font-size:13px;color:var(--muted)}
+.btn{appearance:none;border:1px solid var(--accent);background:var(--accent);color:var(--on-accent);border-radius:10px;padding:12px 16px;font:600 16px var(--f-body);cursor:pointer;min-height:48px;display:inline-flex;align-items:center;justify-content:center;gap:10px}
+.btn[disabled]{opacity:.55;cursor:default}
+.msg{margin:0;font-size:14px;color:var(--muted);min-height:1.4em}
+.msg.bad{color:var(--bad)}.msg.ok{color:var(--good)}
+
+.how{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:24px;margin-top:30px}
+@media (max-width:760px){.how{grid-template-columns:minmax(0,1fr)}}
+.sec-h{border-bottom:2px solid var(--ink);padding-bottom:6px;margin-bottom:10px}
+ol.steps{margin:0;padding:0;list-style:none;counter-reset:s;display:grid;gap:10px}
+ol.steps li{counter-increment:s;display:grid;grid-template-columns:28px minmax(0,1fr);gap:10px;align-items:start;font-size:15.5px}
+ol.steps li::before{content:counter(s);font:600 13px/26px var(--f-mono);text-align:center;width:26px;height:26px;border-radius:50%;background:var(--surface-2)}
+.hand{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.hand li{display:flex;gap:10px;align-items:baseline;font-size:15px;padding:6px 0;border-bottom:1px solid var(--line)}
+.hand b{font:600 14px var(--f-mono);min-width:4.5ch}
+.note{font-size:14px;color:var(--muted);margin:8px 0 0}
+
+.sheets{margin-top:34px;display:grid;gap:22px}
+.sheet{display:grid;gap:6px}
+.sheet .cap{font:600 11px var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.sheet svg{display:block;width:100%;height:auto;background:var(--paper);border:1px solid var(--line);border-radius:4px;box-shadow:0 1px 0 var(--line)}
+.sheet svg text{font-family:Helvetica,Arial,sans-serif}
+.foot{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);display:grid;gap:8px}
+.links{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:15px}
+.fine{margin:0;font-size:14px;color:var(--muted);max-width:80ch}
+a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="plate" aria-label="Build spec">
+      <span class="rivet" aria-hidden="true"></span>
+      <span><b>Wire labels</b></span><span>Rancilio Silvia</span><span>Gaggiuino harness</span>
+      <span class="rivet" aria-hidden="true"></span>
+    </div>
+    <h1>Silvia Wire Labels</h1>
+    <p class="lede">A flag label for each end of every harness run, using the IDs from the <a href="wiring.html">wiring reference</a>. Each label says which end it sits on and where the other end goes, so you can check a wire without tracing it.</p>
+  </header>
+
+  <section class="panel" aria-label="Label settings">
+    <div>
+      <span class="k">Include</span>
+      <div class="chips" id="groups"></div>
+      <span class="k">Paper</span>
+      <div class="seg" id="paper" role="group" aria-label="Paper size">
+        <button type="button" data-paper="letter">US Letter</button><button type="button" data-paper="a4">A4</button>
+      </div>
+    </div>
+    <div>
+      <div class="stats">
+        <div class="stat"><span class="v" id="s-runs">0</span><span class="s">runs</span></div>
+        <div class="stat"><span class="v" id="s-labels">0</span><span class="s">labels</span></div>
+        <div class="stat"><span class="v" id="s-sheets">0</span><span class="s" id="s-sheets-s">sheets</span></div>
+      </div>
+      <button class="btn" id="dl" type="button">Download PDF to print</button>
+      <p class="msg" id="msg" aria-live="polite"></p>
+    </div>
+  </section>
+
+  <section class="how">
+    <div>
+      <div class="sec-h"><h2>Print and fit</h2></div>
+      <ol class="steps">
+        <li><span>Print the PDF at 100% (actual size), not "fit to page". The bar at the top right of each sheet should measure 50 mm.</span></li>
+        <li><span>Plain paper with clear tape over it works. Full-sheet sticker paper is quicker.</span></li>
+        <li><span>Cut on the solid lines. Label each wire as you cut and crimp it, before it goes into the machine.</span></li>
+        <li><span>Wrap the blank middle strip around the wire about 3 cm from the end, fold the two halves together, text outward. Seal with tape if it's plain paper.</span></li>
+        <li><span>Each row is one run: the left label goes on the first-named end, the right label on the other.</span></li>
+      </ol>
+    </div>
+    <div>
+      <div class="sec-h"><h2>Mark by hand</h2></div>
+      <ul class="hand" id="hand"></ul>
+      <p class="note">These ends sit on the boiler, where paper and tape adhesive won't last. Write the ID on the silicone jacket with an oil-based permanent marker, which the official guide recommends for silicone.</p>
+    </div>
+  </section>
+
+  <section class="sheets" id="sheets" aria-label="Sheet preview"></section>
+
+  <footer class="foot">
+    <div class="links">
+      <a href="wiring.html">Wiring reference</a>
+      <a href="power-on-checks.html">Power-on checks</a>
+      <a href="runbook.html">Install runbook</a>
+    </div>
+    <p class="fine">Run IDs and lengths come from the wiring reference, which is redrawn from realNiche's community Silvia diagram and Talon's harness on the Gaggiuino Discord.</p>
+  </footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+var LabelCore=(function(){
+  var PAPER={letter:{w:215.9,h:279.4,name:'US Letter'},a4:{w:210,h:297,name:'A4'}};
+  var L={w:92,h:13,half:40,wrap:12,gapX:4,gapY:3,top:20,left:null,bottom:10};
+  var COLOR={L:[176,58,46],H:[199,120,0],N:[47,95,179],E:[45,122,76],LV:[112,70,184],LVG:[89,97,106],S:[31,127,134],OPT:[138,109,59]};
+  function ends(r){
+    var parts=String(r.short).split('→');
+    return [parts[0].trim(),(parts[1]||'').trim()];
+  }
+  function hotAt(r,i){return r.hot==='both'||(r.hot==='a'&&i===0)||(r.hot==='b'&&i===1)}
+  function sheets(runs,paperKey){
+    var P=PAPER[paperKey]||PAPER.letter;
+    var left=(P.w-(2*L.w+L.gapX))/2;
+    var rows=Math.floor((P.h-L.top-L.bottom+L.gapY)/(L.h+L.gapY));
+    var pages=[],page=null;
+    runs.forEach(function(r,idx){
+      if(!page||page.rows.length>=rows){page={rows:[]};pages.push(page)}
+      var y=L.top+page.rows.length*(L.h+L.gapY);
+      var e=ends(r);
+      page.rows.push({y:y,run:r,cells:[0,1].map(function(i){
+        return {x:left+i*(L.w+L.gapX),y:y,end:i,here:e[i],there:e[1-i],hot:hotAt(r,i)};
+      })});
+    });
+    return {paper:P,left:left,rows:rows,pages:pages,L:L};
+  }
+  function pdfText(s){return String(s).replace(/→/g,'>').replace(/−/g,'-').replace(/[^\x20-\x7E°–]/g,'')}
+  function drawPdf(jsPDF,runs,paperKey){
+    var S=sheets(runs,paperKey),P=S.paper;
+    var doc=new jsPDF({unit:'mm',format:paperKey==='a4'?'a4':'letter',orientation:'portrait'});
+    S.pages.forEach(function(pg,pi){
+      if(pi>0)doc.addPage();
+      doc.setTextColor(22,25,28);
+      doc.setFont('helvetica','bold');doc.setFontSize(9);
+      doc.text('Silvia wire labels',S.left,10);
+      doc.setFont('helvetica','normal');doc.setFontSize(7.5);
+      doc.text('Sheet '+(pi+1)+' of '+S.pages.length+'  |  Print at 100% (actual size). Cut on solid lines, fold on dashed lines around the wire, text outward.',S.left,14);
+      // 50 mm scale check
+      var bx=P.w-S.left-50;
+      doc.setDrawColor(22,25,28);doc.setLineWidth(0.4);doc.line(bx,8,bx+50,8);doc.line(bx,6.8,bx,9.2);doc.line(bx+50,6.8,bx+50,9.2);
+      doc.setFontSize(6.5);doc.text('This bar should measure 50 mm',bx,11.5);
+      pg.rows.forEach(function(row){
+        row.cells.forEach(function(c){
+          var r=row.run,col=COLOR[r.sys]||COLOR.LVG;
+          if(c.hot){
+            doc.setDrawColor(160,166,172);doc.setLineWidth(0.2);doc.setLineDashPattern([0.6,0.9],0);
+            doc.rect(c.x,c.y,L.w,L.h);doc.setLineDashPattern([],0);
+            doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(90,96,104);
+            doc.text(r.id+'  at '+pdfText(c.here),c.x+3,c.y+5.4);
+            doc.setFont('helvetica','normal');doc.setFontSize(6.5);
+            doc.text('Boiler end: no paper label. Write '+r.id+' on the jacket with an oil-based marker.',c.x+3,c.y+9.6);
+            doc.setTextColor(22,25,28);
+            return;
+          }
+          doc.setDrawColor(22,25,28);doc.setLineWidth(0.25);doc.rect(c.x,c.y,L.w,L.h);
+          doc.setDrawColor(150,150,150);doc.setLineWidth(0.2);doc.setLineDashPattern([1,1],0);
+          doc.line(c.x+L.half,c.y,c.x+L.half,c.y+L.h);doc.line(c.x+L.half+L.wrap,c.y,c.x+L.half+L.wrap,c.y+L.h);
+          doc.setLineDashPattern([],0);
+          [c.x,c.x+L.half+L.wrap].forEach(function(hx){
+            doc.setFillColor(col[0],col[1],col[2]);doc.rect(hx,c.y,1.8,L.h,'F');
+            doc.setTextColor(22,25,28);
+            doc.setFont('helvetica','bold');doc.setFontSize(12);doc.text(r.id,hx+3.4,c.y+5.2);
+            doc.setFont('helvetica','normal');doc.setFontSize(5.6);doc.setTextColor(90,96,104);
+            doc.text(pdfText(r.gauge),hx+L.half-1.2,c.y+3.6,{align:'right'});
+            doc.setTextColor(22,25,28);doc.setFontSize(6.4);
+            doc.text('this end: '+pdfText(c.here),hx+3.4,c.y+8.5,{maxWidth:L.half-4.6});
+            doc.setTextColor(90,96,104);doc.setFontSize(6);
+            doc.text('to: '+pdfText(c.there),hx+3.4,c.y+11.4,{maxWidth:L.half-4.6});
+          });
+        });
+      });
+    });
+    return doc;
+  }
+  return {PAPER:PAPER,L:L,COLOR:COLOR,sheets:sheets,drawPdf:drawPdf,ends:ends};
+})();
+if(typeof module!=='undefined'&&module.exports)module.exports=LabelCore;
+
+(function(){
+  var RUNS=[{"id": "AC1", "sys": "L", "short": "Inlet L → Power sw L", "frm": "Power inlet, L pin", "to": "Power switch, L pole outer spade", "gauge": "18 AWG", "mm": null, "lenNote": "Reuse the stock lead if it is sound, or measure", "ends": ["6.3 mm female spade", "6.3 mm female spade"], "src": "realNiche", "note": "Supply goes on the outer spades of the power switch; the loads come off the center spades.", "k": ["f", "f"], "color": "red", "hot": ""}, {"id": "AC3", "sys": "L", "short": "Power sw L → SSR 1", "frm": "Power switch, L pole center spade", "to": "SSR load terminal 1", "gauge": "18 AWG", "mm": 350, "ends": ["6.3 mm female spade", "Fork spade sized for two 18 AWG wires, shared with AC4"], "src": "Talon / RS lengths", "note": "Switched line into the SSR. The same SSR terminal also feeds the PCB through AC4.", "k": ["f", "fk2:SSR1"], "color": "red", "lenNote": "", "hot": ""}, {"id": "AC4", "sys": "L", "short": "SSR 1 → J11 Line", "frm": "SSR load terminal 1", "to": "PCB J11 (AC Line)", "gauge": "18 AWG", "mm": 200, "ends": ["Shared fork with AC3", "6.3 mm female spade"], "src": "Talon / RS lengths", "note": "Powers the PCB and feeds its pump and solenoid outputs.", "k": ["fk2:SSR1", "f"], "color": "red", "lenNote": "", "hot": ""}, {"id": "AC13", "sys": "L", "short": "J13 → Solenoid coil", "frm": "PCB J13 (Solenoid)", "to": "Solenoid, coil spade", "gauge": "18 AWG", "mm": 120, "ends": ["6.3 mm female spade", "Uninsulated 6.3 mm spade (open-barrel crimp) + self-fusing silicone tape"], "src": "RS lengths", "note": "PCB-switched line to the 3-way valve coil. The valve sits on the hot group, so bare spades and silicone tape are the safer choice there.", "k": ["f", "b"], "color": "red", "lenNote": "", "hot": ""}, {"id": "AC14", "sys": "L", "short": "J12 → Pump coil", "frm": "PCB J12 (Pump)", "to": "Pump, coil terminal", "gauge": "18 AWG", "mm": null, "lenNote": "Not in the reference lengths; measure", "ends": ["6.3 mm female spade", "6.3 mm female spade"], "src": "realNiche", "note": "PCB-switched line to the pump. Neutral reaches the pump's other terminal through its thermal fuse.", "k": ["f", "f"], "color": "red", "hot": ""}, {"id": "AC5", "sys": "H", "short": "SSR 2 → Safety tstat", "frm": "SSR load terminal 2", "to": "Safety thermostat (165 C), terminal 1", "gauge": "18 AWG", "mm": 350, "ends": ["Fork spade", "Uninsulated 6.3 mm spade (open-barrel crimp) + self-fusing silicone tape"], "hot": "b", "src": "RS lengths (thermostat to SSR)", "note": "The 165 C safety thermostat stays in the heater line. Never bypass it.", "k": ["fk", "b"], "color": "orange", "lenNote": ""}, {"id": "AC6", "sys": "H", "short": "Safety tstat → Element", "frm": "Safety thermostat, terminal 2", "to": "Boiler element, terminal 1", "gauge": "18 AWG", "mm": 250, "ends": ["Uninsulated 6.3 mm spade sized for two 18 AWG wires + self-fusing silicone tape, shared with AC7", "Uninsulated 6.3 mm spade (open-barrel crimp) + self-fusing silicone tape"], "hot": "both", "src": "Talon", "note": "Talon doubled the spade at the safety thermostat. The alternative is doubling at the element terminal, with both leads 250 mm.", "k": ["b2:TST2", "b"], "color": "orange", "lenNote": ""}, {"id": "AC7", "sys": "H", "short": "Safety tstat → Lamp L", "frm": "Safety thermostat, terminal 2", "to": "Heating lamp, L spade", "gauge": "18 AWG", "mm": 100, "lenNote": "100 mm doubled at the thermostat (Talon); 250 mm if doubled at the element", "ends": ["Shared with AC6", "6.3 mm female spade"], "hot": "a", "src": "Talon", "note": "The heating lamp sits across the element, so it lights whenever the SSR is heating.", "k": ["b2:TST2", "f"], "color": "orange"}, {"id": "AC2", "sys": "N", "short": "Inlet N → Power sw N", "frm": "Power inlet, N pin", "to": "Power switch, N pole outer spade", "gauge": "18 AWG", "mm": null, "lenNote": "Reuse the stock lead if it is sound, or measure", "ends": ["6.3 mm female spade", "6.3 mm female spade"], "src": "realNiche", "note": "The power switch breaks both line and neutral, one per pole.", "k": ["f", "f"], "color": "blue", "hot": ""}, {"id": "AC8", "sys": "N", "short": "Power sw N → Lamp N", "frm": "Power switch, N pole center spade", "to": "Heating lamp, N spade", "gauge": "18 AWG", "mm": 100, "ends": ["6.3 mm female spade sized for two 18 AWG wires (blue), shared with AC9", "6.3 mm female spade sized for two 18 AWG wires (blue), shared with AC10"], "src": "Talon", "note": "Start of the neutral daisy chain.", "k": ["f2:SWN", "f2:LAMPN"], "color": "blue", "lenNote": "", "hot": ""}, {"id": "AC9", "sys": "N", "short": "Power sw N → Element", "frm": "Power switch, N pole center spade", "to": "Boiler element, terminal 2", "gauge": "18 AWG", "mm": 300, "ends": ["Shared with AC8", "Uninsulated 6.3 mm spade (open-barrel crimp) + self-fusing silicone tape"], "hot": "b", "src": "Talon", "note": "Talon left this one long for cable management.", "k": ["f2:SWN", "b"], "color": "blue", "lenNote": ""}, {"id": "AC10", "sys": "N", "short": "Lamp N → Pump N", "frm": "Heating lamp, N spade", "to": "Pump, thermal-fuse terminal", "gauge": "18 AWG", "mm": 400, "ends": ["Shared with AC8", "6.3 mm female spade sized for two 18 AWG wires (blue), shared with AC11"], "src": "Talon / RS lengths", "note": "The pump's thermal fuse (110 C on realNiche's diagram) stays in circuit. If your pump has none, this run goes to the pump terminal.", "k": ["f2:LAMPN", "f2:PUMPN"], "color": "blue", "lenNote": "", "hot": ""}, {"id": "AC11", "sys": "N", "short": "Pump N → Solenoid N", "frm": "Pump, thermal-fuse terminal", "to": "Solenoid, N spade", "gauge": "18 AWG", "mm": 350, "ends": ["Shared with AC10", "Uninsulated 6.3 mm spade sized for two 18 AWG wires + self-fusing silicone tape, shared with AC12"], "src": "Talon / RS lengths", "note": "", "k": ["f2:PUMPN", "b2:SOLN"], "color": "blue", "lenNote": "", "hot": ""}, {"id": "AC12", "sys": "N", "short": "Solenoid N → J10 Neutral", "frm": "Solenoid, N spade", "to": "PCB J10 (AC Neutral)", "gauge": "18 AWG", "mm": 120, "ends": ["Shared with AC11", "6.3 mm female spade"], "src": "Talon / RS lengths", "note": "End of the neutral chain.", "k": ["b2:SOLN", "f"], "color": "blue", "lenNote": "", "hot": ""}, {"id": "G1", "sys": "E", "short": "Inlet earth → Boiler gnd", "frm": "Power inlet, earth pin", "to": "Boiler ground spade", "gauge": "18 AWG green", "mm": null, "lenNote": "Reuse the stock earth lead if it is sound, or measure", "ends": ["6.3 mm female spade", "Uninsulated 6.3 mm spade sized for two 18 AWG wires + self-fusing silicone tape, shared with G2"], "hot": "b", "src": "realNiche", "note": "Earth never connects to the PCB's 5 V ground (official warning).", "k": ["f", "b2:BGND"], "color": "green"}, {"id": "G2", "sys": "E", "short": "Solenoid gnd → Boiler gnd", "frm": "Solenoid ground spade", "to": "Boiler ground spade", "gauge": "18 AWG green", "mm": 200, "ends": ["Uninsulated 6.3 mm spade (open-barrel crimp) + self-fusing silicone tape", "Shared with G1"], "hot": "b", "src": "RS lengths", "note": "", "k": ["b", "b2:BGND"], "color": "green", "lenNote": ""}, {"id": "LV1", "sys": "LV", "short": "J7 S → Steam sw", "frm": "PCB J7 S", "to": "Steam switch, ground pole center spade", "gauge": "22 AWG", "mm": 320, "ends": ["JST-PH 2 mm crimp in the connector housing", "6.3 mm female spade (red)"], "src": "realNiche / RS lengths", "note": "Signal on the center spade, ground on the outer spade of the same pole.", "k": ["jst", "lv"], "color": "white", "hdr": "J7", "lenNote": "", "hot": ""}, {"id": "LV2", "sys": "LV", "short": "J7 B → Brew sw", "frm": "PCB J7 B", "to": "Brew switch, ground pole center spade", "gauge": "22 AWG", "mm": 320, "ends": ["JST-PH 2 mm crimp in the connector housing", "6.3 mm female spade (red)"], "src": "realNiche / RS lengths", "note": "", "k": ["jst", "lv"], "color": "white", "hdr": "J7", "lenNote": "", "hot": ""}, {"id": "LV3", "sys": "LV", "short": "J5 B15 → Hot water sw", "frm": "PCB J5 B15", "to": "Hot water switch, ground pole center spade", "gauge": "22 AWG", "mm": 400, "ends": ["JST-PH 2 mm crimp in the connector housing", "6.3 mm female spade (red)"], "src": "realNiche / RS lengths", "note": "B15, not A12: PCB firmware reads the hot water switch on B15. Keep hot water on low voltage.", "k": ["jst", "lv"], "color": "white", "hdr": "J5", "lenNote": "", "hot": ""}, {"id": "LV4", "sys": "LVG", "short": "J7 GND → Steam sw gnd", "frm": "PCB J7 GND", "to": "Steam switch, ground pole outer spade", "gauge": "22 AWG", "mm": 470, "ends": ["JST-PH 2 mm crimp in the connector housing", "6.3 mm female spade (red)"], "src": "RS lengths / Talon", "note": "Start of the switch ground chain. Talon brings it into the lowest switch first and chains up; start at whichever switch is nearest.", "k": ["jst", "lv2:STG"], "color": "black", "hdr": "J7", "lenNote": "", "hot": ""}, {"id": "LV5", "sys": "LVG", "short": "Steam sw gnd → Brew sw gnd", "frm": "Steam switch, ground pole outer spade", "to": "Brew switch, ground pole outer spade", "gauge": "22 AWG", "mm": null, "lenNote": "Short jumper; measure (about 100 mm)", "ends": ["Shared spade or red butt splice", "6.3 mm female spade (red)"], "src": "Talon / LED notes", "note": "", "k": ["lv2:STG", "lv2:BRG"], "color": "black", "hot": ""}, {"id": "LV6", "sys": "LVG", "short": "Brew sw gnd → Hot water gnd", "frm": "Brew switch, ground pole outer spade", "to": "Hot water switch, ground pole outer spade", "gauge": "22 AWG", "mm": null, "lenNote": "Short jumper; measure (about 100 mm)", "ends": ["Shared spade or red butt splice", "6.3 mm female spade (red)"], "src": "Talon / LED notes", "note": "", "k": ["lv2:BRG", "lv"], "color": "black", "hot": ""}, {"id": "LV7", "sys": "S", "short": "J9 R1 → SSR +", "frm": "PCB J9 R1", "to": "SSR control +", "gauge": "22 AWG", "mm": null, "lenNote": "Measure", "ends": ["JST-PH 2 mm crimp in the connector housing", "Fork spade"], "src": "realNiche / official LV schematic", "note": "Polarity matters: R1 to +, GND to −.", "k": ["jst", "fks"], "color": "red", "hdr": "J9", "hot": ""}, {"id": "LV8", "sys": "S", "short": "J9 GND → SSR −", "frm": "PCB J9 GND", "to": "SSR control −", "gauge": "22 AWG", "mm": null, "lenNote": "Measure", "ends": ["JST-PH 2 mm crimp in the connector housing", "Fork spade"], "src": "realNiche / official LV schematic", "note": "", "k": ["jst", "fks"], "color": "black", "hdr": "J9", "hot": ""}, {"id": "LV9", "sys": "S", "short": "J6 → Pressure sensor", "frm": "PCB J6 (5V, GND, P)", "to": "Pressure transducer", "gauge": "Sensor lead", "mm": null, "lenNote": "Sensor's own lead; extend with 22 AWG if short", "ends": ["JST-PH 3-pin", "Transducer pigtail"], "src": "realNiche", "note": "Three wires: 5V, GND and P (signal).", "k": ["jst3", "pig"], "color": "", "hdr": "J6", "hot": ""}, {"id": "LV10", "sys": "S", "short": "J4 → Thermocouple", "frm": "PCB J4 (+, −)", "to": "Thermocouple, brew thermostat position", "gauge": "TC lead", "mm": null, "lenNote": "Thermocouple's own lead", "ends": ["Screw terminal; fold the bare wire over, don't clamp insulation", "M3 thermocouple"], "src": "Official PCB guide / Discord", "note": "Ungrounded K-type. Route it around the front of the boiler. If the bench test shows temperature falling when you warm it, swap the two leads.", "k": ["tc", "pig"], "color": "", "hot": ""}, {"id": "LV11", "sys": "S", "short": "J1 → Screen", "frm": "PCB J1 (GND, TX, RX, 5V)", "to": "4.3 in Gen 3.5 screen", "gauge": "Screen cable", "mm": 600, "lenNote": "DIY-EFI cable is 60 cm and Peak Coffee's 45 cm. The older diagram used 650 mm for a front mount; a funnel mount needs more (open question)", "ends": ["JST-PH 4-pin", "Screen connector"], "src": "DIY-EFI / RS lengths / Talon", "note": "Check connection points, not colors: blue and yellow can be swapped between cable revisions. Don't take pre-made cables apart.", "k": ["pre", "pre"], "color": "", "hot": ""}, {"id": "OP1", "sys": "OPT", "short": "J8 → Scales board", "frm": "PCB J8 (D2, 5V, GND, CLK, D1)", "to": "Scales board (optional)", "gauge": "5-pin cable", "mm": null, "lenNote": "5P JST XH to PH cable", "ends": ["JST-PH 5-pin", "JST-XH 5-pin"], "src": "Official BOM / Discord", "note": "Only if you fit hardware scales.", "k": ["pre", "pre"], "color": "", "hot": ""}, {"id": "OP2", "sys": "OPT", "short": "J2 → ToF sensor", "frm": "PCB J2, backside (JST-SH)", "to": "ToF sensor (optional)", "gauge": "Qwiic cable", "mm": 250, "lenNote": "250 mm or longer, JST SH 1.0 opposite direction", "ends": ["JST-SH 4-pin", "JST-SH 4-pin"], "src": "Official BOM / Discord", "note": "Only if you fit the ToF tank sensor.", "k": ["pre", "pre"], "color": "", "hot": ""}, {"id": "OP3", "sys": "OPT", "short": "5V splice → 1st sw LED", "frm": "Screen 5V line (BN1.25 butt splice)", "to": "First switch, LED pole outer spade", "gauge": "22 AWG", "mm": 320, "ends": ["BN1.25 butt splice", "6.3 mm female spade (red)"], "src": "Discord LED notes", "note": "LED switch mod only. See the LED guide for which pole gets 5 V.", "k": ["bn", "lv2:LED1"], "color": "yellow", "lenNote": "", "hot": ""}, {"id": "OP4", "sys": "OPT", "short": "1st sw LED → 2nd sw LED", "frm": "First switch, LED pole outer spade", "to": "Second switch, LED pole outer spade", "gauge": "22 AWG", "mm": 100, "ends": ["Shared spade", "6.3 mm female spade (red)"], "src": "Discord LED notes", "note": "LED switch mod only.", "k": ["lv2:LED1", "lv2:LED2"], "color": "yellow", "lenNote": "", "hot": ""}, {"id": "OP5", "sys": "OPT", "short": "2nd sw LED → 3rd sw LED", "frm": "Second switch, LED pole outer spade", "to": "Third switch, LED pole outer spade", "gauge": "22 AWG", "mm": 100, "ends": ["Shared spade", "6.3 mm female spade (red)"], "src": "Discord LED notes", "note": "LED switch mod only.", "k": ["lv2:LED2", "lv"], "color": "yellow", "lenNote": "", "hot": ""}];
+  var GROUPS=[['mains','Mains',['L','H','N']],['earth','Earth',['E']],['lv','Low voltage',['LV','LVG','S']],['opt','Optional add-ons',['OPT']]];
+  var KEY='silvia-wire-labels-v1';
+  var prefs={groups:{mains:true,earth:true,lv:true,opt:false},paper:'letter'};
+  try{var s=JSON.parse(localStorage.getItem(KEY)||'null');if(s&&s.groups){prefs.groups=Object.assign(prefs.groups,s.groups);if(s.paper==='a4'||s.paper==='letter')prefs.paper=s.paper}}catch(e){}
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(prefs))}catch(e){}}
+  function $(id){return document.getElementById(id)}
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+  function selected(){
+    var sys=[];GROUPS.forEach(function(g){if(prefs.groups[g[0]])sys=sys.concat(g[2])});
+    return RUNS.filter(function(r){return sys.indexOf(r.sys)>=0});
+  }
+  function rgb(c){return 'rgb('+c.join(',')+')'}
+
+  $('groups').innerHTML=GROUPS.map(function(g){
+    var n=RUNS.filter(function(r){return g[2].indexOf(r.sys)>=0}).length;
+    return '<label class="chip"><input type="checkbox" id="g-'+g[0]+'" data-g="'+g[0]+'"'+(prefs.groups[g[0]]?' checked':'')+'><span class="box" aria-hidden="true"></span>'+g[1]+' <span class="n">'+n+'</span></label>';
+  }).join('');
+
+  function sheetSvg(S,pg,pi,total){
+    var P=S.paper,L=S.L,o=[];
+    o.push('<svg viewBox="0 0 '+P.w+' '+P.h+'" role="img" aria-label="Sheet '+(pi+1)+' of '+total+'">');
+    o.push('<text x="'+S.left+'" y="10" font-size="3.2" font-weight="700" fill="var(--paper-ink)">Silvia wire labels</text>');
+    o.push('<text x="'+S.left+'" y="14" font-size="2.6" fill="var(--paper-ink)">Sheet '+(pi+1)+' of '+total+'  |  Print at 100% (actual size). Cut on solid lines, fold on dashed lines around the wire, text outward.</text>');
+    var bx=P.w-S.left-50;
+    o.push('<path d="M'+bx+',8 h50 M'+bx+',6.8 v2.4 M'+(bx+50)+',6.8 v2.4" stroke="var(--paper-ink)" stroke-width=".4" fill="none"/>');
+    o.push('<text x="'+bx+'" y="11.5" font-size="2.3" fill="var(--paper-ink)">This bar should measure 50 mm</text>');
+    pg.rows.forEach(function(row){
+      row.cells.forEach(function(c){
+        var r=row.run,col=rgb(LabelCore.COLOR[r.sys]||LabelCore.COLOR.LVG);
+        if(c.hot){
+          o.push('<rect x="'+c.x+'" y="'+c.y+'" width="'+L.w+'" height="'+L.h+'" fill="none" stroke="var(--paper-line)" stroke-width=".2" stroke-dasharray=".6 .9"/>');
+          o.push('<text x="'+(c.x+3)+'" y="'+(c.y+5.4)+'" font-size="2.8" font-weight="700" fill="var(--paper-muted)">'+esc(r.id)+'  at '+esc(c.here)+'</text>');
+          o.push('<text x="'+(c.x+3)+'" y="'+(c.y+9.6)+'" font-size="2.3" fill="var(--paper-muted)">Boiler end: no paper label. Write '+esc(r.id)+' on the jacket with an oil-based marker.</text>');
+          return;
+        }
+        o.push('<rect x="'+c.x+'" y="'+c.y+'" width="'+L.w+'" height="'+L.h+'" fill="none" stroke="var(--paper-ink)" stroke-width=".25"/>');
+        o.push('<path d="M'+(c.x+L.half)+','+c.y+' v'+L.h+' M'+(c.x+L.half+L.wrap)+','+c.y+' v'+L.h+'" stroke="var(--paper-line)" stroke-width=".2" stroke-dasharray="1 1"/>');
+        [c.x,c.x+L.half+L.wrap].forEach(function(hx){
+          o.push('<rect x="'+hx+'" y="'+c.y+'" width="1.8" height="'+L.h+'" fill="'+col+'"/>');
+          o.push('<text x="'+(hx+3.4)+'" y="'+(c.y+5.2)+'" font-size="4.2" font-weight="700" fill="var(--paper-ink)">'+esc(r.id)+'</text>');
+          o.push('<text x="'+(hx+L.half-1.2)+'" y="'+(c.y+3.6)+'" font-size="2" text-anchor="end" fill="var(--paper-muted)">'+esc(r.gauge)+'</text>');
+          o.push('<text x="'+(hx+3.4)+'" y="'+(c.y+8.5)+'" font-size="2.25" fill="var(--paper-ink)">this end: '+esc(c.here)+'</text>');
+          o.push('<text x="'+(hx+3.4)+'" y="'+(c.y+11.4)+'" font-size="2.1" fill="var(--paper-muted)">to: '+esc(c.there)+'</text>');
+        });
+      });
+    });
+    o.push('</svg>');
+    return o.join('');
+  }
+
+  function render(){
+    var runs=selected(),S=LabelCore.sheets(runs,prefs.paper);
+    var hot=[],labels=0;
+    runs.forEach(function(r){var e=LabelCore.ends(r);[0,1].forEach(function(i){
+      var isHot=r.hot==='both'||(r.hot==='a'&&i===0)||(r.hot==='b'&&i===1);
+      if(isHot)hot.push([r.id,e[i]]);else labels++;
+    })});
+    $('s-runs').textContent=runs.length;
+    $('s-labels').textContent=labels;
+    $('s-sheets').textContent=S.pages.length;
+    $('s-sheets-s').textContent=(S.pages.length===1?'sheet':'sheets')+' of '+S.paper.name;
+    $('hand').innerHTML=hot.length?hot.map(function(h){return '<li><b>'+esc(h[0])+'</b><span>at '+esc(h[1])+'</span></li>'}).join(''):'<li><span>None in this selection.</span></li>';
+    $('sheets').innerHTML=S.pages.length?S.pages.map(function(pg,i){return '<div class="sheet"><span class="cap">Sheet '+(i+1)+' of '+S.pages.length+' · '+S.paper.name+' · preview</span>'+sheetSvg(S,pg,i,S.pages.length)+'</div>'}).join(''):'<p class="note">Pick at least one group to see the sheets.</p>';
+    Array.prototype.forEach.call(document.querySelectorAll('[data-paper]'),function(b){b.setAttribute('aria-pressed',String(b.getAttribute('data-paper')===prefs.paper))});
+    $('dl').disabled=!runs.length;
+  }
+
+  $('groups').addEventListener('change',function(e){var g=e.target.getAttribute('data-g');if(!g)return;prefs.groups[g]=e.target.checked;save();render()});
+  $('paper').addEventListener('click',function(e){var b=e.target.closest('[data-paper]');if(!b)return;prefs.paper=b.getAttribute('data-paper');save();render()});
+
+  var downloads=null,busy=false;
+  function msg(t,cls){var m=$('msg');m.textContent=t;m.className='msg'+(cls?' '+cls:'')}
+  try{
+    if(window.claude&&typeof window.claude.use==='function'){
+      window.claude.use('downloads').then(function(d){downloads=d;if(!d)msg('Downloading isn\'t available in this view. Open this page on claude.ai in a browser to get the PDF.','bad')}).catch(function(){msg('Downloading isn\'t available in this view.','bad')});
+    }
+  }catch(e){}
+  $('dl').addEventListener('click',function(){
+    if(busy)return;
+    if(!window.jspdf||!window.jspdf.jsPDF){msg('The PDF maker didn\'t load. Check your connection and reload the page.','bad');return}
+    var plain=!(window.claude&&typeof window.claude.use==='function');
+    if(!downloads&&!plain){msg('Downloading isn\'t available in this view. Open this page on claude.ai in a browser to get the PDF.','bad');return}
+    busy=true;$('dl').disabled=true;msg('Making the PDF…');
+    var blob,fname='silvia-wire-labels-'+prefs.paper+'.pdf';
+    try{blob=LabelCore.drawPdf(window.jspdf.jsPDF,selected(),prefs.paper).output('blob')}catch(e){busy=false;$('dl').disabled=false;msg('Couldn\'t make the PDF. Reload the page and try again.','bad');return}
+    if(plain){
+      try{var u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=fname;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},4000);msg('Saved. Print it at 100% scale.','ok')}catch(e){msg('Couldn\'t start the download in this browser.','bad')}
+      busy=false;$('dl').disabled=!selected().length;return;
+    }
+    downloads.save({filename:fname,data:blob}).then(function(){
+      msg('Saved. Print it at 100% scale.','ok');
+    }).catch(function(e){
+      var c=e&&e.code;
+      if(c==='declined')msg('Download cancelled.');
+      else if(c==='rate_limited')msg('A save prompt is already open. Finish that one first.','bad');
+      else msg('Downloading isn\'t available in this view.','bad');
+    }).then(function(){busy=false;$('dl').disabled=!selected().length});
+  });
+
+  render();
+})();
+</script>
+<footer class="site-foot"><div class="in"><nav class="foot-nav" aria-label="All pages"><a class="fn-home" href="index.html">Silvia × Gaggiuino home</a><div class="fn-g"><span class="gl">Learn</span><a href="conversion.html">The conversion</a><a href="how-silvia-works.html">How the Silvia works</a><a href="how-gaggiuino-works.html">How Gaggiuino works</a><a href="glossary.html">Glossary</a></div><div class="fn-g"><span class="gl">Plan</span><a href="budget.html">Budget</a><a href="used-checklist.html">Used Silvia check</a><a href="which-silvia.html">Which Silvia</a><a href="parts-tracker.html">Parts tracker</a></div><div class="fn-g"><span class="gl">Install</span><a href="runbook.html">Runbook</a><a href="wiring.html">Wiring</a><a href="cut-list.html">Cut list</a><a href="wire-labels.html" aria-current="page">Wire labels</a><a href="power-on-checks.html">Power-on checks</a></div><div class="fn-g"><span class="gl">After</span><a href="troubleshooting.html">Troubleshooting</a><a href="led-mod.html">LED switch mod</a></div></nav><p><strong>Mains voltage.</strong> This conversion puts your hands near 120/230 V wiring. Work only with the cord out, check everything with a meter before first power-on, and stop if anything here disagrees with the official Gaggiuino docs or your own reading of the machine. Nothing on this site has been reviewed by the Gaggiuino project. You are responsible for your own build.</p><p>Unofficial community material for the Rancilio Silvia, built on the work of realNiche, Talon, Juun, mjr and others on the Gaggiuino Discord, and the official docs at <a href="https://gaggiuino.github.io/">gaggiuino.github.io</a>. Content is <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>, the same terms as realNiche's diagrams. · <a href="https://github.com/Jabawabawaba/silvia-gaggiuino">Source and issues on GitHub</a></p></div></footer></body></html>

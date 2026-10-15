@@ -1,0 +1,769 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui}img{max-width:100%}[hidden]{display:none!important}</style><title>Silvia Build Budget</title>
+<style>
+.site-nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;font:500 14px/1.35 "Barlow",system-ui,sans-serif;background:var(--surface,#F9FAFA);color:var(--ink,#16191C);border-bottom:1px solid var(--line,#CBD0D5);transition:transform .22s ease,box-shadow .22s ease}
+/* it slides away while you read down the page and comes back as soon as you scroll up a little (NAV_JS) */
+.site-nav.nav-hide{transform:translateY(calc(-100% - env(safe-area-inset-top,0px)))}
+.site-nav.nav-float{box-shadow:0 6px 18px rgba(0,0,0,.16)}
+@media (prefers-reduced-motion:reduce){.site-nav{transition:none}}
+.site-nav .in{max-width:1300px;margin:0 auto;padding:8px max(16px,env(safe-area-inset-right,0px)) 8px max(16px,env(safe-area-inset-left,0px));display:flex;align-items:center;gap:6px 16px;flex-wrap:wrap}
+.site-nav a{color:var(--ink,#16191C);text-decoration:none;padding:4px 0;white-space:nowrap}
+.site-nav a:hover,.site-nav a[aria-current]{text-decoration:underline;text-underline-offset:3px}
+.site-nav .brand{font-weight:700;letter-spacing:.01em;padding:8px 0}
+.site-nav .brand small{font-weight:500;color:var(--muted,#59616A);margin-left:6px;font-size:12px}
+.site-nav .nav-links{display:flex;flex-wrap:wrap;align-items:center;gap:2px 16px;flex:1 1 auto;min-width:0}
+.site-nav .grp{display:inline-flex;flex-wrap:wrap;align-items:center;gap:2px 12px}
+.site-nav .gl{font:600 10.5px var(--f-mono,ui-monospace,monospace);letter-spacing:.1em;text-transform:uppercase;color:var(--muted,#59616A)}
+.site-nav button{font:inherit;color:inherit}
+.nav-toggle{display:none;appearance:none;border:1px solid var(--line,#CBD0D5);background:var(--surface,#F9FAFA);border-radius:8px;padding:6px 12px;cursor:pointer;margin-left:auto}
+.nav-toggle[aria-expanded="true"]{background:var(--ink,#16191C);color:var(--bg,#ECEEF0);border-color:var(--ink,#16191C)}
+.mchip{appearance:none;border:1px solid var(--accent,#D98400);background:var(--accent-soft,#F4E1C0);color:var(--accent-ink,#965300);border-radius:999px;padding:6px 12px;min-height:36px;cursor:pointer;font-weight:600;white-space:nowrap}
+.mchip b{color:var(--ink,#16191C);font-weight:600;margin-left:4px}
+/* desktop: brand and Your Silvia on the first row, every page on the second */
+@media (min-width:1061px){
+  .site-nav .nav-links{order:3;flex-basis:100%}
+  .mchip{margin-left:auto}
+}
+/* tablets and phones: brand, Your Silvia and the Pages button on one row; the page list opens below */
+@media (max-width:1060px){
+  .site-nav .brand{order:1}
+  .mchip{order:2;margin-left:auto;min-height:40px}
+  .nav-toggle{display:inline-block;order:3;margin-left:0;min-height:40px}
+  .site-nav .nav-links{display:none;order:5;flex-basis:100%;flex-direction:column;align-items:flex-start;gap:6px;padding:6px 0 6px}
+  .site-nav .nav-links.open{display:flex;position:absolute;left:0;right:0;top:100%;background:var(--surface,#F9FAFA);border-top:1px solid var(--line,#CBD0D5);border-bottom:1px solid var(--line,#CBD0D5);box-shadow:0 12px 24px rgba(0,0,0,.18);padding:4px max(16px,env(safe-area-inset-right,0px)) 12px max(16px,env(safe-area-inset-left,0px));max-height:calc(100vh - 120px);max-height:calc(100svh - 120px);overflow-y:auto;overscroll-behavior:contain}
+  .site-nav .grp{gap:0 18px}
+  .site-nav .nav-links a{display:inline-flex;align-items:center;min-height:40px}
+}
+@media (max-width:480px){
+  .site-nav .in{gap:6px 10px}
+  .site-nav .brand small{display:none}
+  .mchip:not(.set) #mchip-l{display:none}
+  .mchip.set .mchip-k{display:none}
+  .mchip.set b{margin-left:0}
+}
+/* the page list (phones) and the Your Silvia panel open over the page, so nothing below them jumps */
+.mpanel{position:absolute;left:0;right:0;top:100%;border-top:1px solid var(--line,#CBD0D5);border-bottom:1px solid var(--line,#CBD0D5);background:var(--surface,#F9FAFA);box-shadow:0 12px 24px rgba(0,0,0,.18);max-height:calc(100vh - 120px);max-height:calc(100svh - 120px);overflow-y:auto;overscroll-behavior:contain}
+.mpanel .in{display:grid;gap:12px;padding-block:14px 16px}
+/* behind an open page list or panel: dims the page, and a tap on it closes them instead of following whatever link was under it */
+.nav-scrim{position:fixed;inset:0;z-index:49;background:rgba(10,14,18,.3);-webkit-tap-highlight-color:transparent}
+.mrow{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}
+.mk{font:600 11px var(--f-mono,ui-monospace,monospace);letter-spacing:.1em;text-transform:uppercase;color:var(--muted,#59616A);min-width:7ch}
+.mseg{display:inline-flex;flex-wrap:wrap;border:1px solid var(--line,#CBD0D5);border-radius:999px;overflow:hidden}
+.mseg button{appearance:none;border:0;border-right:1px solid var(--line,#CBD0D5);background:var(--surface,#F9FAFA);padding:7px 13px;cursor:pointer;font-weight:600;min-height:36px}
+.mseg button:last-child{border-right:0}
+.mseg button[aria-pressed="true"]{background:var(--ink,#16191C);color:var(--bg,#ECEEF0)}
+.mseg button[disabled]{opacity:.4;cursor:default}
+.mh{font-size:13px;color:var(--muted,#59616A)}
+#m-summary{margin:0;font-size:14px;color:var(--muted,#59616A);max-width:80ch}
+.mact{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px}
+.mact a{color:var(--accent-ink,#965300);text-decoration:underline}
+.mact button{appearance:none;border:1px solid var(--line,#CBD0D5);background:var(--surface,#F9FAFA);border-radius:8px;padding:6px 12px;cursor:pointer}
+.mact button#m-done{background:var(--ink,#16191C);color:var(--bg,#ECEEF0);border-color:var(--ink,#16191C)}
+.vtag{display:inline-block;font:600 10.5px/1 var(--f-mono,ui-monospace,monospace);letter-spacing:.06em;text-transform:uppercase;padding:4px 6px;border-radius:4px;background:var(--accent-soft,#F4E1C0);color:var(--accent-ink,#965300);vertical-align:2px;margin-left:6px;white-space:nowrap}
+.site-foot{font:400 13.5px/1.5 "Barlow",system-ui,sans-serif;color:var(--muted,#59616A);border-top:1px solid var(--line,#CBD0D5);background:var(--bg,#ECEEF0)}
+.site-foot .in{max-width:1300px;margin:0 auto;padding:16px max(16px,env(safe-area-inset-right,0px)) 28px max(16px,env(safe-area-inset-left,0px));display:grid;gap:6px}
+.site-foot a{color:var(--accent-ink,#965300)}
+.site-foot p{margin:0;max-width:95ch}
+/* every page ends with the full page list, so the next page is one tap away at the bottom too */
+.foot-nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 24px;min-width:0;padding-bottom:14px;margin-bottom:8px;border-bottom:1px solid var(--line,#CBD0D5)}
+@media (min-width:640px){.foot-nav{grid-template-columns:repeat(4,minmax(0,180px))}}
+.foot-nav .fn-home{grid-column:1/-1;justify-self:start;font-weight:700;color:var(--ink,#16191C);text-decoration:none;padding:4px 0}
+.foot-nav .fn-g{display:flex;flex-direction:column;align-items:flex-start;gap:0;min-width:0}
+.foot-nav .gl{font:600 11.5px var(--f-mono,ui-monospace,monospace);letter-spacing:.1em;text-transform:uppercase;color:var(--muted,#59616A);margin-bottom:2px}
+.foot-nav .fn-g a{color:var(--ink,#16191C);text-decoration:none;padding:3px 0}
+.foot-nav a:hover,.foot-nav a[aria-current]{text-decoration:underline;text-underline-offset:3px}
+@media (pointer:coarse){.foot-nav .fn-g a,.foot-nav .fn-home{padding:8px 0}}
+@media print{.site-nav,.site-foot,.swipe-hint,.nav-scrim{display:none!important}}
+/* phones: inputs fill their boxes, small text buttons get a bigger tap area, wide drawings say they scroll */
+.read input,.money input,.unitbox input{align-self:stretch}
+@media (pointer:coarse){
+  .linkbtn{min-height:40px}
+  summary{min-height:40px}
+  .mact a,.foot .links a{display:inline-block;padding:10px 0}
+  input.mm{min-height:36px}
+  input[type=range]{height:32px}
+}
+@media (max-width:600px){
+  .plate{font-size:12px}
+  .vtag{font-size:11px}
+}
+.swipe-hint{margin:6px 0 0;font:500 12.5px "Barlow",system-ui,sans-serif;color:var(--muted,#59616A);display:flex;align-items:center;gap:6px}
+.swipe-hint::before{content:"";width:18px;height:10px;background:linear-gradient(90deg,transparent 0 3px,currentColor 3px 15px,transparent 15px) center/100% 2px no-repeat;opacity:.7}
+</style></head><body><nav class="site-nav" aria-label="Site"><div class="in"><a class="brand" href="index.html">Silvia × Gaggiuino<small>unofficial</small></a><button type="button" class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="nav-links">Pages</button><div class="nav-links" id="nav-links"><span class="grp"><span class="gl">Learn</span><a href="conversion.html">The conversion</a><a href="how-silvia-works.html">How the Silvia works</a><a href="how-gaggiuino-works.html">How Gaggiuino works</a><a href="glossary.html">Glossary</a></span><span class="grp"><span class="gl">Plan</span><a href="budget.html" aria-current="page">Budget</a><a href="used-checklist.html">Used Silvia check</a><a href="which-silvia.html">Which Silvia</a><a href="parts-tracker.html">Parts tracker</a></span><span class="grp"><span class="gl">Install</span><a href="runbook.html">Runbook</a><a href="wiring.html">Wiring</a><a href="cut-list.html">Cut list</a><a href="wire-labels.html">Wire labels</a><a href="power-on-checks.html">Power-on checks</a></span><span class="grp"><span class="gl">After</span><a href="troubleshooting.html">Troubleshooting</a><a href="led-mod.html">LED switch mod</a></span></div><button type="button" class="mchip" id="mchip" aria-expanded="false" aria-controls="mpanel" aria-label="Your Silvia: not set"><span class="mchip-k">Your Silvia</span><b id="mchip-l">Set it</b></button></div><div class="mpanel" id="mpanel" hidden><div class="in"><div class="mrow"><span class="mk">Version</span><div class="mseg" role="group" aria-label="Version"><button type="button" data-mv="V1" aria-pressed="false">V1</button><button type="button" data-mv="V2" aria-pressed="false">V2</button><button type="button" data-mv="V3" aria-pressed="false">V3</button><button type="button" data-mv="V4" aria-pressed="false">V4</button><button type="button" data-mv="V5" aria-pressed="false">V5</button><button type="button" data-mv="V6" aria-pressed="false">V6</button></div><label class="mh" id="m-early-w" hidden><input type="checkbox" id="m-early"> Boiler made before May 2000</label></div><div class="mrow"><span class="mk">Model</span><div class="mseg" role="group" aria-label="Model"><button type="button" data-mm="M" aria-pressed="false">M, manual off</button><button type="button" data-mm="E" aria-pressed="false">E, auto-off</button></div><span class="mh" id="m-model-hint">E and M only exist from V5 on.</span></div><div class="mrow"><span class="mk">Mains</span><div class="mseg" role="group" aria-label="Mains voltage"><button type="button" data-mvolt="120" aria-pressed="false">120 V</button><button type="button" data-mvolt="230" aria-pressed="false">230 V</button></div></div><p id="m-summary"></p><div class="mact"><a href="which-silvia.html">Not sure which you have? Identify your Silvia</a><button type="button" id="m-clear">Clear</button><button type="button" id="m-done">Done</button></div></div></div></nav><div class="nav-scrim" id="nav-scrim" hidden></div><script>(function(){var n=(performance.getEntriesByType&&performance.getEntriesByType('navigation')[0])||{};if(n.type==='back_forward')return;var moved=false;['wheel','touchstart','keydown'].forEach(function(t){addEventListener(t,function(){moved=true},{once:true,passive:true})});function go(){if(moved)return;try{var h=location.hash;if(h){var t=document.getElementById(decodeURIComponent(h.slice(1)));if(t&&t.scrollIntoView)t.scrollIntoView({block:'start'});return}window.scrollTo(0,0);var e=document.body&&document.body.firstElementChild;if(e&&e.scrollIntoView)e.scrollIntoView({block:'start'})}catch(x){}}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',go);else go();addEventListener('load',go)})();</script><script>(function(){var nav=document.querySelector('.site-nav');if(!nav)return;var root=document.documentElement,last=0,acc=0,ticking=false,hidden=false,hold=0,touched=false;function h(){return nav.offsetHeight}function fv(a){try{return a.matches(':focus-visible')}catch(e){return true}}function busy(){var t=document.getElementById('nav-toggle'),p=document.getElementById('mpanel'),a=document.activeElement;return (t&&t.getAttribute('aria-expanded')==='true')||(p&&!p.hidden)||(a&&a!==document.body&&nav.contains(a)&&fv(a))}function cover(){root.style.setProperty('--nav-cover',hidden?'0px':h()+'px')}function set(hide){hidden=hide;nav.classList.toggle('nav-hide',hide);cover()}function Y(){var y=window.pageYOffset||0,m=Math.max(0,root.scrollHeight-innerHeight);return y<0?0:y>m?m:y}function update(){ticking=false;var y=Y(),d=y-last;last=y;nav.classList.toggle('nav-float',y>2);if(y<=h()||busy()){acc=0;if(hidden)set(false);return}if(Date.now()<hold||Math.abs(d)>innerHeight*0.8){acc=0;if(!hidden)set(true);return}if((d>0)!==(acc>0))acc=0;acc+=d;if(acc>10&&!hidden)set(true);else if(acc<-24&&hidden)set(false)}function jump(){last=Y();acc=0;if(last>h()&&!busy())set(true)}addEventListener('scroll',function(){if(!ticking){ticking=true;requestAnimationFrame(update)}},{passive:true});addEventListener('hashchange',function(){hold=Date.now()+600;jump()});document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[href*="#"]');if(a&&a.hash&&a.pathname===location.pathname&&a.host===location.host){hold=Date.now()+600;setTimeout(jump,0)}},true);nav.addEventListener('focusin',function(e){if(hidden&&fv(e.target))set(false)});['wheel','touchstart','keydown'].forEach(function(t){addEventListener(t,function(){touched=true},{once:true,passive:true})});if(window.ResizeObserver)new ResizeObserver(function(){if(!hidden)cover()}).observe(nav);set(false);function init(){last=Y();if(location.hash&&last>h()&&!touched)set(true)}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();addEventListener('load',init)})();</script><script>/* Site-wide "your Silvia" profile: version, E/M model, mains voltage. Every field is optional.
+   Elements with data-when="ver:V5,V6;model:E;volts:230;early" show only when every condition matches.
+   A field the user hasn't set never hides anything: with no version, every version's notes show; with no
+   voltage, both voltages' notes show and the wording stays generic. Nothing is ever filled in for them.
+   Elements with data-mtext="gfci|outlet|volts" get voltage-specific wording. */
+(function(){
+  var KEY='silvia-machine-v1',VERS=['V1','V2','V3','V4','V5','V6'];
+  var TEXT={
+    gfci:{'120':'GFCI','230':'RCD','':'GFCI (RCD outside North America)'},
+    outlet:{'120':'GFCI-protected outlet','230':'socket with RCD protection','':'GFCI- or RCD-protected outlet'},
+    volts:{'120':'120 V','230':'230 V','':'your mains voltage'}
+  };
+  function newer(v){return v==='V5'||v==='V6'}
+  function clean(s){
+    if(!s||typeof s!=='object')return null;
+    var ver=VERS.indexOf(s.ver)>=0?s.ver:null;
+    var model=newer(ver)&&(s.model==='E'||s.model==='M')?s.model:null;
+    var v=Number(s.volts),volts=v===230?230:v===120?120:null;
+    if(!ver&&!volts)return null;
+    return {ver:ver,model:model,volts:volts,early:ver==='V1'&&s.early===true};
+  }
+  function read(){try{return clean(JSON.parse(localStorage.getItem(KEY)||'null'))}catch(e){return null}}
+  var prof=read();
+  function conds(when){
+    return String(when||'').split(';').map(function(c){
+      c=c.trim();var i=c.indexOf(':');return {k:i<0?c:c.slice(0,i),vals:i<0?[]:c.slice(i+1).split(',')};
+    }).filter(function(c){return c.k});
+  }
+  /* true unless the profile rules the element out; unknown fields never rule anything out */
+  function matches(when){
+    if(!when||!prof)return true;
+    return conds(when).every(function(c){
+      if(c.k==='ver')return !prof.ver||c.vals.indexOf(prof.ver)>=0;
+      if(c.k==='model'){
+        if(!prof.ver)return true;
+        if(!newer(prof.ver))return c.vals.indexOf('M')>=0;   /* no E before V5 */
+        return !prof.model||c.vals.indexOf(prof.model)>=0;
+      }
+      if(c.k==='volts')return !prof.volts||c.vals.indexOf(String(prof.volts))>=0;
+      if(c.k==='early')return !prof.ver||prof.early;
+      return true;
+    });
+  }
+  /* true when the profile pins down every field the condition depends on (so a "which machines" tag adds nothing) */
+  function decided(when){
+    if(!prof)return false;
+    return conds(when).every(function(c){
+      if(c.k==='ver'||c.k==='early')return !!prof.ver;
+      if(c.k==='model')return !!prof.ver&&(!newer(prof.ver)||!!prof.model);
+      if(c.k==='volts')return !!prof.volts;
+      return true;
+    });
+  }
+  function text(key){var t=TEXT[key];if(!t)return '';return prof&&prof.volts?t[String(prof.volts)]:t['']}
+  function label(p){
+    p=p||prof;if(!p)return 'Set it';
+    var a=[];if(p.ver)a.push(p.ver+(newer(p.ver)&&p.model?' '+p.model:''));if(p.volts)a.push(p.volts+' V');
+    return a.join(', ');
+  }
+  function missing(p){
+    p=p||prof;if(!p)return [];var m=[];
+    if(!p.ver)m.push('version');else if(newer(p.ver)&&!p.model)m.push('model');
+    if(!p.volts)m.push('mains voltage');
+    return m;
+  }
+  function summary(p){
+    p=p||prof;
+    if(!p)return 'Pick your version and voltage. Until you do, every page shows all the version notes, each tagged with the machines it applies to.';
+    var m=missing(p);
+    return 'Pages now show the steps and notes for a '+label(p)+' Silvia.'+(m.length?' Add your '+m.join(' and ')+' to narrow them down; until then those notes all show.':'');
+  }
+  function apply(root){
+    root=root||document;
+    Array.prototype.forEach.call(root.querySelectorAll('[data-when]'),function(el){el.hidden=!matches(el.getAttribute('data-when'))});
+    Array.prototype.forEach.call(root.querySelectorAll('[data-mtext]'),function(el){var t=text(el.getAttribute('data-mtext'));if(t)el.textContent=t});
+    var l=document.getElementById('mchip-l');if(l)l.textContent=label();
+    var ch=document.getElementById('mchip');if(ch){ch.classList.toggle('set',!!prof);ch.setAttribute('aria-label','Your Silvia: '+(prof?label():'not set'))}
+    syncPanel();
+  }
+  function set(p){
+    prof=p?clean(p):null;
+    try{if(prof)localStorage.setItem(KEY,JSON.stringify(prof));else localStorage.removeItem(KEY)}catch(e){}
+    apply();
+    try{window.dispatchEvent(new CustomEvent('silvia-machine',{detail:prof}))}catch(e){}
+  }
+  /* start from what's saved, never from guesses */
+  function current(){return Object.assign({ver:null,model:null,volts:null,early:false},prof||{})}
+  /* ---- nav panel ---- */
+  function syncPanel(){
+    var pan=document.getElementById('mpanel');if(!pan)return;
+    var p=prof||{},nw=newer(p.ver);
+    Array.prototype.forEach.call(pan.querySelectorAll('[data-mv]'),function(b){b.setAttribute('aria-pressed',String(b.getAttribute('data-mv')===p.ver))});
+    Array.prototype.forEach.call(pan.querySelectorAll('[data-mm]'),function(b){b.disabled=!nw;b.setAttribute('aria-pressed',String(nw&&b.getAttribute('data-mm')===p.model))});
+    Array.prototype.forEach.call(pan.querySelectorAll('[data-mvolt]'),function(b){b.setAttribute('aria-pressed',String(Number(b.getAttribute('data-mvolt'))===p.volts))});
+    var ew=document.getElementById('m-early-w');if(ew)ew.hidden=p.ver!=='V1';
+    var ec=document.getElementById('m-early');if(ec)ec.checked=!!p.early;
+    var mh=document.getElementById('m-model-hint');if(mh)mh.hidden=nw;
+    var s=document.getElementById('m-summary');if(s)s.textContent=summary();
+  }
+  function wire(){
+    var chip=document.getElementById('mchip'),pan=document.getElementById('mpanel');
+    var nt=document.getElementById('nav-toggle'),nl=document.getElementById('nav-links');
+    /* the page list and the Your Silvia panel open over the page, one at a time; a tap outside or Escape closes them */
+    var scrim=document.getElementById('nav-scrim');
+    function sync(){if(scrim)scrim.hidden=!((nl&&nl.classList.contains('open'))||(pan&&!pan.hidden))}
+    function closeMenu(){if(nt&&nl&&nl.classList.contains('open')){nt.setAttribute('aria-expanded','false');nl.classList.remove('open');sync();return true}}
+    function closePanel(){if(chip&&pan&&!pan.hidden){pan.hidden=true;chip.setAttribute('aria-expanded','false');sync();return true}}
+    if(scrim)scrim.addEventListener('click',function(){closeMenu();closePanel()});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape'&&closeMenu())nt.focus()});
+    if(chip&&pan){
+      chip.addEventListener('click',function(){var open=pan.hidden;pan.hidden=!open;chip.setAttribute('aria-expanded',String(open));if(open)closeMenu();sync()});
+      pan.addEventListener('click',function(e){
+        var b=e.target.closest('button');if(!b||b.disabled)return;
+        var p=current();
+        if(b.hasAttribute('data-mv'))p.ver=b.getAttribute('data-mv');
+        else if(b.hasAttribute('data-mm'))p.model=b.getAttribute('data-mm');
+        else if(b.hasAttribute('data-mvolt'))p.volts=Number(b.getAttribute('data-mvolt'));
+        else if(b.id==='m-clear'){set(null);return}
+        else if(b.id==='m-done'){pan.hidden=true;chip.setAttribute('aria-expanded','false');sync();chip.focus();return}
+        else return;
+        set(p);
+      });
+      var ec=document.getElementById('m-early');
+      if(ec)ec.addEventListener('change',function(){var p=current();p.early=ec.checked;set(p)});
+      document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!pan.hidden){pan.hidden=true;chip.setAttribute('aria-expanded','false');sync()}});
+    }
+    if(nt&&nl)nt.addEventListener('click',function(){var open=nt.getAttribute('aria-expanded')!=='true';nt.setAttribute('aria-expanded',String(open));nl.classList.toggle('open',open);if(open)closePanel();sync()});
+    Array.prototype.forEach.call(document.querySelectorAll('[data-setmachine]'),function(b){
+      b.addEventListener('click',function(){
+        var p=current();p.ver=b.getAttribute('data-setmachine');set(p);
+      });
+    });
+    var inViewer=typeof window.claude!=='undefined';
+    var pb=document.querySelectorAll('[data-print]');
+    if(!inViewer)Array.prototype.forEach.call(pb,function(b){b.hidden=false;b.addEventListener('click',function(){window.print()})});
+    apply();
+    hints();window.addEventListener('resize',hints);
+  }
+  /* "swipe sideways" under drawings and tables that are wider than the screen */
+  function hints(){
+    Array.prototype.forEach.call(document.querySelectorAll('.scroll,.tablewrap,.table-wrap'),function(el){
+      var over=el.scrollWidth>el.clientWidth+8,h=el.nextElementSibling&&el.nextElementSibling.classList.contains('swipe-hint')?el.nextElementSibling:null;
+      if(over&&!h){h=document.createElement('p');h.className='swipe-hint';h.textContent=el.querySelector('svg')?'Swipe sideways to see the whole drawing':'Swipe sideways to see every column';el.parentNode.insertBefore(h,el.nextSibling)}
+      else if(!over&&h)h.remove();
+    });
+  }
+  window.SilviaMachine={get:function(){return prof},set:set,current:current,matches:matches,decided:decided,text:text,label:label,missing:missing,summary:summary,apply:apply};
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',wire);else wire();
+})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Layout: rating-plate header over a two-column bench. Line items on the left, a sticky running total on the right. Phones stack, with a fixed total bar at the bottom. */
+:root{
+  --bg:#ECEEF0;
+  --surface:#F9FAFA;
+  --surface-2:#E2E5E8;
+  --ink:#16191C;
+  --muted:#59616A;
+  --line:#CBD0D5;
+  --accent:#D98400;
+  --accent-ink:#965300;
+  --accent-soft:#F4E1C0;
+  --on-accent:#1A1206;
+  --c-machine:#5D6A77;
+  --c-parts:#D98400;
+  --c-tools:#3A7BA3;
+  --c-extras:#8C7B36;
+  --f-display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  --f-body:"Barlow",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --radius:10px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#111316; --surface:#1A1D21; --surface-2:#252A30; --ink:#E7E9EB; --muted:#9BA2AA; --line:#30363D;
+    --accent:#F2A33A; --accent-ink:#F5B566; --accent-soft:#3B2B13; --on-accent:#1A1206;
+    --c-machine:#8D9BA9; --c-parts:#F2A33A; --c-tools:#6AAED6; --c-extras:#C4B062;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#111316; --surface:#1A1D21; --surface-2:#252A30; --ink:#E7E9EB; --muted:#9BA2AA; --line:#30363D;
+  --accent:#F2A33A; --accent-ink:#F5B566; --accent-soft:#3B2B13; --on-accent:#1A1206;
+  --c-machine:#8D9BA9; --c-parts:#F2A33A; --c-tools:#6AAED6; --c-extras:#C4B062;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:var(--accent-ink);text-underline-offset:3px}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 56px}
+
+.top{display:grid;gap:14px;margin-bottom:30px}
+.plate{display:inline-flex;align-items:center;flex-wrap:wrap;gap:6px 12px;justify-self:start;max-width:100%;border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:7px 12px;font:500 11.5px/1.3 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.plate .rivet{width:6px;height:6px;border-radius:50%;background:var(--line);box-shadow:inset 0 0 0 1px var(--muted);opacity:.7}
+.plate b{color:var(--ink);font-weight:600}
+h1{font:700 clamp(36px,6.4vw,56px)/.95 var(--f-display);letter-spacing:.01em;margin:0;text-transform:uppercase;text-wrap:balance}
+.lede{margin:0;color:var(--muted);max-width:62ch;font-size:17px}
+
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:32px;align-items:start}
+
+.group{margin-bottom:34px}
+.group-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;border-bottom:2px solid var(--ink);padding-bottom:6px}
+.group-h h2{font:600 22px/1.1 var(--f-display);letter-spacing:.05em;text-transform:uppercase;margin:0;display:flex;align-items:center;gap:10px}
+.sw{width:10px;height:10px;border-radius:2px;display:inline-block;flex:none}
+.group-h .sum{font:500 13.5px var(--f-mono);color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.group-intro{margin:10px 0 0;color:var(--muted);font-size:14.5px;max-width:62ch}
+.pick-l{margin:16px 0 0;font-weight:600;font-size:15px}
+
+.choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;padding-top:14px}
+.choice{position:relative;display:grid;grid-template-columns:18px minmax(0,1fr);gap:4px 12px;padding:14px 16px;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);cursor:pointer;transition:border-color .15s,background-color .15s}
+.choice input{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+.choice .dot{grid-row:1 / span 3;width:18px;height:18px;border-radius:50%;border:2px solid var(--line);margin-top:2px;display:grid;place-items:center}
+.choice .dot::after{content:"";width:8px;height:8px;border-radius:50%;background:transparent}
+.choice.on{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent);background:var(--accent-soft)}
+.choice.on .dot{border-color:var(--accent)}
+.choice.on .dot::after{background:var(--accent)}
+.choice:focus-within{outline:2px solid var(--accent);outline-offset:2px}
+.cname{font:600 19px/1.15 var(--f-display);letter-spacing:.03em;text-transform:uppercase}
+.camt{font:500 15px var(--f-mono);font-variant-numeric:tabular-nums}
+.cnote{font-size:14px;color:var(--muted);line-height:1.4}
+.choice .src{grid-column:2}
+
+.found{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin-top:14px;padding:12px 14px;border:1px dashed var(--line);border-radius:var(--radius)}
+.found label{font-size:14.5px;color:var(--muted)}
+
+.lines{display:grid}
+.line{display:grid;grid-template-columns:20px minmax(0,1fr) auto;column-gap:14px;row-gap:8px;padding:15px 0;border-bottom:1px solid var(--line);align-items:start}
+.tick{margin-top:3px}
+.tick input{width:18px;height:18px;margin:0;accent-color:var(--accent);cursor:pointer}
+.fixed{width:18px;height:18px;border-radius:4px;background:var(--surface-2);border:1px solid var(--line);display:grid;place-items:center}
+.fixed svg{width:11px;height:11px}
+.lbody{min-width:0}
+.lname{font-weight:600;font-size:16.5px;line-height:1.3;display:flex;flex-wrap:wrap;gap:4px 8px;align-items:baseline}
+.lname label{cursor:pointer}
+.lname .sub{font-weight:400;color:var(--muted);font-size:14px}
+.tag{font:600 10.5px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;padding:4px 6px;border-radius:4px;background:var(--surface-2);color:var(--muted)}
+.note{margin:3px 0 0;color:var(--muted);font-size:14.5px;line-height:1.45;max-width:60ch}
+.src{font-size:13px;color:var(--muted);margin-top:4px}
+.lprice{display:grid;justify-items:end;gap:4px;text-align:right}
+.amt{font:500 15px var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.own{font:600 10.5px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--accent-ink)}
+.line.off .lname,.line.off .amt{color:var(--muted)}
+.line.off .amt{text-decoration:line-through}
+.linkbtn{appearance:none;border:0;background:none;padding:2px 0;font:500 13.5px var(--f-body);color:var(--accent-ink);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.override{grid-column:2 / 4;display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px}
+.override label{font-size:14px;color:var(--muted)}
+
+.money{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:8px;background:var(--surface);padding:0 10px;height:40px}
+.money span{font:500 15px var(--f-mono);color:var(--muted)}
+.money input{border:0;background:transparent;font:500 16px var(--f-mono);color:var(--ink);width:8ch;padding:0 4px;outline:none;font-variant-numeric:tabular-nums}
+.money:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.money input::-webkit-outer-spin-button,.money input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.money input[type=number]{-moz-appearance:textfield}
+
+.summary{position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px + var(--nav-cover,0px));transition:top .22s ease}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;display:grid;gap:16px}
+.eyebrow{font:600 12px var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.total{font:600 clamp(30px,5vw,38px)/1.05 var(--f-mono);font-variant-numeric:tabular-nums;letter-spacing:-.02em;margin-top:6px}
+.bar{display:flex;height:12px;border-radius:3px;overflow:hidden;background:var(--surface-2);gap:2px}
+.bar span{display:block;height:100%;min-width:2px;transition:flex-grow .25s}
+.legend{list-style:none;margin:0;padding:0;display:grid;gap:9px}
+.legend li{display:grid;grid-template-columns:10px minmax(0,1fr) auto;gap:10px;align-items:center;font-size:15px}
+.legend .v{font:500 14px var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.compare{border-top:1px solid var(--line);padding-top:14px;display:grid;gap:10px}
+.cmp{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-size:14.5px;color:var(--muted)}
+.cmp b{font:500 14px var(--f-mono);color:var(--ink);white-space:nowrap;font-variant-numeric:tabular-nums}
+.fine{margin:0;font-size:13px;color:var(--muted);line-height:1.45}
+.foot{display:flex;justify-content:space-between;align-items:center;gap:10px 14px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:14px}
+.status{font:500 12px var(--f-mono);color:var(--muted);display:inline-flex;align-items:center;gap:7px}
+.lamp{width:8px;height:8px;border-radius:50%;background:var(--line);flex:none}
+.status.ok .lamp{background:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.btn{appearance:none;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:8px 12px;font:500 14px var(--f-body);cursor:pointer}
+.btn:hover{border-color:var(--muted)}
+.btn.armed{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+
+.dock{position:fixed;left:0;right:0;bottom:0;z-index:5;display:none;align-items:center;justify-content:space-between;gap:12px;background:var(--ink);color:var(--bg);padding-top:12px;padding-bottom:calc(12px + env(safe-area-inset-bottom,0px));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.dock .k{font:600 11px var(--f-mono);letter-spacing:.1em;text-transform:uppercase;opacity:.75}
+.dock .t{font:600 20px/1.2 var(--f-mono);font-variant-numeric:tabular-nums}
+.dock a{color:var(--bg);font-size:14px}
+
+@media (max-width:880px){
+  .layout{grid-template-columns:minmax(0,1fr)}
+  .summary{order:-1;position:static}
+  .dock{display:flex}
+  .wrap{padding-bottom:110px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="plate" aria-label="Build spec">
+      <span class="rivet" aria-hidden="true"></span>
+      <span><b>Rancilio Silvia</b></span><span>120 V ~ 60 Hz</span><span>Gaggiuino Gen 3.5</span><span>PCB v4</span>
+      <span class="rivet" aria-hidden="true"></span>
+    </div>
+    <h1>Silvia Build Budget</h1>
+    <p class="lede">Pick a machine path and the extras you want; the total updates as you go. When you get a real quote, tap <em>Set price</em> on that line and the estimate becomes your number.</p>
+  </header>
+
+  <div class="layout">
+    <main>
+      <section class="group" aria-labelledby="g-machine">
+        <div class="group-h"><h2 id="g-machine"><span class="sw" style="background:var(--c-machine)"></span>Machine</h2><span class="sum" id="sum-machine"></span></div>
+        <div class="choices" id="machines" role="radiogroup" aria-labelledby="g-machine"></div>
+        <div class="found">
+          <label for="machine-price" id="machine-price-label">Found one? Its price</label>
+          <span class="money"><span>$</span><input id="machine-price" type="number" inputmode="decimal" min="0" step="1" placeholder="—"></span>
+          <button class="linkbtn" id="machine-clear" type="button" hidden>Use the estimate</button>
+        </div>
+      </section>
+
+      <section class="group" aria-labelledby="g-parts">
+        <div class="group-h"><h2 id="g-parts"><span class="sw" style="background:var(--c-parts)"></span>Gaggiuino parts</h2><span class="sum" id="sum-parts"></span></div>
+        <p class="group-intro">The PCB and screen from DIY-EFI or Peak Coffee, the rest of the electronics from the official parts list, and the Silvia-specific parts. Required lines stay in the total; set a price of $0 if you already have one.</p>
+        <p class="pick-l" id="sup-l">Where to buy the PCB and screen</p>
+        <div class="choices" id="suppliers" role="radiogroup" aria-labelledby="sup-l"></div>
+        <div class="lines" id="lines-parts"></div>
+      </section>
+
+      <section class="group" aria-labelledby="g-tools">
+        <div class="group-h"><h2 id="g-tools"><span class="sw" style="background:var(--c-tools)"></span>Tools</h2><span class="sum" id="sum-tools"></span></div>
+        <p class="group-intro">You have a heat gun and probably a soldering iron, so only these two are missing.</p>
+        <div class="lines" id="lines-tools"></div>
+      </section>
+
+      <section class="group" aria-labelledby="g-extras">
+        <div class="group-h"><h2 id="g-extras"><span class="sw" style="background:var(--c-extras)"></span>Extras</h2><span class="sum" id="sum-extras"></span></div>
+        <p class="group-intro">Shot weight first. Your current scale isn't Bluetooth, so real in-cup weight means one of the paid options.</p>
+        <div class="choices" id="scales" role="radiogroup" aria-label="Shot weight"></div>
+        <div class="found" id="scale-found" hidden>
+          <label for="scale-price" id="scale-price-label">Price you found</label>
+          <span class="money"><span>$</span><input id="scale-price" type="number" inputmode="decimal" min="0" step="1" placeholder="—"></span>
+          <button class="linkbtn" id="scale-clear" type="button" hidden>Use the estimate</button>
+        </div>
+        <div class="lines" id="lines-extras" style="margin-top:6px"></div>
+      </section>
+    </main>
+
+    <aside class="summary" id="summary" aria-label="Total">
+      <div class="card">
+        <div>
+          <div class="eyebrow">Your build</div>
+          <div class="total" id="total" aria-live="polite"></div>
+        </div>
+        <div class="bar" id="bar" aria-hidden="true"></div>
+        <ul class="legend" id="legend"></ul>
+        <div class="compare" id="compare"></div>
+        <p class="fine">Excludes shipping. Peak Coffee prices include US tax and its 5.2% card fee; DIY-EFI prices exclude UK shipping and any import duty. Prices checked October 14 and 15, 2026.</p>
+        <div class="foot">
+          <span class="status" id="status"><span class="lamp"></span><span id="status-text">Loading</span></span>
+          <button class="btn" id="reset" type="button">Reset to plan defaults</button>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<div class="dock" id="dock" hidden>
+  <div><div class="k">Your build</div><div class="t" id="dock-total"></div></div>
+  <a href="#summary">Breakdown</a>
+</div>
+
+<script>
+(function(){
+  var MACHINES=[
+    {id:'used',name:'Used Silvia',lo:400,hi:800,note:'Any V1 to V6 single-boiler Silvia, 120 V. Take the inspection checklist when you go look.',src:[['Price guide','https://latestcost.com/rancilio-espresso-machine-prices-costs/']]},
+    {id:'new',name:'New Silvia M (V6)',lo:900,hi:1000,note:'Whole Latte Love lists it at $900, Walmart at $995.',src:[['Whole Latte Love','https://wholelattelove.com/rancilio-silvia-m-espresso-machine'],['Walmart','https://www.walmart.com/ip/seort/202407871']]}
+  ];
+  var LINES=[
+    /* the PCB and screen price, note and link follow the supplier picked above them (see SUPPLIERS) */
+    {id:'pcb',cat:'parts',name:'Gaggiuino V4 PCB',req:true,by:{
+      diyefi:{sub:'DIY-EFI',lo:88,hi:95,note:'£68 before VAT, in stock October 14. There is no Silvia kit, so Discord recommends the PCB and screen from an approved supplier. Assumes no UK VAT and $1.30 to $1.40 per pound.',src:[['DIY-EFI','https://diy-efi.co.uk/product/gaggiuino-4-0-pcb-stm32u585']]},
+      peak:{sub:'Peak Coffee',lo:72,hi:72,note:'$68 with US tax included, plus the 5.2% card fee. In stock October 15. Sold as a non-returnable prototype.',src:[['Peak Coffee','https://www.peakcoffee.cc/product/gaggiuino-pcb/']]}}},
+    {id:'screen',cat:'parts',name:'4.3" touchscreen',req:true,by:{
+      diyefi:{sub:'DIY-EFI',lo:61,hi:66,note:'£47 before VAT, in stock. Includes firmware and a 60 cm cable. Shipping from the UK is extra and not included here.',src:[['DIY-EFI','https://diy-efi.co.uk/product/gaggiuino-4-3-screen-gen3-5']]},
+      peak:{sub:'Peak Coffee',lo:61,hi:68,note:'$58 with one cable or $65 with two, plus the card fee (the product page still says $42 or $48; checkout decides). Pre-flashed and activated. Its kit listings give the cable as 45 cm, likely too short for a Silvia, so plan on a longer one.',src:[['Peak Coffee','https://www.peakcoffee.cc/product/4-3-iot-gaggiuino-lcd/']]}}},
+    {id:'elec',cat:'parts',name:'Electronics from the official parts list',lo:45,hi:80,req:true,note:'SSR-40DA, pressure sensor, ST-Link, JST connectors and 22 AWG wire. Rough prices; AliExpress listings change often.',src:[['Official BOM','https://gaggiuino.github.io/README.md']]},
+    {id:'tc',cat:'parts',name:'M3 thermocouple and thermal paste',lo:15,hi:25,req:true,note:'Talon confirmed on Discord that the Silvia needs M3, not the M4 in the official parts list.'},
+    {id:'elbow',cat:'parts',name:'Pressure sensor tee, elbow and sealant',lo:15,hi:35,req:true,note:'A 1/8" tee at the OPV and a 1/4" to 1/8" elbow, sealed with Loctite 55. Rough prices.'},
+    {id:'wire',cat:'parts',name:'Extra 18 AWG silicone wire',lo:15,hi:25,req:true,note:'The Silvia harness runs longer than the Gaggia one.'},
+    {id:'conn',cat:'parts',name:'Connectors, silicone tape, velcro',lo:30,hi:50,req:true,note:'Bare spades for the boiler, fork spades for the SSR, butt splices for the switch wiring.'},
+    {id:'prints',cat:'parts',name:'Printed housings',sub:'Hudson Creative Group',lo:35,hi:45,req:true,note:'PCB housing $8, screen housing $12, funnel mount $15, plus screws and washers.',src:[['Hudson','https://gaggiuino.hudsoncreativegroup.com/']]},
+    {id:'sd',cat:'parts',name:'MicroSD card',lo:5,hi:10,req:false,def:true,note:'1 to 8 GB, FAT32. Turns on shot history.'},
+    {id:'meter',cat:'tools',name:'Multimeter',lo:25,hi:45,req:true,note:'Needed for the continuity checks before first power-on. A basic auto-ranging meter is enough.'},
+    {id:'crimper',cat:'tools',name:'Open-barrel crimper',lo:20,hi:35,req:false,def:true,note:'For the bare spades at the boiler. Turn this off if your crimper is already the open-barrel kind.'},
+    {id:'tof',cat:'extras',name:'Water tank sensor',sub:'ToF only, no LED',lo:15,hi:35,req:false,def:false,note:'Tank level on screen and a low-water warning at 20%.'},
+    {id:'led',cat:'extras',name:'LED switch mod',lo:5,hi:15,req:false,def:false,note:'Brings back the switch lights after the low-voltage conversion: orange 5 mm LEDs with their own 1k to 3k resistors.'}
+  ];
+  var SUPPLIERS=[
+    {id:'diyefi',name:'DIY-EFI (UK)',note:'An approved supplier in the official docs. The screen comes with a 60 cm cable. UK shipping and any import duty come on top.',src:[['DIY-EFI','https://diy-efi.co.uk/product-category/gaggiuino/']]},
+    {id:'peak',name:'Peak Coffee',note:'Ships weekly from Asia with US tax included. Talon OK\'d its PCB and screen for a Silvia build in 2025. Not on the docs\' current approved list; no warranty, and no refunds once an order is packed.',src:[['Peak Coffee','https://www.peakcoffee.cc/product-category/gaggiuino/']]}
+  ];
+  var SCALES=[
+    {id:'scale-none',name:'Predictive only',lo:0,hi:0,note:'Built into Gaggiuino. Estimates weight from pump flow, with no extra hardware.'},
+    {id:'scale-bt',name:'Bluetooth scale',lo:99,hi:140,note:'Real in-cup weight with no install. Bookoo Themis Ultra from $99, Themis Mini from $129.',src:[['Bookoo','https://bookoocoffee.com/']]},
+    {id:'scale-hw',name:'Hardware scales',lo:60,hi:120,note:'Built in under the drip tray. Advanced install; the Silvia mount needs a print service.'}
+  ];
+  var CATS=[['machine','Machine'],['parts','Gaggiuino parts'],['tools','Tools'],['extras','Extras']];
+  var KEY='silvia-build-budget-v1';
+  var CHECK='<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.2l2.2 2.2 4.8-4.9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  function $(id){return document.getElementById(id)}
+  function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+  function fmt(n){return '$'+Math.round(n).toLocaleString('en-US')}
+  function rng(lo,hi){return lo===hi?fmt(lo):fmt(lo)+' – '+fmt(hi)}
+  function srcHtml(src){
+    if(!src||!src.length) return '';
+    return '<div class="src">Price from '+src.map(function(s){return '<a href="'+esc(s[1])+'" target="_blank" rel="noopener">'+esc(s[0])+'</a>'}).join(' · ')+'</div>';
+  }
+  function byId(list,id){for(var i=0;i<list.length;i++){if(list[i].id===id)return list[i]}return null}
+
+  function defaults(){
+    var on={};LINES.forEach(function(l){if(!l.req)on[l.id]=!!l.def});
+    return {machine:'used',supplier:'diyefi',on:on,scale:'scale-none',price:{},updatedAt:0};
+  }
+  function normalize(s){
+    var d=defaults();
+    if(!s||typeof s!=='object') return d;
+    var out={machine:s.machine==='new'?'new':'used',supplier:byId(SUPPLIERS,s.supplier)?s.supplier:'diyefi',on:{},scale:byId(SCALES,s.scale)?s.scale:'scale-none',price:{},updatedAt:typeof s.updatedAt==='number'?s.updatedAt:0};
+    Object.keys(d.on).forEach(function(k){out.on[k]=(s.on&&typeof s.on[k]==='boolean')?s.on[k]:d.on[k]});
+    if(s.price&&typeof s.price==='object'){
+      Object.keys(s.price).forEach(function(k){var v=s.price[k];if(typeof v==='number'&&isFinite(v)&&v>=0)out.price[k]=v});
+    }
+    return out;
+  }
+
+  /* a line's details for the chosen supplier (lines without a supplier choice are as written) */
+  function cur(item,sup){return item.by?item.by[sup||state.supplier]:item}
+  function priceOf(item,sup){
+    var p=state.price[item.id],c=cur(item,sup);
+    return (typeof p==='number')?{lo:p,hi:p,own:true}:{lo:c.lo,hi:c.hi,own:false};
+  }
+  function compute(machineId,sup){
+    var t={machine:{lo:0,hi:0},parts:{lo:0,hi:0},tools:{lo:0,hi:0},extras:{lo:0,hi:0}};
+    var mp=priceOf(byId(MACHINES,machineId||state.machine));
+    t.machine.lo+=mp.lo;t.machine.hi+=mp.hi;
+    LINES.forEach(function(l){
+      if(l.req||state.on[l.id]){var p=priceOf(l,sup);t[l.cat].lo+=p.lo;t[l.cat].hi+=p.hi}
+    });
+    var sp=priceOf(byId(SCALES,state.scale));
+    t.extras.lo+=sp.lo;t.extras.hi+=sp.hi;
+    var all={lo:0,hi:0};
+    CATS.forEach(function(c){all.lo+=t[c[0]].lo;all.hi+=t[c[0]].hi});
+    return {cats:t,all:all};
+  }
+
+  /* ---------- static render ---------- */
+  function choiceHtml(name,item){
+    return '<label class="choice" data-id="'+item.id+'">'+
+      '<input type="radio" name="'+name+'" value="'+item.id+'" id="opt-'+item.id+'">'+
+      '<span class="dot" aria-hidden="true"></span>'+
+      '<span class="cname">'+esc(item.name)+'</span>'+
+      '<span class="camt" data-amt="'+item.id+'"></span>'+
+      '<span class="cnote">'+esc(item.note)+'</span>'+
+      srcHtml(item.src)+
+    '</label>';
+  }
+  function lineHtml(l){
+    var tick=l.req
+      ? '<span class="fixed" title="Required" style="color:var(--muted)">'+CHECK+'</span>'
+      : '<input type="checkbox" id="on-'+l.id+'" aria-describedby="note-'+l.id+'">';
+    var nameInner=l.req?esc(l.name):'<label for="on-'+l.id+'">'+esc(l.name)+'</label>';
+    return '<div class="line" data-line="'+l.id+'">'+
+      '<div class="tick">'+tick+'</div>'+
+      '<div class="lbody">'+
+        '<div class="lname">'+nameInner+(cur(l).sub?'<span class="sub">'+esc(cur(l).sub)+'</span>':'')+(l.req?'<span class="tag">Required</span>':'')+'</div>'+
+        '<p class="note" id="note-'+l.id+'">'+esc(cur(l).note)+'</p>'+srcHtml(cur(l).src)+
+      '</div>'+
+      '<div class="lprice"><span class="amt" data-amt="'+l.id+'"></span><span class="own" data-own="'+l.id+'" hidden>Your price</span>'+
+        '<button class="linkbtn" type="button" data-edit="'+l.id+'">Set price</button></div>'+
+      '<div class="override" data-ov="'+l.id+'" hidden>'+
+        '<label for="price-'+l.id+'">Your price</label>'+
+        '<span class="money"><span>$</span><input id="price-'+l.id+'" type="number" inputmode="decimal" min="0" step="1" placeholder="'+cur(l).lo+'"></span>'+
+        '<button class="linkbtn" type="button" data-clear="'+l.id+'">Use the estimate</button>'+
+      '</div>'+
+    '</div>';
+  }
+  function renderStatic(){
+    $('machines').innerHTML=MACHINES.map(function(m){return choiceHtml('machine',m)}).join('');
+    $('scales').innerHTML=SCALES.map(function(s){return choiceHtml('scale',s)}).join('');
+    $('suppliers').innerHTML=SUPPLIERS.map(function(s){return choiceHtml('supplier',s)}).join('');
+    ['parts','tools','extras'].forEach(function(cat){
+      $('lines-'+cat).innerHTML=LINES.filter(function(l){return l.cat===cat}).map(lineHtml).join('');
+    });
+  }
+
+  /* ---------- sync controls from state ---------- */
+  var openOverrides={};
+  function syncControls(){
+    MACHINES.forEach(function(m){$('opt-'+m.id).checked=(state.machine===m.id)});
+    SCALES.forEach(function(s){$('opt-'+s.id).checked=(state.scale===s.id)});
+    SUPPLIERS.forEach(function(s){$('opt-'+s.id).checked=(state.supplier===s.id)});
+    LINES.forEach(function(l){
+      if(!l.req) $('on-'+l.id).checked=!!state.on[l.id];
+      var inp=$('price-'+l.id),v=state.price[l.id];
+      if(document.activeElement!==inp) inp.value=(typeof v==='number')?String(v):'';
+    });
+    var mi=$('machine-price'),mv=state.price[state.machine];
+    if(document.activeElement!==mi) mi.value=(typeof mv==='number')?String(mv):'';
+    var si=$('scale-price'),sv=state.price[state.scale];
+    if(document.activeElement!==si) si.value=(typeof sv==='number')?String(sv):'';
+  }
+
+  /* ---------- dynamic render ---------- */
+  function render(){
+    document.querySelectorAll('.choice').forEach(function(el){
+      var id=el.getAttribute('data-id');
+      el.classList.toggle('on',id===state.machine||id===state.scale||id===state.supplier);
+    });
+    MACHINES.concat(SCALES).forEach(function(it){
+      var p=priceOf(it),el=document.querySelector('[data-amt="'+it.id+'"]');
+      el.textContent=(it.lo===0&&it.hi===0&&!p.own)?'No added cost':(p.own?fmt(p.lo)+' (your price)':rng(p.lo,p.hi));
+    });
+    /* each supplier card shows what the PCB and screen cost from it */
+    SUPPLIERS.forEach(function(s){var lo=0,hi=0;['pcb','screen'].forEach(function(id){var c=cur(byId(LINES,id),s.id);lo+=c.lo;hi+=c.hi});
+      document.querySelector('[data-amt="'+s.id+'"]').textContent='PCB and screen '+rng(lo,hi)});
+    LINES.forEach(function(l){
+      var p=priceOf(l),active=l.req||!!state.on[l.id];
+      document.querySelector('[data-amt="'+l.id+'"]').textContent=rng(p.lo,p.hi);
+      document.querySelector('[data-own="'+l.id+'"]').hidden=!p.own;
+      document.querySelector('[data-line="'+l.id+'"]').classList.toggle('off',!active);
+      var showOv=p.own||!!openOverrides[l.id];
+      document.querySelector('[data-ov="'+l.id+'"]').hidden=!showOv;
+      document.querySelector('[data-edit="'+l.id+'"]').hidden=showOv;
+    });
+    var m=byId(MACHINES,state.machine);
+    $('machine-price-label').textContent=(state.machine==='used'?'Found a used one? Its price':'Found a better price on a new one?');
+    $('machine-clear').hidden=(typeof state.price[state.machine]!=='number');
+    var sc=byId(SCALES,state.scale);
+    $('scale-found').hidden=(state.scale==='scale-none');
+    $('scale-price-label').textContent='Price you found for the '+sc.name.toLowerCase();
+    $('scale-clear').hidden=(typeof state.price[state.scale]!=='number');
+
+    var r=compute();
+    CATS.forEach(function(c){var v=r.cats[c[0]];$('sum-'+c[0]).textContent=(v.lo===0&&v.hi===0)?'$0':rng(v.lo,v.hi)});
+    $('total').textContent=rng(r.all.lo,r.all.hi);
+    $('dock-total').textContent=rng(r.all.lo,r.all.hi);
+
+    var mids=CATS.map(function(c){var v=r.cats[c[0]];return (v.lo+v.hi)/2});
+    $('bar').innerHTML=CATS.map(function(c,i){
+      return mids[i]>0?'<span style="flex-grow:'+mids[i]+';background:var(--c-'+c[0]+')"></span>':'';
+    }).join('');
+    $('legend').innerHTML=CATS.map(function(c){
+      var v=r.cats[c[0]];
+      return '<li><span class="sw" style="background:var(--c-'+c[0]+')"></span><span>'+c[1]+'</span><span class="v">'+((v.lo===0&&v.hi===0)?'$0':rng(v.lo,v.hi))+'</span></li>';
+    }).join('');
+
+    var other=state.machine==='used'?'new':'used';
+    var ro=compute(other);
+    var otherSup=state.supplier==='peak'?'diyefi':'peak',rs=compute(null,otherSup);
+    var side={lo:r.all.lo-r.cats.machine.lo,hi:r.all.hi-r.cats.machine.hi};
+    var owns=Object.keys(state.price).filter(function(k){
+      if(k===other) return false;
+      if(byId(SCALES,k)) return k===state.scale;
+      var l=byId(LINES,k); if(l) return l.req||!!state.on[l.id];
+      return k===state.machine;
+    }).length;
+    $('compare').innerHTML=
+      '<div class="cmp"><span>Same build with '+(other==='new'?'a new Silvia M':'a used Silvia')+'</span><b>'+rng(ro.all.lo,ro.all.hi)+'</b></div>'+
+      '<div class="cmp"><span>PCB and screen from '+(otherSup==='peak'?'Peak Coffee':'DIY-EFI')+' instead</span><b>'+rng(rs.all.lo,rs.all.hi)+'</b></div>'+
+      '<div class="cmp"><span>Everything except the machine</span><b>'+rng(side.lo,side.hi)+'</b></div>'+
+      (owns?'<p class="fine">Includes '+owns+' price'+(owns===1?'':'s')+' you entered.</p>':'');
+  }
+
+  /* ---------- persistence ---------- */
+  var state=defaults(),dbRef=null,mode='local',readOnly=false,saveTimer=null,chain=Promise.resolve();
+  function loadLocal(){try{var s=localStorage.getItem(KEY);return s?normalize(JSON.parse(s)):null}catch(e){return null}}
+  function saveLocal(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
+  function setStatus(kind){
+    var txt={loading:'Loading',local:'Saved on this device',saving:'Saving',saved:'Saved',readonly:'View only: changes stay on this screen'}[kind]||'';
+    $('status-text').textContent=txt;
+    $('status').classList.toggle('ok',kind==='saved');
+  }
+  function writeOnce(body){
+    return dbRef.set(body).catch(function(e){
+      if(e&&e.code==='unavailable'){
+        return new Promise(function(r){setTimeout(r,700+Math.random()*900)}).then(function(){return dbRef.set(body)});
+      }
+      throw e;
+    });
+  }
+  function onWriteError(e){
+    if(e&&(e.code==='invalid_argument'||e.code==='not_granted'||e.code==='revoked'||e.code==='capability_disabled'||e.code==='capability_removed')){readOnly=true;setStatus('readonly')}
+    else setStatus('local');
+  }
+  function scheduleSave(){
+    clearTimeout(saveTimer);
+    if(mode!=='db'){setStatus('local');return}
+    if(readOnly){setStatus('readonly');return}
+    setStatus('saving');
+    saveTimer=setTimeout(function(){
+      var body=JSON.parse(JSON.stringify(state));
+      chain=chain.then(function(){return writeOnce(body)}).then(function(){if(!readOnly)setStatus('saved')}).catch(onWriteError);
+    },700);
+  }
+  function changed(){state.updatedAt=Date.now();saveLocal();render();scheduleSave()}
+
+  function connect(){
+    var p;
+    try{p=(window.claude&&typeof window.claude.use==='function')?window.claude.use('db'):Promise.resolve(null)}catch(e){p=Promise.resolve(null)}
+    Promise.resolve(p).then(function(db){
+      if(!db){mode='local';setStatus('local');return}
+      dbRef=db.doc('plans/current');mode='db';
+      return dbRef.get().then(function(snap){
+        if(snap.exists){
+          var remote=normalize(snap.data());
+          if(remote.updatedAt>=state.updatedAt){state=remote;saveLocal();syncControls();render();setStatus('saved')}
+          else scheduleSave();
+        }else if(state.updatedAt>0){scheduleSave()}
+        else setStatus('saved');
+      }).catch(function(e){
+        if(e&&e.code==='unavailable'){setStatus('local');mode='local'}
+        else onWriteError(e);
+      });
+    }).catch(function(){mode='local';setStatus('local')});
+  }
+
+  /* ---------- events ---------- */
+  function parseMoney(v){if(v===''||v==null)return null;var n=Number(v);return (isFinite(n)&&n>=0)?Math.round(n*100)/100:undefined}
+  function bindMoney(input,keyFn){
+    input.addEventListener('input',function(){
+      var n=parseMoney(input.value),k=keyFn();
+      if(n===null){delete state.price[k]}
+      else if(n===undefined){return}
+      else state.price[k]=n;
+      changed();
+    });
+  }
+
+  renderStatic();
+  state=loadLocal()||defaults();
+  syncControls();render();setStatus('loading');
+
+  document.addEventListener('change',function(e){
+    var t=e.target;
+    if(t.name==='machine'){state.machine=t.value;syncControls();changed()}
+    else if(t.name==='scale'){state.scale=t.value;syncControls();changed()}
+    else if(t.name==='supplier'){state.supplier=t.value;$('lines-parts').innerHTML=LINES.filter(function(l){return l.cat==='parts'}).map(lineHtml).join('');LINES.forEach(function(l){if(l.cat==='parts')bindMoney($('price-'+l.id),function(){return l.id})});syncControls();changed()}
+    else if(t.id&&t.id.indexOf('on-')===0){state.on[t.id.slice(3)]=t.checked;changed()}
+  });
+  document.addEventListener('click',function(e){
+    var ed=e.target.closest('[data-edit]');
+    if(ed){var id=ed.getAttribute('data-edit');openOverrides[id]=true;render();var i=$('price-'+id);i.focus();return}
+    var cl=e.target.closest('[data-clear]');
+    if(cl){var cid=cl.getAttribute('data-clear');delete state.price[cid];openOverrides[cid]=false;$('price-'+cid).value='';changed();return}
+  });
+  LINES.forEach(function(l){bindMoney($('price-'+l.id),function(){return l.id})});
+  bindMoney($('machine-price'),function(){return state.machine});
+  bindMoney($('scale-price'),function(){return state.scale});
+  $('machine-clear').addEventListener('click',function(){delete state.price[state.machine];$('machine-price').value='';changed()});
+  $('scale-clear').addEventListener('click',function(){delete state.price[state.scale];$('scale-price').value='';changed()});
+
+  var armTimer=null,resetBtn=$('reset');
+  resetBtn.addEventListener('click',function(){
+    if(!resetBtn.classList.contains('armed')){
+      resetBtn.classList.add('armed');resetBtn.textContent='Tap again to reset';
+      clearTimeout(armTimer);armTimer=setTimeout(function(){resetBtn.classList.remove('armed');resetBtn.textContent='Reset to plan defaults'},4000);
+      return;
+    }
+    clearTimeout(armTimer);resetBtn.classList.remove('armed');resetBtn.textContent='Reset to plan defaults';
+    state=defaults();openOverrides={};syncControls();changed();
+  });
+
+  var dock=$('dock');
+  if('IntersectionObserver' in window){
+    new IntersectionObserver(function(entries){entries.forEach(function(en){dock.hidden=en.isIntersecting})},{threshold:0.15}).observe($('summary'));
+  }else{dock.hidden=false}
+
+  connect();
+})();
+</script>
+<footer class="site-foot"><div class="in"><nav class="foot-nav" aria-label="All pages"><a class="fn-home" href="index.html">Silvia × Gaggiuino home</a><div class="fn-g"><span class="gl">Learn</span><a href="conversion.html">The conversion</a><a href="how-silvia-works.html">How the Silvia works</a><a href="how-gaggiuino-works.html">How Gaggiuino works</a><a href="glossary.html">Glossary</a></div><div class="fn-g"><span class="gl">Plan</span><a href="budget.html" aria-current="page">Budget</a><a href="used-checklist.html">Used Silvia check</a><a href="which-silvia.html">Which Silvia</a><a href="parts-tracker.html">Parts tracker</a></div><div class="fn-g"><span class="gl">Install</span><a href="runbook.html">Runbook</a><a href="wiring.html">Wiring</a><a href="cut-list.html">Cut list</a><a href="wire-labels.html">Wire labels</a><a href="power-on-checks.html">Power-on checks</a></div><div class="fn-g"><span class="gl">After</span><a href="troubleshooting.html">Troubleshooting</a><a href="led-mod.html">LED switch mod</a></div></nav><p><strong>Mains voltage.</strong> This conversion puts your hands near 120/230 V wiring. Work only with the cord out, check everything with a meter before first power-on, and stop if anything here disagrees with the official Gaggiuino docs or your own reading of the machine. Nothing on this site has been reviewed by the Gaggiuino project. You are responsible for your own build.</p><p>Unofficial community material for the Rancilio Silvia, built on the work of realNiche, Talon, Juun, mjr and others on the Gaggiuino Discord, and the official docs at <a href="https://gaggiuino.github.io/">gaggiuino.github.io</a>. Content is <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>, the same terms as realNiche's diagrams. · <a href="https://github.com/Jabawabawaba/silvia-gaggiuino">Source and issues on GitHub</a></p></div></footer></body></html>

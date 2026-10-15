@@ -1,0 +1,70 @@
+%%INCLUDE:learn-defs.html%%
+  <section class="block" id="blocks" aria-labelledby="h-blocks">
+    <div class="sec-h"><h2 id="h-blocks">Who does what now</h2><span class="sum">before and after</span></div>
+    <div class="lead2">
+      <div class="prose">
+        <p>On a stock Silvia the switches and thermostats do the controlling themselves: each one sits in a mains wire and either completes a load's circuit or breaks it. Gaggiuino moves every decision into one place.</p>
+        <p>The brew, hot water and steam switches stop carrying mains and become signals. A thermocouple and a pressure sensor report what's happening. The PCB reads all of it many times a second and decides what the element, pump and 3-way valve should do, switching the pump and valve itself and the element through a solid-state relay. The screen shows it and takes your settings.</p>
+        <p class="gg"><b>What stays:</b> the power switch still breaks mains, the 165 °C safety thermostat still sits in the element's supply, a pump thermal fuse stays if yours has one, and earth is bonded exactly as before. None of those depend on software.</p>
+      </div>
+      %%FIG:blocks%%
+    </div>
+  </section>
+
+  <section class="block" id="temp" aria-labelledby="h-temp">
+    <div class="sec-h"><h2 id="h-temp">Holding the temperature</h2><span class="sum">thermocouple, PCB, SSR</span></div>
+    <div class="lead2">
+      <div class="prose">
+        <p>The thermocouple in the boiler top reports the temperature continuously, the PCB decides when the element should be on, and the SSR switches it. Instead of the stock thermostat's long on and long off, the element gets short pulses as the boiler nears the target, so the temperature settles there instead of swinging around it.</p>
+        <p>Gen 3's code isn't public, but it uses the same settings as the open Gen 2 firmware. In the Gen 2 code it works in steps. More than 10 °C below the target the element is simply on. From 10 to 5 °C below it's pulsed for a fixed share of the time, and in the last 5 °C for a smaller share, with the pulses getting shorter as the boiler closes in. At the target it's off. During a shot it runs nearly flat out to meet the cold water coming in. That code isn't a PID loop: each step is a fixed rule. Whether Gen 3 changed the details isn't published.</p>
+        <h3>The settings that shape it</h3>
+        <ul>
+          %%INCLUDE:learn-gg-temp.html%%
+        </ul>
+        <p>Gaggiuino's defaults are tuned for the Gaggia Classic. Silvia builders on Discord start from HPWR 100, Main Divider 5, Brew Divider 3, Brew Delta off and Offset 5; they're in the <a href="index.html#h-set">starting settings</a> on the home page.</p>
+      </div>
+      %%FIG:loop%%
+    </div>
+  </section>
+
+  <section class="block" id="pump" aria-labelledby="h-pump">
+    <div class="sec-h"><h2 id="h-pump">Driving the pump</h2><span class="sum">pressure and flow profiling</span></div>
+    <div class="lead2">
+      <div class="prose">
+        %%INCLUDE:learn-gg-pump.html%%
+      </div>
+      %%FIG:psm%%
+    </div>
+  </section>
+
+  <section class="block" id="newparts" aria-labelledby="h-newparts">
+    <div class="sec-h"><h2 id="h-newparts">The new parts</h2><span class="sum">what each one does</span></div>
+%%INCLUDE:learn-gg-parts.html%%
+  </section>
+
+  <section class="block" id="mods" aria-labelledby="h-mods">
+    <div class="sec-h"><h2 id="h-mods">Optional mods</h2><span class="sum">add any time</span></div>
+%%INCLUDE:learn-gg-mods.html%%
+  </section>
+
+  <section class="block" id="ground" aria-labelledby="h-ground">
+    <div class="sec-h"><h2 id="h-ground">Why the low-voltage side floats</h2></div>
+    <div class="lead2">
+      <div class="prose">
+        %%INCLUDE:learn-gg-ground.html%%
+      </div>
+      %%FIG:ground%%
+    </div>
+  </section>
+
+  <section class="block" aria-labelledby="h-next">
+    <div class="sec-h"><h2 id="h-next">Next</h2></div>
+    <div class="next"><a class="btn primary" href="runbook.html" style="text-decoration:none;display:inline-flex;align-items:center">Start the install runbook</a><a href="how-silvia-works.html">How the Silvia works</a><a href="glossary.html">Glossary</a><a href="wiring.html">Wiring reference</a></div>
+  </section>
+
+  <section class="block" aria-labelledby="h-src">
+    <div class="sec-h"><h2 id="h-src">Sources</h2></div>
+    <ul class="src">
+%%INCLUDE:learn-gg-sources.html%%
+    </ul>
+  </section>

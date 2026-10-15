@@ -1,0 +1,695 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui}img{max-width:100%}[hidden]{display:none!important}</style><title>Gaggiuino on Rancilio Silvia: Discord notes</title>
+<style>
+.site-nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;font:500 14px/1.35 "Barlow",system-ui,sans-serif;background:var(--surface,#F9FAFA);color:var(--ink,#16191C);border-bottom:1px solid var(--line,#CBD0D5);transition:transform .22s ease,box-shadow .22s ease}
+/* it slides away while you read down the page and comes back as soon as you scroll up a little (NAV_JS) */
+.site-nav.nav-hide{transform:translateY(calc(-100% - env(safe-area-inset-top,0px)))}
+.site-nav.nav-float{box-shadow:0 6px 18px rgba(0,0,0,.16)}
+@media (prefers-reduced-motion:reduce){.site-nav{transition:none}}
+.site-nav .in{max-width:1300px;margin:0 auto;padding:8px max(16px,env(safe-area-inset-right,0px)) 8px max(16px,env(safe-area-inset-left,0px));display:flex;align-items:center;gap:6px 16px;flex-wrap:wrap}
+.site-nav a{color:var(--ink,#16191C);text-decoration:none;padding:4px 0;white-space:nowrap}
+.site-nav a:hover,.site-nav a[aria-current]{text-decoration:underline;text-underline-offset:3px}
+.site-nav .brand{font-weight:700;letter-spacing:.01em;padding:8px 0}
+.site-nav .brand small{font-weight:500;color:var(--muted,#59616A);margin-left:6px;font-size:12px}
+.site-nav .nav-links{display:flex;flex-wrap:wrap;align-items:center;gap:2px 16px;flex:1 1 auto;min-width:0}
+.site-nav .grp{display:inline-flex;flex-wrap:wrap;align-items:center;gap:2px 12px}
+.site-nav .gl{font:600 10.5px var(--f-mono,ui-monospace,monospace);letter-spacing:.1em;text-transform:uppercase;color:var(--muted,#59616A)}
+.site-nav button{font:inherit;color:inherit}
+.nav-toggle{display:none;appearance:none;border:1px solid var(--line,#CBD0D5);background:var(--surface,#F9FAFA);border-radius:8px;padding:6px 12px;cursor:pointer;margin-left:auto}
+.nav-toggle[aria-expanded="true"]{background:var(--ink,#16191C);color:var(--bg,#ECEEF0);border-color:var(--ink,#16191C)}
+.mchip{appearance:none;border:1px solid var(--accent,#D98400);background:var(--accent-soft,#F4E1C0);color:var(--accent-ink,#965300);border-radius:999px;padding:6px 12px;min-height:36px;cursor:pointer;font-weight:600;white-space:nowrap}
+.mchip b{color:var(--ink,#16191C);font-weight:600;margin-left:4px}
+/* desktop: brand and Your Silvia on the first row, every page on the second */
+@media (min-width:1061px){
+  .site-nav .nav-links{order:3;flex-basis:100%}
+  .mchip{margin-left:auto}
+}
+/* tablets and phones: brand, Your Silvia and the Pages button on one row; the page list opens below */
+@media (max-width:1060px){
+  .site-nav .brand{order:1}
+  .mchip{order:2;margin-left:auto;min-height:40px}
+  .nav-toggle{display:inline-block;order:3;margin-left:0;min-height:40px}
+  .site-nav .nav-links{display:none;order:5;flex-basis:100%;flex-direction:column;align-items:flex-start;gap:6px;padding:6px 0 6px}
+  .site-nav .nav-links.open{display:flex;position:absolute;left:0;right:0;top:100%;background:var(--surface,#F9FAFA);border-top:1px solid var(--line,#CBD0D5);border-bottom:1px solid var(--line,#CBD0D5);box-shadow:0 12px 24px rgba(0,0,0,.18);padding:4px max(16px,env(safe-area-inset-right,0px)) 12px max(16px,env(safe-area-inset-left,0px));max-height:calc(100vh - 120px);max-height:calc(100svh - 120px);overflow-y:auto;overscroll-behavior:contain}
+  .site-nav .grp{gap:0 18px}
+  .site-nav .nav-links a{display:inline-flex;align-items:center;min-height:40px}
+}
+@media (max-width:480px){
+  .site-nav .in{gap:6px 10px}
+  .site-nav .brand small{display:none}
+  .mchip:not(.set) #mchip-l{display:none}
+  .mchip.set .mchip-k{display:none}
+  .mchip.set b{margin-left:0}
+}
+/* the page list (phones) and the Your Silvia panel open over the page, so nothing below them jumps */
+.mpanel{position:absolute;left:0;right:0;top:100%;border-top:1px solid var(--line,#CBD0D5);border-bottom:1px solid var(--line,#CBD0D5);background:var(--surface,#F9FAFA);box-shadow:0 12px 24px rgba(0,0,0,.18);max-height:calc(100vh - 120px);max-height:calc(100svh - 120px);overflow-y:auto;overscroll-behavior:contain}
+.mpanel .in{display:grid;gap:12px;padding-block:14px 16px}
+/* behind an open page list or panel: dims the page, and a tap on it closes them instead of following whatever link was under it */
+.nav-scrim{position:fixed;inset:0;z-index:49;background:rgba(10,14,18,.3);-webkit-tap-highlight-color:transparent}
+.mrow{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}
+.mk{font:600 11px var(--f-mono,ui-monospace,monospace);letter-spacing:.1em;text-transform:uppercase;color:var(--muted,#59616A);min-width:7ch}
+.mseg{display:inline-flex;flex-wrap:wrap;border:1px solid var(--line,#CBD0D5);border-radius:999px;overflow:hidden}
+.mseg button{appearance:none;border:0;border-right:1px solid var(--line,#CBD0D5);background:var(--surface,#F9FAFA);padding:7px 13px;cursor:pointer;font-weight:600;min-height:36px}
+.mseg button:last-child{border-right:0}
+.mseg button[aria-pressed="true"]{background:var(--ink,#16191C);color:var(--bg,#ECEEF0)}
+.mseg button[disabled]{opacity:.4;cursor:default}
+.mh{font-size:13px;color:var(--muted,#59616A)}
+#m-summary{margin:0;font-size:14px;color:var(--muted,#59616A);max-width:80ch}
+.mact{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px}
+.mact a{color:var(--accent-ink,#965300);text-decoration:underline}
+.mact button{appearance:none;border:1px solid var(--line,#CBD0D5);background:var(--surface,#F9FAFA);border-radius:8px;padding:6px 12px;cursor:pointer}
+.mact button#m-done{background:var(--ink,#16191C);color:var(--bg,#ECEEF0);border-color:var(--ink,#16191C)}
+.vtag{display:inline-block;font:600 10.5px/1 var(--f-mono,ui-monospace,monospace);letter-spacing:.06em;text-transform:uppercase;padding:4px 6px;border-radius:4px;background:var(--accent-soft,#F4E1C0);color:var(--accent-ink,#965300);vertical-align:2px;margin-left:6px;white-space:nowrap}
+.site-foot{font:400 13.5px/1.5 "Barlow",system-ui,sans-serif;color:var(--muted,#59616A);border-top:1px solid var(--line,#CBD0D5);background:var(--bg,#ECEEF0)}
+.site-foot .in{max-width:1300px;margin:0 auto;padding:16px max(16px,env(safe-area-inset-right,0px)) 28px max(16px,env(safe-area-inset-left,0px));display:grid;gap:6px}
+.site-foot a{color:var(--accent-ink,#965300)}
+.site-foot p{margin:0;max-width:95ch}
+/* every page ends with the full page list, so the next page is one tap away at the bottom too */
+.foot-nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 24px;min-width:0;padding-bottom:14px;margin-bottom:8px;border-bottom:1px solid var(--line,#CBD0D5)}
+@media (min-width:640px){.foot-nav{grid-template-columns:repeat(4,minmax(0,180px))}}
+.foot-nav .fn-home{grid-column:1/-1;justify-self:start;font-weight:700;color:var(--ink,#16191C);text-decoration:none;padding:4px 0}
+.foot-nav .fn-g{display:flex;flex-direction:column;align-items:flex-start;gap:0;min-width:0}
+.foot-nav .gl{font:600 11.5px var(--f-mono,ui-monospace,monospace);letter-spacing:.1em;text-transform:uppercase;color:var(--muted,#59616A);margin-bottom:2px}
+.foot-nav .fn-g a{color:var(--ink,#16191C);text-decoration:none;padding:3px 0}
+.foot-nav a:hover,.foot-nav a[aria-current]{text-decoration:underline;text-underline-offset:3px}
+@media (pointer:coarse){.foot-nav .fn-g a,.foot-nav .fn-home{padding:8px 0}}
+@media print{.site-nav,.site-foot,.swipe-hint,.nav-scrim{display:none!important}}
+/* phones: inputs fill their boxes, small text buttons get a bigger tap area, wide drawings say they scroll */
+.read input,.money input,.unitbox input{align-self:stretch}
+@media (pointer:coarse){
+  .linkbtn{min-height:40px}
+  summary{min-height:40px}
+  .mact a,.foot .links a{display:inline-block;padding:10px 0}
+  input.mm{min-height:36px}
+  input[type=range]{height:32px}
+}
+@media (max-width:600px){
+  .plate{font-size:12px}
+  .vtag{font-size:11px}
+}
+.swipe-hint{margin:6px 0 0;font:500 12.5px "Barlow",system-ui,sans-serif;color:var(--muted,#59616A);display:flex;align-items:center;gap:6px}
+.swipe-hint::before{content:"";width:18px;height:10px;background:linear-gradient(90deg,transparent 0 3px,currentColor 3px 15px,transparent 15px) center/100% 2px no-repeat;opacity:.7}
+</style></head><body><nav class="site-nav" aria-label="Site"><div class="in"><a class="brand" href="index.html">Silvia × Gaggiuino<small>unofficial</small></a><button type="button" class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="nav-links">Pages</button><div class="nav-links" id="nav-links"><span class="grp"><span class="gl">Learn</span><a href="conversion.html">The conversion</a><a href="how-silvia-works.html">How the Silvia works</a><a href="how-gaggiuino-works.html">How Gaggiuino works</a><a href="glossary.html">Glossary</a></span><span class="grp"><span class="gl">Plan</span><a href="budget.html">Budget</a><a href="used-checklist.html">Used Silvia check</a><a href="which-silvia.html">Which Silvia</a><a href="parts-tracker.html">Parts tracker</a></span><span class="grp"><span class="gl">Install</span><a href="runbook.html">Runbook</a><a href="wiring.html">Wiring</a><a href="cut-list.html">Cut list</a><a href="wire-labels.html">Wire labels</a><a href="power-on-checks.html">Power-on checks</a></span><span class="grp"><span class="gl">After</span><a href="troubleshooting.html">Troubleshooting</a><a href="led-mod.html">LED switch mod</a></span></div><button type="button" class="mchip" id="mchip" aria-expanded="false" aria-controls="mpanel" aria-label="Your Silvia: not set"><span class="mchip-k">Your Silvia</span><b id="mchip-l">Set it</b></button></div><div class="mpanel" id="mpanel" hidden><div class="in"><div class="mrow"><span class="mk">Version</span><div class="mseg" role="group" aria-label="Version"><button type="button" data-mv="V1" aria-pressed="false">V1</button><button type="button" data-mv="V2" aria-pressed="false">V2</button><button type="button" data-mv="V3" aria-pressed="false">V3</button><button type="button" data-mv="V4" aria-pressed="false">V4</button><button type="button" data-mv="V5" aria-pressed="false">V5</button><button type="button" data-mv="V6" aria-pressed="false">V6</button></div><label class="mh" id="m-early-w" hidden><input type="checkbox" id="m-early"> Boiler made before May 2000</label></div><div class="mrow"><span class="mk">Model</span><div class="mseg" role="group" aria-label="Model"><button type="button" data-mm="M" aria-pressed="false">M, manual off</button><button type="button" data-mm="E" aria-pressed="false">E, auto-off</button></div><span class="mh" id="m-model-hint">E and M only exist from V5 on.</span></div><div class="mrow"><span class="mk">Mains</span><div class="mseg" role="group" aria-label="Mains voltage"><button type="button" data-mvolt="120" aria-pressed="false">120 V</button><button type="button" data-mvolt="230" aria-pressed="false">230 V</button></div></div><p id="m-summary"></p><div class="mact"><a href="which-silvia.html">Not sure which you have? Identify your Silvia</a><button type="button" id="m-clear">Clear</button><button type="button" id="m-done">Done</button></div></div></div></nav><div class="nav-scrim" id="nav-scrim" hidden></div><script>(function(){var n=(performance.getEntriesByType&&performance.getEntriesByType('navigation')[0])||{};if(n.type==='back_forward')return;var moved=false;['wheel','touchstart','keydown'].forEach(function(t){addEventListener(t,function(){moved=true},{once:true,passive:true})});function go(){if(moved)return;try{var h=location.hash;if(h){var t=document.getElementById(decodeURIComponent(h.slice(1)));if(t&&t.scrollIntoView)t.scrollIntoView({block:'start'});return}window.scrollTo(0,0);var e=document.body&&document.body.firstElementChild;if(e&&e.scrollIntoView)e.scrollIntoView({block:'start'})}catch(x){}}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',go);else go();addEventListener('load',go)})();</script><script>(function(){var nav=document.querySelector('.site-nav');if(!nav)return;var root=document.documentElement,last=0,acc=0,ticking=false,hidden=false,hold=0,touched=false;function h(){return nav.offsetHeight}function fv(a){try{return a.matches(':focus-visible')}catch(e){return true}}function busy(){var t=document.getElementById('nav-toggle'),p=document.getElementById('mpanel'),a=document.activeElement;return (t&&t.getAttribute('aria-expanded')==='true')||(p&&!p.hidden)||(a&&a!==document.body&&nav.contains(a)&&fv(a))}function cover(){root.style.setProperty('--nav-cover',hidden?'0px':h()+'px')}function set(hide){hidden=hide;nav.classList.toggle('nav-hide',hide);cover()}function Y(){var y=window.pageYOffset||0,m=Math.max(0,root.scrollHeight-innerHeight);return y<0?0:y>m?m:y}function update(){ticking=false;var y=Y(),d=y-last;last=y;nav.classList.toggle('nav-float',y>2);if(y<=h()||busy()){acc=0;if(hidden)set(false);return}if(Date.now()<hold||Math.abs(d)>innerHeight*0.8){acc=0;if(!hidden)set(true);return}if((d>0)!==(acc>0))acc=0;acc+=d;if(acc>10&&!hidden)set(true);else if(acc<-24&&hidden)set(false)}function jump(){last=Y();acc=0;if(last>h()&&!busy())set(true)}addEventListener('scroll',function(){if(!ticking){ticking=true;requestAnimationFrame(update)}},{passive:true});addEventListener('hashchange',function(){hold=Date.now()+600;jump()});document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[href*="#"]');if(a&&a.hash&&a.pathname===location.pathname&&a.host===location.host){hold=Date.now()+600;setTimeout(jump,0)}},true);nav.addEventListener('focusin',function(e){if(hidden&&fv(e.target))set(false)});['wheel','touchstart','keydown'].forEach(function(t){addEventListener(t,function(){touched=true},{once:true,passive:true})});if(window.ResizeObserver)new ResizeObserver(function(){if(!hidden)cover()}).observe(nav);set(false);function init(){last=Y();if(location.hash&&last>h()&&!touched)set(true)}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();addEventListener('load',init)})();</script><script>/* Site-wide "your Silvia" profile: version, E/M model, mains voltage. Every field is optional.
+   Elements with data-when="ver:V5,V6;model:E;volts:230;early" show only when every condition matches.
+   A field the user hasn't set never hides anything: with no version, every version's notes show; with no
+   voltage, both voltages' notes show and the wording stays generic. Nothing is ever filled in for them.
+   Elements with data-mtext="gfci|outlet|volts" get voltage-specific wording. */
+(function(){
+  var KEY='silvia-machine-v1',VERS=['V1','V2','V3','V4','V5','V6'];
+  var TEXT={
+    gfci:{'120':'GFCI','230':'RCD','':'GFCI (RCD outside North America)'},
+    outlet:{'120':'GFCI-protected outlet','230':'socket with RCD protection','':'GFCI- or RCD-protected outlet'},
+    volts:{'120':'120 V','230':'230 V','':'your mains voltage'}
+  };
+  function newer(v){return v==='V5'||v==='V6'}
+  function clean(s){
+    if(!s||typeof s!=='object')return null;
+    var ver=VERS.indexOf(s.ver)>=0?s.ver:null;
+    var model=newer(ver)&&(s.model==='E'||s.model==='M')?s.model:null;
+    var v=Number(s.volts),volts=v===230?230:v===120?120:null;
+    if(!ver&&!volts)return null;
+    return {ver:ver,model:model,volts:volts,early:ver==='V1'&&s.early===true};
+  }
+  function read(){try{return clean(JSON.parse(localStorage.getItem(KEY)||'null'))}catch(e){return null}}
+  var prof=read();
+  function conds(when){
+    return String(when||'').split(';').map(function(c){
+      c=c.trim();var i=c.indexOf(':');return {k:i<0?c:c.slice(0,i),vals:i<0?[]:c.slice(i+1).split(',')};
+    }).filter(function(c){return c.k});
+  }
+  /* true unless the profile rules the element out; unknown fields never rule anything out */
+  function matches(when){
+    if(!when||!prof)return true;
+    return conds(when).every(function(c){
+      if(c.k==='ver')return !prof.ver||c.vals.indexOf(prof.ver)>=0;
+      if(c.k==='model'){
+        if(!prof.ver)return true;
+        if(!newer(prof.ver))return c.vals.indexOf('M')>=0;   /* no E before V5 */
+        return !prof.model||c.vals.indexOf(prof.model)>=0;
+      }
+      if(c.k==='volts')return !prof.volts||c.vals.indexOf(String(prof.volts))>=0;
+      if(c.k==='early')return !prof.ver||prof.early;
+      return true;
+    });
+  }
+  /* true when the profile pins down every field the condition depends on (so a "which machines" tag adds nothing) */
+  function decided(when){
+    if(!prof)return false;
+    return conds(when).every(function(c){
+      if(c.k==='ver'||c.k==='early')return !!prof.ver;
+      if(c.k==='model')return !!prof.ver&&(!newer(prof.ver)||!!prof.model);
+      if(c.k==='volts')return !!prof.volts;
+      return true;
+    });
+  }
+  function text(key){var t=TEXT[key];if(!t)return '';return prof&&prof.volts?t[String(prof.volts)]:t['']}
+  function label(p){
+    p=p||prof;if(!p)return 'Set it';
+    var a=[];if(p.ver)a.push(p.ver+(newer(p.ver)&&p.model?' '+p.model:''));if(p.volts)a.push(p.volts+' V');
+    return a.join(', ');
+  }
+  function missing(p){
+    p=p||prof;if(!p)return [];var m=[];
+    if(!p.ver)m.push('version');else if(newer(p.ver)&&!p.model)m.push('model');
+    if(!p.volts)m.push('mains voltage');
+    return m;
+  }
+  function summary(p){
+    p=p||prof;
+    if(!p)return 'Pick your version and voltage. Until you do, every page shows all the version notes, each tagged with the machines it applies to.';
+    var m=missing(p);
+    return 'Pages now show the steps and notes for a '+label(p)+' Silvia.'+(m.length?' Add your '+m.join(' and ')+' to narrow them down; until then those notes all show.':'');
+  }
+  function apply(root){
+    root=root||document;
+    Array.prototype.forEach.call(root.querySelectorAll('[data-when]'),function(el){el.hidden=!matches(el.getAttribute('data-when'))});
+    Array.prototype.forEach.call(root.querySelectorAll('[data-mtext]'),function(el){var t=text(el.getAttribute('data-mtext'));if(t)el.textContent=t});
+    var l=document.getElementById('mchip-l');if(l)l.textContent=label();
+    var ch=document.getElementById('mchip');if(ch){ch.classList.toggle('set',!!prof);ch.setAttribute('aria-label','Your Silvia: '+(prof?label():'not set'))}
+    syncPanel();
+  }
+  function set(p){
+    prof=p?clean(p):null;
+    try{if(prof)localStorage.setItem(KEY,JSON.stringify(prof));else localStorage.removeItem(KEY)}catch(e){}
+    apply();
+    try{window.dispatchEvent(new CustomEvent('silvia-machine',{detail:prof}))}catch(e){}
+  }
+  /* start from what's saved, never from guesses */
+  function current(){return Object.assign({ver:null,model:null,volts:null,early:false},prof||{})}
+  /* ---- nav panel ---- */
+  function syncPanel(){
+    var pan=document.getElementById('mpanel');if(!pan)return;
+    var p=prof||{},nw=newer(p.ver);
+    Array.prototype.forEach.call(pan.querySelectorAll('[data-mv]'),function(b){b.setAttribute('aria-pressed',String(b.getAttribute('data-mv')===p.ver))});
+    Array.prototype.forEach.call(pan.querySelectorAll('[data-mm]'),function(b){b.disabled=!nw;b.setAttribute('aria-pressed',String(nw&&b.getAttribute('data-mm')===p.model))});
+    Array.prototype.forEach.call(pan.querySelectorAll('[data-mvolt]'),function(b){b.setAttribute('aria-pressed',String(Number(b.getAttribute('data-mvolt'))===p.volts))});
+    var ew=document.getElementById('m-early-w');if(ew)ew.hidden=p.ver!=='V1';
+    var ec=document.getElementById('m-early');if(ec)ec.checked=!!p.early;
+    var mh=document.getElementById('m-model-hint');if(mh)mh.hidden=nw;
+    var s=document.getElementById('m-summary');if(s)s.textContent=summary();
+  }
+  function wire(){
+    var chip=document.getElementById('mchip'),pan=document.getElementById('mpanel');
+    var nt=document.getElementById('nav-toggle'),nl=document.getElementById('nav-links');
+    /* the page list and the Your Silvia panel open over the page, one at a time; a tap outside or Escape closes them */
+    var scrim=document.getElementById('nav-scrim');
+    function sync(){if(scrim)scrim.hidden=!((nl&&nl.classList.contains('open'))||(pan&&!pan.hidden))}
+    function closeMenu(){if(nt&&nl&&nl.classList.contains('open')){nt.setAttribute('aria-expanded','false');nl.classList.remove('open');sync();return true}}
+    function closePanel(){if(chip&&pan&&!pan.hidden){pan.hidden=true;chip.setAttribute('aria-expanded','false');sync();return true}}
+    if(scrim)scrim.addEventListener('click',function(){closeMenu();closePanel()});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape'&&closeMenu())nt.focus()});
+    if(chip&&pan){
+      chip.addEventListener('click',function(){var open=pan.hidden;pan.hidden=!open;chip.setAttribute('aria-expanded',String(open));if(open)closeMenu();sync()});
+      pan.addEventListener('click',function(e){
+        var b=e.target.closest('button');if(!b||b.disabled)return;
+        var p=current();
+        if(b.hasAttribute('data-mv'))p.ver=b.getAttribute('data-mv');
+        else if(b.hasAttribute('data-mm'))p.model=b.getAttribute('data-mm');
+        else if(b.hasAttribute('data-mvolt'))p.volts=Number(b.getAttribute('data-mvolt'));
+        else if(b.id==='m-clear'){set(null);return}
+        else if(b.id==='m-done'){pan.hidden=true;chip.setAttribute('aria-expanded','false');sync();chip.focus();return}
+        else return;
+        set(p);
+      });
+      var ec=document.getElementById('m-early');
+      if(ec)ec.addEventListener('change',function(){var p=current();p.early=ec.checked;set(p)});
+      document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!pan.hidden){pan.hidden=true;chip.setAttribute('aria-expanded','false');sync()}});
+    }
+    if(nt&&nl)nt.addEventListener('click',function(){var open=nt.getAttribute('aria-expanded')!=='true';nt.setAttribute('aria-expanded',String(open));nl.classList.toggle('open',open);if(open)closePanel();sync()});
+    Array.prototype.forEach.call(document.querySelectorAll('[data-setmachine]'),function(b){
+      b.addEventListener('click',function(){
+        var p=current();p.ver=b.getAttribute('data-setmachine');set(p);
+      });
+    });
+    var inViewer=typeof window.claude!=='undefined';
+    var pb=document.querySelectorAll('[data-print]');
+    if(!inViewer)Array.prototype.forEach.call(pb,function(b){b.hidden=false;b.addEventListener('click',function(){window.print()})});
+    apply();
+    hints();window.addEventListener('resize',hints);
+  }
+  /* "swipe sideways" under drawings and tables that are wider than the screen */
+  function hints(){
+    Array.prototype.forEach.call(document.querySelectorAll('.scroll,.tablewrap,.table-wrap'),function(el){
+      var over=el.scrollWidth>el.clientWidth+8,h=el.nextElementSibling&&el.nextElementSibling.classList.contains('swipe-hint')?el.nextElementSibling:null;
+      if(over&&!h){h=document.createElement('p');h.className='swipe-hint';h.textContent=el.querySelector('svg')?'Swipe sideways to see the whole drawing':'Swipe sideways to see every column';el.parentNode.insertBefore(h,el.nextSibling)}
+      else if(!over&&h)h.remove();
+    });
+  }
+  window.SilviaMachine={get:function(){return prof},set:set,current:current,matches:matches,decided:decided,text:text,label:label,missing:missing,summary:summary,apply:apply};
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',wire);else wire();
+})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Shared tokens and components for the site-only pages (home, which Silvia, cut list, troubleshooting). */
+:root{
+  --bg:#ECEEF0; --surface:#F9FAFA; --surface-2:#E2E5E8; --ink:#16191C; --muted:#59616A; --line:#CBD0D5;
+  --accent:#D98400; --accent-ink:#965300; --accent-soft:#F4E1C0; --on-accent:#1A1206;
+  --good:#2D7A4C; --good-soft:#DCEFE3; --bad:#B13A2F; --bad-soft:#F6DEDB; --blue:#2F6F98; --blue-soft:#DCE9F2;
+  --w-l:#B03A2E; --w-h:#C77800; --w-n:#2F5FB3; --w-e:#2D7A4C; --w-lv:#7046B8; --w-lvg:#59616A; --w-s:#1F7F86;
+  --f-display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  --f-body:"Barlow",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#111316; --surface:#1A1D21; --surface-2:#252A30; --ink:#E7E9EB; --muted:#9BA2AA; --line:#30363D;
+    --accent:#F2A33A; --accent-ink:#F5B566; --accent-soft:#3B2B13; --on-accent:#1A1206;
+    --good:#63C08A; --good-soft:#17301F; --bad:#EC7064; --bad-soft:#3A1D1A; --blue:#6AAED6; --blue-soft:#16293A;
+    --w-l:#F0735F; --w-h:#F2A33A; --w-n:#79A6F2; --w-e:#63C08A; --w-lv:#B595F2; --w-lvg:#9BA2AA; --w-s:#5CC3C9;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#111316; --surface:#1A1D21; --surface-2:#252A30; --ink:#E7E9EB; --muted:#9BA2AA; --line:#30363D;
+  --accent:#F2A33A; --accent-ink:#F5B566; --accent-soft:#3B2B13; --on-accent:#1A1206;
+  --good:#63C08A; --good-soft:#17301F; --bad:#EC7064; --bad-soft:#3A1D1A; --blue:#6AAED6; --blue-soft:#16293A;
+  --w-l:#F0735F; --w-h:#F2A33A; --w-n:#79A6F2; --w-e:#63C08A; --w-lv:#B595F2; --w-lvg:#9BA2AA; --w-s:#5CC3C9;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16.5px;line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:var(--accent-ink);text-underline-offset:3px}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.wrap{max-width:980px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:30px 64px}
+.top{display:grid;gap:14px;margin-bottom:24px}
+.plate{display:inline-flex;align-items:center;flex-wrap:wrap;gap:6px 12px;justify-self:start;max-width:100%;border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:7px 12px;font:500 11.5px/1.3 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.plate .rivet{width:6px;height:6px;border-radius:50%;background:var(--line);box-shadow:inset 0 0 0 1px var(--muted);opacity:.7}
+.plate b{color:var(--ink);font-weight:600}
+/* rivets pinned to the plate's ends so a wrapped plate never leaves one on a line of its own */
+.plate{position:relative;padding:7px 26px}.plate .rivet{position:absolute;top:calc(50% - 3px);left:10px}.plate .rivet:last-child{left:auto;right:10px}
+h1{font:700 clamp(38px,6.6vw,60px)/.95 var(--f-display);letter-spacing:.01em;margin:0;text-transform:uppercase;text-wrap:balance}
+h2{font:600 24px/1.1 var(--f-display);letter-spacing:.05em;text-transform:uppercase;margin:0;text-wrap:balance}
+h3{margin:0;font-size:18px;font-weight:600;line-height:1.3}
+.lede{margin:0;color:var(--muted);max-width:66ch;font-size:17.5px}
+.warn{border:1px solid var(--bad);background:var(--bad-soft);border-radius:10px;padding:12px 16px;display:grid;gap:4px;max-width:880px}
+.warn strong{font:600 13px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--bad)}
+.warn p{margin:0;font-size:15.5px}
+section.block{margin-top:38px}
+.sec-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;border-bottom:2px solid var(--ink);padding-bottom:6px;margin-bottom:14px}
+.sec-h .sum{font:500 13px var(--f-mono);color:var(--muted);white-space:nowrap}
+/* on phones a long heading takes its own line and the note drops below it, instead of the heading squeezing into a column */
+@media (max-width:520px){.sec-h{flex-wrap:wrap;row-gap:2px}.sec-h .sum{white-space:normal}}
+.k{font:600 11px var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.fine{margin:0;font-size:14.5px;color:var(--muted);max-width:90ch}
+.chip{appearance:none;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 13px;font:600 14px var(--f-body);cursor:pointer;min-height:38px;display:inline-flex;align-items:center;gap:7px}
+.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.chip .n{font:500 12px var(--f-mono);color:var(--muted)}
+.chip[aria-pressed="true"] .n{color:var(--bg);opacity:.75}
+.btn{appearance:none;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 16px;font:600 15px var(--f-body);cursor:pointer;min-height:44px}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th{font:600 11px var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-align:left;padding:10px 10px 6px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.print-only{display:none}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@media print{
+  :root,:root[data-theme="dark"],:root:not([data-theme="light"]){--bg:#fff;--surface:#fff;--surface-2:#eee;--ink:#000;--muted:#333;--line:#999;--accent:#000;--accent-ink:#000;--accent-soft:#fff;color-scheme:light}
+  body{background:#fff;color:#000;font-size:10.5pt}
+  .wrap{max-width:none;padding:0}
+  .print-only{display:block}
+  .no-print,[data-print]{display:none!important}
+}
+
+/* Reference docs, rendered from build/docs-*.md by md2html.py: a plain reading column. */
+.doc{max-width:74ch;display:grid;grid-template-columns:minmax(0,1fr);gap:12px;padding-bottom:24px}
+.doc>*{min-width:0}
+.doc h2{font:600 24px/1.1 var(--f-display);letter-spacing:.03em;text-transform:uppercase;margin:18px 0 0;border-bottom:2px solid var(--ink);padding-bottom:6px}
+.doc h3{font:600 19px/1.15 var(--f-display);letter-spacing:.03em;text-transform:uppercase;margin:8px 0 0}
+.doc p,.doc li{font-size:16px;line-height:1.6;margin:0;overflow-wrap:anywhere}
+.doc ul,.doc ol{margin:0;padding-left:22px;display:grid;grid-template-columns:minmax(0,1fr);gap:6px}
+.doc li{min-width:0}
+.doc li ul,.doc li ol{margin-top:6px}
+.doc code{font:500 .88em var(--f-mono);background:var(--surface-2);padding:1px 5px;border-radius:4px;overflow-wrap:anywhere}
+.doc pre{margin:6px 0;padding:10px 12px;background:var(--surface-2);border-radius:8px;overflow-x:auto}
+.doc pre code{background:none;padding:0}
+.doc table{font-size:15px}
+.doc hr{border:0;border-top:1px solid var(--line);margin:8px 0}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="plate"><span class="rivet" aria-hidden="true"></span><span><b>Reference</b></span><span>Discord thread notes</span><span class="rivet" aria-hidden="true"></span></div>
+    <h1>Gaggiuino on Rancilio Silvia: Discord notes</h1>
+  </header>
+  <article class="doc">
+<p>Notes captured from the Gaggiuino Discord in October 2026. Community material, unreviewed, kept here as the raw source behind the site's pages. Credit to the contributors named below. Where these notes and the site's pages disagree, the pages are the later reading; where either disagrees with the official docs, trust the official docs.</p>
+<p>Sources (Gaggiuino Discord):</p>
+<ul>
+<li>"Rancilio Silvia install specifics" thread (Jan 2024 to Jan 2026). Contributors: Zer0-bit, Juun, Talon, realNiche, Joscha, cjs, Bitr0t, EspressoHackers. This thread is for install notes and 3D models only; questions go in individual help threads.
+</li>
+<li>"[Untested] Rancilio Silvia PCBv3 Wiring Diagram" thread (Jun 2023). Contributors: realNiche (OP), Juun, Vas, Loogle. The original design discussion; mostly about where the hot water switch connects.
+</li>
+<li>"[gerrg][Silvia V6][PCBv4][Gen 3]" build log (May 2025 to Apr 2026). Contributors: gerrg (OP), Talon, Juun, redjb, bomerst. See section 9.
+</li></ul>
+<p>These are the Silvia-specific additions and deviations. The standard Gaggiuino BOM and install guide still apply.</p>
+<p>Thread attachments (not included here; see the Discord threads):</p>
+<ul>
+<li>realNiche's "Rancillio Silvia Wiring" diagram (PCB v3.1/v4.0)
+</li>
+<li>The older "RS Wiring" diagram (220 VAC, PCB v3, marked UNTESTED, has wire lengths)
+</li>
+<li>Three of Talon's install photos (top, back, front)
+</li>
+<li>cjs's Tank_level_top.STL and Tank_level_but.STL
+</li>
+<li>Loogle's "Component Housing Schematic" for the Lego build (rev 3.4, 2023-06-22)
+</li>
+<li>Switch panel sketches: hot water combo jumpers, LED on the hot water switch, spare terminals circled on steam/brew, and a single-switch LED + 1k ohm circuit
+</li>
+<li>Blackpill pinout with PA12 marked
+</li></ul>
+<hr>
+<h2>1. System settings (best known so far)</h2>
+<div class="tablewrap"><table><thead><tr><th>Setting</th><th>Value</th></tr></thead><tbody><tr><td>HPWR</td><td>100</td></tr><tr><td>M.DIV</td><td>5</td></tr><tr><td>B.DIV</td><td>3</td></tr><tr><td>Offset</td><td>5</td></tr><tr><td>Brew Delta</td><td>OFF</td></tr><tr><td>Dream Steam</td><td>OFF</td></tr></tbody></table></div>
+<ul>
+<li>Dream Steam is unnecessary on Silvia (large boiler, strong steam on stock). Gen3 software: disable in Settings. Older software: add to <code>extra_defines.ini</code> alongside any scales/ToF defines:
+<pre><code>[extra]
+build_flags =
+    -DDREAM_STEAM_DISABLED</code></pre>
+</li>
+<li>If removing the steam thermostat for custom wiring, set max steam to 150C.
+</li></ul>
+<h2>2. Component placement</h2>
+<ul>
+<li>SSR: left of the 3-way valve. Talon drilled one hole for a screw/washers/nut to hold it (his photo shows it on a small metal bracket at the left wall).
+</li>
+<li>Pressure transducer: screwed into the bottom port of the 3-way valve via an elbow, hanging below the valve (visible in Talon's front photo).
+</li>
+<li>PCB: right of the 3-way valve, or next to the pump. Thin velcro strips work for the PCB and scales board case.
+</li>
+<li>LEGO box (PCB enclosure): right of the 3-way valve. Talon's is a black 3D-printed box on the right wall.
+</li>
+<li>HX711/scales board enclosure: Talon's sits bottom center, between the transducer and the PCB box.
+</li>
+<li>Thermocouple: M3 instead of M4 (confirmed back in the 2023 thread). Use thermal paste, hand tight.
+</li>
+<li>Use flag connectors if the PCB goes behind the front panel (AliExpress item 1005005109606262).
+</li>
+<li>Screen enclosure:
+<ul>
+<li>Silvia V1-V4: Printables model 691527 (unofficial Nextion display enclosure for Gaggiuino)
+</li>
+<li>Silvia V5+: Printables model 343688 (Silvia V6 Nextion display enclosure)
+</li>
+<li>Talon used the funnel-mount screen enclosure instead of front mount, which needs longer screen cables.
+</li></ul>
+</li></ul>
+<h2>3. Wiring</h2>
+<ul>
+<li>Reference diagram: realNiche's, at github.com/thejobbitt/gaggiuino_resources, in <code>wiring_diagrams/rancilio_silvia</code> (the thread called the folder "Wiring Diagrams/Rancilio Silvia"; it has since been renamed). Covers 110-240 VAC, PCB v3.1/v4.0, with Nextion NX3224F024, Headless E177, or ESP32-S3 display options. Eco machines require full custom wiring.
+</li>
+<li>Thick lines = high voltage, thin lines = low voltage.
+</li>
+<li>Plumbing BOM: link in thread was broken (listed as unknown).
+</li></ul>
+<h3>Thermostats</h3>
+<ul>
+<li>realNiche's first (2023) draft removed both the brew and steam thermostats.
+</li>
+<li>Juun: most people just disconnect the brew thermostat and use its connectors to feed the SSR. Whether to keep the steam thermostat was left open; if you remove it, set max steam to 150C (section 1).
+</li></ul>
+<h3>Component specs (from the diagram)</h3>
+<ul>
+<li>Switches: Steam, Hot Water, Brew, Power are all DPST, 6.3 mm male spades, viewed from back.
+</li>
+<li>Indicator lamp: shows when boiler is heating, 6.3 mm spades.
+</li>
+<li>Safety thermostat: 165C, on the boiler.
+</li>
+<li>Boiler terminals: 6.3 mm spades.
+</li>
+<li>SSR: 3-32 VDC control, 24-480 VAC load, 40 A. Use fork spade connectors on all 4 screw terminals.
+</li>
+<li>Solenoid (3-way valve): Brass 57, 6.3 mm spades on connector side, plus a ground spade.
+</li>
+<li>Pump: Ulka EFP5 or EP5, with 110C pump thermal fuse.
+</li>
+<li>Pressure transducer: 0-1.2 MPa, 5 V, G1/4, side view.
+</li>
+<li>Thermocouple: K type, ungrounded, M3.
+</li>
+<li>Power socket: IEC C14 15 A, ground facing up (cord NEMA 5-15P to C13 for US).
+</li></ul>
+<h3>CoffeeHat PCB v3.1/v4.0 connector map</h3>
+<div class="tablewrap"><table><thead><tr><th>Connector</th><th>Function</th><th>Pins</th></tr></thead><tbody><tr><td>J1</td><td>Touch screen (JST-PH 2 mm)</td><td>GND, TX, RX, 5V</td></tr><tr><td>J2</td><td>ToFnLED (backside, JST-SH 1 mm)</td><td>CLK, DATA, 3V3, GND</td></tr><tr><td>J4</td><td>Thermocouple</td><td>-, +</td></tr><tr><td>J5</td><td>Extra IO</td><td>GND, B15, A12</td></tr><tr><td>J6</td><td>Pressure transducer</td><td>5V, GND, P</td></tr><tr><td>J7</td><td>Switches</td><td>GND, S (steam), B (brew)</td></tr><tr><td>J8</td><td>Scales</td><td>D2, 5V, GND, CLK, D1</td></tr><tr><td>J9</td><td>SSR relay</td><td>GND, R1, R2 (R1 drives the boiler SSR; R2 unused on Silvia, per the older diagram)</td></tr><tr><td>J27</td><td>Programming / UART</td><td></td></tr><tr><td>J10</td><td>AC Neutral (6.3 mm spade)</td><td></td></tr><tr><td>J11</td><td>AC Line (6.3 mm spade)</td><td></td></tr><tr><td>J12</td><td>Pump (6.3 mm spade)</td><td></td></tr><tr><td>J13</td><td>Solenoid / 3-way valve (6.3 mm spade)</td><td></td></tr></tbody></table></div>
+<p>Switch LV wiring: Steam to J7 S, Brew to J7 B, Hot Water to J5 B15, with GND daisy-chained across all three switches to J7 GND.</p>
+<h3>Hot water switch: which input (resolved)</h3>
+<p>The 2023 thread was mostly about this. Short answer for a PCB build: use J5 <strong>B15</strong>, not A12.</p>
+<ul>
+<li>Firmware check (public <code>release/stm32-blackpill</code> branch, <code>src/pindef.h</code>, checked Oct 2026): <code>waterPin</code> is <strong>PB15</strong> when built with <code>-DSINGLE_BOARD</code>, and <strong>PA12</strong> otherwise. Every <code>all-pcb-*</code> PlatformIO target defines <code>SINGLE_BOARD</code>; the <code>lego-*</code> targets do not. So PCB builds read PB15 with no code change or soldering. Gen3 firmware was not checked.
+</li>
+<li>J5 breaks out both B15 and A12. A12 is the Lego-build pin; on PCB firmware, a switch on A12 would be ignored.
+</li>
+<li>History: hot water was first implemented on PA12 (it came in from someone's Lego build). PCB v3 did not route PA12 to any connector, so the options in 2023 were soldering to the Blackpill header leg or moving to PB15 (originally reserved for a water level reed, freed up once ToFnLED handled water level). The older RS Wiring diagram still shows a green "Manual Connection PA12" wire from the hot water switch; that is obsolete for current PCB builds.
+</li>
+<li>No-extra-wire alternative: the firmware also treats brew + steam closed at the same time as hot water (<code>hotWaterSwitchState = waterPinState() || (brew &amp;&amp; steam)</code>, the GC/GCP switch combo). One sketch uses this: jumper the hot water switch so one pole pulls the steam S line to GND and the other pulls the brew B line to GND (S jumped to hot water pole 1, hot water pole 2 jumped to brew B, both bottom terminals tied to GND). Works, but the dedicated B15 wire is cleaner and is what realNiche's diagram uses.
+</li>
+<li>Keep it low voltage. Juun noted Silvia could hard-wire hot water to the pump like stock, but LV avoids extra piggybacks and splitters. Vas warned that switching the pump in HV around the PCB's pump output effectively shorts the dimmer's triac. Do not leave the stock HV hot water wiring in place.
+</li></ul>
+<h3>Reference wire lengths (from the older RS Wiring diagram, 220 V PCB v3, marked untested)</h3>
+<p>These line up with Talon's harness below, so they are a reasonable starting point.</p>
+<div class="tablewrap"><table><thead><tr><th>Run</th><th>Length</th></tr></thead><tbody><tr><td>Touch screen cable (front mount)</td><td>650 mm</td></tr><tr><td>Switch LV wires (S, B, GND daisy chain)</td><td>320 mm, 320 mm, 470 mm</td></tr><tr><td>Hot water switch to IO (B15)</td><td>400 mm</td></tr><tr><td>Thermostat to SSR (L)</td><td>350 mm</td></tr><tr><td>SSR to PCB L</td><td>200 mm</td></tr><tr><td>Boiler L lead</td><td>250 mm</td></tr><tr><td>Lamp L lead</td><td>250 mm or 100 mm (see doubling choice below)</td></tr><tr><td>Power switch L</td><td>350 mm</td></tr><tr><td>Power switch to indicator lamp (N)</td><td>100 mm</td></tr><tr><td>Indicator lamp N</td><td>400 mm</td></tr><tr><td>Boiler N</td><td>300 mm</td></tr><tr><td>Solenoid N</td><td>120 mm</td></tr><tr><td>Pump N</td><td>350 mm</td></tr><tr><td>Solenoid to J13</td><td>120 mm</td></tr><tr><td>Solenoid ground</td><td>200 mm</td></tr></tbody></table></div>
+<h3>Talon's custom harness (based on realNiche's diagram)</h3>
+<p>Shows logical connections only; doubled/spliced wires are not drawn.</p>
+<ul>
+<li><strong>N chain:</strong> N to Solenoid (120 mm) &gt; Solenoid to Pump (350 mm) &gt; Pump to Indicator Lamp (400 mm) &gt; Lamp to Power Switch (100 mm) &gt; Switch to Boiler (300 mm, for cable management)
+</li>
+<li><strong>L (at PCB):</strong> L to SSR (200 mm) &gt; SSR to Power Switch (350 mm)
+</li>
+<li><strong>L (at boiler/thermostat/lamp):</strong> two options for the doubled spade
+<ul>
+<li>Doubled at boiler terminal: both leads 250 mm, one to indicator lamp, one to safety thermostat
+</li>
+<li>Doubled at safety thermostat: 250 mm to boiler, 100 mm to indicator lamp (Talon chose this)
+</li></ul>
+</li>
+<li><strong>Screen cables:</strong> longer than needed for funnel mount; could be shortened a little.
+</li></ul>
+<h3>Install rules from Talon's build</h3>
+<ul>
+<li>Do NOT use nylon spades at the boiler. Use uninsulated spades plus self-adhering silicone tape. (His top photo still shows red nylon spades on the boiler; he redid these afterward.)
+</li>
+<li>Do NOT crimp two 18 AWG wires into red spades. Use blue spades.
+</li>
+<li>Front: LV connections to the PCB routed right, SSR HV connections straight up.
+</li>
+<li>Back: AC, pump hose (braided steel), and pump wiring consolidated to the center slot for HV/LV isolation.
+</li>
+<li>Top: daisy-chained LV switch wire enters the lowest switch first, then chains up. HV routed high for isolation.
+</li>
+<li>Butt splices (red, 18-22 AWG) are used liberally for the LV daisy chains; a labeled "ground" splice sits near the solenoid.
+</li></ul>
+<h3>Lego (non-PCB) build reference</h3>
+<p>Loogle's Component Housing Schematic (rev 3.4) is for the Lego build: Blackpill on a Nano expansion board, MAX6675 thermocouple board, pump dimmer, relay for the 3-way valve, snubber, 12 V AC-DC PSU plus 5 V step-down, ADS1015 for the pressure transducer, optional dual HX711 and ToFnLED. Its "Silvia Only" block wires the hot water switch to PA12 with COM on GND, matching the Lego firmware pin above. Not the path for a CoffeeHat PCB build, but its wiring notes are useful generally:</p>
+<ul>
+<li>HV wires 22 AWG or heavier; boiler heater wires 18 AWG or heavier.
+</li>
+<li>LV between housing components 22-26 AWG (22 for PSU, step-down, and switch runs). Scale wires 26-30 AWG.
+</li>
+<li>Bare wire or crimped ferrules in screw terminals; do not tin wires that get clamped.
+</li>
+<li>Solder where possible; no DuPont connectors (headers on the Blackpill/expansion board are fine).
+</li>
+<li>AC-DC PSU and snubber L/N polarity does not matter as long as it is consistent.
+</li>
+<li>ToFnLED is not 5 V tolerant: feed it 3.3 V through an LDO and use a level converter on SDA/SCL.
+</li></ul>
+<h2>4. Hardware scales</h2>
+<h3>Load cell mount (3D printed)</h3>
+<ul>
+<li>Original: 3D Printed Load Cell Mounts for Silvia
+</li>
+<li>Remixes: Makkuro's slide-on, Sacatab's
+</li>
+<li>Latest/recommended: Joscha's "beefy" remix, Printables model 1277828. Thicker bridge (less flex), narrower left/right spacing, magnet pockets, wider/longer tray paddles. Designed for 1 kg 13x13x80 mm load cells.
+</li></ul>
+<h3>Scales BOM</h3>
+<ul>
+<li>2x 1 kg load cells (13x13x80 mm)
+</li>
+<li>4x M4 x 10 mm countersunk screws
+</li>
+<li>M5 x 10 mm low profile screws
+</li>
+<li>4x 5x2 mm magnets (same as standard HW scales)
+</li>
+<li>Stripboard
+</li>
+<li>1 row 2.54 mm right-angle header pins
+</li>
+<li>5P JST XH connector
+</li>
+<li>26 AWG silicone wire
+</li>
+<li>Either 2x HX711 interface boards + 1k resistor, or Vas' Dualscales board
+</li>
+<li>Enclosure for the HX711s or Dualscales board: Sacatab's HX711 enclosure, Waffe's Dualscales board enclosure, or a plastic project box
+</li></ul>
+<p>Remaining steps follow the standard GC/P HW scales install instructions.</p>
+<h2>5. ToF water level sensor</h2>
+<ul>
+<li>The Silvia tank is deeper (~200 mm), so the stock ranges are wrong.
+<ul>
+<li>Gen3 software: set ToF ranges in the ToFnLED Settings page. No code edit needed.
+</li>
+<li>Older software: edit <code>src/peripherials/tof.h</code>, <code>readRangeToPct</code>, and replace the ranges array with 10 values: 20, 40, 60, 80, 100, 120, 140, 160, 180, 200 (water_lvl array stays 100 down to 10). Credit cryptenstein.
+</li></ul>
+</li>
+<li>ToF-only (no LED strip) makes sense on Silvia since the tank is covered.
+</li></ul>
+<h3>ToF-only BOM</h3>
+<ul>
+<li>Standalone ToF sensor
+</li>
+<li>Oskar_diy ToF enclosure (designed for four 5x2 mm magnets)
+</li>
+<li>4-pin JST SH 1.0 cable (pigtails, or crimp your own)
+</li>
+<li>Conformal coat the ToF board, leaving the sensor top uncovered. Clear nail polish is sufficient.
+</li></ul>
+<h3>Mounting</h3>
+<ul>
+<li>Screen funnel mounts are plastic, so magnets need a metal target. Talon stuck a leftover adhesive-backed metal disk under the funnel mount and let the enclosure magnets hold to it. Position to keep silicone hoses clear of the sensor.
+</li>
+<li>Double-sided tape works but makes it hard to disconnect the ToF when removing the funnel mount (e.g. to pull the water tank).
+</li>
+<li>Alternative: cjs's water tank mount, two STLs, requires a T-fitting.
+<ul>
+<li>Tank_level_but.STL (body): 25.0 x 30.1 x 48.0 mm bounding box, ~238k triangles
+</li>
+<li>Tank_level_top.STL (cap/insert): 16.6 x 5.9 x 35.4 mm bounding box, ~62k triangles
+</li>
+<li>Files are from cjs's help thread ([csj][Silvia V2][PCBv3][Gen2]) on Discord.
+</li></ul>
+</li></ul>
+<h2>6. LED (low voltage) mod</h2>
+<ul>
+<li>Power: butt splice (BN 1.25) on the 5V line from the screen connection, cut closer to the PCB but leaving enough wire to exit the 3D printed enclosure. 320 mm from the splice, then 100 mm daisy chains between switches.
+</li>
+<li>Circuit per switch (from the single-switch sketch): the first pole stays as the signal-to-GND input. 5 V goes to the second pole's bottom terminal, and an LED plus 1k ohm resistor runs from that pole's top terminal to GND, so the LED lights when the switch is on. The circled sketch marks those spare second-pole terminals on steam and brew. Another sketch shows an LED drawn across the hot water switch's top terminals.
+</li>
+<li>The metal "studs" in the switches are 0407 MELF surface-mount resistors, 47k ohm each.
+</li>
+<li>No-solder option: replace with 0 ohm MELFs (DigiKey MMB02070Z0000ZB200, Vishay), or pick a value from a 100 ohm to 1k ohm variety pack. 12 AWG solid copper wire (~2 mm) also works as a 0 ohm replacement.
+</li>
+<li>Resolved later in the thread: the studs can simply be removed (PBS), and every LED keeps its own 1k to 3k series resistor (mjr, Mathieu). See the LED switch mod page.
+</li></ul>
+<h2>7. Notes and gotchas</h2>
+<ul>
+<li>The 3-way valve clip must be "opposite direction." The standard Gaggiuino BOM link offers same/opposite selection; the Silvia thread link does not, and vendor listings change, so verify when ordering.
+</li>
+<li>Dream Steam off is the consensus; see section 1.
+</li>
+<li>Flash with Dream Steam off via extra defines on pre-Gen3 builds.
+</li>
+<li>The RS Wiring diagram with lengths is marked UNTESTED and is for 220 V / PCB v3 (STM32 Blackpill). Use realNiche's v3.1/v4.0 diagram for connections; use the older one only for length reference. Ignore its "Manual Connection PA12" hot water wire.
+</li>
+<li>Hot water switch goes to J5 B15 on PCB builds (firmware reads PB15 there). Keep it LV; switching the pump in HV around the PCB output shorts the dimmer triac. See section 3.
+</li></ul>
+<h2>8. Silvia-specific BOM summary (additions to standard Gaggiuino BOM)</h2>
+<p><strong>Mechanical / enclosures</strong></p>
+<ul>
+<li>Screen enclosure for your Silvia version (Printables 691527 for V1-V4, 343688 for V5+)
+</li>
+<li>Load cell mount (Joscha beefy remix, Printables 1277828)
+</li>
+<li>HX711 or Dualscales board enclosure
+</li>
+<li>ToF enclosure (Oskar_diy) or cjs tank mount + T-fitting
+</li>
+<li>M3 thermocouple, thermal paste
+</li>
+<li>SSR mounting hardware (one screw, washers, nut) or bracket
+</li></ul>
+<p><strong>Scales</strong></p>
+<ul>
+<li>2x 1 kg load cells (13x13x80 mm)
+</li>
+<li>4x M4x10 countersunk, M5x10 low profile screws
+</li>
+<li>4x 5x2 mm magnets
+</li>
+<li>2x HX711 + 1k resistor, or Vas' Dualscales board
+</li>
+<li>Stripboard, 2.54 mm right-angle headers, 5P JST XH, 26 AWG silicone wire
+</li></ul>
+<p><strong>ToF</strong></p>
+<ul>
+<li>Standalone ToF sensor
+</li>
+<li>4-pin JST SH 1.0 cable
+</li>
+<li>Clear nail polish (conformal coat)
+</li>
+<li>Adhesive metal disk (if magnet-mounting to funnel mount)
+</li></ul>
+<p><strong>Wiring / electrical</strong></p>
+<ul>
+<li>Uninsulated spades + self-adhering silicone tape (boiler)
+</li>
+<li>Blue spades for doubled 18 AWG runs
+</li>
+<li>Fork spades for the 4 SSR terminals
+</li>
+<li>Flag connectors (if PCB behind front panel)
+</li>
+<li>Red butt splices for LV daisy chains; BN 1.25 butt splice (LED mod)
+</li>
+<li>0 ohm 0407 MELF resistors or 12 AWG solid copper (LED mod), or 100 ohm to 1k ohm MELFs
+</li>
+<li>3-way valve clip, opposite direction
+</li>
+<li>Velcro strips (PCB, scales board case)
+</li></ul>
+<h2>9. A Silvia V6 build log (gerrg, May 2025 to April 2026)</h2>
+<p>A US Silvia V6 on PCB v4 and Gen 3. After wiring, everything worked except the hardware scales, which turned out to be a wiring slip.</p>
+<ul>
+<li><strong>Parts list:</strong> a public Google Sheet, the most complete Silvia V6 list found so far: <a href="https://docs.google.com/spreadsheets/d/1xjcB6rN2AdtnimUDdN68e9jHE2p5eL-skKkFtvtA_5I">docs.google.com/spreadsheets/d/1xjcB6rN2AdtnimUDdN68e9jHE2p5eL-skKkFtvtA_5I</a>
+</li>
+<li><strong>PCB, screen and pressure sensor from Peak Coffee.</strong> Talon: if you order from Peak, those items work; the sensor can come from wherever is cheapest. Peak's complete kit adds the Gaggia ToFnLED, which is no use with the Silvia's covered tank, so he bought load cells and a plain ToF instead.
+</li>
+<li><strong>Pressure sensor at the OPV</strong> with Juun's parts: 1/8" FFM tee, 1/4"F to 1/8"M elbow, Loctite 55. No 3-way valve clip anywhere in the list. Talon's review: "Quick review looks fine", plus a reminder to plan crimp tools (spades, butt connectors, JST unless you use pigtails) and insulation (self-adhering silicone tape or silicone heat shrink).
+</li>
+<li><strong>Housings:</strong> screen in Loogle's Gen 3 screen housing (Printables 356026); PCB in Loogle's hinged PCB v3.1/v4 housing (Printables 894339), held with velcro.
+</li>
+<li><strong>ToFnLED on a Silvia:</strong> set different min/max values; Talon thinks 20/200 works ("don't quote me"). Matches the ranges in section 5.
+</li>
+<li><strong>Hardware scales:</strong> 1 kg load cells need only the standard calibration (Talon). Weight stuck at 0: Juun's checklist is HW scales enabled in the settings, then voltage at the HX711 board and photos of the wiring. gerrg's 5 V and CLK were swapped. The older load cell mount (Printables 357683) was wobbly; wrapping self-fusing silicone tape around the frame where it clips on made it solid.
+</li>
+<li><strong>Crimping:</strong> uninsulated flags, spades and forks, with interchangeable jaws: HS-056FL for flags, SN-058B for spades, SN-6 for forks. His AliExpress crimper links wouldn't ship to the US.
+</li>
+<li><strong>JST pins:</strong> the sharp tip of a pair of tweezers releases them: <a href="https://www.youtube.com/watch?v=nRVhPhfdawg">youtube.com/watch?v=nRVhPhfdawg</a>
+</li>
+<li><strong>Not Gaggiuino, but done on the same machine:</strong> an insulated steam wand with a PTFE tube inside (sharpen the tube's end with a pencil sharpener to feed it through; bomerst: recess the O-ring at the ball end deeply, deburr and chamfer the ball end, and if steam starts running outside the tube, fill around it with silicone), and a low-profile shower screen screw.
+</li>
+<li><strong>Leads:</strong> gblur's "[gblur][Silvia V6 E][PCB v4]" build guide in #help-silvia and his walkthrough video: <a href="https://www.youtube.com/watch?v=nquiqOzltUo">youtube.com/watch?v=nquiqOzltUo</a>
+</li>
+<li>Talon asks people to put questions about their own build in their own help thread.
+</li></ul>
+<h2>10. Links</h2>
+<ul>
+<li>realNiche wiring diagram (current): <a href="https://github.com/thejobbitt/gaggiuino_resources/tree/main/wiring_diagrams/rancilio_silvia">github.com/thejobbitt/gaggiuino_resources/tree/main/wiring_diagrams/rancilio_silvia</a>
+</li>
+<li>realNiche original 2023 diagram (historical): <a href="https://github.com/thejobbitt/gaggiuino-build/tree/main/wiring/Rancilio%20Silvia">github.com/thejobbitt/gaggiuino-build/tree/main/wiring/Rancilio%20Silvia</a>
+</li>
+<li>Firmware pin definitions: <a href="https://github.com/Zer0-bit/gaggiuino/blob/release/stm32-blackpill/src/pindef.h">github.com/Zer0-bit/gaggiuino/blob/release/stm32-blackpill/src/pindef.h</a>
+</li>
+<li>Screen enclosure V1-V4: <a href="https://www.printables.com/model/691527-unofficial-nextion-display-enclosure-for-gaggiuino">printables.com/model/691527-unofficial-nextion-display-enclosure-for-gaggiuino</a>
+</li>
+<li>Screen enclosure V5+: <a href="https://www.printables.com/model/343688-rancilio-silvia-v6-nextion-display-enclosure-for-g">printables.com/model/343688-rancilio-silvia-v6-nextion-display-enclosure-for-g</a>
+</li>
+<li>Joscha load cell mount: <a href="https://www.printables.com/model/1277828-rancilio-silvia-load-cell-mount-beefy">printables.com/model/1277828-rancilio-silvia-load-cell-mount-beefy</a>
+</li>
+<li>Flag connectors: <a href="https://www.aliexpress.com/item/1005005109606262.html">aliexpress.com/item/1005005109606262.html</a>
+</li>
+<li>0 ohm MELF: <a href="https://www.digikey.com/en/products/detail/vishay/MMB02070Z0000ZB200/2177496">digikey.com/en/products/detail/vishay/MMB02070Z0000ZB200/2177496</a>
+</li></ul>
+  </article>
+</div>
+<footer class="site-foot"><div class="in"><nav class="foot-nav" aria-label="All pages"><a class="fn-home" href="index.html">Silvia × Gaggiuino home</a><div class="fn-g"><span class="gl">Learn</span><a href="conversion.html">The conversion</a><a href="how-silvia-works.html">How the Silvia works</a><a href="how-gaggiuino-works.html">How Gaggiuino works</a><a href="glossary.html">Glossary</a></div><div class="fn-g"><span class="gl">Plan</span><a href="budget.html">Budget</a><a href="used-checklist.html">Used Silvia check</a><a href="which-silvia.html">Which Silvia</a><a href="parts-tracker.html">Parts tracker</a></div><div class="fn-g"><span class="gl">Install</span><a href="runbook.html">Runbook</a><a href="wiring.html">Wiring</a><a href="cut-list.html">Cut list</a><a href="wire-labels.html">Wire labels</a><a href="power-on-checks.html">Power-on checks</a></div><div class="fn-g"><span class="gl">After</span><a href="troubleshooting.html">Troubleshooting</a><a href="led-mod.html">LED switch mod</a></div></nav><p><strong>Mains voltage.</strong> This conversion puts your hands near 120/230 V wiring. Work only with the cord out, check everything with a meter before first power-on, and stop if anything here disagrees with the official Gaggiuino docs or your own reading of the machine. Nothing on this site has been reviewed by the Gaggiuino project. You are responsible for your own build.</p><p>Unofficial community material for the Rancilio Silvia, built on the work of realNiche, Talon, Juun, mjr and others on the Gaggiuino Discord, and the official docs at <a href="https://gaggiuino.github.io/">gaggiuino.github.io</a>. Content is <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>, the same terms as realNiche's diagrams. · <a href="https://github.com/Jabawabawaba/silvia-gaggiuino">Source and issues on GitHub</a></p></div></footer></body></html>

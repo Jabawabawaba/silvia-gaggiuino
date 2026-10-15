@@ -1,0 +1,36 @@
+/* stock circuit ladder */
+.lad{border:1px solid var(--line);border-radius:14px;background:var(--surface);overflow:hidden}
+.lad-ctl{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;padding:14px 16px;border-bottom:1px solid var(--line)}
+.tgl{appearance:none;display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:6px 14px 6px 10px;border:1px solid var(--line);border-radius:999px;background:var(--bg);font:600 15px var(--f-body);cursor:pointer}
+.tgl i{width:12px;height:20px;border-radius:3px;background:#202326}
+.tgl[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.tgl[aria-pressed="true"] i{background:#F2A33A;box-shadow:0 0 6px #F2A33A}
+.lad-t{display:inline-flex;align-items:center;gap:8px;flex:1 1 220px;font-size:14.5px}
+.lad-t input{flex:1;accent-color:var(--accent);min-width:90px}
+.lad-t output{font:600 15px var(--f-mono);min-width:7ch;text-align:right}
+.lad-fig{overflow-x:auto;padding:6px 8px}
+.lad-fig svg{display:block;width:100%;min-width:640px;height:auto}
+.lad .swipe-hint{margin:0;padding:0 16px 10px}
+.lad-status{margin:0;padding:10px 16px 14px;border-top:1px solid var(--line);font-size:15px}
+.lad-status b{font-weight:600}
+#lad-svg .lt{font:700 15px var(--f-mono);fill:var(--ink)}
+#lad-svg .lc{font:500 11.5px var(--f-mono);fill:var(--muted)}
+#lad-svg .lc.dim{fill:var(--accent-ink)}
+#lad-svg .w{fill:none;stroke:var(--line);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;transition:stroke .2s}
+#lad-svg .w.live{stroke:var(--w-l);stroke-dasharray:8 8}
+#lad-svg .w.h.live{stroke:var(--w-h)}
+#lad-svg .w.n.live{stroke:var(--w-n)}
+#lad-svg .node{fill:var(--muted)}
+#lad-svg .tm{fill:var(--surface);stroke:var(--ink);stroke-width:1.6}
+#lad-svg .blade{stroke:var(--ink);stroke-width:2.6;stroke-linecap:round;transition:transform .15s}
+#lad-svg .swi.th .tm{stroke:var(--accent-ink)}
+#lad-svg .link{stroke:var(--muted);stroke-width:1.4;stroke-dasharray:3 4}
+#lad-svg .ld circle,#lad-svg .ld rect,#lad-svg .ld polygon{fill:var(--surface);stroke:var(--ink);stroke-width:1.8}
+#lad-svg .ld path,#lad-svg .ld line{fill:none;stroke:var(--ink);stroke-width:2.2;stroke-linejoin:round}
+#lad-svg .ld.on.lamp circle{fill:#3FBF6A;stroke:#2D7A4C}
+#lad-svg .ld.on.lamp.ht circle{fill:#F2A33A;stroke:#965300}
+#lad-svg .ld.on.el path{stroke:#FF8A2A;filter:drop-shadow(0 0 4px #FF8A2A)}
+#lad-svg .ld.on.coil path{stroke:var(--accent)}
+#lad-svg .ld.blown line{stroke:var(--bad)}
+#lad-svg .earth line{stroke:var(--w-e);stroke-width:2}
+@media (prefers-reduced-motion:reduce){#lad-svg .w.live{stroke-dasharray:none}}
