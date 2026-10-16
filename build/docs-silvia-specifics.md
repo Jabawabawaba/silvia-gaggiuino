@@ -42,7 +42,7 @@ There is no official Silvia schematic. realNiche's "Rancillio Silvia Wiring" (PC
 - **PCB outputs:** J12 pump, J13 solenoid.
 - **Earth:** inlet earth to the boiler ground spade, solenoid ground to the boiler ground spade. Earth never connects to the PCB's 5 V ground, which floats so the thermocouple reads correctly. **[Official]**
 - **Switches:** brew, steam and hot water each use one pole. Signal on the center spade, ground on the outer spade: steam to J7 S, brew to J7 B, hot water to **J5 B15**, with the ground chain to J7 GND.
-- **Hot water on B15, not A12 (not yet confirmed on Gen 3 firmware):** `pindef.h` in the public STM32 firmware reads `waterPin` as PB15 when built with `SINGLE_BOARD`, which every `all-pcb-*` target defines; A12 is the component (Lego) build pin. Brew plus steam together also triggers hot water mode. Keep the switch low voltage; switching the pump in mains around the PCB's output shorts its triac. **[Firmware + Discord]**
+- **Hot water on B15, not A12:** realNiche's schematic puts the switch on J5 B15, and Talon confirmed on Discord in October 2026 that Gen 3 reads it there. In the public STM32 firmware, `pindef.h` reads `waterPin` as PB15 when built with `SINGLE_BOARD`, which every `all-pcb-*` target defines; A12 is the component (Lego) build pin. Brew plus steam together also triggers hot water mode. Keep the switch low voltage; switching the pump in mains around the PCB's output shorts its triac. **[Firmware + Discord]**
 - **Thermostats:** the brew thermostat comes out. The thermostats are clamped to the boiler top with M3 screws, and the M3 thermocouple screws into one of those holes; GaggiMate's Silvia guide suggests the middle or left-most hole for better readings. The safety thermostat stays in the heater line. The steam thermostat isn't wired in realNiche's harness, so it no longer limits anything whether it stays in the boiler or comes out; set max steam to 150 °C either way. **[Discord]**
 - **Lengths** (Talon's harness and an older untested diagram): N chain 120, 350, 400, 100, 300 mm; L to SSR 200 mm, SSR to switch 350 mm, thermostat to SSR 350 mm; doubled leads 250 mm at the element or 250 + 100 mm at the thermostat; switch LV 320, 320, 470 mm; hot water 400 mm; screen 650 mm front mount, more for funnel. Cut long. **[Discord]**
 
@@ -70,8 +70,7 @@ Per the official Gen 3 manual: fill the boiler with Flush until water runs 5+ se
 
 ## Still open
 
-1. Whether Gen 3 reads the Silvia's own hot water switch on J5 B15 (the public Gen 2 firmware does).
-2. The screen cable length a V6 funnel mount needs.
-3. Which latching double-pole switch Silvia E builders fit in place of the push button and energy-saver module, and whether anything else on the E needs bypassing under the custom harness. gblur's "[gblur][Silvia V6 E][PCB v4]" build thread in #help-silvia and his walkthrough video are the place to check.
-4. Whether a stock Silvia OPV passes [UT] Test OPV (10.5 to 13 bar) or usually needs raising.
-5. More real harness lengths.
+1. The screen cable length a V6 funnel mount needs.
+2. Which latching double-pole switch Silvia E builders fit in place of the push button and energy-saver module, and whether anything else on the E needs bypassing under the custom harness. gblur's "[gblur][Silvia V6 E][PCB v4]" build thread in #help-silvia and his walkthrough video are the place to check.
+3. Whether a stock Silvia OPV passes [UT] Test OPV (10.5 to 13 bar) or usually needs raising.
+4. More real harness lengths, to compare with Talon's.

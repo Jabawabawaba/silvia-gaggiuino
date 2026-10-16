@@ -3,7 +3,7 @@
 The most useful contributions are from finished Silvia builds. Open an issue with:
 
 - **Your machine:** Silvia version (V1 to V6, E or M), voltage, any prior mods.
-- **Harness lengths you actually used**, by run ID from the wiring reference (AC1, LV3 and so on). The lengths on the site come from one builder and an untested older diagram.
+- **Harness lengths you actually used**, by run ID from the wiring reference (AC1, LV3 and so on). The lengths on the site come from Talon's harness and an untested older diagram.
 - **Where your pressure transducer went** (OPV tee, 3-way valve bottom port, elsewhere) and the exact fittings.
 - **Screen mount and cable length**, especially for the funnel mount.
 - **Photos** of the finished wiring, boiler top, and switch backs.

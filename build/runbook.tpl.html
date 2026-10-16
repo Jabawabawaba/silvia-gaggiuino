@@ -248,7 +248,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
       {id:'p5e',t:'Run [UT] Tube Fill',d:'From Community Profiles in the web UI. It fills the sensor line so there is no air in it.',src:'Official'},
       {id:'p5f',t:'Run [UT] Test OPV with a blank basket',d:'Peak pressure 10.5 to 13 bar, water moving through the OPV tubing, no leaks.',src:'Official'},
       {id:'p5g',t:'Check for leaks, unplugged',d:'Switch off and unplug first. Lift the top cover and touch a dry paper towel to the tee, elbow, sensor and thermocouple. Close it up and rerun h1 to h4 of the power-on checks before you plug back in, and h5 and h6 as well if the screen cable moved.',src:'Plan',link:['Power-on checks','checks']},
-      {id:'p5h',t:'Try each switch',d:'Brew runs the pump, steam switches the target to steam temperature, and hot water starts hot water mode. Hot water on B15 comes from the public STM32 firmware and isn\'t yet confirmed on Gen 3; if only hot water does nothing, recheck f5 and f6, then report it on Discord.',src:'Plan'},
+      {id:'p5h',t:'Try each switch',d:'Brew runs the pump, steam switches the target to steam temperature, and hot water starts hot water mode. If only hot water does nothing, recheck f5 and f6: its switch has to land on J5 B15, not A12.',src:'Plan'},
       {id:'p5i',t:'Let it heat and settle',d:'Watch the temperature reach the target and hold there. Anything odd: the troubleshooting page goes symptom by symptom.',src:'Plan',link:['Troubleshooting','trouble']}
     ]},
     {id:'p6',n:'Phase 6',name:'Calibrate',goal:'Tune Gaggiuino to this pump and boiler.',steps:[

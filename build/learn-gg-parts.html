@@ -81,7 +81,7 @@
         <h3>How it works</h3>
         <p>A pull-up resistor holds each input at 3.3 V: 10 kΩ on the board for brew and steam, and the STM32's own built-in one for hot water on J5. So an open switch reads high, which the firmware treats as off. Closing the switch ties the pin to ground and it reads low: on. That's why the power-on checks want under 1 Ω with a switch on and OL with it off.</p>
         <p>None of the stock mains wiring can stay on these switches. Mains on an input pin destroys it, and wiring the pump around the PCB's pump output can short the triac that drives it.</p>
-        <p class="gg">The public Gen 2 firmware reads a separate hot water switch on B15. The Gen 3 manual only describes the Gaggia's brew-plus-steam combination, so whether Gen 3 reads the Silvia's own hot water switch is still being confirmed on Discord.</p>
+        <p class="gg">The public Gen 2 firmware reads a separate hot water switch on B15, and Talon confirmed on the Gaggiuino Discord in October 2026 that Gen 3 does too, per the schematic. The Gen 3 manual only describes the Gaggia's way, brew and steam together.</p>
       </div>
       %%FIG:input%%
     </article>

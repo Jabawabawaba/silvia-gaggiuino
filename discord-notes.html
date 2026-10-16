@@ -442,6 +442,9 @@ build_flags =
 <h3>Hot water switch: which input (resolved)</h3>
 <p>The 2023 thread was mostly about this. Short answer for a PCB build: use J5 <strong>B15</strong>, not A12.</p>
 <ul>
+<li>Confirmed for Gen 3 (Talon, October 2026, answering this site's open question): per the schematic, the hot water pin is B15 on connector J5.
+</li></ul>
+<ul>
 <li>Firmware check (public <code>release/stm32-blackpill</code> branch, <code>src/pindef.h</code>, checked Oct 2026): <code>waterPin</code> is <strong>PB15</strong> when built with <code>-DSINGLE_BOARD</code>, and <strong>PA12</strong> otherwise. Every <code>all-pcb-*</code> PlatformIO target defines <code>SINGLE_BOARD</code>; the <code>lego-*</code> targets do not. So PCB builds read PB15 with no code change or soldering. Gen3 firmware was not checked.
 </li>
 <li>J5 breaks out both B15 and A12. A12 is the Lego-build pin; on PCB firmware, a switch on A12 would be ignored.

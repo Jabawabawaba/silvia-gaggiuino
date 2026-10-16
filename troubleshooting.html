@@ -441,7 +441,7 @@ details.tb.danger .tb-body{border-left-color:var(--bad)}
      causes:['The transducer sealing on its threads: the flat O-ring has to sit flush inside the fitting.','Tapered fittings without Loctite 55, or loosened while lining them up.','Mixed thread types: a 1/4" NPT part won\'t seal to the G1/4 (BSPP) transducer.'],
      check:['Unplug and let it cool before touching fittings.','Transducer hand tight plus at most a quarter turn; Loctite 55 on the tee and elbow only.'],src:'Official custom wiring guide · Discord'},
     {c:'switch',s:'A switch does nothing',
-     causes:['Signal and ground on the wrong spades.','Hot water on J5 A12 instead of B15. The public STM32 firmware reads B15; not yet confirmed on Gen 3 firmware, so if only hot water does nothing, report it on Discord.','A break in the ground chain between switches.'],
+     causes:['Signal and ground on the wrong spades.','Hot water on J5 A12 instead of B15. The firmware reads the hot water switch on B15, as realNiche\'s schematic shows.','A break in the ground chain between switches.'],
      check:['Rerun [f1] to [f6] with the plugs off the PCB.','Check [LV3] lands on B15.','Check [LV4], [LV5] and [LV6].'],src:'Firmware pin definitions · Discord'},
     {c:'switch',s:'A switch acts as if it\'s always on',
      causes:['Signal and ground on two spades that are always connected.'],

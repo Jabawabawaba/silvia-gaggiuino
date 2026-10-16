@@ -394,7 +394,7 @@ td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:ta
 </li>
 <li><strong>Switches:</strong> brew, steam and hot water each use one pole. Signal on the center spade, ground on the outer spade: steam to J7 S, brew to J7 B, hot water to <strong>J5 B15</strong>, with the ground chain to J7 GND.
 </li>
-<li><strong>Hot water on B15, not A12 (not yet confirmed on Gen 3 firmware):</strong> <code>pindef.h</code> in the public STM32 firmware reads <code>waterPin</code> as PB15 when built with <code>SINGLE_BOARD</code>, which every <code>all-pcb-*</code> target defines; A12 is the component (Lego) build pin. Brew plus steam together also triggers hot water mode. Keep the switch low voltage; switching the pump in mains around the PCB's output shorts its triac. <strong>[Firmware + Discord]</strong>
+<li><strong>Hot water on B15, not A12:</strong> realNiche's schematic puts the switch on J5 B15, and Talon confirmed on Discord in October 2026 that Gen 3 reads it there. In the public STM32 firmware, <code>pindef.h</code> reads <code>waterPin</code> as PB15 when built with <code>SINGLE_BOARD</code>, which every <code>all-pcb-*</code> target defines; A12 is the component (Lego) build pin. Brew plus steam together also triggers hot water mode. Keep the switch low voltage; switching the pump in mains around the PCB's output shorts its triac. <strong>[Firmware + Discord]</strong>
 </li>
 <li><strong>Thermostats:</strong> the brew thermostat comes out. The thermostats are clamped to the boiler top with M3 screws, and the M3 thermocouple screws into one of those holes; GaggiMate's Silvia guide suggests the middle or left-most hole for better readings. The safety thermostat stays in the heater line. The steam thermostat isn't wired in realNiche's harness, so it no longer limits anything whether it stays in the boiler or comes out; set max steam to 150 °C either way. <strong>[Discord]</strong>
 </li>
@@ -415,15 +415,13 @@ td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:ta
 </li></ul>
 <h2>Still open</h2>
 <ol>
-<li>Whether Gen 3 reads the Silvia's own hot water switch on J5 B15 (the public Gen 2 firmware does).
-</li>
 <li>The screen cable length a V6 funnel mount needs.
 </li>
 <li>Which latching double-pole switch Silvia E builders fit in place of the push button and energy-saver module, and whether anything else on the E needs bypassing under the custom harness. gblur's "[gblur][Silvia V6 E][PCB v4]" build thread in #help-silvia and his walkthrough video are the place to check.
 </li>
 <li>Whether a stock Silvia OPV passes [UT] Test OPV (10.5 to 13 bar) or usually needs raising.
 </li>
-<li>More real harness lengths.
+<li>More real harness lengths, to compare with Talon's.
 </li></ol>
   </article>
 </div>

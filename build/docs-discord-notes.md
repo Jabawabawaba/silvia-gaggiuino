@@ -101,6 +101,8 @@ Switch LV wiring: Steam to J7 S, Brew to J7 B, Hot Water to J5 B15, with GND dai
 
 The 2023 thread was mostly about this. Short answer for a PCB build: use J5 **B15**, not A12.
 
+- Confirmed for Gen 3 (Talon, October 2026, answering this site's open question): per the schematic, the hot water pin is B15 on connector J5.
+
 - Firmware check (public `release/stm32-blackpill` branch, `src/pindef.h`, checked Oct 2026): `waterPin` is **PB15** when built with `-DSINGLE_BOARD`, and **PA12** otherwise. Every `all-pcb-*` PlatformIO target defines `SINGLE_BOARD`; the `lego-*` targets do not. So PCB builds read PB15 with no code change or soldering. Gen3 firmware was not checked.
 - J5 breaks out both B15 and A12. A12 is the Lego-build pin; on PCB firmware, a switch on A12 would be ignored.
 - History: hot water was first implemented on PA12 (it came in from someone's Lego build). PCB v3 did not route PA12 to any connector, so the options in 2023 were soldering to the Blackpill header leg or moving to PB15 (originally reserved for a water level reed, freed up once ToFnLED handled water level). The older RS Wiring diagram still shows a green "Manual Connection PA12" wire from the hot water switch; that is obsolete for current PCB builds.
