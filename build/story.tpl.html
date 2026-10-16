@@ -392,7 +392,7 @@
   var shP=$('sh-p'),shF=$('sh-flow'),scrP=$('scr-pp');
   shP.setAttribute('d','M'+pp.join(' L'));shF.setAttribute('d','M'+fp.join(' L'));scrP.setAttribute('d','M'+mp.join(' L'));
   [shP,shF,scrP].forEach(function(p){var L=p.getTotalLength();p._L=L;p.style.strokeDasharray=L+' '+L});
-  /* kit parts: installed centre, kit centre, kit scale */
+  /* kit parts: installed center, kit center, kit scale */
   function center(el){var b=el.getBBox();return [b.x+b.width/2,b.y+b.height/2]}
   var PARTS=[['pcb',980,198,1.35,2.10,4.05],['screen',1110,190,.62,2.18,4.45],['ssr',980,300,1.25,2.26,4.12],['tc',1110,294,1.9,2.34,4.00],['xdcr',980,410,1.45,2.42,4.26]].map(function(a,i){var el=$(a[0]);return {el:el,c:center(el),kx:a[1],ky:a[2],s:a[3],a:a[4],ia:a[5],ph:i*1.25}});
   var tstB=$('tst-brew'),tstBc=center(tstB);

@@ -14,7 +14,7 @@
       <div class="prose">
         <p>The ToFnLED board's distance sensor, mounted above the water, tells the screen how full the tank is, so you see it running low before the pump runs dry. It plugs into the Qwiic socket, J2, on the back of the PCB. The board also has an RGB LED to light the tank; the Silvia's tank is covered, so builders use it for the level reading.</p>
         <h3>How it works</h3>
-        <p>A time-of-flight sensor fires a very short pulse of infrared light and times how long the reflection takes to come back from the water surface. Light covers a millimetre in about 3 trillionths of a second, so the chip, a VL53L0X in the Gen 2 code, has to time it extremely finely; it reports a distance, and the firmware turns the distance into a percentage using the ranges you set. The Silvia's tank is deeper than a Gaggia's, about 200 mm, so those ranges need changing in the ToFnLED settings.</p>
+        <p>A time-of-flight sensor fires a very short pulse of infrared light and times how long the reflection takes to come back from the water surface. Light covers a millimeter in about 3 trillionths of a second, so the chip, a VL53L0X in the Gen 2 code, has to time it extremely finely; it reports a distance, and the firmware turns the distance into a percentage using the ranges you set. The Silvia's tank is deeper than a Gaggia's, about 200 mm, so those ranges need changing in the ToFnLED settings.</p>
       </div>
       %%FIG:tof%%
     </article>

@@ -250,7 +250,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
       msg('Saved. Print it at 100% scale.','ok');
     }).catch(function(e){
       var c=e&&e.code;
-      if(c==='declined')msg('Download cancelled.');
+      if(c==='declined')msg('Download canceled.');
       else if(c==='rate_limited')msg('A save prompt is already open. Finish that one first.','bad');
       else msg('Downloading isn\'t available in this view.','bad');
     }).then(function(){busy=false;$('dl').disabled=!selected().length});

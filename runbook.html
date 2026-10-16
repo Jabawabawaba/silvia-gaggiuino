@@ -456,7 +456,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
       {id:'p2c',t:'Remove the brew thermostat',d:'Undo its clamp screws. The thermocouple goes into one of those boiler-top holes later. The 165 °C safety thermostat stays; it has a reset button on top.',src:'Discord / GaggiMate'},
       {id:'p2d',t:'Decide on the steam thermostat',d:'realNiche\'s harness doesn\'t wire it, so it no longer limits anything whether it stays in the boiler or comes out. Either way, set max steam to 150 °C in Phase 6.',src:'Discord'},
       {id:'p2e',t:'Cut and label each run',d:'Start from the cut list, cut a little long, and put both labels on before crimping.',src:'Discord',link:['Cut list','cut']},
-      {id:'p2f',t:'Crimp the boiler ends with the open-barrel crimper',d:'Uninsulated spades, then self-fusing silicone tape over each one.',src:'Official'},
+      {id:'p2f',t:'Crimp the boiler ends with the open-barrel crimper',d:'Uninsulated spades. Each gets self-fusing silicone tape once it\'s fitted and the power-on checks have probed it; check g1 is the reminder.',src:'Official'},
       {id:'p2g',t:'Use two-wire spades where runs share a terminal',d:'Blue, never red, for two 18 AWG wires: SSR terminal 1, the safety thermostat, the power switch neutral spade, the lamp, the pump, the solenoid and the boiler ground.',src:'Discord'},
       {id:'p2h',t:'Fork spades on all four SSR terminals',d:'Two load, two control.',src:'Discord'},
       {id:'p2i',t:'Pull-test every crimp',d:'A firm tug. Redo any that move.',src:'Official'}
@@ -474,18 +474,18 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
       {id:'p4b',t:'Fit the low-voltage runs',d:'Brew, steam and hot water each use one pole: signal on its center spade, ground on its outer spade. Hot water goes to J5 B15. The ground chain ends at J7 GND.',src:'Discord'},
       {id:'p4c',t:'Route and tie',d:'Mains high, low voltage low and to the right. Nothing but 200 °C silicone wire touches the boiler or steam wand. Talon ran mains, the pump hose and the pump wires through the center slot at the back.',src:'Discord'},
       {id:'p4d',t:'Add strain relief',d:'At the SSR and where the screen cable leaves the machine.',src:'Plan'},
-      {id:'p4f',t:'Plug the sensors and switches back in',d:'The checks take the thermocouple off J4 and the J5, J7 and J9 plugs out. Refit them all, thermocouple + and − the same way round as on the bench.',src:'Plan'},
-      {id:'p4e',t:'Pass every power-on check',d:'All of them, unplugged. Have someone else trace the harness against the wiring reference too.',src:'Plan',link:['Power-on checks','checks'],stop:true}
+      {id:'p4z',t:'Pass the power-on checks',d:'Every section up to Covers on, all unplugged. Have someone else trace the harness against the wiring reference too. The last section waits until the covers are back on in Phase 5.',src:'Plan',link:['Power-on checks','checks'],stop:true}
     ]},
-    {id:'p5',n:'Phase 5',name:'First power-on',goal:'Mains for the first time, then fill, prime and pressure-test.',stop:'Don\'t plug in until every check on the power-on checklist passes.',settings:true,steps:[
-      {id:'p5a',t:'Covers on, tank full, cup under the wand',d:'Portafilter out, drip tray in, and a cup or jug under the steam wand for the first fill. Steam knob closed for now.',src:'Plan'},
+    {id:'p5',n:'Phase 5',name:'First power-on',goal:'Close up and run the last checks, then mains for the first time: fill, prime and pressure-test.',stop:'Don\'t plug in until every check on the power-on checklist passes.',settings:true,steps:[
+      {id:'p5a0',t:'Close it up, then the last checks',d:'Top cover and every panel back on, with the screen cable clear of the vent edge. Then run Covers on, the last section of the power-on checks, before anything gets plugged in.',src:'Plan',link:['Power-on checks','checks']},
+      {id:'p5a',t:'Tank full, cup under the wand',d:'Portafilter out, drip tray in, and a cup or jug under the steam wand for the first fill. Steam knob closed for now.',src:'Plan'},
       {id:'p5b',t:'Plug in and switch on',d:'Use a {outlet}. Stay by the plug. At any smell, smoke, trip or odd noise, unplug first and investigate after.',src:'Plan'},
       {id:'p5d',t:'Fill the boiler first',d:'Straight after switch-on, before anything else: open the steam knob and turn on Flush. Run it until water comes steadily out of the steam wand, not just the group; that means the boiler is full and the air is out. Close the knob, then flush the group for 5 seconds or more. This is how Rancilio fills a new Silvia, and it keeps the element from heating a dry or half-empty boiler.',src:'Rancilio manual'},
       {id:'p5d2',t:'Watch the temperature rise',d:'Once the boiler is full, the temperature must climb while the SSR light is on. If it falls instead, switch off and unplug: the thermocouple wires are reversed at J4.',src:'Plan'},
       {id:'p5c',t:'Enter the Silvia starting settings',d:'Settings, Boiler: the values in the table above. Tap save once when they are all in.',src:'Discord'},
       {id:'p5e',t:'Run [UT] Tube Fill',d:'From Community Profiles in the web UI. It fills the sensor line so there is no air in it.',src:'Official'},
       {id:'p5f',t:'Run [UT] Test OPV with a blank basket',d:'Peak pressure 10.5 to 13 bar, water moving through the OPV tubing, no leaks.',src:'Official'},
-      {id:'p5g',t:'Check for leaks',d:'Tee, elbow, sensor and thermocouple, with a dry paper towel.',src:'Plan'},
+      {id:'p5g',t:'Check for leaks, unplugged',d:'Switch off and unplug first. Lift the top cover and touch a dry paper towel to the tee, elbow, sensor and thermocouple. Close it up and rerun h1 to h4 of the power-on checks before you plug back in, and h5 and h6 as well if the screen cable moved.',src:'Plan',link:['Power-on checks','checks']},
       {id:'p5h',t:'Try each switch',d:'Brew runs the pump, steam switches the target to steam temperature, and hot water starts hot water mode. Hot water on B15 comes from the public STM32 firmware and isn\'t yet confirmed on Gen 3; if only hot water does nothing, recheck f5 and f6, then report it on Discord.',src:'Plan'},
       {id:'p5i',t:'Let it heat and settle',d:'Watch the temperature reach the target and hold there. Anything odd: the troubleshooting page goes symptom by symptom.',src:'Plan',link:['Troubleshooting','trouble']}
     ]},
@@ -497,7 +497,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
       {id:'p6e',t:'Set max steam to 150 °C',d:'The steam thermostat is off the heater line now, even if it\'s still on the boiler, so this setting and the 165 °C safety thermostat are the only limits.',src:'Discord'}
     ]},
     {id:'p7',n:'Phase 7',name:'Finish',goal:'Tidy up, write down what you ended with, and add the extras when you want them.',steps:[
-      {id:'p7a',t:'Final tidy',d:'Zip ties, Kapton tape on the screen cable, panels back on.',src:'Official'},
+      {id:'p7a',t:'Final tidy, unplugged',d:'Zip ties where they\'re needed and Kapton tape on the screen cable. Close it up again and rerun the whole Covers on section, h1 to h6, before you plug back in.',src:'Official',link:['Power-on checks','checks']},
       {id:'p7b',t:'Write down your final settings',d:'In the notes below, along with anything you would do differently.',src:'Plan'},
       {id:'p7c',t:'LED switch mod (optional)',d:'Brings back the brew, steam and hot water switch lights.',src:'Discord',link:['LED switch mod','led']},
       {id:'p7d',t:'Hardware scales or ToF (optional)',d:'Each one is independent of the core install.',src:'Plan'}

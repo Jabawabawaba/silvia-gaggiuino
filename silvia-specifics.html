@@ -367,22 +367,22 @@ td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:ta
 </li>
 <li><strong>Pressure transducer plumbing.</strong> The standard 0 to 1.2 MPa G1/4 transducer, on a 1/8" FFM tee at the OPV through a 1/4"F to 1/8"M elbow, which keeps it clear of the steam pipes. Loctite 55 thread cord on the tapered tee and elbow threads so they can be turned back to line up; the transducer seals on a flat 11 × 6 mm O-ring pressed flush into the elbow's 1/4" socket (the official guide's advice, since the sensor's own base O-ring often can't reach the seat), hand tight plus at most a quarter turn. The transducer is rated to 105 °C and this spot never sees steam temperatures. A tee at the pump adds vibration noise to the reading. Some builds use the 3-way valve's bottom port instead (Talon's does). A 2025 V6 build used the OPV tee and Talon OK'd its parts list, so both work; the OPV tee has an exact parts list. <strong>[Discord]</strong>
 </li>
-<li><strong>Wire:</strong> 18 AWG 200 °C silicone for mains, 22 AWG for low voltage. The Silvia harness is longer than a Gaggia one; budget an extra metre of 18 AWG. <strong>[Official + Discord]</strong>
+<li><strong>Wire:</strong> 18 AWG 200 °C silicone for mains, 22 AWG for low voltage. The Silvia harness is longer than a Gaggia one; budget an extra meter of 18 AWG. <strong>[Official + Discord]</strong>
 </li>
 <li><strong>Spades:</strong> uninsulated 6.3 mm spades crimped with an open-barrel crimper plus self-fusing silicone tape at the boiler (nylon spades are rated to 105 °C). Spades sized for two 18 AWG wires (blue, or bare 16–14 AWG) wherever two runs share a terminal. Fork spades on all four SSR terminals. Flag connectors if the PCB sits behind the front panel. <strong>[Official + Discord]</strong>
 </li>
 <li><strong>Prints:</strong> the official Gen 3 screen housing with the funnel mount has been used on a Silvia (Talon) and needs a longer screen cable than a Gaggia front mount. A 2025 V6 build used Loogle's Gen 3 screen housing (Printables 356026). The Printables "Silvia Nextion enclosure" models (691527, 343688) are Gen 2 housings and don't fit a Gen 3 screen. PCB housing: Printables 894339 or any box. <strong>[Official + Discord]</strong>
 </li>
-<li><strong>Screen cable:</strong> DIY-EFI's screen comes with a 60 cm cable and Peak Coffee lists 45 cm for its own. A front-mount Silvia build used about 65 cm and the funnel mount runs longer, so plan on a longer cable (JST-PH 4-pin, wired by pin, not by colour). <strong>[Supplier sites + Discord]</strong>
+<li><strong>Screen cable:</strong> DIY-EFI's screen comes with a 60 cm cable and Peak Coffee lists 45 cm for its own. A front-mount Silvia build used about 65 cm and the funnel mount runs longer, so plan on a longer cable (JST-PH 4-pin, wired by pin, not by color). <strong>[Supplier sites + Discord]</strong>
 </li>
 <li><strong>The "3-way valve clip, opposite direction"</strong> in the thread's BOM is probably a garbled reference to the ToF cable's "opposite direction" JST SH type. A complete 2025 V6 parts list that Talon reviewed has no valve clip. <strong>[Discord]</strong>
 </li></ul>
 <h2>Placement</h2>
-<p>SSR on the left wall (one drilled hole, or a small bracket), PCB to the right of the 3-way valve or beside the pump on velcro, transducer hanging below its tee, scales board bottom centre. Mains routed high, low voltage low and to the right; mains, pump hose and pump wiring through the centre slot at the back for separation. <strong>[Discord]</strong></p>
+<p>SSR on the left wall (one drilled hole, or a small bracket), PCB to the right of the 3-way valve or beside the pump on velcro, transducer hanging below its tee, scales board bottom center. Mains routed high, low voltage low and to the right; mains, pump hose and pump wiring through the center slot at the back for separation. <strong>[Discord]</strong></p>
 <h2>Wiring</h2>
 <p>There is no official Silvia schematic. realNiche's "Rancillio Silvia Wiring" (PCB v3.1/v4.0, 110–240 V) is the reference everyone uses: <a href="https://github.com/thejobbitt/gaggiuino_resources/tree/main/wiring_diagrams/rancilio_silvia">github.com/thejobbitt/gaggiuino_resources/tree/main/wiring_diagrams/rancilio_silvia</a>. The site's wiring reference is a redraw of it with run IDs and lengths.</p>
 <ul>
-<li><strong>Power switch</strong> stays on mains and breaks both line and neutral, one per pole. Supply on the outer spades, loads off the centre spades.
+<li><strong>Power switch</strong> stays on mains and breaks both line and neutral, one per pole. Supply on the outer spades, loads off the center spades.
 </li>
 <li><strong>Line:</strong> switched line feeds both SSR load terminal 1 and PCB J11. SSR terminal 2 feeds the 165 °C safety thermostat, then the boiler element, with the heating lamp across the element.
 </li>
@@ -392,7 +392,7 @@ td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:ta
 </li>
 <li><strong>Earth:</strong> inlet earth to the boiler ground spade, solenoid ground to the boiler ground spade. Earth never connects to the PCB's 5 V ground, which floats so the thermocouple reads correctly. <strong>[Official]</strong>
 </li>
-<li><strong>Switches:</strong> brew, steam and hot water each use one pole. Signal on the centre spade, ground on the outer spade: steam to J7 S, brew to J7 B, hot water to <strong>J5 B15</strong>, with the ground chain to J7 GND.
+<li><strong>Switches:</strong> brew, steam and hot water each use one pole. Signal on the center spade, ground on the outer spade: steam to J7 S, brew to J7 B, hot water to <strong>J5 B15</strong>, with the ground chain to J7 GND.
 </li>
 <li><strong>Hot water on B15, not A12 (not yet confirmed on Gen 3 firmware):</strong> <code>pindef.h</code> in the public STM32 firmware reads <code>waterPin</code> as PB15 when built with <code>SINGLE_BOARD</code>, which every <code>all-pcb-*</code> target defines; A12 is the component (Lego) build pin. Brew plus steam together also triggers hot water mode. Keep the switch low voltage; switching the pump in mains around the PCB's output shorts its triac. <strong>[Firmware + Discord]</strong>
 </li>

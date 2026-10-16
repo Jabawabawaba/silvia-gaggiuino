@@ -281,7 +281,7 @@ def page_src(name):
 
 def n_checks():
     """How many checks the power-on checklist has, so the home page and README never go stale."""
-    return len(re.findall(r"\{id:'[a-g]\d+'", open(os.path.join(HERE, "checks.tpl.html")).read()))
+    return len(re.findall(r"\{id:'[a-z]\d+'", open(os.path.join(HERE, "checks.tpl.html")).read()))
 
 
 # Stock thermostats for the circuit diagram (learn-ladder.js): Rancilio's opening points, illustrative closing points

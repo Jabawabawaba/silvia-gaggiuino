@@ -622,7 +622,7 @@ td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:ta
         <circle cx="990" cy="396" r="8" fill="#111315"/><circle cx="1060" cy="396" r="8" fill="#111315" stroke="#D8433A" stroke-width="2.5"/>
         <g id="cgrid"></g>
         <circle id="gate-lamp" cx="952" cy="546" r="8" fill="#3A3F45"/>
-        <text id="gate-t" x="968" y="551" class="pt">55 checks to go</text>
+        <text id="gate-t" x="968" y="551" class="pt">65 checks to go</text>
       </g>
       <g id="probes" style="opacity:0" fill="none" stroke-linecap="round">
         <path id="probeB" d="" stroke="#1B1D20" stroke-width="3.5"/><path id="probeR" d="" stroke="#D8433A" stroke-width="3.5"/>
@@ -671,7 +671,7 @@ td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:ta
     <article class="ch" data-ch="3" style="--len:180"><div class="card"><span class="st-num" aria-hidden="true">03</span><h2>Open it up</h2><p>Cord out of the wall, top off. Photograph and label every stock wire before it comes out. The brew thermostat comes off the boiler; the safety thermostat stays.</p><div class="st-links"><a href="runbook.html">Runbook</a><a href="which-silvia.html">Which Silvia</a></div></div></article>
     <article class="ch" data-ch="4" style="--len:160"><div class="card"><span class="st-num" aria-hidden="true">04</span><h2>Fit the hardware</h2><p>The thermocouple screws into the boiler top. The SSR goes on the left wall, the PCB beside the valve, the pressure sensor on its tee, and the screen on top.</p><div class="st-links"><a href="runbook.html">Runbook, phase 3</a></div></div></article>
     <article class="ch" data-ch="5" style="--len:180"><div class="card"><span class="st-num" aria-hidden="true">05</span><h2>Wire the harness</h2><p>Sixteen mains runs and eleven low-voltage ones, each with an ID and a label at both ends. Line runs through the SSR to the element, neutral chains back, earth goes to the boiler, and the switches move to low voltage.</p><div class="st-links"><a href="wiring.html">Wiring reference</a><a href="cut-list.html">Cut list</a><a href="wire-labels.html">Wire labels</a></div></div></article>
-    <article class="ch" data-ch="6" style="--len:160"><div class="card"><span class="st-num" aria-hidden="true">06</span><h2>Check it, unplugged</h2><p>55 checks with the cord out: earth reaches the metal, nothing shorts, every path is whole, every switch input is clean. The checklist only says ready when all of them pass.</p><div class="st-links"><a href="power-on-checks.html">Power-on checks</a></div></div></article>
+    <article class="ch" data-ch="6" style="--len:160"><div class="card"><span class="st-num" aria-hidden="true">06</span><h2>Check it, unplugged</h2><p>65 checks with the cord out: earth reaches the metal, nothing shorts, every path is whole, every switch input is clean. The checklist only says ready when all of them pass.</p><div class="st-links"><a href="power-on-checks.html">Power-on checks</a></div></div></article>
     <article class="ch" data-ch="7" style="--len:220"><div class="card"><span class="st-num" aria-hidden="true">07</span><h2>First power-on</h2><p>Covers on, plugged into a protected outlet. Steam knob open and flush until water runs from the wand, so the boiler is full before it heats. This time the temperature climbs and holds flat at the target.</p><div class="st-links"><a href="runbook.html">Runbook, phase 5</a><a href="troubleshooting.html">Troubleshooting</a></div></div></article>
     <article class="ch" data-ch="8" style="--len:190"><div class="card"><span class="st-num" aria-hidden="true">08</span><h2>Pull a profiled shot</h2><p>Calibrate the pump, then let a profile run: a gentle preinfusion, a ramp to nine bar, and a taper as the puck gives way. The graph draws as the glass fills.</p><div class="st-links"><a href="runbook.html">Runbook, phase 6</a><a href="how-gaggiuino-works.html#pump">How the pump is driven</a></div></div></article>
     <article class="ch" data-ch="9" style="--len:140"><div class="card"><span class="st-num" aria-hidden="true">09</span><h2>Make it yours</h2><p>Bring back the switch lights with the LED mod. Add scales under the drip tray or a tank sensor whenever you want them; each is independent of the core install.</p><div class="st-links"><a href="led-mod.html">LED switch mod</a></div></div></article>
@@ -693,7 +693,7 @@ td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:ta
   function lerp(a,b,x){return a+(b-a)*x}
   function op(el,v){if(el)el.style.opacity=String(Math.round(cl(v)*1000)/1000)}
   function tf(el,s){if(el)el.setAttribute('transform',s)}
-  var NS='http://www.w3.org/2000/svg',NCHK=55;
+  var NS='http://www.w3.org/2000/svg',NCHK=65;
 
   /* ---------- static prep ---------- */
   var hw=Array.prototype.slice.call(svg.querySelectorAll('.hw'));
@@ -713,7 +713,7 @@ td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:ta
   var shP=$('sh-p'),shF=$('sh-flow'),scrP=$('scr-pp');
   shP.setAttribute('d','M'+pp.join(' L'));shF.setAttribute('d','M'+fp.join(' L'));scrP.setAttribute('d','M'+mp.join(' L'));
   [shP,shF,scrP].forEach(function(p){var L=p.getTotalLength();p._L=L;p.style.strokeDasharray=L+' '+L});
-  /* kit parts: installed centre, kit centre, kit scale */
+  /* kit parts: installed center, kit center, kit scale */
   function center(el){var b=el.getBBox();return [b.x+b.width/2,b.y+b.height/2]}
   var PARTS=[['pcb',980,198,1.35,2.10,4.05],['screen',1110,190,.62,2.18,4.45],['ssr',980,300,1.25,2.26,4.12],['tc',1110,294,1.9,2.34,4.00],['xdcr',980,410,1.45,2.42,4.26]].map(function(a,i){var el=$(a[0]);return {el:el,c:center(el),kx:a[1],ky:a[2],s:a[3],a:a[4],ia:a[5],ph:i*1.25}});
   var tstB=$('tst-brew'),tstBc=center(tstB);

@@ -15,7 +15,7 @@ E = [
     ("BN1.25", "", "A small bare butt splice sized for thin wire, about 22 to 16 AWG. The LED mod uses one to tap the 5 V line.", [("LED switch mod", "led-mod.html")]),
     ("BOM", "bill of materials", "The full parts list for a build. The official Gaggiuino BOM covers the electronics; the Silvia adds a few parts of its own.", [("Parts tracker", "parts-tracker.html")]),
     ("BSPP", "British Standard Pipe Parallel", "A pipe thread with straight sides that seals on a gasket or O-ring, not on the thread. The pressure sensor's G1/4 thread is BSPP.", []),
-    ("CC BY-NC-SA", "Creative Commons Attribution-NonCommercial-ShareAlike", "The licence this site and realNiche's diagrams use: share and adapt with credit, not for sale, under the same terms.", []),
+    ("CC BY-NC-SA", "Creative Commons Attribution-NonCommercial-ShareAlike", "The license this site and realNiche's diagrams use: share and adapt with credit, not for sale, under the same terms.", []),
     ("CLK", "clock", "The timing line on a two-wire sensor bus. The scales header J8 has one, shared by both load cell boards.", []),
     ("D1, D2", "data 1, data 2", "The two scale data pins on J8, one per load cell board.", []),
     ("DC", "direct current", "Electricity that flows one way, like the 5 V and 3.3 V on the Gaggiuino low-voltage side and the signal that switches the SSR.", []),

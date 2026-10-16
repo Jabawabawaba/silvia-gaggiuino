@@ -242,7 +242,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* Layout: rating-plate header and the unplugged warning, a gate readout (ready or not), run picker and meter setup, then seven sections of checks. Each check: probe points, switch position, expected reading, the reading you got, and an automatic pass or fail. */
+/* Layout: rating-plate header and the unplugged warning, a gate readout (ready or not), run picker and meter setup, then eight sections of checks. Each check: probe points, switch position, expected reading, the reading you got, and an automatic pass or fail. */
 :root{
   --bg:#ECEEF0; --surface:#F9FAFA; --surface-2:#E2E5E8; --ink:#16191C; --muted:#59616A; --line:#CBD0D5;
   --accent:#D98400; --accent-ink:#965300; --accent-soft:#F4E1C0; --on-accent:#1A1206;
@@ -327,6 +327,12 @@ h2{font:600 22px/1.1 var(--f-display);letter-spacing:.05em;text-transform:upperc
 .item[data-r="fail"]{border-left-color:var(--bad)}
 .i-main{min-width:0;display:grid;gap:4px}
 .i-title{font-weight:600;font-size:16.5px;line-height:1.35}
+.cid{font:600 12.5px var(--f-mono);color:var(--muted);margin-right:9px;letter-spacing:.02em}
+.item{scroll-margin-top:84px;transition:background-color .5s ease}
+.item.hit{background:var(--accent-soft)}
+.moved{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px;border:1px solid var(--accent);background:var(--accent-soft);border-radius:10px;padding:10px 14px;margin:0 0 22px}
+.moved p{margin:0;font-size:15px;flex:1 1 36ch;min-width:0}
+.moved[hidden]{display:none}
 .i-how{margin:0;color:var(--muted);font-size:14.5px;max-width:62ch}
 .i-tags{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 .tag{font:600 10.5px/1 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;padding:4px 6px;border-radius:4px;background:var(--surface-2);color:var(--muted)}
@@ -363,7 +369,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
   @page{margin:12mm 11mm}
   body{background:#fff;color:#000;font-size:10pt;line-height:1.3}
   .wrap{max-width:none;padding:0}
-  .lede,.bar,.runrow,.i-side,.foot,[data-print],.fix{display:none!important}
+  .lede,.bar,.runrow,.i-side,.foot,[data-print],.fix,.moved{display:none!important}
   .print-only{display:block}
   #print-for{display:block;font-size:10pt}
   h1{font-size:22pt}
@@ -415,6 +421,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     <div class="counts"><span><b id="c-pass">0</b>passed</span><span><b id="c-fail">0</b>failed</span><span><b id="c-left">0</b>to do</span></div>
   </section>
   <div class="bar" id="bar" aria-hidden="true"></div>
+  <div class="moved" id="moved" role="note" hidden><p>This list changed on October 16, 2026. The component checks take leads off, so they now come before the shorts and paths, and a Covers on section was added at the end. Your other readings carried over. Take the shorts and path readings again once the leads are back on.</p><button type="button" class="linkbtn" id="moved-ok">Got it</button></div>
 
   <section class="setup" aria-label="Run and meter setup">
     <div class="runrow">
@@ -454,7 +461,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     {id:'a',name:'Before you measure',intro:'Get the machine safe and the meter ready.',items:[
       {id:'a1',t:'Cord out of the wall and out of the machine',how:'Both ends. The inlet pins are your probe points for the next sections.',type:'check'},
       {id:'a2',t:'Meter set to resistance or continuity',how:'Lowest Ω range. Touch the leads together and enter that reading under Meter leads above.',type:'check'},
-      {id:'a3',t:'Harness complete and every spade seated',how:'All runs fitted, including the PCB spades J10 to J13. The PCB stays connected unless a check says otherwise.',type:'check'}
+      {id:'a3',t:'Harness complete and every spade seated',how:'All runs fitted, including the PCB spades J10 to J13 and the J4, J5, J7 and J9 plugs. The PCB stays connected unless a check says otherwise.',type:'check'}
     ]},
     {id:'b',name:'Earth',intro:'Earth must reach every exposed metal part and must stay off the 5 V side.',items:[
       {id:'b1',t:'Inlet earth pin ↔ bare chassis metal',how:'Use a screw head or a scratch-free bare spot on the frame.',type:'low',fix:'Earth isn\'t reaching the chassis. Check the inlet earth lead (G1) and its spades.'},
@@ -464,33 +471,36 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
       {id:'b5',t:'Inlet earth pin ↔ PCB 5 V ground (J7 GND pin)',how:'Earth and the 5 V ground must never meet; the DC side floats so the thermocouple reads correctly.',type:'open',fix:'Something joins earth to the 5 V ground. Look for a grounded thermocouple, a pinched low-voltage wire, or a sensor touching metal.'},
       {id:'b6',t:'Thermocouple lead ↔ boiler body',how:'Unclamp the thermocouple wires from J4 and probe either wire against the boiler. Fold them over again when they go back in.',type:'open',tags:['J4 unclamped'],fix:'This is a grounded thermocouple, or its insulation is damaged. Gaggiuino needs the ungrounded type.'}
     ]},
-    {id:'c',name:'Shorts',intro:'With the power switch ON (still unplugged), mains must not reach earth or the 5 V side.',items:[
-      {id:'c1',t:'Inlet L ↔ inlet earth',how:'Highest Ω range.',type:'open',tags:['Power ON'],fix:'Line touches earth somewhere. Look for a bare spade or crushed insulation against the frame.'},
-      {id:'c2',t:'Inlet N ↔ inlet earth',how:'Highest Ω range.',type:'open',tags:['Power ON'],fix:'Neutral touches earth somewhere.'},
-      {id:'c3',t:'Inlet L ↔ J7 GND (5 V side)',how:'Highest Ω range.',type:'open',tags:['Power ON'],fix:'Mains reaches the 5 V side. Don\'t power it. Check the switch wiring and anything near the PCB.'},
-      {id:'c4',t:'Inlet N ↔ J7 GND (5 V side)',how:'Highest Ω range.',type:'open',tags:['Power ON'],fix:'Mains reaches the 5 V side. Don\'t power it.'},
-      {id:'c6',t:'PCB J12 spade ↔ inlet earth',how:'The pump output, checked directly because the pump\'s diode can hide a fault on this side.',type:'open',fix:'The pump output or its wiring touches earth.'},
-      {id:'c7',t:'PCB J13 spade ↔ inlet earth',how:'The solenoid output.',type:'open',fix:'The solenoid output or its wiring touches earth.'},
-      {id:'c5',t:'Inlet L ↔ inlet N',how:'May read OL, or a high value that climbs as the PCB\'s supply charges.',type:'notshort',tags:['Power ON'],fix:'Under 100 Ω means a short, or the element bypassing the SSR: a reading near the element\'s expected resistance (shown under Element power) means the SSR is passing current or the element is wired around it. Find it before plugging in.'}
+    {id:'c',name:'Components',intro:'Readings worth keeping, taken before the shorts and paths below so those test the wiring as it will run. Power switch off. Take a lead off only where a check says so, so other paths don\'t skew the number, and put it back exactly where it came from before you move on.',items:[
+      {id:'c1',t:'Boiler element, across its two terminals',how:'One element lead off. If the element has its own wattage stamped on it, use that above rather than the machine plate, which includes the pump.',type:'range',tags:['One lead off'],fix:'Far from the expected value suggests a damaged element or a reading through another path. Recheck with both leads off.'},
+      {id:'c2',t:'Element terminal ↔ boiler body',how:'Either terminal.',type:'open',fix:'The element is leaking to its sheath. Don\'t power it; the element needs replacing.'},
+      {id:'c3',t:'Safety thermostat (165 °C), across it, cold',how:'Leads can stay on.',type:'low',fix:'Open when cold: tripped or failed. Some have a reset button; otherwise replace it. Never bypass it.'},
+      {id:'c4',t:'Pump thermal fuse, across it',how:'The fuse on the pump\'s neutral side; realNiche\'s diagram shows a 110 °C one. No fuse on yours: measure from the AC10 spade to the pump terminal instead.',type:'low',fix:'An open pump fuse needs replacing before the pump will run.'},
+      {id:'c5',t:'Pump coil',how:'Across the pump\'s two terminals, leads off. Ulka pumps have a diode in series, so measure with the probes one way, then swapped, and enter the lower reading. OL one way is normal; press OL only if it reads OL both ways.',type:'coil',tags:['Leads off','Both ways'],fix:'OL both ways means an open coil or fuse; near zero means a shorted coil.'},
+      {id:'c6',t:'Solenoid coil',how:'Across its two coil spades, leads off. Record the value.',type:'coil',tags:['Leads off'],fix:'OL means an open coil; near zero means a shorted coil.'},
+      {id:'c7',t:'Thermocouple loop',how:'Across its two wires, unclamped from J4. A few ohms is normal.',type:'tc',tags:['J4 unclamped'],fix:'OL means a broken thermocouple or lead.'},
+      {id:'c8',t:'Element, pump and solenoid leads back on',how:'Every lead you took off for c1, c5 and c6 goes back on the spade it came from, as the wiring reference shows. Leave the boiler and valve ends untaped for now: e3 to e5 probe those terminals, and g1 is where the tape goes back on. The path checks in section e prove each lead is back.',type:'check'}
     ]},
-    {id:'d',name:'Path continuity',intro:'Each mains path is whole, and the power switch breaks both line and neutral.',items:[
-      {id:'d1',t:'Inlet L ↔ PCB J11 spade',how:'AC1, the switch, AC3, SSR terminal 1, AC4.',type:'low',tags:['Power ON'],fix:'Break in the line path. Check each spade on AC1, AC3 and AC4 and the shared fork at SSR terminal 1.'},
-      {id:'d2',t:'Inlet N ↔ PCB J10 spade',how:'AC2, the switch, then the neutral chain AC8, AC10, AC11, AC12.',type:'low',tags:['Power ON'],fix:'Break in the neutral chain. Check each doubled spade along it.'},
-      {id:'d3',t:'Inlet N ↔ element terminal 2',how:'AC2, the switch, AC9.',type:'low',tags:['Power ON'],fix:'Check AC9 and its boiler-end spade.'},
-      {id:'d4',t:'SSR load terminal 2 ↔ element terminal 1',how:'AC5, the safety thermostat, AC6.',type:'low',fix:'Open safety thermostat or a bad crimp on AC5 or AC6. Never bridge the thermostat.'},
-      {id:'d5',t:'PCB J13 ↔ solenoid coil spade',how:'AC13.',type:'low',fix:'Check AC13.'},
-      {id:'d6',t:'PCB J12 ↔ pump coil terminal',how:'AC14.',type:'low',fix:'Check AC14.'},
-      {id:'d7',t:'Inlet L ↔ PCB J11 spade',how:'Same as above, switch off. Should now be open.',type:'open',tags:['Power OFF'],fix:'The switch isn\'t breaking line. Check that the inlet goes to the outer spades and the loads to the center spades.'},
-      {id:'d8',t:'Inlet N ↔ PCB J10 spade',how:'Switch off. Should now be open.',type:'open',tags:['Power OFF'],fix:'The switch isn\'t breaking neutral.'}
+    {id:'d',name:'Shorts',intro:'With the power switch ON (still unplugged), mains must not reach earth or the 5 V side.',items:[
+      {id:'d1',t:'Inlet L ↔ inlet earth',how:'Highest Ω range.',type:'open',tags:['Power ON'],fix:'Line touches earth somewhere. Look for a bare spade or crushed insulation against the frame.'},
+      {id:'d2',t:'Inlet N ↔ inlet earth',how:'Highest Ω range.',type:'open',tags:['Power ON'],fix:'Neutral touches earth somewhere.'},
+      {id:'d3',t:'Inlet L ↔ J7 GND (5 V side)',how:'Highest Ω range. f10 repeats this with the board out of the reading.',type:'open',tags:['Power ON'],fix:'Mains reaches the 5 V side. Don\'t power it. Check the switch wiring and anything near the PCB.'},
+      {id:'d4',t:'Inlet N ↔ J7 GND (5 V side)',how:'Highest Ω range.',type:'open',tags:['Power ON'],fix:'Mains reaches the 5 V side. Don\'t power it.'},
+      {id:'d5',t:'PCB J12 spade ↔ inlet earth',how:'The pump output, checked directly because the pump\'s diode can hide a fault on this side.',type:'open',fix:'The pump output or its wiring touches earth.'},
+      {id:'d6',t:'PCB J13 spade ↔ inlet earth',how:'The solenoid output.',type:'open',fix:'The solenoid output or its wiring touches earth.'},
+      {id:'d7',t:'Inlet L ↔ inlet N',how:'May read OL, or a high value that climbs as the PCB\'s supply charges.',type:'notshort',tags:['Power ON'],fix:'Under 100 Ω means a short, or the element bypassing the SSR: a reading near the element\'s expected resistance (shown under Element power) means the SSR is passing current or the element is wired around it. Find it before plugging in.'}
     ]},
-    {id:'e',name:'Components',intro:'Readings worth keeping. Take one lead off where it says so, so other paths don\'t skew the number.',items:[
-      {id:'e1',t:'Boiler element, across its two terminals',how:'One element lead off. If the element has its own wattage stamped on it, use that above rather than the machine plate, which includes the pump.',type:'range',tags:['One lead off'],fix:'Far from the expected value suggests a damaged element or a reading through another path. Recheck with both leads off.'},
-      {id:'e2',t:'Element terminal ↔ boiler body',how:'Either terminal.',type:'open',fix:'The element is leaking to its sheath. Don\'t power it; the element needs replacing.'},
-      {id:'e3',t:'Safety thermostat (165 °C), across it, cold',how:'Leads can stay on.',type:'low',fix:'Open when cold: tripped or failed. Some have a reset button; otherwise replace it. Never bypass it.'},
-      {id:'e4',t:'Pump thermal fuse, across it',how:'The fuse on the pump\'s neutral side; realNiche\'s diagram shows a 110 °C one. No fuse on yours: measure from the AC10 spade to the pump terminal instead.',type:'low',fix:'An open pump fuse needs replacing before the pump will run.'},
-      {id:'e5',t:'Pump coil',how:'Across the pump\'s two terminals, leads off. Ulka pumps have a diode in series, so measure with the probes one way, then swapped, and enter the lower reading. OL one way is normal; press OL only if it reads OL both ways.',type:'coil',tags:['Leads off','Both ways'],fix:'OL both ways means an open coil or fuse; near zero means a shorted coil.'},
-      {id:'e6',t:'Solenoid coil',how:'Across its two coil spades, leads off. Record the value.',type:'coil',tags:['Leads off'],fix:'OL means an open coil; near zero means a shorted coil.'},
-      {id:'e7',t:'Thermocouple loop',how:'Across its two wires, unclamped from J4. A few ohms is normal.',type:'tc',tags:['J4 unclamped'],fix:'OL means a broken thermocouple or lead.'}
+    {id:'e',name:'Path continuity',intro:'Each mains path is whole, every lead from the component checks is back on, and the power switch breaks both line and neutral.',items:[
+      {id:'e1',t:'Inlet L ↔ PCB J11 spade',how:'AC1, the switch, AC3, SSR terminal 1, AC4.',type:'low',tags:['Power ON'],fix:'Break in the line path. Check each spade on AC1, AC3 and AC4 and the shared fork at SSR terminal 1.'},
+      {id:'e2',t:'Inlet N ↔ PCB J10 spade',how:'AC2, the switch, then the neutral chain AC8, AC10, AC11, AC12.',type:'low',tags:['Power ON'],fix:'Break in the neutral chain. Check each doubled spade along it.'},
+      {id:'e3',t:'Inlet N ↔ element terminal 2',how:'AC2, the switch, AC9.',type:'low',tags:['Power ON'],fix:'Check AC9 and its boiler-end spade.'},
+      {id:'e4',t:'SSR load terminal 2 ↔ element terminal 1',how:'AC5, the safety thermostat, AC6.',type:'low',fix:'Open safety thermostat or a bad crimp on AC5 or AC6. Never bridge the thermostat.'},
+      {id:'e5',t:'PCB J13 ↔ solenoid coil spade',how:'AC13.',type:'low',fix:'Check AC13.'},
+      {id:'e6',t:'PCB J12 ↔ pump coil terminal',how:'AC14.',type:'low',fix:'Check AC14.'},
+      {id:'e7',t:'PCB J12 ↔ PCB J10, through the pump',how:'AC14, the pump coil and its thermal fuse, then AC11 and AC12. Probes one way, then swapped, as in c5; enter the lower reading, which should be close to c5\'s. It proves both pump leads are back on.',type:'coil',tags:['Both ways'],fix:'A pump lead from c5 isn\'t back on, or the thermal fuse is open. Check AC14 and the doubled AC10 and AC11 spade on the fuse.'},
+      {id:'e8',t:'PCB J13 ↔ PCB J10, through the solenoid',how:'AC13, the solenoid coil, then AC12. It should read close to c6, and proves both solenoid leads are back on.',type:'coil',fix:'A solenoid lead from c6 isn\'t back on. Check AC13 and the doubled AC11 and AC12 spade on the solenoid.'},
+      {id:'e9',t:'Inlet L ↔ PCB J11 spade, switch off',how:'Same probes as e1, power switch off. Should now be open.',type:'open',tags:['Power OFF'],fix:'The switch isn\'t breaking line. Check that the inlet goes to the outer spades and the loads to the center spades.'},
+      {id:'e10',t:'Inlet N ↔ PCB J10 spade, switch off',how:'Same probes as e2, power switch off. Should now be open.',type:'open',tags:['Power OFF'],fix:'The switch isn\'t breaking neutral.'}
     ]},
     {id:'f',name:'Low-voltage inputs',intro:'Unplug the J7, J5 and J9 plugs from the PCB and probe the plug pins, so the board itself isn\'t in the reading.',items:[
       {id:'f1',t:'Brew ON: J7 B ↔ J7 GND',how:'LV2 and the ground chain.',type:'low',tags:['Brew ON','Plugs off'],fix:'Check LV2, the brew switch ground pole and the ground chain.'},
@@ -501,10 +511,11 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
       {id:'f6',t:'Hot water OFF: J5 B15 ↔ J7 GND',how:'',type:'open',tags:['Hot water OFF','Plugs off'],fix:'Signal and ground are on the wrong spades.'},
       {id:'f7',t:'J9 R1 pin ↔ SSR + terminal',how:'LV7.',type:'low',tags:['Plugs off'],fix:'R1 must go to the SSR\'s + control terminal.'},
       {id:'f8',t:'J9 GND pin ↔ SSR − terminal',how:'LV8.',type:'low',tags:['Plugs off'],fix:'GND must go to the SSR\'s − control terminal.'},
-      {id:'f9',t:'Each switch signal pin ↔ chassis',how:'J7 S, J7 B and J5 B15 against bare metal.',type:'open',tags:['Plugs off'],fix:'A low-voltage wire touches the frame. Find the pinch.'}
+      {id:'f9',t:'Each switch signal pin ↔ chassis',how:'J7 S, J7 B and J5 B15 against bare metal. Enter the lowest reading.',type:'open',tags:['Plugs off'],fix:'A low-voltage wire touches the frame. Find the pinch.'},
+      {id:'f10',t:'J7 GND pin ↔ inlet L, then inlet N',how:'Power switch on, and brew, steam and hot water all on, so every signal wire joins the ground chain. Two readings test the whole switch harness against mains with the board out of the reading; enter the lower one.',type:'open',tags:['Power ON','Brew ON','Steam ON','Hot water ON','Plugs off'],fix:'A switch wire meets mains. Don\'t power it. Look for one on a power switch spade or pinched against a mains run.'}
     ]},
     {id:'g',name:'Look and pull',intro:'The checks a meter can\'t do.',items:[
-      {id:'g1',t:'Every boiler spade is uninsulated and wrapped in silicone tape',how:'No nylon-insulated spade within reach of the boiler; nylon is rated to 105 °C.',type:'check'},
+      {id:'g1',t:'Every boiler and valve spade is uninsulated and wrapped in silicone tape',how:'Wrap any you left bare for the meter checks. No nylon-insulated spade within reach of the boiler; nylon is rated to 105 °C.',type:'check'},
       {id:'g2',t:'Doubled terminals use spades sized for two 18 AWG wires',how:'Never two wires in a red spade. SSR terminal 1, the safety thermostat, the power switch neutral spade, the lamp, the pump, the solenoid and the boiler ground.',type:'check'},
       {id:'g3',t:'Every crimp survives a firm tug',how:'Redo any that move.',type:'check'},
       {id:'g4',t:'SSR: fork spades on all four terminals, screws tight',how:'Mounted on the left wall, clear of the pump.',type:'check'},
@@ -518,12 +529,20 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
       {id:'g12',t:'Someone else traced the harness against the wiring reference',how:'A second set of eyes, run by run.',type:'check'},
       {id:'g13',t:'Everything plugged back in',how:'J4 thermocouple reclamped with the same + and − as on the bench, then J5, J7 and J9. Recheck J9 R1 to SSR + and GND to SSR − with the plug in.',type:'check'},
       {id:'g15',t:'The power switch latches on and off by itself',how:'The harness relies on it breaking both line and neutral. The E model\'s push-button switch doesn\'t latch; it needs a double-pole rocker like the M model\'s.',type:'check'},
-      {id:'g14',t:'Stop immediately if the temperature falls while heating',how:'At first power-on, the reading must rise while the SSR light is on. If it falls, the thermocouple is reversed and the controller will heat nonstop. Switch off, unplug, swap the J4 wires.',type:'check'}
+      {id:'g14',t:'Stop immediately if the temperature falls while heating',how:'At first power-on, the reading must rise while the SSR light is on. If it falls, the thermocouple is reversed and the controller may keep heating. Switch off, unplug, swap the J4 wires.',type:'check'}
+    ]},
+    {id:'h',name:'Covers on',intro:'After the top cover and panels are back on (runbook Phase 5), still unplugged. Closing up is where a wire gets pinched against the case, and the screen cable at the vent is the usual one.',items:[
+      {id:'h1',t:'Top cover and every panel back on, screws tight',how:'Watch the screen cable at the vent and any wire near a panel edge as each one goes on.',type:'check'},
+      {id:'h2',t:'Inlet earth pin ↔ the top cover and each panel',how:'A bare spot on the top cover and on each panel itself, away from its screws. Skip the loose cup tray. Enter the highest reading.',type:'low',fix:'That part isn\'t reaching earth. Check its screws are in and tight.'},
+      {id:'h3',t:'Inlet L ↔ inlet earth',how:'Highest Ω range, power switch on.',type:'open',tags:['Power ON'],fix:'Line touches earth since the covers went on: a wire is pinched or a spade is touching the case. Open it up and find it.'},
+      {id:'h4',t:'Inlet N ↔ inlet earth',how:'Highest Ω range, power switch on. Probes one way, then swapped; enter the lower reading. The pump\'s diode can hide a pinched pump lead in one direction.',type:'open',tags:['Power ON','Both ways'],fix:'Neutral touches earth since the covers went on. Open it up and find the pinched wire.'},
+      {id:'h5',t:'Inlet earth pin ↔ the screen cable\'s GND pin',how:'Open the screen housing, unplug the cable from the screen and probe the cable\'s GND pin; a pin pushed into its socket helps. Through the cable it\'s the PCB\'s 5 V ground, so this catches the screen cable or a sensor lead pinched against the case.',type:'open',fix:'The 5 V side touches earth since the covers went on. Open it up and find the pinched cable.'},
+      {id:'h6',t:'Inlet L, then inlet N ↔ the same GND pin',how:'Highest Ω range, power switch on. Two readings, both open; enter the lower one. Then plug the screen back in and close its housing.',type:'open',tags:['Power ON'],fix:'Mains reaches the 5 V side since the covers went on. Don\'t plug in: open it up and find the pinched wire.'}
     ]}
   ];
   var ITEMS={};SECTIONS.forEach(function(s){s.items.forEach(function(i){ITEMS[i.id]=i})});
   var UNITS={'Ω':1,'kΩ':1e3,'MΩ':1e6};
-  var KEY='silvia-power-on-checks-v1';
+  var KEY='silvia-power-on-checks-v2',OLDKEY='silvia-power-on-checks-v1',MOVEDKEY='silvia-power-on-checks-moved';
   function $(id){return document.getElementById(id)}
   function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
   function num(v){return (typeof v==='number'&&isFinite(v)&&v>=0)?v:null}
@@ -549,6 +568,18 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     if(!out.runs.length)return defaults();
     out.cur=out.runs.some(function(r){return r.id===s.cur})?s.cur:out.runs[out.runs.length-1].id;
     return out;
+  }
+  /* Until Oct 2026 the shorts and paths came before the component checks, which take leads off, so nothing proved the leads went back. Old readings carry over except the shorts and paths, which have to be taken again after the leads are back on. */
+  function fromV1(s){
+    if(!s||typeof s!=='object'||!Array.isArray(s.runs))return null;
+    var n=0;
+    s.runs.forEach(function(r){
+      if(!r||!r.vals||typeof r.vals!=='object')return;
+      var out={};
+      Object.keys(r.vals).forEach(function(k){var m=/^([a-g])(\d+)$/.exec(k);if(!m||m[1]==='c'||m[1]==='d')return;out[m[1]==='e'?'c'+m[2]:k]=r.vals[k]});
+      n+=Object.keys(r.vals).length;r.vals=out;
+    });
+    return {state:normalize(s),had:n};
   }
   function run(){for(var i=0;i<state.runs.length;i++)if(state.runs[i].id===state.cur)return state.runs[i];return state.runs[0]}
 
@@ -604,8 +635,8 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
         '<button type="button" class="olbtn" data-ol="'+it.id+'" aria-pressed="'+(!!v.ol)+'">OL</button>'+
         '<span class="res '+(res||'')+'" data-res="'+it.id+'">'+(res==='pass'?'Pass':res==='fail'?'Fail':'—')+'</span>';
     }
-    return '<div class="item" data-item="'+it.id+'" data-r="'+(res||'')+'">'+
-      '<div class="i-main"><div class="i-title">'+esc(it.t)+'</div>'+(it.how?'<p class="i-how">'+esc(it.how)+'</p>':'')+
+    return '<div class="item" id="'+it.id+'" data-item="'+it.id+'" data-r="'+(res||'')+'">'+
+      '<div class="i-main"><div class="i-title"><span class="cid">'+it.id+'</span>'+esc(it.t)+'</div>'+(it.how?'<p class="i-how">'+esc(it.how)+'</p>':'')+
       '<div class="i-tags">'+tags+(it.type!=='check'?'<span class="exp" data-exp="'+it.id+'">'+esc(expText(it,r))+'</span>':'')+'</div></div>'+
       '<div class="i-side">'+side+'</div>'+
       '<div class="pline print-only" data-pline="'+it.id+'">'+plineHtml(it,r)+'</div>'+
@@ -644,7 +675,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     $('c-pass').textContent=p;$('c-fail').textContent=f;$('c-left').textContent=left;
     var g=$('gate');g.className='gate '+(f?'failed':(left?(p?'going':''):'ready'));
     $('g-t').textContent=f?'Not ready to plug in':(left?(p?'Keep going':'Not started'):'Ready for first power-on');
-    $('g-s').textContent=f?(f+' check'+(f===1?' failed':'s failed')+'. Fix each one, then recheck it.'):(left?(left+' check'+(left===1?'':'s')+' still to do, all unplugged.'):'Every check passed. Plug into a '+outlet()+', covers on, and follow Phase 5 of the runbook.');
+    $('g-s').textContent=f?(f+' check'+(f===1?' failed':'s failed')+'. Fix each one, then recheck it.'):(left?(left+' check'+(left===1?'':'s')+' still to do, all unplugged.'):'Every check passed, covers on. Plug into a '+outlet()+' and carry on with Phase 5 of the runbook.');
     $('bar').innerHTML=[[p,'var(--good)'],[f,'var(--bad)']].map(function(x){return x[0]?'<span style="flex-grow:'+x[0]+';background:'+x[1]+'"></span>':''}).join('')+(left?'<span style="flex-grow:'+left+';background:transparent"></span>':'');
     var e=expectedR(r);$('watts-s').textContent=e?('Expected element resistance: about '+e.toFixed(1)+' Ω'+(r.volts?'':' at '+profVolts()+' V, from Your Silvia')+'.'):(r.watts?'Enter the rated voltage too; the expected resistance depends on it.':'Sets the expected element resistance.');
     var pv=profVolts();$('volts').placeholder=pv?String(pv):'120/230';
@@ -655,6 +686,8 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
   /* ---------- persistence ---------- */
   var state=defaults(),dbRef=null,mode='local',readOnly=false,saveTimer=null,chain=Promise.resolve();
   function loadLocal(){try{var s=localStorage.getItem(KEY);return s?normalize(JSON.parse(s)):null}catch(e){return null}}
+  function loadOld(){try{var s=localStorage.getItem(OLDKEY);return s?fromV1(JSON.parse(s)):null}catch(e){return null}}
+  function moved(on){try{if(on!=null)localStorage.setItem(MOVEDKEY,on?'1':'0');return localStorage.getItem(MOVEDKEY)==='1'}catch(e){return false}}
   function saveLocal(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
   function setStatus(kind){
     var txt={loading:'Loading',local:'Saved on this device',saving:'Saving',saved:'Saved',readonly:'View only: changes stay on this screen',full:'Storage is full: changes stay on this device'}[kind]||'';
@@ -680,10 +713,13 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     try{p=(window.claude&&typeof window.claude.use==='function')?window.claude.use('db'):Promise.resolve(null)}catch(e){p=Promise.resolve(null)}
     Promise.resolve(p).then(function(db){
       if(!db){mode='local';setStatus('local');return}
-      dbRef=db.doc('checks/state');mode='db';
+      dbRef=db.doc('checks/state-v2');mode='db';
       return dbRef.get().then(function(snap){
         if(snap.exists){var remote=normalize(snap.data());if(remote.updatedAt>=state.updatedAt){state=remote;saveLocal();renderAll();setStatus('saved')}else scheduleSave()}
-        else if(state.updatedAt>0)scheduleSave();else setStatus('saved');
+        else return db.doc('checks/state').get().then(function(o){
+          var mv=o&&o.exists?fromV1(o.data()):null;
+          if(mv&&mv.state.updatedAt>state.updatedAt){state=mv.state;saveLocal();renderAll();if(mv.had){moved(true);$('moved').hidden=false}}
+        },function(){}).then(function(){if(state.updatedAt>0)scheduleSave();else setStatus('saved')});
       }).catch(function(e){if(e&&e.code==='unavailable'){mode='local';setStatus('local')}else onWriteError(e)});
     }).catch(function(){mode='local';setStatus('local')});
   }
@@ -720,8 +756,14 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     state.updatedAt=Date.now();saveLocal();renderAll();scheduleSave();
   });
 
-  state=loadLocal()||defaults();
+  state=loadLocal();
+  if(!state){var old=loadOld();if(old){state=old.state;saveLocal();if(old.had)moved(true)}}
+  if(!state)state=defaults();
   renderAll();setStatus('loading');
+  if(moved())$('moved').hidden=false;
+  $('moved-ok').addEventListener('click',function(){moved(false);$('moved').hidden=true});
+  function jump(){var h=(location.hash||'').slice(1).toLowerCase();if(!ITEMS[h])return;var el=$(h);if(!el)return;el.scrollIntoView({block:'center'});el.classList.add('hit');setTimeout(function(){el.classList.remove('hit')},2600)}
+  window.addEventListener('hashchange',jump);jump();
   connect();
 })();
 </script>

@@ -839,7 +839,7 @@ td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:ta
         <p>The temperature sensor. Silvia builders on Discord, and GaggiMate's Silvia guide, use an ungrounded K-type with an M3 thread, screwed into one of the holes the brew or steam thermostat's clamp used, with thermal paste and only finger tight. Gaggiuino's own parts list has an M4 probe, for Gaggias. If your boiler was made before May 2000, check how one mounts before you buy.</p>
         <h3>How it works</h3>
         <p>Two different alloys, chromel and alumel, are joined at the tip. When the tip is hotter than the far ends, a tiny voltage appears between them, about 41 microvolts per degree. The MAX31855 chip on the PCB measures it, adds the temperature at its own end (the cold junction), and hands the STM32 a reading. "Ungrounded" means the junction is insulated inside the probe's sheath, which matters because the boiler is earthed; <a href="#ground">see why the low-voltage side floats</a>.</p>
-        <p>Polarity matters. Swapped wires make the reading fall as the boiler heats, the controller keeps heating, and only the safety thermostat stops it. That's why the runbook has you watch the temperature rise at first power-on.</p>
+        <p>Polarity matters. Swapped wires make the reading fall as the boiler heats, so the controller may keep heating. The public Gen 2 firmware cuts the heater once the reading drops to 0 °C, Gen 3's behavior isn't published, and the 165 °C safety thermostat is the last line. That's why the runbook has you watch the temperature rise at first power-on.</p>
       </div>
       <figure class="gfig" id="g-tc">
   <div class="mini-ctl"><label class="mini-note" for="tc-r">Boiler</label><input type="range" id="tc-r" min="20" max="150" step="1" value="93"><output id="tc-o">93 °C</output></div>
@@ -891,12 +891,12 @@ td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:ta
       <div class="ph"><h3>Screen</h3><span class="where">on top, to J1</span></div>
       <div class="prose">
         <p>The 4.3" touch screen is a small computer of its own, built on an ESP32-S3 Wi-Fi chip. It draws the interface, stores your profiles and settings, runs the Gaggiuino Wi-Fi network and the web page at gaggiuino.local, and installs updates for itself and the board. It talks to the PCB over a serial link on J1, which also powers it.</p>
-        <p>The cable is wired by pin, not by colour: blue and yellow swap between cable revisions. With a funnel mount on a Silvia it needs a longer cable than a Gaggia's front mount.</p>
+        <p>The cable is wired by pin, not by color: blue and yellow swap between cable revisions. With a funnel mount on a Silvia it needs a longer cable than a Gaggia's front mount.</p>
       </div>
     </article>
 
     <article class="pc nofig" id="harness">
-      <div class="ph"><h3>The harness</h3><span class="where">32 runs, each labelled at both ends</span></div>
+      <div class="ph"><h3>The harness</h3><span class="where">32 runs, each labeled at both ends</span></div>
       <div class="prose">
         <p>The Silvia has no plug-in Gaggiuino harness, so the stock wiring comes out and a new one goes in, built from realNiche's diagram: 16 mains runs (including two earth runs), 11 low-voltage runs and 5 optional ones. Mains runs are 18 AWG silicone wire rated to 200 °C, low-voltage runs 22 AWG. Bare spades with self-fusing silicone tape go on the hot ends at the boiler and valve, two-wire spades wherever two runs share a terminal, and fork spades on the SSR.</p>
         <p>Mains is routed high and low voltage low, kept apart, with nothing but silicone wire touching the boiler or steam wand. <a href="wiring.html">Wiring reference</a>, <a href="cut-list.html">cut list</a>, <a href="wire-labels.html">labels</a>.</p>
@@ -962,7 +962,7 @@ td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:ta
       <div class="prose">
         <p>The ToFnLED board's distance sensor, mounted above the water, tells the screen how full the tank is, so you see it running low before the pump runs dry. It plugs into the Qwiic socket, J2, on the back of the PCB. The board also has an RGB LED to light the tank; the Silvia's tank is covered, so builders use it for the level reading.</p>
         <h3>How it works</h3>
-        <p>A time-of-flight sensor fires a very short pulse of infrared light and times how long the reflection takes to come back from the water surface. Light covers a millimetre in about 3 trillionths of a second, so the chip, a VL53L0X in the Gen 2 code, has to time it extremely finely; it reports a distance, and the firmware turns the distance into a percentage using the ranges you set. The Silvia's tank is deeper than a Gaggia's, about 200 mm, so those ranges need changing in the ToFnLED settings.</p>
+        <p>A time-of-flight sensor fires a very short pulse of infrared light and times how long the reflection takes to come back from the water surface. Light covers a millimeter in about 3 trillionths of a second, so the chip, a VL53L0X in the Gen 2 code, has to time it extremely finely; it reports a distance, and the firmware turns the distance into a percentage using the ranges you set. The Silvia's tank is deeper than a Gaggia's, about 200 mm, so those ranges need changing in the ToFnLED settings.</p>
       </div>
       <figure class="gfig" id="g-tof">
   <div class="mini-ctl"><label class="mini-note" for="tof-r">Water in the tank</label><input type="range" id="tof-r" min="5" max="100" step="1" value="70"><output id="tof-o">70%</output></div>

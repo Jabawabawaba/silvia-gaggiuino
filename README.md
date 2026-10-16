@@ -23,7 +23,7 @@ Gaggiuino is documented for the Gaggia Classic. The Silvia works, but there is n
 | `wiring.html` | Install day | realNiche's diagram redrawn with an ID per run, ends, gauge, connectors and lengths; tap to isolate a run |
 | `cut-list.html` | Install day | Wire to buy by gauge and color, connectors to crimp, and every run to cut, with adjustable extra length |
 | `wire-labels.html` | Install day | Printable flag labels per run end, PDF for Letter or A4 |
-| `power-on-checks.html` | Before plugging in | 55 unplugged multimeter and visual checks that mark themselves pass or fail; prints with blanks for readings |
+| `power-on-checks.html` | Before plugging in | 65 unplugged multimeter and visual checks that mark themselves pass or fail; prints with blanks for readings |
 | `troubleshooting.html` | After | Symptoms with likely causes and checks, linked to check and run IDs |
 | `led-mod.html` | After | mjr's switch LED conversion, drawn step by step |
 | `silvia-specifics.html`, `discord-notes.html` | Reference | The two docs below, rendered as site pages |
