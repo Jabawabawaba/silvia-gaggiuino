@@ -10,32 +10,167 @@
     if('IntersectionObserver' in window)new IntersectionObserver(function(es){vis(es[0].isIntersecting)}).observe(el);else vis(true);
   }
 
-  /* ---------- machine map: modes ---------- */
-  var cut=$('cut');
+  /* ---------- machine map: modes ----------
+     Water, coffee and steam are dots that move along hidden routes. Each mode is a little timeline: it sets how fast
+     each route flows (eased, so things speed up and slow down instead of snapping), where the 3-way valve's plunger is,
+     which pipes are under pump pressure, and what the boiler level does. Time only runs while the drawing is on screen. */
+  var cut=$('cut'),NS='http://www.w3.org/2000/svg',dotsG=$('dots');
+  var R={};
+  qa('.routes path',cut).forEach(function(p){
+    var L=p.getTotalLength(),n=Math.max(2,Math.ceil(L/2)),pts=[];
+    for(var i=0;i<=n;i++){var q=p.getPointAtLength(L*i/n);pts.push([q.x,q.y])}
+    R[p.getAttribute('data-r')]={pts:pts,len:L,n:n};
+  });
+  function at(r,s){var f=s/r.len*r.n,i=Math.floor(f);if(i>=r.n)return r.pts[r.n];if(i<0)return r.pts[0];var a=r.pts[i],b=r.pts[i+1],u=f-i;return [a[0]+(b[0]-a[0])*u,a[1]+(b[1]-a[1])*u]}
+  /* kind: w water, c coffee, s steam. sp is speed in drawing units a second at rate 1; gap is the spacing of the dots */
+  var KIND={w:{gap:13,r:2.5,sp:70},c:{gap:11,r:2.3,sp:46},s:{gap:15,r:3.3,sp:150}};
+  var FLOWS=[['intake','w',{stop:.1}],['pump','w',{stop:.1}],['tee','w',{stop:.1}],['opvret','w',{r:2,gap:15,stop:.12}],['boilerin','w',{stop:.1}],['bmix','w',{r:2.2,gap:16,op:.55,stop:.15}],['bup','w',{op:.6,stop:.15}],
+    ['valvein','w',{stop:.08}],['through','w',{stop:.08}],['screen','w',{r:2.1,gap:11}],['rain1','w',{r:1.8,gap:7,sp:40}],['rain2','w',{r:1.8,gap:7,sp:40}],['rain3','w',{r:1.8,gap:7,sp:40}],['rain4','w',{r:1.8,gap:7,sp:40}],
+    ['shot1','c',{sp:90}],['shot2','c',{sp:90}],['vent','w',{gap:12}],['steam','s'],['hot','w',{sp:110}]];
+  var F={};
+  FLOWS.forEach(function(d){
+    var k=KIND[d[1]],o=d[2]||{},r=R[d[0]],g=document.createElementNS(NS,'g');
+    var f={r:r,gap:o.gap||k.gap,sp:o.sp||k.sp,op:o.op||1,stop:o.stop||.3,rate:0,ph:0,g:g,c:[]};
+    var n=Math.ceil(r.len/f.gap)+1;
+    for(var i=0;i<n;i++){var c=document.createElementNS(NS,'circle');c.setAttribute('r',String(o.r||k.r));c.setAttribute('class',d[1]);g.appendChild(c);f.c.push(c)}
+    g.setAttribute('opacity','0');dotsG.appendChild(g);F[d[0]]=f;
+  });
+  /* bubbles off the element while it heats */
+  var bubG=document.createElementNS(NS,'g'),bubs=[];dotsG.insertBefore(bubG,dotsG.firstChild);
+  for(var bi=0;bi<26;bi++){var bc=document.createElementNS(NS,'circle');bc.setAttribute('class','b');bc.setAttribute('r','0');bubG.appendChild(bc);bubs.push({c:bc,on:false})}
+
   var MODES={
-    off:{flows:[],pump:0,sol:0,heat:0,knob:0,jug:0,puffs:0,sw:[],pwr:0,ht:0},
-    heat:{flows:[],pump:0,sol:0,heat:'cycle',knob:0,jug:0,puffs:0,sw:['pwr'],pwr:1,ht:'cycle'},
-    brew:{flows:['intake','pump','pumpout','boilerin','boiler','togroup','shot1','shot2','opvret'],pump:1,sol:1,heat:'cycle',knob:0,jug:0,puffs:0,sw:['pwr','brew'],pwr:1,ht:'cycle'},
-    stop:{flows:['drain'],pump:0,sol:0,heat:'cycle',knob:0,jug:0,puffs:0,sw:['pwr'],pwr:1,ht:'cycle'},
-    water:{flows:['intake','pump','pumpout','boilerin','boilerup','steamwater'],pump:1,sol:0,heat:'cycle',knob:1,jug:1,puffs:0,sw:['pwr','water'],pwr:1,ht:'cycle'},
-    steam:{flows:['steam'],pump:0,sol:0,heat:1,knob:1,jug:1,puffs:1,sw:['pwr','steam'],pwr:1,ht:1}
+    off:{sw:[],pwr:0,heat:0},
+    heat:{sw:['pwr'],pwr:1,heat:'cycle'},
+    brew:{sw:['pwr','brew'],pwr:1,heat:'cycle'},
+    stop:{sw:['pwr'],pwr:1,heat:'cycle'},
+    water:{sw:['pwr','water'],pwr:1,heat:'cycle'},
+    steam:{sw:['pwr','steam'],pwr:1,heat:1}
   };
-  var mode='heat',heatOn=false,cycT=null;
+  /* where boiler water can go, per mode: [to the group, to the wand, pump side] */
+  var EXITS={
+    off:[['shut','Shut: the 3-way valve is off'],['shut','Shut: the steam knob is closed'],['oneway','One-way: nothing can flow back through the pump'],'Sealed. The water stays where it is.'],
+    heat:[['shut','Shut: the 3-way valve is off'],['shut','Shut: the steam knob is closed'],['oneway','One-way: nothing can flow back through the pump'],'Sealed. The water heats but has nowhere to go.'],
+    brew:[['open','Open: the 3-way valve is on'],['shut','Shut: the steam knob is closed'],['in','Water coming in from the pump'],'In from the pump, out through the group.'],
+    stop:[['shut','Shut: the valve has sprung back; the group side drains'],['shut','Shut: the steam knob is closed'],['oneway','One-way: the pump has stopped'],'Sealed again. Only the group side empties.'],
+    water:[['shut','Shut: the 3-way valve stays off'],['open','Open: the steam knob is open'],['in','Water coming in from the pump'],'In from the pump, out of the wand.'],
+    steam:[['shut','Shut: the 3-way valve is off'],['open','Open: the steam knob is open'],['oneway','One-way: the pump is off'],'Steam out of the wand, so the level drops.']
+  };
+  var mode='heat',heatOn=false,cycT=null,T=0,t0=0,L=1,cup=0,jug=0,pB=0,pG=0,bubAcc=0;
+  function clamp(x,a,b){return x<a?a:x>b?b:x}
+  /* the timeline for each mode at t seconds in: target flow rates and the valve, pump and pressure states */
+  function plan(m,t){
+    var f={},s={plg:0,pump:0,pB:0,pG:0,knob:0,puffs:0,steamLine:L<.99?'s':'w'};
+    if(m==='brew'){
+      var fill=t<1.6?1:.42,cof=clamp((t-3.2)/1.6,0,1);
+      s.plg=1;s.pump=1;s.pB=s.pG=clamp((t-.5)/2.2,0,1);
+      f.intake=f.pump=f.tee=1;f.opvret=t<1.8?0:.6;
+      f.boilerin=f.bmix=f.valvein=f.through=f.screen=fill;
+      f.rain1=f.rain2=f.rain3=f.rain4=t<.5?0:fill;
+      f.shot1=f.shot2=cof;
+    }else if(m==='stop'){
+      s.pB=Math.exp(-t/.8);
+      f.vent=3.4*Math.exp(-t/.28)+.3*Math.exp(-t/1.3);
+      f.shot1=f.shot2=.75*Math.exp(-t/1.1);
+    }else if(m==='water'){
+      s.pump=1;s.knob=1;f.intake=f.pump=f.tee=f.boilerin=1;
+      if(L<.995){f.steam=.6;s.puffs=1;s.steamLine='s'}else{f.bup=1;f.hot=1;s.steamLine='w'}
+    }else if(m==='steam'){
+      s.knob=1;
+      if(t<1.3&&L>=.99){f.hot=1;s.steamLine='w'}else{f.steam=1;s.puffs=1;s.steamLine='s'}
+    }
+    s.f=f;return s;
+  }
+  function setB(sel,cls){qa(sel,cut).forEach(function(e){['w','p','s'].forEach(function(c){e.classList.toggle(c,c===cls)})})}
+  function frame(dt){
+    T+=dt;var t=T-t0,S=plan(mode,t);
+    /* states that build up: boiler level, cup and jug */
+    if(mode==='brew'){L=Math.min(1,L+dt*.02);if(S.f.shot1>0)cup=Math.min(.78,cup+dt*.028*S.f.shot1)}
+    if(mode==='water'){L=Math.min(1,L+dt*.07);if(S.f.hot)jug=Math.min(.8,jug+dt*.045)}
+    if(mode==='steam'&&S.f.steam)L=Math.max(.55,L-dt*.04);
+    /* flows: ease each rate toward its target, move its dots, fade dots in at the start and out at the end of a route */
+    for(var k in F){
+      var fl=F[k],tgt=S.f[k]||0;
+      fl.rate+=(tgt-fl.rate)*Math.min(1,dt/(tgt>fl.rate?.18:fl.stop));
+      if(fl.rate<.003)fl.rate=0;
+      fl.ph=(fl.ph+dt*fl.sp*fl.rate)%fl.gap;
+      var o=Math.min(1,fl.rate*3)*fl.op;fl.g.setAttribute('opacity',o.toFixed(3));
+      if(o<=0)continue;
+      for(var i=0;i<fl.c.length;i++){
+        var s=fl.ph+i*fl.gap,c=fl.c[i];
+        if(s>fl.r.len){c.setAttribute('cx','-99');continue}
+        var p=at(fl.r,s),e=Math.min(1,s/5,(fl.r.len-s)/5);
+        c.setAttribute('cx',p[0].toFixed(1));c.setAttribute('cy',p[1].toFixed(1));c.setAttribute('opacity',e.toFixed(2));
+      }
+    }
+    pB+=(S.pB-pB)*Math.min(1,dt/.35);pG+=(S.pG-pG)*Math.min(1,dt/(S.pG<pG?.06:.35));
+    paint(S);
+    bubbles(dt);
+  }
+  function paint(S){
+    $('plunger').classList.toggle('on',!!S.plg);
+    cut.querySelector('.solcoil').classList.toggle('on',!!S.plg);
+    cut.querySelector('.pumpbody').classList.toggle('on',!!S.pump&&!RM);
+    $('chk').setAttribute('cx',S.pump?(577+Math.random()*1.4).toFixed(1):'583');
+    $('opvplug').classList.toggle('open',F.opvret.rate>.15);
+    $('knob').classList.toggle('open',!!S.knob);$('sgate').classList.toggle('open',!!S.knob);
+    $('puffs').classList.toggle('on',!!S.puffs);
+    $('jug').style.opacity=$('jugfill').style.opacity=(mode==='water'||mode==='steam')?1:0;
+    /* bores: under pump pressure, plain water, steam, or empty */
+    var hiB=pB>.45,hiG=pG>.45;
+    setB('[data-b="pumpout"],[data-b="boilerin"],[data-b="valvein"]',hiB?'p':'w');
+    cut.querySelector('.pbore').classList.toggle('p',hiB);
+    setB('[data-b="valveout"],[data-b="chamber"],[data-b="group"]',hiG?'p':'w');
+    setB('[data-b="intake"]','w');
+    setB('[data-b="opvret"]',F.opvret.rate>.05?'w':'');
+    setB('[data-b="drain"],[data-b="core"]',F.vent.rate>.04?'w':'');
+    setB('[data-b="steam"]',S.steamLine);
+    $('bpres').style.opacity=(pB*.4).toFixed(3);
+    var y=160+(1-L)*162;$('bwater').setAttribute('y',y.toFixed(1));$('bwater').setAttribute('height',(L*162).toFixed(1));
+    $('bsurf').setAttribute('d','M238,'+y.toFixed(1)+' H412');$('bsurf').style.opacity=L<.995?1:0;
+    $('cupfill').setAttribute('y',(512-cup*60).toFixed(1));$('cupfill').setAttribute('height',(cup*60).toFixed(1));
+    $('jugfill').setAttribute('y',(452-jug*56).toFixed(1));$('jugfill').setAttribute('height',(jug*56).toFixed(1));
+  }
+  function bubbles(dt){
+    var surf=160+(1-L)*162+3,rate=heatOn?(mode==='steam'?14:6):0;
+    bubAcc+=dt*rate;
+    while(bubAcc>=1){bubAcc-=1;for(var i=0;i<bubs.length;i++)if(!bubs[i].on){var b=bubs[i];b.on=true;b.x=252+Math.random()*150;b.y=214+Math.random()*10;b.v=34+Math.random()*26;b.r=1.4+Math.random()*1.8;b.w=Math.random()*6.28;break}}
+    bubs.forEach(function(b){
+      if(!b.on)return;b.y-=b.v*dt;b.w+=dt*5;
+      if(b.y<=surf){b.on=false;b.c.setAttribute('r','0');return}
+      b.c.setAttribute('cx',(b.x+Math.sin(b.w)*2).toFixed(1));b.c.setAttribute('cy',b.y.toFixed(1));b.c.setAttribute('r',b.r.toFixed(1));
+    });
+  }
+  function exits(m){
+    var E=EXITS[m],box=$('xits');if(!box)return;
+    ['grp','wand','pump'].forEach(function(id,i){var row=$('x-'+id);row.className='xrow '+E[i][0];row.querySelector('.xs').textContent=E[i][1]});
+    $('x-sum').textContent=E[3];
+  }
   function setMode(m){
-    mode=m;var M=MODES[m];
+    mode=m;var M=MODES[m];t0=T;
+    if(m==='stop'&&cup<.3)cup=.45;
+    if(m!=='brew'&&m!=='stop')cup=0;
+    if(m!=='water')jug=0;
+    if(m==='water'&&RM)L=1;
     qa('[data-mode]').forEach(function(b){b.setAttribute('aria-pressed',String(b.getAttribute('data-mode')===m))});
-    qa('.flow',cut).forEach(function(p){p.classList.toggle('on',M.flows.indexOf(p.getAttribute('data-f'))>=0)});
-    cut.querySelector('.pumpbody').classList.toggle('on',!!M.pump&&!RM);
-    cut.querySelector('.solcoil').classList.toggle('on',!!M.sol);
-    $('knob').classList.toggle('open',!!M.knob);
-    $('jug').style.opacity=M.jug?1:0;
-    $('puffs').classList.toggle('on',!!M.puffs);
+    var rp=$('replay');if(rp)rp.style.visibility=m==='stop'?'':'hidden';
     ['pwr','brew','water','steam'].forEach(function(k){var on=M.sw.indexOf(k)>=0;$('sw-'+k).classList.toggle('on',on);var r=$('rk-'+k);if(r)r.classList.toggle('on',on)});
     $('lp-pwr').classList.toggle('on',!!M.pwr);
     $('modecap').textContent=$('cap-'+m).textContent;
+    exits(m);
+    aim();
     if(cycT){clearInterval(cycT);cycT=null}
-    if(M.heat==='cycle'){heatOn=true;applyHeat();cycT=setInterval(function(){heatOn=!heatOn;applyHeat()},heatOn?2600:2600)}
+    if(M.heat==='cycle'){heatOn=true;applyHeat();cycT=setInterval(function(){heatOn=!heatOn;applyHeat()},2600)}
     else{heatOn=!!M.heat;applyHeat()}
+    if(RM)still();
+  }
+  /* reduced motion: one still frame of each mode in its steady state, with the dots standing on the routes */
+  function still(){
+    var keep=T;t0=0;T=mode==='stop'?.35:mode==='steam'?4:6;
+    var S=plan(mode,T);
+    for(var k in F){F[k].rate=S.f[k]?Math.min(1,S.f[k]):0;F[k].ph=0}
+    pB=S.pB;pG=S.pG;
+    frame(0);T=keep;
   }
   function applyHeat(){
     $('element').classList.toggle('hot',heatOn);
@@ -43,11 +178,42 @@
     $('lp-ht').classList.toggle('on',heatOn);
   }
   qa('[data-mode]').forEach(function(b){b.addEventListener('click',function(){setMode(b.getAttribute('data-mode'))})});
+  if($('replay'))$('replay').addEventListener('click',function(){setMode('stop')});
+  /* close-up: the camera glides in on where the action is (the valve and group, or the steam valve and wand), where the
+     whole drawing is too small on a phone. Phones start in close-up; picking a part outside the frame pulls back out. */
+  var zoomed=false,camRaf=0,CUR=[24,44,926,510];
+  var VIEW={all:[24,44,926,510],valve:[190,92,356,440],front:[40,88,364,450]};
+  var INVIEW={valve:'boiler element tstat sol group pf tray opv',front:'boiler element tstat wand panel group pf tray'};
+  function frameFor(m){return zoomed?((m==='water'||m==='steam')?'front':'valve'):'all'}
+  function putVB(v){cut.setAttribute('viewBox',v.map(function(x){return x.toFixed(1)}).join(' '))}
+  function aim(){
+    var to=VIEW[frameFor(mode)],from=CUR.slice(),st=0;
+    cut.classList.toggle('zoomed',zoomed);
+    var zb=$('zoomb');if(zb){zb.setAttribute('aria-pressed',String(zoomed));zb.textContent=zoomed?'Show the whole machine':'Close-up'}
+    if(camRaf)cancelAnimationFrame(camRaf);
+    if(RM||from.join()===to.join()){CUR=to.slice();putVB(CUR);return}
+    function go(ms){if(!st)st=ms;var u=Math.min(1,(ms-st)/700),e=u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2;
+      for(var i=0;i<4;i++)CUR[i]=from[i]+(to[i]-from[i])*e;putVB(CUR);camRaf=u<1?requestAnimationFrame(go):0}
+    camRaf=requestAnimationFrame(go);
+  }
+  if($('zoomb'))$('zoomb').addEventListener('click',function(){zoomed=!zoomed;aim()});
+  /* keep the caption's height steady across modes, so the drawing under it doesn't jump when the mode changes */
+  (function(){
+    var cap=$('modecap');if(!cap)return;
+    function fit(){var keep=cap.textContent,h=0;cap.style.minHeight='';
+      Object.keys(MODES).forEach(function(m){cap.textContent=$('cap-'+m).textContent;h=Math.max(h,cap.offsetHeight)});
+      cap.textContent=keep;cap.style.minHeight=h+'px'}
+    fit();var rt=0;window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(fit,150)});
+    if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fit);
+  })();
+  var lastMs=0;
+  onScreen(cut,function(ms){var dt=lastMs?Math.min(.05,(ms-lastMs)/1000):0;lastMs=ms;frame(dt)},function(){lastMs=0});
 
   /* ---------- machine map: parts ---------- */
   var sel=null;
   function pick(id,scrollIt){
     sel=id;
+    if(id&&zoomed&&(INVIEW[frameFor(mode)]||'').split(' ').indexOf(id)<0){zoomed=false;aim()}
     qa('.hot',cut).forEach(function(h){h.classList.toggle('sel',h.getAttribute('data-part')===id)});
     cut.classList.toggle('focus',!!id);
     qa('.part',cut).forEach(function(g){g.classList.toggle('lit',!!id&&g.id==='p-'+id)});
@@ -73,7 +239,8 @@
     });
     stage.parentNode.insertBefore(pl,stage.nextSibling);
   })();
-  setMode('heat');pick(null);
+  zoomed=cut.getBoundingClientRect().width<600;CUR=VIEW[frameFor('heat')].slice();putVB(CUR);
+  setMode('heat');pick(null);if(!RM)frame(0);
 
   /* ---------- thermostat figure: a simple boiler that heats while the contacts are closed ---------- */
   (function(){

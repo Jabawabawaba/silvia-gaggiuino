@@ -317,7 +317,10 @@ td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:ta
 }
 
 /* cutaway drawing */
-.cut{display:block;width:100%;height:auto;color:var(--ink)}
+.cut{display:block;width:100%;height:auto;color:var(--ink);
+  --wt-bore:#C9E1F3;--wt-pres:#4E97D4;--wt-dot:#1F7BC7;--wt-steam:#DCE2E7;--wt-sdot:#76838E;--wt-empty:var(--surface-2);--wt-coffee:#6B3A17;--wt-bub:#FFFFFF}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .cut{--wt-bore:#1C3B55;--wt-pres:#2F78B8;--wt-dot:#8FCBF2;--wt-steam:#3A434C;--wt-sdot:#C9D2DA;--wt-empty:#2A3036;--wt-coffee:#C08A55;--wt-bub:#CFE6F7}}
+:root[data-theme="dark"] .cut{--wt-bore:#1C3B55;--wt-pres:#2F78B8;--wt-dot:#8FCBF2;--wt-steam:#3A434C;--wt-sdot:#C9D2DA;--wt-empty:#2A3036;--wt-coffee:#C08A55;--wt-bub:#CFE6F7}
 .cut .dot{fill:var(--line)}
 .cut .shell{fill:var(--surface);fill-opacity:.55;stroke:var(--muted);stroke-opacity:.55;stroke-width:1.5}
 .cut .shell-top{fill:var(--surface-2);stroke:var(--muted);stroke-opacity:.5}
@@ -327,49 +330,76 @@ td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:ta
 .cut .tank{fill:var(--blue-soft);fill-opacity:.5;stroke:var(--blue);stroke-opacity:.6;stroke-width:1.5}
 .cut .tankwater{fill:var(--blue);fill-opacity:.22}
 .cut .wave{fill:none;stroke:var(--blue);stroke-opacity:.6;stroke-width:1.5}
-.cut .pipes path{fill:none;stroke:var(--muted);stroke-opacity:.45;stroke-width:7;stroke-linecap:round;stroke-linejoin:round}
+/* pipes: a wall with a bore whose colour says what's inside: water, water under pump pressure, steam, or nothing */
+.cut .pipes path{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.cut .pipes .tw{stroke:var(--muted);stroke-opacity:.5;stroke-width:10}
+.cut .pipes .halo{stroke:var(--surface);stroke-width:16;stroke-linecap:butt}
+.cut [data-b]{transition:stroke .5s,fill .5s}
+.cut .pipes .tb{stroke:var(--wt-empty);stroke-width:5.5}
+.cut .tb.w,.cut .core.w,.cut .vbore.w,.cut .port.w{stroke:var(--wt-bore)}
+.cut .tb.p,.cut .port.p{stroke:var(--wt-pres)}
+.cut .tb.s,.cut .core.s,.cut .vbore.s{stroke:var(--wt-steam)}
 .cut .pump{fill:var(--surface-2);stroke:var(--muted);stroke-width:1.5}
+.cut .pbore{stroke:var(--wt-bore);stroke-width:7;stroke-linecap:round;transition:stroke .5s}
+.cut .pbore.p{stroke:var(--wt-pres)}
 .cut .coil{fill:#2F3439;stroke:#16181B}
 .cut .windings line{stroke:#B98F45;stroke-width:2}
+.cut .seat{stroke:#4A5057;stroke-width:3;stroke-linecap:round}
+.cut .ball{fill:#8C949B;stroke:#4A5057;stroke-width:1.2}
 .cut .nipple{fill:var(--muted)}
 .cut .brass-s{stroke:#6E5420;stroke-width:1.2}
 .cut .spring{fill:none;stroke:#3B2C0E;stroke-width:1.3}
-.cut .boilerwater{fill:var(--blue);fill-opacity:.25}
+.cut .plug{fill:#2B2F34;transition:transform .25s}
+.cut .plug.open{transform:translateY(-3px)}
+.cut .boilerin{fill:var(--wt-steam);fill-opacity:.85}
+.cut .boilerwater{fill:var(--wt-bore)}
+.cut .bpres{fill:var(--wt-pres);opacity:0}
+.cut .bsurf{fill:none;stroke:var(--wt-dot);stroke-opacity:.7;stroke-width:1.6;opacity:0}
 .cut .element{fill:none;stroke:#7A5A1E;stroke-width:3.5;stroke-linejoin:round;stroke-linecap:round}
 .cut .tst rect{fill:var(--surface);stroke:var(--muted);stroke-width:1.3}
 .cut .tst.safety circle{fill:var(--bad)}
 .cut .chrome-s{stroke:#5E656C;stroke-width:1.2}
+.cut .gchan{fill:var(--wt-bore)}
+.cut .gchan.p{fill:var(--wt-pres)}
 .cut .screen{stroke:#5E656C;stroke-width:2;stroke-dasharray:3 3}
-.cut .solcoil{fill:#2F3439;stroke:#16181B}
+.cut .puck{fill:#5A3A22}
+/* the 3-way valve in x-ray */
+.cut .solcoil{fill:#2F3439;stroke:#16181B;transition:fill .2s,stroke .2s}
+.cut .solcoil.on{fill:#7A3A10;stroke:#F2A33A;filter:drop-shadow(0 0 4px #F2A33A)}
 .cut .wind2{stroke:#B98F45;stroke-width:2}
+.cut .core{fill:none;stroke:var(--wt-empty);stroke-width:5}
+.cut .chamber{fill:var(--wt-bore);stroke:#6E5420;stroke-width:1}
+.cut .chamber.p{fill:var(--wt-pres)}
+.cut .port{fill:none;stroke:var(--wt-bore);stroke-width:6}
+.cut .lip{stroke:#3B2C0E;stroke-width:2.2;stroke-linecap:round}
+.cut .plg{fill:#9AA2A9;stroke:#4A5057;stroke-width:1.2}
+.cut .pad{fill:#1E2125}
+#plunger{transition:transform .14s cubic-bezier(.5,0,.9,.5)}
+#plunger.on{transform:translateY(-16px)}
 .cut .handle{fill:#202326;stroke:#0C0E10}
 .cut .spout{fill:#8C949B}
 .cut .tray{fill:var(--surface-2);stroke:var(--muted);stroke-width:1.3}
 .cut .grate{stroke:var(--muted);stroke-opacity:.5;stroke-width:1.2;fill:none}
 .cut .cup,.cut .jug{fill:var(--surface);fill-opacity:.4;stroke:var(--muted);stroke-width:1.5}
+.cut .cupfill{fill:var(--wt-coffee)}
+.cut .jugfill{fill:var(--wt-bore)}
 .cut .knob{fill:#202326}
 .cut .knobmark{stroke:#ECEEF0;stroke-width:2;stroke-linecap:round}
+.cut .vbore{fill:none;stroke:var(--wt-bore);stroke-width:5}
+.cut .gate{fill:#1E2125;transition:transform .5s}
+#sgate.open{transform:translateX(-9px)}
 .cut .wand{fill:none;stroke:#9AA2A9;stroke-width:7;stroke-linecap:round}
 .cut .panel{fill:var(--surface-2);stroke:var(--muted);stroke-width:1.2}
 .cut .sw{fill:#202326;stroke:#0C0E10}
 .cut .sw.on{fill:#F2A33A;filter:drop-shadow(0 0 4px #F2A33A)}
 .cut .inlet{fill:#2B2F34}
 .cut .cord{fill:none;stroke:#2B2F34;stroke-width:5;stroke-linecap:round}
-/* flows */
-.cut .flow{fill:none;stroke-linecap:round;stroke-linejoin:round;opacity:0;transition:opacity .35s}
-.cut .flow.water{stroke:#2F8FD8;stroke-width:4;stroke-dasharray:9 9}
-.cut .flow.water.thin{stroke-width:2.5}
-.cut .flow.coffee{stroke:#6B3A17;stroke-width:3;stroke-dasharray:6 6}
-.cut .flow.steam{stroke:#B9C3CC;stroke-width:5;stroke-dasharray:3 12}
-/* each moving line slides exactly one repeat of its own dash pattern per loop, so the loop never shows a jump:
-   cutflow for 9+9 dashes, fl12 for patterns that repeat every 12 units, fl15 every 15, fl16 every 16 */
-.cut .flow.on{opacity:1;animation:cutflow .7s linear infinite}
-.cut .flow.coffee.on{animation-name:fl12;animation-duration:.4s}
-.cut .flow.steam.on{animation-name:fl15;animation-duration:.375s}
-@keyframes cutflow{to{stroke-dashoffset:-18}}
-@keyframes fl12{to{stroke-dashoffset:-12}}
-@keyframes fl15{to{stroke-dashoffset:-15}}
-@keyframes fl16{to{stroke-dashoffset:-16}}
+/* moving water, coffee and steam: dots placed by the script along the hidden routes */
+.cut .routes path{fill:none;stroke:none}
+.cut .dots .w{fill:var(--wt-dot)}
+.cut .dots .c{fill:var(--wt-coffee)}
+.cut .dots .s{fill:var(--wt-sdot)}
+.cut .dots .b{fill:var(--wt-bub);fill-opacity:.55;stroke:var(--wt-dot);stroke-opacity:.5;stroke-width:.8}
 .cut .puffs circle{fill:#E3E8EC;opacity:0}
 .cut .puffs.on circle{animation:puff 1.4s ease-out infinite}
 .cut .puffs.on circle:nth-child(2){animation-delay:.45s}.cut .puffs.on circle:nth-child(3){animation-delay:.9s}
@@ -378,7 +408,6 @@ td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:ta
 .cut .pumpbody.on{animation:buzz .09s linear infinite}
 @keyframes buzz{0%{transform:translateX(0)}50%{transform:translateX(1.6px)}100%{transform:translateX(0)}}
 .cut .element.hot{stroke:#FF8A2A;filter:drop-shadow(0 0 5px #FF8A2A)}
-.cut .solcoil.on{fill:#7A3A10;stroke:#F2A33A}
 #knob{transition:transform .5s;transform-box:fill-box;transform-origin:50% 50%}
 #knob.open{transform:rotate(-90deg)}
 #jug{transition:opacity .4s}
@@ -388,10 +417,15 @@ td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:ta
 .cut .hot text{font:700 14px var(--f-mono);fill:var(--bg);text-anchor:middle;pointer-events:none}
 .cut .hot:hover circle,.cut .hot:focus-visible circle{fill:var(--accent)}
 .cut .hot.sel circle{fill:var(--accent);stroke:var(--accent-soft);stroke-width:5}
-.cut .part{transition:opacity .25s}
-.cut.focus .part{opacity:.35}
+.cut .part,.cut .pipes,.cut .dots{transition:opacity .25s}
+.cut.focus .part,.cut.focus .pipes,.cut.focus .dots{opacity:.35}
 .cut.focus .part.lit{opacity:1}
-@media (prefers-reduced-motion:reduce){.cut .flow.on,.cut .puffs.on circle,.cut .pumpbody.on{animation:none}.cut .puffs.on circle{opacity:.6}}
+@media (prefers-reduced-motion:reduce){.cut .puffs.on circle,.cut .pumpbody.on{animation:none}.cut .puffs.on circle{opacity:.6}#plunger,#sgate,#knob{transition:none}}
+/* still used by the mini figures and the Gaggiuino page */
+@keyframes cutflow{to{stroke-dashoffset:-18}}
+@keyframes fl12{to{stroke-dashoffset:-12}}
+@keyframes fl15{to{stroke-dashoffset:-15}}
+@keyframes fl16{to{stroke-dashoffset:-16}}
 /* ---------- mini figures ---------- */
 .mini{margin:0;border:1px solid var(--line);border-radius:14px;background:var(--surface);overflow:hidden}
 .mini svg{display:block;width:100%;max-width:480px;height:auto;margin:0 auto;padding:10px 12px 0}
@@ -525,7 +559,7 @@ td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:ta
 .modes{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
 .modecap{margin:0 0 12px;font-size:15.5px;max-width:75ch;min-height:3em}
 .map{display:grid;gap:14px}
-.side{grid-template-columns:auto minmax(0,1fr)}
+.side{grid-template-columns:minmax(0,340px) minmax(0,1fr)}
 @media (max-width:760px){.side{grid-template-columns:minmax(0,1fr)}}
 .stage{border:1px solid var(--line);border-radius:14px;background:var(--bg);overflow:hidden}
 .side{display:grid;gap:12px;align-items:start}
@@ -538,6 +572,28 @@ td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:ta
 .lamp i{width:12px;height:12px;border-radius:50%;background:var(--surface-2);box-shadow:inset 0 0 0 1px var(--line)}
 .lamp.on.pw i{background:#3FBF6A;box-shadow:0 0 8px #3FBF6A}
 .lamp.on.ht i{background:#F2A33A;box-shadow:0 0 8px #F2A33A}
+.sidel{display:grid;gap:12px;align-content:start}
+.xits{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:12px 14px;display:grid;gap:7px}
+.xrow{display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 10px;align-items:baseline;font-size:14px}
+.xrow b{font-weight:600;grid-column:1 / -1;display:flex;align-items:center;gap:7px}
+.xrow b::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--line);flex:none}
+.xrow .xs{grid-column:1 / -1;color:var(--muted);padding-left:17px}
+.xrow.open b::before{background:var(--good);box-shadow:0 0 6px var(--good)}
+.xrow.shut b::before{background:var(--bad)}
+.xrow.oneway b::before{background:var(--muted)}
+.xrow.in b::before{background:#2F8FD8;box-shadow:0 0 6px #2F8FD8}
+.xsum{margin:2px 0 0;font-size:14px;font-weight:600}
+.cutkey{display:flex;flex-wrap:wrap;gap:4px 14px;padding:8px 14px 10px;border-top:1px solid var(--line);font:500 12px var(--f-mono);color:var(--muted)}
+.cutkey span{display:inline-flex;align-items:center;gap:6px}
+.cutkey i{width:18px;height:7px;border-radius:4px;border:1px solid var(--muted);border-color:color-mix(in srgb,var(--muted) 50%,transparent)}
+.cutkey .kw{background:#C9E1F3}.cutkey .kp{background:#4E97D4}.cutkey .ks{background:#DCE2E7}.cutkey .kc{background:#6B3A17}.cutkey .ke{background:var(--surface-2)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .cutkey .kw{background:#1C3B55}:root:not([data-theme="light"]) .cutkey .kp{background:#2F78B8}:root:not([data-theme="light"]) .cutkey .ks{background:#3A434C}:root:not([data-theme="light"]) .cutkey .kc{background:#C08A55}}
+:root[data-theme="dark"] .cutkey .kw{background:#1C3B55}:root[data-theme="dark"] .cutkey .kp{background:#2F78B8}:root[data-theme="dark"] .cutkey .ks{background:#3A434C}:root[data-theme="dark"] .cutkey .kc{background:#C08A55}
+.chip.replay{border-style:dashed}
+.cutkey{align-items:center}
+.cutkey .zoomb{min-height:34px;padding:4px 12px;font:600 13.5px var(--f-body);margin-right:4px}
+.cutkey .zoomb[aria-pressed="false"]{color:var(--ink)}
+.cut.zoomed{max-height:76vh}
 .pinfo{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:14px 16px;display:grid;gap:8px;min-height:150px;align-content:start}
 .pinfo h3{font:600 21px/1.1 var(--f-display);letter-spacing:.03em;text-transform:uppercase;display:flex;gap:10px;align-items:baseline}
 .pinfo h3 .no{font:700 13px var(--f-mono);color:var(--bg);background:var(--ink);border-radius:999px;min-width:26px;height:26px;display:inline-grid;place-items:center}
@@ -595,25 +651,28 @@ td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:ta
       <button type="button" class="chip" data-mode="stop" aria-pressed="false">End of a shot</button>
       <button type="button" class="chip" data-mode="water" aria-pressed="false">Hot water</button>
       <button type="button" class="chip" data-mode="steam" aria-pressed="false">Steam</button>
+      <button type="button" class="chip replay" id="replay" style="visibility:hidden">Play it again</button>
     </div>
     <p class="modecap" id="modecap" aria-live="polite"></p>
     <div hidden>
-      <span id="cap-off">Cord in, power switch off. Nothing has power, so the water just sits in the tank and the boiler.</span>
-      <span id="cap-heat">Power on. The element heats the boiler until the brew thermostat opens, then waits for it to cool a little and close again. The heating light follows the element, on and off.</span>
-      <span id="cap-brew">Brew switch on. The pump pulls water from the tank and pushes it into the boiler, and the 3-way valve opens so hot water flows from the boiler through the group into the coffee. Whatever the puck won't take above the OPV's setting goes back to the tank.</span>
-      <span id="cap-stop">Brew switch off. The pump stops and the 3-way valve flips: the pressure left above the puck vents into the drip tray.</span>
-      <span id="cap-water">Hot water switch on with the steam knob open. The pump runs but the 3-way valve stays shut, so the water pushes through the boiler and out of the steam wand.</span>
-      <span id="cap-steam">Steam switch on, then the knob. The steam switch takes the brew thermostat out of the circuit, so the element keeps going until the steam thermostat opens, well above boiling. The knob lets steam out of the top of the boiler through the wand.</span>
+      <span id="cap-off">Cord in, power switch off. Nothing has power, so the water just sits in the tank and the boiler. The boiler is sealed: the 3-way valve and the steam knob are shut, and the pump only lets water through one way.</span>
+      <span id="cap-heat">Power on. The element heats the boiler until the brew thermostat opens, then waits for it to cool a little and close again. The heating light follows the element. The boiler stays sealed, so the water heats where it is.</span>
+      <span id="cap-brew">Brew switch on. The coil lifts the 3-way valve's plunger: it seals the drain and opens the boiler to the group. The pump pushes tank water into the boiler, which pushes hot water through the valve onto the puck. Once the puck holds the pressure back, the OPV sends what the puck won't take back to the tank, and coffee starts after a few seconds.</span>
+      <span id="cap-stop">Brew switch off. The pump stops and the spring drops the plunger: it shuts the boiler port and opens the group to the drain, so the pressure left above the puck rushes out into the drip tray. The boiler side stays sealed.</span>
+      <span id="cap-water">Hot water switch on with the steam knob open. The pump runs but the 3-way valve stays shut, so the only way out of the boiler is the wand: fresh water in at the side, hot water out of the top. Just after steaming it sputters steam until the boiler is full again.</span>
+      <span id="cap-steam">Steam switch on, then the knob. The steam switch takes the brew thermostat out of the circuit, so the element keeps going until the steam thermostat opens, well above boiling. Opening the knob spits out the water in the steam pipe first, then steam leaves from the top of the boiler, and the water level drops.</span>
     </div>
     <div class="map">
       <div class="stage"><svg id="cut" class="cut" viewBox="24 44 926 510" role="img" aria-labelledby="cut-t">
-  <title id="cut-t">Side x-ray of a stock Rancilio Silvia: tank at the back, pump below it, the overpressure valve, the boiler above the group with its element inside, the safety thermostat on its front, the 3-way valve beside the group, and the steam valve and wand at the front</title>
+  <title id="cut-t">Side x-ray of a stock Rancilio Silvia: tank at the back, pump below it with its one-way valve, the overpressure valve, the boiler above the group with its element inside, the safety thermostat on its front, the 3-way valve beside the group with its plunger, coil and drain tube, and the steam valve and wand at the front</title>
   <defs>
     <pattern id="cut-dots" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r=".9" class="dot"/></pattern>
     <linearGradient id="cut-brass" x1="0" x2="1"><stop offset="0" stop-color="#9C7A36"/><stop offset=".4" stop-color="#E2C27C"/><stop offset=".7" stop-color="#C39A4E"/><stop offset="1" stop-color="#8E6C2C"/></linearGradient>
     <linearGradient id="cut-chrome" x1="0" x2="1"><stop offset="0" stop-color="#7C848B"/><stop offset=".35" stop-color="#EEF1F3"/><stop offset=".65" stop-color="#B4BBC1"/><stop offset="1" stop-color="#737B82"/></linearGradient>
     <radialGradient id="cut-glow" cx="50%" cy="38%" r="65%"><stop offset="0" stop-color="#FF9A3C" stop-opacity=".95"/><stop offset=".6" stop-color="#F27A1A" stop-opacity=".35"/><stop offset="1" stop-color="#F27A1A" stop-opacity="0"/></radialGradient>
-    <marker id="cut-arr" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="arrowhead"/></marker>
+    <clipPath id="cut-bclip"><rect x="238" y="160" width="174" height="162" rx="16"/></clipPath>
+    <clipPath id="cut-cupclip"><path d="M300,452 H352 L348,512 H304 Z"/></clipPath>
+    <clipPath id="cut-jugclip"><path d="M38,396 H84 L80,452 H42 Z"/></clipPath>
   </defs>
   <rect width="960" height="600" fill="url(#cut-dots)"/>
 
@@ -627,41 +686,53 @@ td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:ta
   <g id="p-tank" class="part">
     <rect x="560" y="92" width="220" height="230" rx="10" class="tank"/>
     <path d="M562,146 H778 V312 Q778,320 770,320 H570 Q562,320 562,312 Z" class="tankwater"/>
-    <path id="w-level" d="M566,146 H774" class="wave"/>
+    <path d="M566,146 H774" class="wave"/>
   </g>
 
-  <!-- pipes (static) -->
+  <!-- pipes: each is a tube (wall) with a bore whose fill shows what's in it.
+       The boiler-to-valve pipe runs behind the valve-to-group pipe; the halo makes the crossing read. -->
   <g class="pipes">
-    <path id="pp-intake" d="M736,320 V404"/>
-    <path id="pp-pumpout" d="M560,426 H512"/>
-    <path id="pp-opvret" d="M490,398 V114 Q490,102 502,102 H596 V146"/>
-    <path id="pp-boilerin" d="M470,426 H454 Q442,426 442,414 V314 Q442,302 430,302 H420"/>
-    <path id="pp-togroup" d="M404,330 V340 H392"/>
-    <path id="pp-steam" d="M398,150 V116 Q398,104 386,104 H150 Q138,104 138,116 V150"/>
-    <path id="pp-drain" d="M412,366 V512"/>
+    <path class="tw" d="M736,320 V400"/><path class="tb" data-b="intake" d="M736,320 V400"/>
+    <path class="tw" d="M560,426 H556"/><path class="tb" data-b="pumpout" d="M560,426 H556"/>
+    <path class="tw" d="M538,396 V114 Q538,102 550,102 H596 V146"/><path class="tb" data-b="opvret" d="M538,396 V114 Q538,102 550,102 H596 V146"/>
+    <path class="tw" d="M520,426 H518 Q506,426 506,414 V226 Q506,214 494,214 H420"/><path class="tb" data-b="boilerin" d="M520,426 H518 Q506,426 506,414 V226 Q506,214 494,214 H420"/>
+    <path class="tw" d="M398,326 V386 Q398,396 408,396 H442 Q452,396 452,386 V380"/><path class="tb" data-b="valvein" d="M398,326 V386 Q398,396 408,396 H442 Q452,396 452,386 V380"/>
+    <path class="halo" d="M428,364 H388"/>
+    <path class="tw" d="M428,364 H388"/><path class="tb" data-b="valveout" d="M428,364 H388"/>
+    <path class="tw" d="M452,296 V288 Q452,278 462,278 H478 Q488,278 488,288 V504"/><path class="tb" data-b="drain" d="M452,296 V288 Q452,278 462,278 H478 Q488,278 488,288 V504"/>
+    <path class="tw" d="M398,152 V116 Q398,104 386,104 H150 Q138,104 138,116 V150"/><path class="tb" data-b="steam" d="M398,152 V116 Q398,104 386,104 H150 Q138,104 138,116 V150"/>
   </g>
 
-  <!-- pump -->
+  <!-- pump, with its one-way valve at the outlet end -->
   <g id="p-pump" class="part">
     <g class="pumpbody">
       <rect x="560" y="404" width="190" height="44" rx="20" class="pump"/>
+      <path d="M572,426 H738" class="pbore"/>
       <rect x="600" y="400" width="80" height="52" rx="6" class="coil"/>
       <g class="windings"><line x1="612" y1="402" x2="612" y2="450"/><line x1="624" y1="402" x2="624" y2="450"/><line x1="636" y1="402" x2="636" y2="450"/><line x1="648" y1="402" x2="648" y2="450"/><line x1="660" y1="402" x2="660" y2="450"/><line x1="672" y1="402" x2="672" y2="450"/></g>
+      <path d="M588,416 V421.5 M588,430.5 V436" class="seat"/>
+      <circle id="chk" cx="583" cy="426" r="4.6" class="ball"/>
     </g>
     <rect x="726" y="398" width="20" height="8" rx="2" class="nipple"/>
   </g>
 
-  <!-- OPV -->
+  <!-- OPV: a T on the pump line. Its spring holds a plug shut until the pressure beats it. -->
   <g id="p-opv" class="part">
-    <rect x="470" y="410" width="42" height="34" rx="5" fill="url(#cut-brass)" class="brass-s"/>
-    <rect x="480" y="396" width="22" height="16" rx="3" fill="url(#cut-brass)" class="brass-s"/>
-    <path d="M484,400 h14 M484,404 h14 M484,408 h14" class="spring"/>
+    <rect x="520" y="410" width="36" height="34" rx="5" fill="url(#cut-brass)" class="brass-s"/>
+    <rect x="528" y="396" width="20" height="16" rx="3" fill="url(#cut-brass)" class="brass-s"/>
+    <path d="M531,400 h14 M531,404 h14 M531,408 h14" class="spring"/>
+    <rect id="opvplug" x="532" y="412" width="12" height="6" rx="1.5" class="plug"/>
   </g>
 
   <!-- boiler and element -->
   <g id="p-boiler" class="part">
     <rect x="230" y="150" width="190" height="180" rx="22" fill="url(#cut-brass)" class="brass-s"/>
-    <rect x="238" y="160" width="174" height="162" rx="16" class="boilerwater"/>
+    <rect x="238" y="160" width="174" height="162" rx="16" class="boilerin"/>
+    <g clip-path="url(#cut-bclip)">
+      <rect id="bwater" x="238" y="160" width="174" height="162" class="boilerwater"/>
+      <rect id="bpres" x="238" y="160" width="174" height="162" class="bpres"/>
+      <path id="bsurf" d="M238,160 H412" class="bsurf"/>
+    </g>
     <rect id="heatglow" x="230" y="150" width="190" height="180" rx="22" fill="url(#cut-glow)" opacity="0"/>
   </g>
   <g id="p-element" class="part">
@@ -673,32 +744,50 @@ td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:ta
     <g class="tst safety"><rect x="214" y="244" width="16" height="30" rx="3"/><circle cx="210" cy="259" r="4"/><text x="226" y="292" class="mini" text-anchor="end">safety</text></g>
   </g>
 
-  <!-- group, 3-way valve, portafilter -->
+  <!-- group, portafilter with a puck, cup -->
   <g id="p-group" class="part">
     <path d="M262,330 H388 V366 Q388,372 382,372 H268 Q262,372 262,366 Z" fill="url(#cut-chrome)" class="chrome-s"/>
+    <rect x="272" y="360" width="116" height="8" rx="3" class="gchan" data-b="group"/>
     <line x1="270" y1="372" x2="380" y2="372" class="screen"/>
-  </g>
-  <g id="p-sol" class="part">
-    <rect x="392" y="334" width="40" height="32" rx="4" fill="url(#cut-brass)" class="brass-s"/>
-    <rect x="396" y="304" width="32" height="30" rx="4" class="solcoil"/>
-    <line x1="400" y1="312" x2="424" y2="312" class="wind2"/><line x1="400" y1="319" x2="424" y2="319" class="wind2"/><line x1="400" y1="326" x2="424" y2="326" class="wind2"/>
   </g>
   <g id="p-pf" class="part">
     <path d="M268,376 H382 L374,400 H276 Z" fill="url(#cut-chrome)" class="chrome-s"/>
+    <path d="M280,378 H370 L366,392 H284 Z" class="puck"/>
     <path d="M270,384 L84,394 Q76,395 76,402 Q76,409 84,409 L272,398 Z" class="handle"/>
     <rect x="308" y="400" width="10" height="10" rx="2" class="spout"/><rect x="334" y="400" width="10" height="10" rx="2" class="spout"/>
   </g>
   <g id="p-tray" class="part">
-    <rect x="118" y="512" width="324" height="18" rx="4" class="tray"/>
-    <path d="M136,518 h288 M136,524 h288" class="grate"/>
+    <rect x="118" y="512" width="390" height="18" rx="4" class="tray"/>
+    <path d="M136,518 h354 M136,524 h354" class="grate"/>
+    <rect id="cupfill" x="300" y="512" width="52" height="0" class="cupfill" clip-path="url(#cut-cupclip)"/>
     <path d="M300,452 H352 L348,512 H304 Z" class="cup"/>
+  </g>
+
+  <!-- 3-way valve, x-ray: brass body with a chamber, an iron plunger, the coil above with the drain through its core.
+       Off, the spring holds the plunger down on the boiler seat and the group is open to the drain.
+       On, the coil lifts it onto the drain seat and the boiler feeds the group. -->
+  <g id="p-sol" class="part">
+    <rect x="434" y="296" width="36" height="40" rx="4" class="solcoil"/>
+    <line x1="438" y1="304" x2="466" y2="304" class="wind2"/><line x1="438" y1="312" x2="466" y2="312" class="wind2"/><line x1="438" y1="320" x2="466" y2="320" class="wind2"/><line x1="438" y1="328" x2="466" y2="328" class="wind2"/>
+    <path d="M452,297 V336" class="core" data-b="core"/>
+    <rect x="428" y="336" width="48" height="44" rx="5" fill="url(#cut-brass)" class="brass-s"/>
+    <rect x="438" y="342" width="28" height="32" rx="3" class="chamber" data-b="chamber"/>
+    <path d="M428,364 H438" class="port" data-b="chamber"/>
+    <path d="M452,336 V342 M452,374 V380" class="port" data-b="chamber"/>
+    <path d="M444,342 H448 M456,342 H460 M444,374 H448 M456,374 H460" class="lip"/>
+    <g id="plunger"><rect x="444" y="358" width="16" height="16" rx="2" class="plg"/><rect x="446" y="358" width="12" height="2.6" rx="1" class="pad"/><rect x="446" y="371.4" width="12" height="2.6" rx="1" class="pad"/></g>
+    <text x="434" y="412" class="mini">boiler</text>
+    <text x="482" y="470" class="mini" text-anchor="end">drain</text>
   </g>
 
   <!-- steam valve and wand -->
   <g id="p-wand" class="part">
     <rect x="124" y="150" width="28" height="36" rx="5" fill="url(#cut-chrome)" class="chrome-s"/>
+    <path d="M138,150 V186" class="vbore" data-b="steam"/>
+    <rect id="sgate" x="133" y="163" width="10" height="9" rx="2" class="gate"/>
     <g id="knob"><rect x="96" y="156" width="28" height="24" rx="6" class="knob"/><line x1="104" y1="168" x2="118" y2="168" class="knobmark"/></g>
     <path id="wand" d="M138,186 V198 Q138,212 124,218 L72,244 Q60,250 60,264 V380" class="wand"/>
+    <rect id="jugfill" x="38" y="452" width="46" height="0" class="jugfill" clip-path="url(#cut-jugclip)"/>
     <path id="jug" d="M38,396 H84 L80,452 H42 Z" class="jug"/>
   </g>
 
@@ -715,33 +804,36 @@ td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:ta
     <path d="M818,482 C860,482 880,520 940,520" class="cord"/>
   </g>
 
-  <!-- flows (animated) -->
-  <g class="flows">
-    <path class="flow water" data-f="intake" d="M736,322 V404"/>
-    <path class="flow water" data-f="pump" d="M736,426 H560"/>
-    <path class="flow water" data-f="pumpout" d="M560,426 H512"/>
-    <path class="flow water thin" data-f="opvret" d="M490,398 V114 Q490,102 502,102 H596 V146"/>
-    <path class="flow water" data-f="boilerin" d="M470,426 H454 Q442,426 442,414 V314 Q442,302 430,302 H420"/>
-    <path class="flow water" data-f="boiler" d="M420,302 H404 V330"/>
-    <path class="flow water" data-f="boilerup" d="M420,302 H410 Q398,302 398,290 V160"/>
-    <path class="flow water" data-f="togroup" d="M404,330 V340 H392 L326,352 V372"/>
-    <path class="flow coffee" data-f="shot1" d="M313,410 V452"/>
-    <path class="flow coffee" data-f="shot2" d="M339,410 V452"/>
-    <path class="flow water" data-f="drain" d="M412,366 V512"/>
-    <path class="flow water" data-f="steamwater" d="M398,160 V116 Q398,104 386,104 H150 Q138,104 138,116 V198 Q138,212 124,218 L72,244 Q60,250 60,264 V430"/>
-    <path class="flow steam" data-f="steam" d="M398,160 V116 Q398,104 386,104 H150 Q138,104 138,116 V198 Q138,212 124,218 L72,244 Q60,250 60,264 V384"/>
+  <!-- paths the water, coffee and steam move along; drawn by the script as moving dots -->
+  <g class="routes" aria-hidden="true">
+    <path data-r="intake" d="M736,322 V404"/>
+    <path data-r="pump" d="M736,426 H560"/>
+    <path data-r="tee" d="M560,426 H538"/>
+    <path data-r="opvret" d="M538,412 V114 Q538,102 550,102 H596 V150"/>
+    <path data-r="boilerin" d="M538,426 H518 Q506,426 506,414 V226 Q506,214 494,214 H420"/>
+    <path data-r="bmix" d="M420,214 C352,214 318,292 360,312 C378,320 392,322 398,328"/>
+    <path data-r="bup" d="M420,214 C406,214 398,206 398,192 V152"/>
+    <path data-r="valvein" d="M398,328 V386 Q398,396 408,396 H442 Q452,396 452,386 V374"/>
+    <path data-r="through" d="M452,374 V368 Q452,364 446,364 H388"/>
+    <path data-r="screen" d="M388,364 H276"/>
+    <path data-r="rain1" d="M290,368 V382"/><path data-r="rain2" d="M314,368 V382"/><path data-r="rain3" d="M338,368 V382"/><path data-r="rain4" d="M362,368 V382"/>
+    <path data-r="shot1" d="M313,410 V512"/><path data-r="shot2" d="M339,410 V512"/>
+    <path data-r="vent" d="M330,364 H441 V352 Q441,346 446,345 Q452,344 452,338 V288 Q452,278 462,278 H478 Q488,278 488,288 V508"/>
+    <path data-r="steam" d="M398,152 V116 Q398,104 386,104 H150 Q138,104 138,116 V198 Q138,212 124,218 L72,244 Q60,250 60,264 V384"/>
+    <path data-r="hot" d="M398,152 V116 Q398,104 386,104 H150 Q138,104 138,116 V198 Q138,212 124,218 L72,244 Q60,250 60,264 V452"/>
   </g>
+  <g id="dots" class="dots" aria-hidden="true"></g>
   <g id="puffs" class="puffs"><circle cx="60" cy="392" r="7"/><circle cx="66" cy="404" r="9"/><circle cx="54" cy="416" r="8"/></g>
 
   <!-- hotspots -->
   <g class="hots">
     <g class="hot" data-part="tank" tabindex="0" role="button" aria-label="Water tank"><circle cx="670" cy="220" r="18"/><text x="670" y="225">1</text></g>
     <g class="hot" data-part="pump" tabindex="0" role="button" aria-label="Vibratory pump"><circle cx="704" cy="476" r="18"/><text x="704" y="481">2</text></g>
-    <g class="hot" data-part="opv" tabindex="0" role="button" aria-label="Overpressure valve"><circle cx="491" cy="470" r="18"/><text x="491" y="475">3</text></g>
+    <g class="hot" data-part="opv" tabindex="0" role="button" aria-label="Overpressure valve"><circle cx="538" cy="476" r="18"/><text x="538" y="481">3</text></g>
     <g class="hot" data-part="boiler" tabindex="0" role="button" aria-label="Boiler"><circle cx="300" cy="280" r="18"/><text x="300" y="285">4</text></g>
-    <g class="hot" data-part="element" tabindex="0" role="button" aria-label="Heating element"><circle cx="360" cy="250" r="18"/><text x="360" y="255">5</text></g>
+    <g class="hot" data-part="element" tabindex="0" role="button" aria-label="Heating element"><circle cx="372" cy="244" r="18"/><text x="372" y="249">5</text></g>
     <g class="hot" data-part="tstat" tabindex="0" role="button" aria-label="Thermostats"><circle cx="216" cy="140" r="18"/><text x="216" y="145">6</text></g>
-    <g class="hot" data-part="sol" tabindex="0" role="button" aria-label="3-way solenoid valve"><circle cx="458" cy="350" r="18"/><text x="458" y="355">7</text></g>
+    <g class="hot" data-part="sol" tabindex="0" role="button" aria-label="3-way solenoid valve"><circle cx="424" cy="440" r="18"/><text x="424" y="445">7</text></g>
     <g class="hot" data-part="group" tabindex="0" role="button" aria-label="Group head"><circle cx="234" cy="350" r="18"/><text x="234" y="355">8</text></g>
     <g class="hot" data-part="pf" tabindex="0" role="button" aria-label="Portafilter"><circle cx="160" cy="424" r="18"/><text x="160" y="429">9</text></g>
     <g class="hot" data-part="wand" tabindex="0" role="button" aria-label="Steam valve and wand"><circle cx="100" cy="300" r="18"/><text x="100" y="305">10</text></g>
@@ -750,8 +842,11 @@ td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:ta
     <g class="hot" data-part="inlet" tabindex="0" role="button" aria-label="Power inlet"><circle cx="840" cy="440" r="18"/><text x="840" y="445">13</text></g>
   </g>
 </svg>
-</div>
+
+        <div class="cutkey"><button type="button" class="chip zoomb" id="zoomb" aria-pressed="false">Close-up</button><span><i class="kw"></i>water</span><span><i class="kp"></i>under pump pressure</span><span><i class="ks"></i>steam</span><span><i class="kc"></i>coffee</span><span><i class="ke"></i>empty</span></div>
+      </div>
       <div class="side">
+        <div class="sidel">
         <div class="fpanel" aria-label="Front panel">
           <span class="k">Front panel</span>
           <div class="row">
@@ -764,6 +859,14 @@ td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:ta
             <span class="rk" id="rk-water"><i></i>Hot water</span>
             <span class="rk" id="rk-steam"><i></i>Steam</span>
           </div>
+        </div>
+        <div class="xits" id="xits" aria-label="Where the boiler water can go">
+          <span class="k">Ways out of the boiler</span>
+          <div class="xrow" id="x-grp"><b>To the group</b><span class="xs"></span></div>
+          <div class="xrow" id="x-wand"><b>To the wand</b><span class="xs"></span></div>
+          <div class="xrow" id="x-pump"><b>Pump side</b><span class="xs"></span></div>
+          <p class="xsum" id="x-sum" aria-live="polite"></p>
+        </div>
         </div>
         <div class="pinfo" id="pinfo" aria-live="polite"></div>
       </div>
@@ -1185,32 +1288,167 @@ td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:ta
     if('IntersectionObserver' in window)new IntersectionObserver(function(es){vis(es[0].isIntersecting)}).observe(el);else vis(true);
   }
 
-  /* ---------- machine map: modes ---------- */
-  var cut=$('cut');
+  /* ---------- machine map: modes ----------
+     Water, coffee and steam are dots that move along hidden routes. Each mode is a little timeline: it sets how fast
+     each route flows (eased, so things speed up and slow down instead of snapping), where the 3-way valve's plunger is,
+     which pipes are under pump pressure, and what the boiler level does. Time only runs while the drawing is on screen. */
+  var cut=$('cut'),NS='http://www.w3.org/2000/svg',dotsG=$('dots');
+  var R={};
+  qa('.routes path',cut).forEach(function(p){
+    var L=p.getTotalLength(),n=Math.max(2,Math.ceil(L/2)),pts=[];
+    for(var i=0;i<=n;i++){var q=p.getPointAtLength(L*i/n);pts.push([q.x,q.y])}
+    R[p.getAttribute('data-r')]={pts:pts,len:L,n:n};
+  });
+  function at(r,s){var f=s/r.len*r.n,i=Math.floor(f);if(i>=r.n)return r.pts[r.n];if(i<0)return r.pts[0];var a=r.pts[i],b=r.pts[i+1],u=f-i;return [a[0]+(b[0]-a[0])*u,a[1]+(b[1]-a[1])*u]}
+  /* kind: w water, c coffee, s steam. sp is speed in drawing units a second at rate 1; gap is the spacing of the dots */
+  var KIND={w:{gap:13,r:2.5,sp:70},c:{gap:11,r:2.3,sp:46},s:{gap:15,r:3.3,sp:150}};
+  var FLOWS=[['intake','w',{stop:.1}],['pump','w',{stop:.1}],['tee','w',{stop:.1}],['opvret','w',{r:2,gap:15,stop:.12}],['boilerin','w',{stop:.1}],['bmix','w',{r:2.2,gap:16,op:.55,stop:.15}],['bup','w',{op:.6,stop:.15}],
+    ['valvein','w',{stop:.08}],['through','w',{stop:.08}],['screen','w',{r:2.1,gap:11}],['rain1','w',{r:1.8,gap:7,sp:40}],['rain2','w',{r:1.8,gap:7,sp:40}],['rain3','w',{r:1.8,gap:7,sp:40}],['rain4','w',{r:1.8,gap:7,sp:40}],
+    ['shot1','c',{sp:90}],['shot2','c',{sp:90}],['vent','w',{gap:12}],['steam','s'],['hot','w',{sp:110}]];
+  var F={};
+  FLOWS.forEach(function(d){
+    var k=KIND[d[1]],o=d[2]||{},r=R[d[0]],g=document.createElementNS(NS,'g');
+    var f={r:r,gap:o.gap||k.gap,sp:o.sp||k.sp,op:o.op||1,stop:o.stop||.3,rate:0,ph:0,g:g,c:[]};
+    var n=Math.ceil(r.len/f.gap)+1;
+    for(var i=0;i<n;i++){var c=document.createElementNS(NS,'circle');c.setAttribute('r',String(o.r||k.r));c.setAttribute('class',d[1]);g.appendChild(c);f.c.push(c)}
+    g.setAttribute('opacity','0');dotsG.appendChild(g);F[d[0]]=f;
+  });
+  /* bubbles off the element while it heats */
+  var bubG=document.createElementNS(NS,'g'),bubs=[];dotsG.insertBefore(bubG,dotsG.firstChild);
+  for(var bi=0;bi<26;bi++){var bc=document.createElementNS(NS,'circle');bc.setAttribute('class','b');bc.setAttribute('r','0');bubG.appendChild(bc);bubs.push({c:bc,on:false})}
+
   var MODES={
-    off:{flows:[],pump:0,sol:0,heat:0,knob:0,jug:0,puffs:0,sw:[],pwr:0,ht:0},
-    heat:{flows:[],pump:0,sol:0,heat:'cycle',knob:0,jug:0,puffs:0,sw:['pwr'],pwr:1,ht:'cycle'},
-    brew:{flows:['intake','pump','pumpout','boilerin','boiler','togroup','shot1','shot2','opvret'],pump:1,sol:1,heat:'cycle',knob:0,jug:0,puffs:0,sw:['pwr','brew'],pwr:1,ht:'cycle'},
-    stop:{flows:['drain'],pump:0,sol:0,heat:'cycle',knob:0,jug:0,puffs:0,sw:['pwr'],pwr:1,ht:'cycle'},
-    water:{flows:['intake','pump','pumpout','boilerin','boilerup','steamwater'],pump:1,sol:0,heat:'cycle',knob:1,jug:1,puffs:0,sw:['pwr','water'],pwr:1,ht:'cycle'},
-    steam:{flows:['steam'],pump:0,sol:0,heat:1,knob:1,jug:1,puffs:1,sw:['pwr','steam'],pwr:1,ht:1}
+    off:{sw:[],pwr:0,heat:0},
+    heat:{sw:['pwr'],pwr:1,heat:'cycle'},
+    brew:{sw:['pwr','brew'],pwr:1,heat:'cycle'},
+    stop:{sw:['pwr'],pwr:1,heat:'cycle'},
+    water:{sw:['pwr','water'],pwr:1,heat:'cycle'},
+    steam:{sw:['pwr','steam'],pwr:1,heat:1}
   };
-  var mode='heat',heatOn=false,cycT=null;
+  /* where boiler water can go, per mode: [to the group, to the wand, pump side] */
+  var EXITS={
+    off:[['shut','Shut: the 3-way valve is off'],['shut','Shut: the steam knob is closed'],['oneway','One-way: nothing can flow back through the pump'],'Sealed. The water stays where it is.'],
+    heat:[['shut','Shut: the 3-way valve is off'],['shut','Shut: the steam knob is closed'],['oneway','One-way: nothing can flow back through the pump'],'Sealed. The water heats but has nowhere to go.'],
+    brew:[['open','Open: the 3-way valve is on'],['shut','Shut: the steam knob is closed'],['in','Water coming in from the pump'],'In from the pump, out through the group.'],
+    stop:[['shut','Shut: the valve has sprung back; the group side drains'],['shut','Shut: the steam knob is closed'],['oneway','One-way: the pump has stopped'],'Sealed again. Only the group side empties.'],
+    water:[['shut','Shut: the 3-way valve stays off'],['open','Open: the steam knob is open'],['in','Water coming in from the pump'],'In from the pump, out of the wand.'],
+    steam:[['shut','Shut: the 3-way valve is off'],['open','Open: the steam knob is open'],['oneway','One-way: the pump is off'],'Steam out of the wand, so the level drops.']
+  };
+  var mode='heat',heatOn=false,cycT=null,T=0,t0=0,L=1,cup=0,jug=0,pB=0,pG=0,bubAcc=0;
+  function clamp(x,a,b){return x<a?a:x>b?b:x}
+  /* the timeline for each mode at t seconds in: target flow rates and the valve, pump and pressure states */
+  function plan(m,t){
+    var f={},s={plg:0,pump:0,pB:0,pG:0,knob:0,puffs:0,steamLine:L<.99?'s':'w'};
+    if(m==='brew'){
+      var fill=t<1.6?1:.42,cof=clamp((t-3.2)/1.6,0,1);
+      s.plg=1;s.pump=1;s.pB=s.pG=clamp((t-.5)/2.2,0,1);
+      f.intake=f.pump=f.tee=1;f.opvret=t<1.8?0:.6;
+      f.boilerin=f.bmix=f.valvein=f.through=f.screen=fill;
+      f.rain1=f.rain2=f.rain3=f.rain4=t<.5?0:fill;
+      f.shot1=f.shot2=cof;
+    }else if(m==='stop'){
+      s.pB=Math.exp(-t/.8);
+      f.vent=3.4*Math.exp(-t/.28)+.3*Math.exp(-t/1.3);
+      f.shot1=f.shot2=.75*Math.exp(-t/1.1);
+    }else if(m==='water'){
+      s.pump=1;s.knob=1;f.intake=f.pump=f.tee=f.boilerin=1;
+      if(L<.995){f.steam=.6;s.puffs=1;s.steamLine='s'}else{f.bup=1;f.hot=1;s.steamLine='w'}
+    }else if(m==='steam'){
+      s.knob=1;
+      if(t<1.3&&L>=.99){f.hot=1;s.steamLine='w'}else{f.steam=1;s.puffs=1;s.steamLine='s'}
+    }
+    s.f=f;return s;
+  }
+  function setB(sel,cls){qa(sel,cut).forEach(function(e){['w','p','s'].forEach(function(c){e.classList.toggle(c,c===cls)})})}
+  function frame(dt){
+    T+=dt;var t=T-t0,S=plan(mode,t);
+    /* states that build up: boiler level, cup and jug */
+    if(mode==='brew'){L=Math.min(1,L+dt*.02);if(S.f.shot1>0)cup=Math.min(.78,cup+dt*.028*S.f.shot1)}
+    if(mode==='water'){L=Math.min(1,L+dt*.07);if(S.f.hot)jug=Math.min(.8,jug+dt*.045)}
+    if(mode==='steam'&&S.f.steam)L=Math.max(.55,L-dt*.04);
+    /* flows: ease each rate toward its target, move its dots, fade dots in at the start and out at the end of a route */
+    for(var k in F){
+      var fl=F[k],tgt=S.f[k]||0;
+      fl.rate+=(tgt-fl.rate)*Math.min(1,dt/(tgt>fl.rate?.18:fl.stop));
+      if(fl.rate<.003)fl.rate=0;
+      fl.ph=(fl.ph+dt*fl.sp*fl.rate)%fl.gap;
+      var o=Math.min(1,fl.rate*3)*fl.op;fl.g.setAttribute('opacity',o.toFixed(3));
+      if(o<=0)continue;
+      for(var i=0;i<fl.c.length;i++){
+        var s=fl.ph+i*fl.gap,c=fl.c[i];
+        if(s>fl.r.len){c.setAttribute('cx','-99');continue}
+        var p=at(fl.r,s),e=Math.min(1,s/5,(fl.r.len-s)/5);
+        c.setAttribute('cx',p[0].toFixed(1));c.setAttribute('cy',p[1].toFixed(1));c.setAttribute('opacity',e.toFixed(2));
+      }
+    }
+    pB+=(S.pB-pB)*Math.min(1,dt/.35);pG+=(S.pG-pG)*Math.min(1,dt/(S.pG<pG?.06:.35));
+    paint(S);
+    bubbles(dt);
+  }
+  function paint(S){
+    $('plunger').classList.toggle('on',!!S.plg);
+    cut.querySelector('.solcoil').classList.toggle('on',!!S.plg);
+    cut.querySelector('.pumpbody').classList.toggle('on',!!S.pump&&!RM);
+    $('chk').setAttribute('cx',S.pump?(577+Math.random()*1.4).toFixed(1):'583');
+    $('opvplug').classList.toggle('open',F.opvret.rate>.15);
+    $('knob').classList.toggle('open',!!S.knob);$('sgate').classList.toggle('open',!!S.knob);
+    $('puffs').classList.toggle('on',!!S.puffs);
+    $('jug').style.opacity=$('jugfill').style.opacity=(mode==='water'||mode==='steam')?1:0;
+    /* bores: under pump pressure, plain water, steam, or empty */
+    var hiB=pB>.45,hiG=pG>.45;
+    setB('[data-b="pumpout"],[data-b="boilerin"],[data-b="valvein"]',hiB?'p':'w');
+    cut.querySelector('.pbore').classList.toggle('p',hiB);
+    setB('[data-b="valveout"],[data-b="chamber"],[data-b="group"]',hiG?'p':'w');
+    setB('[data-b="intake"]','w');
+    setB('[data-b="opvret"]',F.opvret.rate>.05?'w':'');
+    setB('[data-b="drain"],[data-b="core"]',F.vent.rate>.04?'w':'');
+    setB('[data-b="steam"]',S.steamLine);
+    $('bpres').style.opacity=(pB*.4).toFixed(3);
+    var y=160+(1-L)*162;$('bwater').setAttribute('y',y.toFixed(1));$('bwater').setAttribute('height',(L*162).toFixed(1));
+    $('bsurf').setAttribute('d','M238,'+y.toFixed(1)+' H412');$('bsurf').style.opacity=L<.995?1:0;
+    $('cupfill').setAttribute('y',(512-cup*60).toFixed(1));$('cupfill').setAttribute('height',(cup*60).toFixed(1));
+    $('jugfill').setAttribute('y',(452-jug*56).toFixed(1));$('jugfill').setAttribute('height',(jug*56).toFixed(1));
+  }
+  function bubbles(dt){
+    var surf=160+(1-L)*162+3,rate=heatOn?(mode==='steam'?14:6):0;
+    bubAcc+=dt*rate;
+    while(bubAcc>=1){bubAcc-=1;for(var i=0;i<bubs.length;i++)if(!bubs[i].on){var b=bubs[i];b.on=true;b.x=252+Math.random()*150;b.y=214+Math.random()*10;b.v=34+Math.random()*26;b.r=1.4+Math.random()*1.8;b.w=Math.random()*6.28;break}}
+    bubs.forEach(function(b){
+      if(!b.on)return;b.y-=b.v*dt;b.w+=dt*5;
+      if(b.y<=surf){b.on=false;b.c.setAttribute('r','0');return}
+      b.c.setAttribute('cx',(b.x+Math.sin(b.w)*2).toFixed(1));b.c.setAttribute('cy',b.y.toFixed(1));b.c.setAttribute('r',b.r.toFixed(1));
+    });
+  }
+  function exits(m){
+    var E=EXITS[m],box=$('xits');if(!box)return;
+    ['grp','wand','pump'].forEach(function(id,i){var row=$('x-'+id);row.className='xrow '+E[i][0];row.querySelector('.xs').textContent=E[i][1]});
+    $('x-sum').textContent=E[3];
+  }
   function setMode(m){
-    mode=m;var M=MODES[m];
+    mode=m;var M=MODES[m];t0=T;
+    if(m==='stop'&&cup<.3)cup=.45;
+    if(m!=='brew'&&m!=='stop')cup=0;
+    if(m!=='water')jug=0;
+    if(m==='water'&&RM)L=1;
     qa('[data-mode]').forEach(function(b){b.setAttribute('aria-pressed',String(b.getAttribute('data-mode')===m))});
-    qa('.flow',cut).forEach(function(p){p.classList.toggle('on',M.flows.indexOf(p.getAttribute('data-f'))>=0)});
-    cut.querySelector('.pumpbody').classList.toggle('on',!!M.pump&&!RM);
-    cut.querySelector('.solcoil').classList.toggle('on',!!M.sol);
-    $('knob').classList.toggle('open',!!M.knob);
-    $('jug').style.opacity=M.jug?1:0;
-    $('puffs').classList.toggle('on',!!M.puffs);
+    var rp=$('replay');if(rp)rp.style.visibility=m==='stop'?'':'hidden';
     ['pwr','brew','water','steam'].forEach(function(k){var on=M.sw.indexOf(k)>=0;$('sw-'+k).classList.toggle('on',on);var r=$('rk-'+k);if(r)r.classList.toggle('on',on)});
     $('lp-pwr').classList.toggle('on',!!M.pwr);
     $('modecap').textContent=$('cap-'+m).textContent;
+    exits(m);
+    aim();
     if(cycT){clearInterval(cycT);cycT=null}
-    if(M.heat==='cycle'){heatOn=true;applyHeat();cycT=setInterval(function(){heatOn=!heatOn;applyHeat()},heatOn?2600:2600)}
+    if(M.heat==='cycle'){heatOn=true;applyHeat();cycT=setInterval(function(){heatOn=!heatOn;applyHeat()},2600)}
     else{heatOn=!!M.heat;applyHeat()}
+    if(RM)still();
+  }
+  /* reduced motion: one still frame of each mode in its steady state, with the dots standing on the routes */
+  function still(){
+    var keep=T;t0=0;T=mode==='stop'?.35:mode==='steam'?4:6;
+    var S=plan(mode,T);
+    for(var k in F){F[k].rate=S.f[k]?Math.min(1,S.f[k]):0;F[k].ph=0}
+    pB=S.pB;pG=S.pG;
+    frame(0);T=keep;
   }
   function applyHeat(){
     $('element').classList.toggle('hot',heatOn);
@@ -1218,11 +1456,42 @@ td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:ta
     $('lp-ht').classList.toggle('on',heatOn);
   }
   qa('[data-mode]').forEach(function(b){b.addEventListener('click',function(){setMode(b.getAttribute('data-mode'))})});
+  if($('replay'))$('replay').addEventListener('click',function(){setMode('stop')});
+  /* close-up: the camera glides in on where the action is (the valve and group, or the steam valve and wand), where the
+     whole drawing is too small on a phone. Phones start in close-up; picking a part outside the frame pulls back out. */
+  var zoomed=false,camRaf=0,CUR=[24,44,926,510];
+  var VIEW={all:[24,44,926,510],valve:[190,92,356,440],front:[40,88,364,450]};
+  var INVIEW={valve:'boiler element tstat sol group pf tray opv',front:'boiler element tstat wand panel group pf tray'};
+  function frameFor(m){return zoomed?((m==='water'||m==='steam')?'front':'valve'):'all'}
+  function putVB(v){cut.setAttribute('viewBox',v.map(function(x){return x.toFixed(1)}).join(' '))}
+  function aim(){
+    var to=VIEW[frameFor(mode)],from=CUR.slice(),st=0;
+    cut.classList.toggle('zoomed',zoomed);
+    var zb=$('zoomb');if(zb){zb.setAttribute('aria-pressed',String(zoomed));zb.textContent=zoomed?'Show the whole machine':'Close-up'}
+    if(camRaf)cancelAnimationFrame(camRaf);
+    if(RM||from.join()===to.join()){CUR=to.slice();putVB(CUR);return}
+    function go(ms){if(!st)st=ms;var u=Math.min(1,(ms-st)/700),e=u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2;
+      for(var i=0;i<4;i++)CUR[i]=from[i]+(to[i]-from[i])*e;putVB(CUR);camRaf=u<1?requestAnimationFrame(go):0}
+    camRaf=requestAnimationFrame(go);
+  }
+  if($('zoomb'))$('zoomb').addEventListener('click',function(){zoomed=!zoomed;aim()});
+  /* keep the caption's height steady across modes, so the drawing under it doesn't jump when the mode changes */
+  (function(){
+    var cap=$('modecap');if(!cap)return;
+    function fit(){var keep=cap.textContent,h=0;cap.style.minHeight='';
+      Object.keys(MODES).forEach(function(m){cap.textContent=$('cap-'+m).textContent;h=Math.max(h,cap.offsetHeight)});
+      cap.textContent=keep;cap.style.minHeight=h+'px'}
+    fit();var rt=0;window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(fit,150)});
+    if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fit);
+  })();
+  var lastMs=0;
+  onScreen(cut,function(ms){var dt=lastMs?Math.min(.05,(ms-lastMs)/1000):0;lastMs=ms;frame(dt)},function(){lastMs=0});
 
   /* ---------- machine map: parts ---------- */
   var sel=null;
   function pick(id,scrollIt){
     sel=id;
+    if(id&&zoomed&&(INVIEW[frameFor(mode)]||'').split(' ').indexOf(id)<0){zoomed=false;aim()}
     qa('.hot',cut).forEach(function(h){h.classList.toggle('sel',h.getAttribute('data-part')===id)});
     cut.classList.toggle('focus',!!id);
     qa('.part',cut).forEach(function(g){g.classList.toggle('lit',!!id&&g.id==='p-'+id)});
@@ -1248,7 +1517,8 @@ td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:ta
     });
     stage.parentNode.insertBefore(pl,stage.nextSibling);
   })();
-  setMode('heat');pick(null);
+  zoomed=cut.getBoundingClientRect().width<600;CUR=VIEW[frameFor('heat')].slice();putVB(CUR);
+  setMode('heat');pick(null);if(!RM)frame(0);
 
   /* ---------- thermostat figure: a simple boiler that heats while the contacts are closed ---------- */
   (function(){

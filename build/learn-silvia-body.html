@@ -7,19 +7,23 @@
       <button type="button" class="chip" data-mode="stop" aria-pressed="false">End of a shot</button>
       <button type="button" class="chip" data-mode="water" aria-pressed="false">Hot water</button>
       <button type="button" class="chip" data-mode="steam" aria-pressed="false">Steam</button>
+      <button type="button" class="chip replay" id="replay" style="visibility:hidden">Play it again</button>
     </div>
     <p class="modecap" id="modecap" aria-live="polite"></p>
     <div hidden>
-      <span id="cap-off">Cord in, power switch off. Nothing has power, so the water just sits in the tank and the boiler.</span>
-      <span id="cap-heat">Power on. The element heats the boiler until the brew thermostat opens, then waits for it to cool a little and close again. The heating light follows the element, on and off.</span>
-      <span id="cap-brew">Brew switch on. The pump pulls water from the tank and pushes it into the boiler, and the 3-way valve opens so hot water flows from the boiler through the group into the coffee. Whatever the puck won't take above the OPV's setting goes back to the tank.</span>
-      <span id="cap-stop">Brew switch off. The pump stops and the 3-way valve flips: the pressure left above the puck vents into the drip tray.</span>
-      <span id="cap-water">Hot water switch on with the steam knob open. The pump runs but the 3-way valve stays shut, so the water pushes through the boiler and out of the steam wand.</span>
-      <span id="cap-steam">Steam switch on, then the knob. The steam switch takes the brew thermostat out of the circuit, so the element keeps going until the steam thermostat opens, well above boiling. The knob lets steam out of the top of the boiler through the wand.</span>
+      <span id="cap-off">Cord in, power switch off. Nothing has power, so the water just sits in the tank and the boiler. The boiler is sealed: the 3-way valve and the steam knob are shut, and the pump only lets water through one way.</span>
+      <span id="cap-heat">Power on. The element heats the boiler until the brew thermostat opens, then waits for it to cool a little and close again. The heating light follows the element. The boiler stays sealed, so the water heats where it is.</span>
+      <span id="cap-brew">Brew switch on. The coil lifts the 3-way valve's plunger: it seals the drain and opens the boiler to the group. The pump pushes tank water into the boiler, which pushes hot water through the valve onto the puck. Once the puck holds the pressure back, the OPV sends what the puck won't take back to the tank, and coffee starts after a few seconds.</span>
+      <span id="cap-stop">Brew switch off. The pump stops and the spring drops the plunger: it shuts the boiler port and opens the group to the drain, so the pressure left above the puck rushes out into the drip tray. The boiler side stays sealed.</span>
+      <span id="cap-water">Hot water switch on with the steam knob open. The pump runs but the 3-way valve stays shut, so the only way out of the boiler is the wand: fresh water in at the side, hot water out of the top. Just after steaming it sputters steam until the boiler is full again.</span>
+      <span id="cap-steam">Steam switch on, then the knob. The steam switch takes the brew thermostat out of the circuit, so the element keeps going until the steam thermostat opens, well above boiling. Opening the knob spits out the water in the steam pipe first, then steam leaves from the top of the boiler, and the water level drops.</span>
     </div>
     <div class="map">
-      <div class="stage">%%INCLUDE:learn-cutaway.svg.html%%</div>
+      <div class="stage">%%INCLUDE:learn-cutaway.svg.html%%
+        <div class="cutkey"><button type="button" class="chip zoomb" id="zoomb" aria-pressed="false">Close-up</button><span><i class="kw"></i>water</span><span><i class="kp"></i>under pump pressure</span><span><i class="ks"></i>steam</span><span><i class="kc"></i>coffee</span><span><i class="ke"></i>empty</span></div>
+      </div>
       <div class="side">
+        <div class="sidel">
         <div class="fpanel" aria-label="Front panel">
           <span class="k">Front panel</span>
           <div class="row">
@@ -32,6 +36,14 @@
             <span class="rk" id="rk-water"><i></i>Hot water</span>
             <span class="rk" id="rk-steam"><i></i>Steam</span>
           </div>
+        </div>
+        <div class="xits" id="xits" aria-label="Where the boiler water can go">
+          <span class="k">Ways out of the boiler</span>
+          <div class="xrow" id="x-grp"><b>To the group</b><span class="xs"></span></div>
+          <div class="xrow" id="x-wand"><b>To the wand</b><span class="xs"></span></div>
+          <div class="xrow" id="x-pump"><b>Pump side</b><span class="xs"></span></div>
+          <p class="xsum" id="x-sum" aria-live="polite"></p>
+        </div>
         </div>
         <div class="pinfo" id="pinfo" aria-live="polite"></div>
       </div>

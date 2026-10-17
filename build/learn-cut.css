@@ -1,5 +1,8 @@
 /* cutaway drawing */
-.cut{display:block;width:100%;height:auto;color:var(--ink)}
+.cut{display:block;width:100%;height:auto;color:var(--ink);
+  --wt-bore:#C9E1F3;--wt-pres:#4E97D4;--wt-dot:#1F7BC7;--wt-steam:#DCE2E7;--wt-sdot:#76838E;--wt-empty:var(--surface-2);--wt-coffee:#6B3A17;--wt-bub:#FFFFFF}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .cut{--wt-bore:#1C3B55;--wt-pres:#2F78B8;--wt-dot:#8FCBF2;--wt-steam:#3A434C;--wt-sdot:#C9D2DA;--wt-empty:#2A3036;--wt-coffee:#C08A55;--wt-bub:#CFE6F7}}
+:root[data-theme="dark"] .cut{--wt-bore:#1C3B55;--wt-pres:#2F78B8;--wt-dot:#8FCBF2;--wt-steam:#3A434C;--wt-sdot:#C9D2DA;--wt-empty:#2A3036;--wt-coffee:#C08A55;--wt-bub:#CFE6F7}
 .cut .dot{fill:var(--line)}
 .cut .shell{fill:var(--surface);fill-opacity:.55;stroke:var(--muted);stroke-opacity:.55;stroke-width:1.5}
 .cut .shell-top{fill:var(--surface-2);stroke:var(--muted);stroke-opacity:.5}
@@ -9,49 +12,76 @@
 .cut .tank{fill:var(--blue-soft);fill-opacity:.5;stroke:var(--blue);stroke-opacity:.6;stroke-width:1.5}
 .cut .tankwater{fill:var(--blue);fill-opacity:.22}
 .cut .wave{fill:none;stroke:var(--blue);stroke-opacity:.6;stroke-width:1.5}
-.cut .pipes path{fill:none;stroke:var(--muted);stroke-opacity:.45;stroke-width:7;stroke-linecap:round;stroke-linejoin:round}
+/* pipes: a wall with a bore whose colour says what's inside: water, water under pump pressure, steam, or nothing */
+.cut .pipes path{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.cut .pipes .tw{stroke:var(--muted);stroke-opacity:.5;stroke-width:10}
+.cut .pipes .halo{stroke:var(--surface);stroke-width:16;stroke-linecap:butt}
+.cut [data-b]{transition:stroke .5s,fill .5s}
+.cut .pipes .tb{stroke:var(--wt-empty);stroke-width:5.5}
+.cut .tb.w,.cut .core.w,.cut .vbore.w,.cut .port.w{stroke:var(--wt-bore)}
+.cut .tb.p,.cut .port.p{stroke:var(--wt-pres)}
+.cut .tb.s,.cut .core.s,.cut .vbore.s{stroke:var(--wt-steam)}
 .cut .pump{fill:var(--surface-2);stroke:var(--muted);stroke-width:1.5}
+.cut .pbore{stroke:var(--wt-bore);stroke-width:7;stroke-linecap:round;transition:stroke .5s}
+.cut .pbore.p{stroke:var(--wt-pres)}
 .cut .coil{fill:#2F3439;stroke:#16181B}
 .cut .windings line{stroke:#B98F45;stroke-width:2}
+.cut .seat{stroke:#4A5057;stroke-width:3;stroke-linecap:round}
+.cut .ball{fill:#8C949B;stroke:#4A5057;stroke-width:1.2}
 .cut .nipple{fill:var(--muted)}
 .cut .brass-s{stroke:#6E5420;stroke-width:1.2}
 .cut .spring{fill:none;stroke:#3B2C0E;stroke-width:1.3}
-.cut .boilerwater{fill:var(--blue);fill-opacity:.25}
+.cut .plug{fill:#2B2F34;transition:transform .25s}
+.cut .plug.open{transform:translateY(-3px)}
+.cut .boilerin{fill:var(--wt-steam);fill-opacity:.85}
+.cut .boilerwater{fill:var(--wt-bore)}
+.cut .bpres{fill:var(--wt-pres);opacity:0}
+.cut .bsurf{fill:none;stroke:var(--wt-dot);stroke-opacity:.7;stroke-width:1.6;opacity:0}
 .cut .element{fill:none;stroke:#7A5A1E;stroke-width:3.5;stroke-linejoin:round;stroke-linecap:round}
 .cut .tst rect{fill:var(--surface);stroke:var(--muted);stroke-width:1.3}
 .cut .tst.safety circle{fill:var(--bad)}
 .cut .chrome-s{stroke:#5E656C;stroke-width:1.2}
+.cut .gchan{fill:var(--wt-bore)}
+.cut .gchan.p{fill:var(--wt-pres)}
 .cut .screen{stroke:#5E656C;stroke-width:2;stroke-dasharray:3 3}
-.cut .solcoil{fill:#2F3439;stroke:#16181B}
+.cut .puck{fill:#5A3A22}
+/* the 3-way valve in x-ray */
+.cut .solcoil{fill:#2F3439;stroke:#16181B;transition:fill .2s,stroke .2s}
+.cut .solcoil.on{fill:#7A3A10;stroke:#F2A33A;filter:drop-shadow(0 0 4px #F2A33A)}
 .cut .wind2{stroke:#B98F45;stroke-width:2}
+.cut .core{fill:none;stroke:var(--wt-empty);stroke-width:5}
+.cut .chamber{fill:var(--wt-bore);stroke:#6E5420;stroke-width:1}
+.cut .chamber.p{fill:var(--wt-pres)}
+.cut .port{fill:none;stroke:var(--wt-bore);stroke-width:6}
+.cut .lip{stroke:#3B2C0E;stroke-width:2.2;stroke-linecap:round}
+.cut .plg{fill:#9AA2A9;stroke:#4A5057;stroke-width:1.2}
+.cut .pad{fill:#1E2125}
+#plunger{transition:transform .14s cubic-bezier(.5,0,.9,.5)}
+#plunger.on{transform:translateY(-16px)}
 .cut .handle{fill:#202326;stroke:#0C0E10}
 .cut .spout{fill:#8C949B}
 .cut .tray{fill:var(--surface-2);stroke:var(--muted);stroke-width:1.3}
 .cut .grate{stroke:var(--muted);stroke-opacity:.5;stroke-width:1.2;fill:none}
 .cut .cup,.cut .jug{fill:var(--surface);fill-opacity:.4;stroke:var(--muted);stroke-width:1.5}
+.cut .cupfill{fill:var(--wt-coffee)}
+.cut .jugfill{fill:var(--wt-bore)}
 .cut .knob{fill:#202326}
 .cut .knobmark{stroke:#ECEEF0;stroke-width:2;stroke-linecap:round}
+.cut .vbore{fill:none;stroke:var(--wt-bore);stroke-width:5}
+.cut .gate{fill:#1E2125;transition:transform .5s}
+#sgate.open{transform:translateX(-9px)}
 .cut .wand{fill:none;stroke:#9AA2A9;stroke-width:7;stroke-linecap:round}
 .cut .panel{fill:var(--surface-2);stroke:var(--muted);stroke-width:1.2}
 .cut .sw{fill:#202326;stroke:#0C0E10}
 .cut .sw.on{fill:#F2A33A;filter:drop-shadow(0 0 4px #F2A33A)}
 .cut .inlet{fill:#2B2F34}
 .cut .cord{fill:none;stroke:#2B2F34;stroke-width:5;stroke-linecap:round}
-/* flows */
-.cut .flow{fill:none;stroke-linecap:round;stroke-linejoin:round;opacity:0;transition:opacity .35s}
-.cut .flow.water{stroke:#2F8FD8;stroke-width:4;stroke-dasharray:9 9}
-.cut .flow.water.thin{stroke-width:2.5}
-.cut .flow.coffee{stroke:#6B3A17;stroke-width:3;stroke-dasharray:6 6}
-.cut .flow.steam{stroke:#B9C3CC;stroke-width:5;stroke-dasharray:3 12}
-/* each moving line slides exactly one repeat of its own dash pattern per loop, so the loop never shows a jump:
-   cutflow for 9+9 dashes, fl12 for patterns that repeat every 12 units, fl15 every 15, fl16 every 16 */
-.cut .flow.on{opacity:1;animation:cutflow .7s linear infinite}
-.cut .flow.coffee.on{animation-name:fl12;animation-duration:.4s}
-.cut .flow.steam.on{animation-name:fl15;animation-duration:.375s}
-@keyframes cutflow{to{stroke-dashoffset:-18}}
-@keyframes fl12{to{stroke-dashoffset:-12}}
-@keyframes fl15{to{stroke-dashoffset:-15}}
-@keyframes fl16{to{stroke-dashoffset:-16}}
+/* moving water, coffee and steam: dots placed by the script along the hidden routes */
+.cut .routes path{fill:none;stroke:none}
+.cut .dots .w{fill:var(--wt-dot)}
+.cut .dots .c{fill:var(--wt-coffee)}
+.cut .dots .s{fill:var(--wt-sdot)}
+.cut .dots .b{fill:var(--wt-bub);fill-opacity:.55;stroke:var(--wt-dot);stroke-opacity:.5;stroke-width:.8}
 .cut .puffs circle{fill:#E3E8EC;opacity:0}
 .cut .puffs.on circle{animation:puff 1.4s ease-out infinite}
 .cut .puffs.on circle:nth-child(2){animation-delay:.45s}.cut .puffs.on circle:nth-child(3){animation-delay:.9s}
@@ -60,7 +90,6 @@
 .cut .pumpbody.on{animation:buzz .09s linear infinite}
 @keyframes buzz{0%{transform:translateX(0)}50%{transform:translateX(1.6px)}100%{transform:translateX(0)}}
 .cut .element.hot{stroke:#FF8A2A;filter:drop-shadow(0 0 5px #FF8A2A)}
-.cut .solcoil.on{fill:#7A3A10;stroke:#F2A33A}
 #knob{transition:transform .5s;transform-box:fill-box;transform-origin:50% 50%}
 #knob.open{transform:rotate(-90deg)}
 #jug{transition:opacity .4s}
@@ -70,10 +99,15 @@
 .cut .hot text{font:700 14px var(--f-mono);fill:var(--bg);text-anchor:middle;pointer-events:none}
 .cut .hot:hover circle,.cut .hot:focus-visible circle{fill:var(--accent)}
 .cut .hot.sel circle{fill:var(--accent);stroke:var(--accent-soft);stroke-width:5}
-.cut .part{transition:opacity .25s}
-.cut.focus .part{opacity:.35}
+.cut .part,.cut .pipes,.cut .dots{transition:opacity .25s}
+.cut.focus .part,.cut.focus .pipes,.cut.focus .dots{opacity:.35}
 .cut.focus .part.lit{opacity:1}
-@media (prefers-reduced-motion:reduce){.cut .flow.on,.cut .puffs.on circle,.cut .pumpbody.on{animation:none}.cut .puffs.on circle{opacity:.6}}
+@media (prefers-reduced-motion:reduce){.cut .puffs.on circle,.cut .pumpbody.on{animation:none}.cut .puffs.on circle{opacity:.6}#plunger,#sgate,#knob{transition:none}}
+/* still used by the mini figures and the Gaggiuino page */
+@keyframes cutflow{to{stroke-dashoffset:-18}}
+@keyframes fl12{to{stroke-dashoffset:-12}}
+@keyframes fl15{to{stroke-dashoffset:-15}}
+@keyframes fl16{to{stroke-dashoffset:-16}}
 /* ---------- mini figures ---------- */
 .mini{margin:0;border:1px solid var(--line);border-radius:14px;background:var(--surface);overflow:hidden}
 .mini svg{display:block;width:100%;max-width:480px;height:auto;margin:0 auto;padding:10px 12px 0}
