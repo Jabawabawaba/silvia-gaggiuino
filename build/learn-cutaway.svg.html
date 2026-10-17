@@ -4,7 +4,7 @@
     <pattern id="cut-dots" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r=".9" class="dot"/></pattern>
     <linearGradient id="cut-brass" x1="0" x2="1"><stop offset="0" stop-color="#9C7A36"/><stop offset=".4" stop-color="#E2C27C"/><stop offset=".7" stop-color="#C39A4E"/><stop offset="1" stop-color="#8E6C2C"/></linearGradient>
     <linearGradient id="cut-chrome" x1="0" x2="1"><stop offset="0" stop-color="#7C848B"/><stop offset=".35" stop-color="#EEF1F3"/><stop offset=".65" stop-color="#B4BBC1"/><stop offset="1" stop-color="#737B82"/></linearGradient>
-    <radialGradient id="cut-glow" cx="50%" cy="38%" r="65%"><stop offset="0" stop-color="#FF9A3C" stop-opacity=".95"/><stop offset=".6" stop-color="#F27A1A" stop-opacity=".35"/><stop offset="1" stop-color="#F27A1A" stop-opacity="0"/></radialGradient>
+    <radialGradient id="cut-glow" cx="50%" cy="72%" r="70%"><stop offset="0" stop-color="#FF9A3C" stop-opacity=".95"/><stop offset=".6" stop-color="#F27A1A" stop-opacity=".35"/><stop offset="1" stop-color="#F27A1A" stop-opacity="0"/></radialGradient>
     <clipPath id="cut-bclip"><rect x="238" y="160" width="174" height="162" rx="16"/></clipPath>
     <clipPath id="cut-cupclip"><path d="M300,452 H352 L348,512 H304 Z"/></clipPath>
     <clipPath id="cut-jugclip"><path d="M38,396 H84 L80,452 H42 Z"/></clipPath>
@@ -71,7 +71,7 @@
     <rect id="heatglow" x="230" y="150" width="190" height="180" rx="22" fill="url(#cut-glow)" opacity="0"/>
   </g>
   <g id="p-element" class="part">
-    <path id="element" d="M246,222 l12,-18 l12,18 l12,-18 l12,18 l12,-18 l12,18 l12,-18 l12,18 l12,-18 l12,18 l12,-18 l12,18 l12,-18 l10,14" class="element"/>
+    <path id="element" d="M246,290 l12,-18 l12,18 l12,-18 l12,18 l12,-18 l12,18 l12,-18 l12,18 l12,-18 l12,18 l12,-18 l12,18 l12,-18 l10,14" class="element"/>
   </g>
   <g id="p-tstat" class="part">
     <g class="tst"><rect x="248" y="134" width="32" height="16" rx="3"/><text x="264" y="128" class="mini" text-anchor="middle">brew</text></g>
@@ -108,7 +108,8 @@
     <rect x="428" y="336" width="48" height="44" rx="5" fill="url(#cut-brass)" class="brass-s"/>
     <rect x="438" y="342" width="28" height="32" rx="3" class="chamber" data-b="chamber"/>
     <path d="M428,364 H438" class="port" data-b="chamber"/>
-    <path d="M452,336 V342 M452,374 V380" class="port" data-b="chamber"/>
+    <path d="M452,336 V342" class="core" data-b="core"/>
+    <path d="M452,374 V380" class="port" data-b="valvein"/>
     <path d="M444,342 H448 M456,342 H460 M444,374 H448 M456,374 H460" class="lip"/>
     <g id="plunger"><rect x="444" y="358" width="16" height="16" rx="2" class="plg"/><rect x="446" y="358" width="12" height="2.6" rx="1" class="pad"/><rect x="446" y="371.4" width="12" height="2.6" rx="1" class="pad"/></g>
     <text x="434" y="412" class="mini">boiler</text>
@@ -122,8 +123,8 @@
     <rect id="sgate" x="133" y="163" width="10" height="9" rx="2" class="gate"/>
     <g id="knob"><rect x="96" y="156" width="28" height="24" rx="6" class="knob"/><line x1="104" y1="168" x2="118" y2="168" class="knobmark"/></g>
     <path id="wand" d="M138,186 V198 Q138,212 124,218 L72,244 Q60,250 60,264 V380" class="wand"/>
-    <rect id="jugfill" x="38" y="452" width="46" height="0" class="jugfill" clip-path="url(#cut-jugclip)"/>
-    <path id="jug" d="M38,396 H84 L80,452 H42 Z" class="jug"/>
+    <g id="jugg"><rect id="jugfill" x="38" y="452" width="46" height="0" class="jugfill" clip-path="url(#cut-jugclip)"/>
+    <path id="jug" d="M38,396 H84 L80,452 H42 Z" class="jug"/></g>
   </g>
 
   <!-- front panel and inlet -->
@@ -165,15 +166,15 @@
     <g class="hot" data-part="tank" tabindex="0" role="button" aria-label="Water tank"><circle cx="670" cy="220" r="18"/><text x="670" y="225">1</text></g>
     <g class="hot" data-part="pump" tabindex="0" role="button" aria-label="Vibratory pump"><circle cx="704" cy="476" r="18"/><text x="704" y="481">2</text></g>
     <g class="hot" data-part="opv" tabindex="0" role="button" aria-label="Overpressure valve"><circle cx="538" cy="476" r="18"/><text x="538" y="481">3</text></g>
-    <g class="hot" data-part="boiler" tabindex="0" role="button" aria-label="Boiler"><circle cx="300" cy="280" r="18"/><text x="300" y="285">4</text></g>
-    <g class="hot" data-part="element" tabindex="0" role="button" aria-label="Heating element"><circle cx="372" cy="244" r="18"/><text x="372" y="249">5</text></g>
-    <g class="hot" data-part="tstat" tabindex="0" role="button" aria-label="Thermostats"><circle cx="216" cy="140" r="18"/><text x="216" y="145">6</text></g>
+    <g class="hot" data-part="boiler" tabindex="0" role="button" aria-label="Boiler"><circle cx="300" cy="212" r="18"/><text x="300" y="217">4</text></g>
+    <g class="hot" data-part="element" tabindex="0" role="button" aria-label="Heating element"><circle cx="372" cy="281" r="18"/><text x="372" y="286">5</text></g>
+    <g class="hot" data-part="tstat" tabindex="0" role="button" aria-label="Thermostats"><circle cx="348" cy="128" r="18"/><text x="348" y="133">6</text></g>
     <g class="hot" data-part="sol" tabindex="0" role="button" aria-label="3-way solenoid valve"><circle cx="424" cy="440" r="18"/><text x="424" y="445">7</text></g>
     <g class="hot" data-part="group" tabindex="0" role="button" aria-label="Group head"><circle cx="234" cy="350" r="18"/><text x="234" y="355">8</text></g>
     <g class="hot" data-part="pf" tabindex="0" role="button" aria-label="Portafilter"><circle cx="160" cy="424" r="18"/><text x="160" y="429">9</text></g>
     <g class="hot" data-part="wand" tabindex="0" role="button" aria-label="Steam valve and wand"><circle cx="100" cy="300" r="18"/><text x="100" y="305">10</text></g>
     <g class="hot" data-part="tray" tabindex="0" role="button" aria-label="Drip tray"><circle cx="230" cy="500" r="18"/><text x="230" y="505">11</text></g>
-    <g class="hot" data-part="panel" tabindex="0" role="button" aria-label="Switches"><circle cx="230" cy="100" r="18"/><text x="230" y="105">12</text></g>
+    <g class="hot" data-part="panel" tabindex="0" role="button" aria-label="Switches"><circle cx="218" cy="146" r="18"/><text x="218" y="151">12</text></g>
     <g class="hot" data-part="inlet" tabindex="0" role="button" aria-label="Power inlet"><circle cx="840" cy="440" r="18"/><text x="840" y="445">13</text></g>
   </g>
 </svg>
