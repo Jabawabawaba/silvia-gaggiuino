@@ -1,0 +1,139 @@
+      <article class="pc nofig" id="part-tank" data-no="1">
+        <div class="ph"><span class="no">1</span><h3>Water tank</h3></div>
+        <div class="txt">
+          <p class="sum">A plastic reservoir of about 2 liters under the lid at the back of the cup tray. A tube from near its floor feeds the pump, and the OPV's return tube runs back into it.</p>
+          <h4>How it works</h4>
+          <p>Nothing clever: the pump sucks water up the intake tube, and the tank isn't pressurised, so anything the OPV dumps simply runs back in. Keep the end of the intake under water; a pump drawing air rattles and stops pushing water.</p>
+          <p class="gg"><b>In a Gaggiuino build:</b> unchanged. The optional ToF sensor sits above it and reads the level. The Silvia's tank is deeper than a Gaggia's, so the sensor's ranges need setting for it.</p>
+        </div>
+      </article>
+
+      <article class="pc" id="part-pump" data-no="2">
+        <div class="ph"><span class="no">2</span><h3>Vibratory pump</h3></div>
+        <div class="txt">
+          <p class="sum">An Ulka E-series vibratory pump, sold as the EP5 for the Silvia, that builds the brewing pressure. A coil yanks a piston against a spring once per mains cycle, and check valves turn that buzz into one-way flow.</p>
+          <h4>How it works</h4>
+          <p>Inside is an iron piston in a tube, with a coil wound around the outside and a spring behind it. A diode in the pump lets only one half of each mains cycle through the coil, so each cycle gives one pulse: the coil pulls the piston against the spring, then the spring pushes it back. Check valves only let water move toward the boiler, so every stroke shoves a little water forward. That's why it buzzes at mains frequency, 60 strokes a second on 60 Hz mains and 50 on 50 Hz.</p>
+          <p>It can push about 15 bar, well past brewing pressure, so something has to cap it: that's the OPV. Some Silvias also have a thermal fuse in the pump's wiring that cuts it if the coil overheats.</p>
+          <p class="gg"><b>In a Gaggiuino build:</b> kept. The PCB drives it from J12 and chooses how many mains cycles reach it, which is how it controls pressure and flow. A thermal fuse, if yours has one, stays in its path.</p>
+        </div>
+        %%INCLUDE_MINI:pump%%
+      </article>
+
+      <article class="pc" id="part-opv" data-no="3">
+        <div class="ph"><span class="no">3</span><h3>Overpressure valve (OPV)</h3></div>
+        <div class="txt">
+          <p class="sum">A spring-loaded valve on the line from the pump to the boiler. When the pressure goes past its setting it opens and sends the extra water back to the tank, so the pressure can't climb any further.</p>
+          <h4>How it works</h4>
+          <p>A seal is held against a seat by a spring. Water pressure pushes the other way; when it beats the spring, the seal lifts and water escapes down the return hose. The more the pump pushes past the setting, the further it opens, so the line pressure stays close to the setting. Turning the adjuster squeezes or relaxes the spring and moves the setting.</p>
+          <p>Rancilio doesn't publish a factory setting. Owners report about 9 to 11 bar on newer machines and more on older ones, so measure yours before trusting it.</p>
+          <p class="gg"><b>In a Gaggiuino build:</b> kept, and it matters more. Gaggiuino wants it at least 1 bar above the highest pressure you'll profile, and the [UT] Test OPV utility should peak at 10.5 to 13 bar. Most builds put the pressure sensor on a tee here. On a V1, adding washers can only lower it.</p>
+        </div>
+        %%INCLUDE_MINI:opv%%
+      </article>
+
+      <article class="pc nofig" id="part-boiler" data-no="4">
+        <div class="ph"><span class="no">4</span><h3>Boiler</h3></div>
+        <div class="txt">
+          <p class="sum">A brass boiler of about 0.3 liters, bolted straight onto the top of the group with an O-ring between them. It heats the water for shots and makes the steam.</p>
+          <h4>How it works</h4>
+          <p>The pump pushes cold water in, hot water leaves for the group through the 3-way valve, and a pipe from the top runs to the steam valve. The brew and steam thermostats clamp to the top and the safety thermostat screws into the front. Because the group is bolted to it, the boiler heats the group too, which is why a Silvia needs a good warm-up before the first shot.</p>
+          <p>For brewing the brew thermostat holds it around 100 °C; the boiler is sealed, so the water stays liquid. For steam it's heated to around 140 °C, and the pressure that builds pushes steam out of the wand. Brass holds a lot of heat, which smooths things a little, but it can't stop a thermostat's swings.</p>
+          <p class="gg"><b>In a Gaggiuino build:</b> kept as it is. The thermocouple goes into one of the thermostat clamp holes on top. From V5 on there's insulation around it to lift off first.</p>
+        </div>
+      </article>
+
+      <article class="pc nofig" id="part-element" data-no="5">
+        <div class="ph"><span class="no">5</span><h3>Heating element</h3></div>
+        <div class="txt">
+          <p class="sum">A sheathed heater that sits in the water inside the boiler, about 950 W on a 120 V machine and 1100 W on a 230 V one. Mains across its two terminals heats it; nothing in the element itself regulates anything.</p>
+          <h4>How it works</h4>
+          <p>It's a resistance wire packed in insulating powder inside a metal sheath. Power is voltage squared divided by resistance, so a 950 W element on 120 V measures about 15 Ω and an 1100 W one on 230 V about 48 Ω. The power-on checks compare your meter with the figure from your machine's rating plate. It is either fully on or fully off; the thermostats, or the SSR after the conversion, do the switching.</p>
+          <p>Before 2002 it was a threaded stainless element you could replace. From 2002 a copper element was soldered into the boiler's upper half, so a dead element meant a new boiler half; a later version made it replaceable again.</p>
+          <p class="gg"><b>In a Gaggiuino build:</b> kept, now switched by the SSR. The 165 °C safety thermostat stays in its supply.</p>
+        </div>
+      </article>
+
+      <article class="pc" id="part-tstat" data-no="6">
+        <div class="ph"><span class="no">6</span><h3>Thermostats</h3></div>
+        <div class="txt">
+          <p class="sum">Three thermostats: brew and steam, bimetal switches clamped on top of the boiler, and a 165 °C safety cut-out screwed into its front. They switch the element straight on and off.</p>
+          <h4>How it works</h4>
+          <p>The brew and steam thermostats each have a bimetal element inside: two metals bonded together that expand by different amounts. As it heats it bends, and at its set point it pushes a pair of contacts apart. It has to cool several degrees before the contacts close again. That gap is what makes the stock temperature swing up and down instead of holding still.</p>
+          <p>The brew thermostat opens at 100 °C (110 °C on machines made before mid-2007) and runs the machine for shots. The steam thermostat opens at 140 °C; the steam switch bridges the brew thermostat so the element carries on up to it. The safety thermostat only opens if something has gone wrong, like the boiler running dry, and stays open until you press its red reset button. If the heating light is on but the boiler stays cold, a tripped safety is the usual suspect.</p>
+          <p class="gg"><b>In a Gaggiuino build:</b> the brew thermostat comes out and the thermocouple takes one of the clamp holes. The steam thermostat is left in place unwired, or removed; either way it no longer limits anything, so max steam is set to 150 °C in the firmware. The safety thermostat stays, wired in series with the element. After the conversion the heating light sits across the element, after the safety, so a tripped safety turns it off.</p>
+        </div>
+        %%INCLUDE_MINI:tstat%%
+      </article>
+
+      <article class="pc" id="part-sol" data-no="7">
+        <div class="ph"><span class="no">7</span><h3>3-way solenoid valve</h3></div>
+        <div class="txt">
+          <p class="sum">An electrically worked valve behind the front panel, between the boiler and the group. On, it lets boiler water into the group. Off, it closes the boiler side and opens the group to the drip tray.</p>
+          <h4>How it works</h4>
+          <p>A coil sits on top of a brass valve body with an iron plunger in its core. Current through the coil lifts the plunger, which opens the boiler-to-group path and seals the drain. When the current stops, a spring drops the plunger: the boiler port closes and the group port connects to a drain tube that runs into the back of the drip tray. That release is the hiss you hear at the end of a shot, and it leaves the puck drier. Only the brew switch powers it; hot water leaves it shut.</p>
+          <p class="gg"><b>In a Gaggiuino build:</b> kept, driven by the PCB from J13 instead of by the brew switch. Its ground spade stays bonded to earth.</p>
+        </div>
+        %%INCLUDE_MINI:sol%%
+      </article>
+
+      <article class="pc" id="part-group" data-no="8">
+        <div class="ph"><span class="no">8</span><h3>Group head</h3></div>
+        <div class="txt">
+          <p class="sum">The heavy brass block bolted under the boiler, where the portafilter locks in. It spreads the water over the coffee through the shower screen.</p>
+          <h4>How it works</h4>
+          <p>Water from the 3-way valve enters the group and fans out behind the shower screen, a fine perforated plate, so it lands evenly on the puck instead of drilling a hole in it. The rubber gasket around it seals against the basket rim when you lock the portafilter in. The group has no heater of its own: it's warmed by the boiler above it, and its mass helps keep the brew water steady during a shot.</p>
+          <p class="gg"><b>In a Gaggiuino build:</b> unchanged. Gaggiuino's temperature offset setting accounts for the difference between the boiler reading and the water at the group.</p>
+        </div>
+        %%INCLUDE_MINI:group%%
+      </article>
+
+      <article class="pc nofig" id="part-pf" data-no="9">
+        <div class="ph"><span class="no">9</span><h3>Portafilter and baskets</h3></div>
+        <div class="txt">
+          <p class="sum">The handle that holds the coffee: a 58 mm filter basket in a chrome holder with spouts underneath.</p>
+          <h4>How it works</h4>
+          <p>The basket's fine holes let coffee through and hold the grounds back. The tamped bed of coffee is the puck; how tightly it resists the water decides the pressure the pump can build. A blind basket, with no holes, is used for backflushing and for the [UT] Test OPV utility, because it lets the pressure go all the way to the OPV's setting.</p>
+          <p class="gg"><b>In a Gaggiuino build:</b> unchanged. With hardware scales, the cup sits on the scale under the spouts.</p>
+        </div>
+      </article>
+
+      <article class="pc nofig" id="part-wand" data-no="10">
+        <div class="ph"><span class="no">10</span><h3>Steam valve and wand</h3></div>
+        <div class="txt">
+          <p class="sum">A hand-turned valve on the side of the machine and the wand it feeds. Steam and hot water both come out of the wand.</p>
+          <h4>How it works</h4>
+          <p>A pipe runs from the top of the boiler to the valve. Turn the knob and it opens a path to the wand. In steam mode the boiler is above boiling, so pressure drives steam out. In hot water mode the pump pushes fresh water into the boiler, which pushes hot water out through the same wand. After steaming, running hot water through it refills the boiler, which the steam has partly emptied.</p>
+          <p class="gg"><b>In a Gaggiuino build:</b> unchanged. Steam temperature is set in the firmware. The steam thermostat is off the heater line whether or not it stays in the boiler, so keep max steam at 150 °C.</p>
+        </div>
+      </article>
+
+      <article class="pc nofig" id="part-tray" data-no="11">
+        <div class="ph"><span class="no">11</span><h3>Drip tray</h3></div>
+        <div class="txt">
+          <p class="sum">Catches drips, flush water and the burst from the 3-way valve's drain tube at the end of each shot.</p>
+          <h4>How it works</h4>
+          <p>The drain tube from the 3-way valve ends over the back of the tray, so every shot leaves a little water here. Empty it often; a full tray means water around the base of the machine, which sits right next to mains wiring.</p>
+          <p class="gg"><b>In a Gaggiuino build:</b> the optional hardware scales fit under the drip tray area, with two load cells on a printed mount.</p>
+        </div>
+      </article>
+
+      <article class="pc nofig" id="part-panel" data-no="12">
+        <div class="ph"><span class="no">12</span><h3>Switches and lights</h3></div>
+        <div class="txt">
+          <p class="sum">Four rocker switches on the front: power, brew, hot water and steam. Brew, hot water and steam light orange when they're on, and two more lights show power and heating.</p>
+          <h4>How it works</h4>
+          <p>The power switch is double pole: it breaks line and neutral together. The brew switch also has two poles: one feeds the pump and the 3-way valve, the other completes the valve's circuit, so only brew opens the valve. Hot water runs the pump alone. Steam bridges the brew thermostat and powers nothing else. The lamps in the rockers run on mains, and the heating light comes on whenever the thermostats are calling for heat. From V5 the power and heating lights are LEDs. The Silvia E replaces the power rocker with a push button and an auto-off controller.</p>
+          <p class="gg"><b>In a Gaggiuino build:</b> the power switch stays on mains. Brew, hot water and steam become low-voltage inputs to the PCB (J7 and J5), so their lamps go dark unless you do the <a href="led-mod.html">LED switch mod</a>. Gen 3 reads the separate hot water switch on J5 B15, as Talon confirmed on Discord.</p>
+        </div>
+      </article>
+
+      <article class="pc nofig" id="part-inlet" data-no="13">
+        <div class="ph"><span class="no">13</span><h3>Power inlet and earth</h3></div>
+        <div class="txt">
+          <p class="sum">The IEC inlet on the back where the cord plugs in, carrying line, neutral and earth. Earth is bonded to the frame, the boiler and the valve body.</p>
+          <h4>How it works</h4>
+          <p>Line and neutral run to the power switch and on to the loads. Earth never carries current in normal use. If a live wire touches metal, earth gives that fault current an easy way out, which trips a GFCI or RCD, or the breaker, instead of leaving the case live for the next person to touch.</p>
+          <p class="gg"><b>In a Gaggiuino build:</b> unchanged, and checked first: the power-on checks start with earth reaching every piece of metal. Earth must never connect to the PCB's low-voltage ground.</p>
+        </div>
+      </article>

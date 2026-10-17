@@ -1,0 +1,213 @@
+<title>Which Silvia Is Mine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+%%BASECSS%%
+/* Layout: plate header, a timeline strip of the six versions, then one card per version (how to spot it, what it changes for the build, a "this is mine" button), then E vs M and voltage. */
+.strip{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface)}
+.strip a{display:grid;gap:2px;padding:12px 12px 10px;text-decoration:none;color:inherit;border-left:1px solid var(--line)}
+.strip a:first-child{border-left:0}
+.strip a:hover{background:var(--surface-2)}
+.strip .v{font:700 26px/1 var(--f-display)}
+.strip .y{font:500 12px var(--f-mono);color:var(--muted);font-variant-numeric:tabular-nums}
+.strip a.mine{background:var(--accent-soft)}
+.strip a.mine .v{color:var(--accent-ink)}
+@media (max-width:700px){.strip{grid-template-columns:repeat(3,minmax(0,1fr))}.strip a:nth-child(4){border-left:0}.strip a:nth-child(n+4){border-top:1px solid var(--line)}}
+.vcard{display:grid;grid-template-columns:150px minmax(0,1fr);gap:8px 24px;padding:22px 0;border-bottom:1px solid var(--line);scroll-margin-top:16px}
+.vcard.mine{background:linear-gradient(90deg,var(--accent-soft),transparent 60%);border-radius:10px;padding-left:14px}
+.vhead{display:grid;gap:4px;align-content:start}
+.vhead .v{font:700 54px/.9 var(--f-display)}
+.vhead .y{font:500 13px var(--f-mono);color:var(--muted)}
+.vbody{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 24px;min-width:0}
+.vbody h3{font:600 12px var(--f-mono);letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.vbody ul{margin:0;padding-left:18px;display:grid;gap:4px;font-size:15.5px}
+.vbody .build li::marker{color:var(--accent)}
+.vact{grid-column:1 / -1;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.isyours{font:600 13px var(--f-mono);color:var(--accent-ink)}
+@media (max-width:760px){.vcard{grid-template-columns:minmax(0,1fr)}.vbody{grid-template-columns:minmax(0,1fr)}.vhead{grid-auto-flow:column;justify-content:start;align-items:baseline;gap:12px}}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 28px}
+@media (max-width:760px){.two{grid-template-columns:minmax(0,1fr)}}
+.panel{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:16px 18px;display:grid;gap:8px;align-content:start}
+.panel p{margin:0;font-size:15.5px}
+.panel ul{margin:0;padding-left:18px;display:grid;gap:4px;font-size:15.5px}
+.src{display:grid;gap:4px;font-size:14.5px;color:var(--muted);padding-left:18px;margin:0}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="plate"><span class="rivet" aria-hidden="true"></span><span><b>Identify</b></span><span>Rancilio Silvia</span><span>V1 to V6</span><span class="rivet" aria-hidden="true"></span></div>
+    <h1>Which Silvia Is Mine</h1>
+    <p class="lede">Rancilio never put version numbers on the machine; owners and sellers made them up from the changes. Find yours below, then tap "This is mine" so the runbook, checks and wiring pages show only what applies to it. The single-boiler Silvia only; none of this is for the Silvia Pro or Pro X.</p>
+  </header>
+
+  <nav class="strip" aria-label="Versions">
+    <a href="#v1" data-strip="V1"><span class="v">V1</span><span class="y">1997–2006</span></a>
+    <a href="#v2" data-strip="V2"><span class="v">V2</span><span class="y">2006–2008</span></a>
+    <a href="#v3" data-strip="V3"><span class="v">V3</span><span class="y">2008–2014</span></a>
+    <a href="#v4" data-strip="V4"><span class="v">V4</span><span class="y">2014–~2016</span></a>
+    <a href="#v5" data-strip="V5"><span class="v">V5</span><span class="y">~2016–2020</span></a>
+    <a href="#v6" data-strip="V6"><span class="v">V6</span><span class="y">2020–now</span></a>
+  </nav>
+  <p class="fine" style="margin-top:8px">Years are approximate; changes rolled in over a few months and sellers date them differently.</p>
+
+  <section class="block" aria-label="Versions in detail">
+    <article class="vcard" id="v1" data-card="V1">
+      <div class="vhead"><span class="v">V1</span><span class="y">1997 to 2006</span></div>
+      <div class="vbody">
+        <div><h3>How to spot it</h3><ul>
+          <li>Brushed-steel cylinder around the group head.</li>
+          <li>Ribbed black plastic portafilter handle and steam knob.</li>
+          <li>Thin 6 mm steam wand with a hex tip on a simple swivel.</li>
+          <li>Drip tray cover with an even grid of holes.</li>
+          <li>Early units have a printed black logo on the front; later ones a thick plastic badge.</li>
+        </ul></div>
+        <div><h3>What it means for the build</h3><ul class="build">
+          <li>Boilers changed design in May 2000. On an earlier boiler, confirm how the thermocouple mounts before buying one.</li>
+          <li>From 2002 the element is soldered into the boiler, so a dead element means a new boiler half. Check it carefully before buying.</li>
+          <li>The OPV has a single nut and is set with washers.</li>
+        </ul></div>
+        <div class="vact"><button type="button" class="btn primary" data-setmachine="V1">This is mine</button><span class="isyours" data-yours="V1" hidden>Set as your Silvia</span></div>
+      </div>
+    </article>
+
+    <article class="vcard" id="v2" data-card="V2">
+      <div class="vhead"><span class="v">V2</span><span class="y">August 2006 to 2008</span></div>
+      <div class="vbody">
+        <div><h3>How to spot it</h3><ul>
+          <li>Conical plastic collar with a chrome finish around the group, instead of the steel cylinder.</li>
+          <li>Drip tray cover with a ring of angled slots under the group and two curved rows of holes under the wand.</li>
+          <li>Still the ribbed black handle and knob, and the thin 6 mm wand.</li>
+        </ul></div>
+        <div><h3>What it means for the build</h3><ul class="build">
+          <li>OPV with a two-nut adjuster, which makes raising it for Gaggiuino easier.</li>
+          <li>Element still soldered into the boiler.</li>
+          <li>Threaded steam and water connections on the boiler.</li>
+        </ul></div>
+        <div class="vact"><button type="button" class="btn primary" data-setmachine="V2">This is mine</button><span class="isyours" data-yours="V2" hidden>Set as your Silvia</span></div>
+      </div>
+    </article>
+
+    <article class="vcard" id="v3" data-card="V3">
+      <div class="vhead"><span class="v">V3</span><span class="y">mid-2008 to 2014</span></div>
+      <div class="vbody">
+        <div><h3>How to spot it</h3><ul>
+          <li>Thick 10 mm commercial-style steam wand with a single-hole tip on a ball joint that tilts and swivels.</li>
+          <li>Partly chrome steam knob.</li>
+          <li>Portafilter handle shaped like Rancilio's commercial ones.</li>
+        </ul></div>
+        <div><h3>What it means for the build</h3><ul class="build">
+          <li>Element still soldered into the boiler.</li>
+          <li>Otherwise the install is the same as V4.</li>
+        </ul></div>
+        <div class="vact"><button type="button" class="btn primary" data-setmachine="V3">This is mine</button><span class="isyours" data-yours="V3" hidden>Set as your Silvia</span></div>
+      </div>
+    </article>
+
+    <article class="vcard" id="v4" data-card="V4">
+      <div class="vhead"><span class="v">V4</span><span class="y">2014 to about 2016</span></div>
+      <div class="vbody">
+        <div><h3>How to spot it</h3><ul>
+          <li>Looks like a V3 from the outside.</li>
+          <li>Inside, the element screws into the boiler and can be replaced on its own.</li>
+          <li>A vertical bar heating light, as on all earlier versions.</li>
+        </ul></div>
+        <div><h3>What it means for the build</h3><ul class="build">
+          <li>A replaceable element: a failed one is a part, not a boiler.</li>
+          <li>The harness matches realNiche's diagram directly.</li>
+        </ul></div>
+        <div class="vact"><button type="button" class="btn primary" data-setmachine="V4">This is mine</button><span class="isyours" data-yours="V4" hidden>Set as your Silvia</span></div>
+      </div>
+    </article>
+
+    <article class="vcard" id="v5" data-card="V5">
+      <div class="vhead"><span class="v">V5</span><span class="y">about 2016 to 2020</span></div>
+      <div class="vbody">
+        <div><h3>How to spot it</h3><ul>
+          <li>Round LEDs beside the power switch, one for power and one for heating, instead of the vertical bar light.</li>
+          <li>Insulation wrapped around the boiler.</li>
+          <li>Sold as the Silvia M (manual off) and, in Europe, the Silvia E with a 30-minute auto-off.</li>
+        </ul></div>
+        <div><h3>What it means for the build</h3><ul class="build">
+          <li>Lift the boiler insulation to reach the thermostats, and refit it after.</li>
+          <li>Trace the heating LED's wires before you cut, and put it back where it was. On an E the energy-saver module may drive it.</li>
+          <li>An E needs a latching power switch. See below.</li>
+        </ul></div>
+        <div class="vact"><button type="button" class="btn primary" data-setmachine="V5">This is mine</button><span class="isyours" data-yours="V5" hidden>Set as your Silvia</span></div>
+      </div>
+    </article>
+
+    <article class="vcard" id="v6" data-card="V6">
+      <div class="vhead"><span class="v">V6</span><span class="y">2020 to now</span></div>
+      <div class="vbody">
+        <div><h3>How to spot it</h3><ul>
+          <li>A slightly smoother steam wand without the small lip of V3 to V5.</li>
+          <li>Optional matte black finish with a black group cover.</li>
+          <li>Brew, water and steam switches on the left, the power switch in the center with its two LEDs.</li>
+          <li>The current US model is the Silvia M.</li>
+        </ul></div>
+        <div><h3>What it means for the build</h3><ul class="build">
+          <li>Same as V5: insulated boiler, round heating LED, E or M.</li>
+          <li>Check whether your unit has a braided pump hose; it changes how a pressure tee is fitted.</li>
+        </ul></div>
+        <div class="vact"><button type="button" class="btn primary" data-setmachine="V6">This is mine</button><span class="isyours" data-yours="V6" hidden>Set as your Silvia</span></div>
+      </div>
+    </article>
+  </section>
+
+  <section class="block" aria-labelledby="h-em">
+    <div class="sec-h"><h2 id="h-em">E or M, and voltage</h2></div>
+    <div class="two">
+      <div class="panel">
+        <h3>Silvia E</h3>
+        <p>Sold in Europe from about winter 2015 to meet energy rules. It turns the heater off after 30 minutes without use.</p>
+        <ul>
+          <li>The power switch is a push button that works with a GICAR energy-saver module instead of a plain on/off rocker.</li>
+          <li>Gaggiuino's harness leaves the module out and needs a power switch that latches, breaking line and neutral. Plan on a double-pole rocker like the M's, and confirm the part on Discord.</li>
+          <li>Set "E" in Your Silvia (top of the page) to see the extra steps.</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h3>Silvia M and older machines</h3>
+        <p>A plain latching double-pole power switch. The custom harness keeps it on mains and runs line through one pole and neutral through the other. Every machine before V5 works this way.</p>
+        <h3 style="margin-top:8px">120 V or 230 V</h3>
+        <p>Read the rating plate. The harness is the same at both voltages (realNiche's diagram covers 110 to 240 V). The element's resistance is about three times higher on a 230 V machine, and the circuit protection is an RCD rather than a GFCI. The power-on checks work out the expected element resistance from the plate.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" aria-labelledby="h-all">
+    <div class="sec-h"><h2 id="h-all">The same on every version</h2></div>
+    <ul style="margin:0;padding-left:20px;display:grid;gap:6px">
+      <li>The thermostats are clamped to the boiler top with M3 screws. The M3 thermocouple screws into one of those holes; GaggiMate's Silvia guide suggests the middle or left-most hole for better readings.</li>
+      <li>The 165 °C safety thermostat stays in the heater line. It has a reset button on top.</li>
+      <li>A brass boiler of about 0.3 L, a vibratory pump and a 3-way solenoid valve. Gaggiuino replaces the control wiring, so what you're really buying is the boiler, element, pump, group and case.</li>
+    </ul>
+  </section>
+
+  <section class="block" aria-labelledby="h-src">
+    <div class="sec-h"><h2 id="h-src">Sources</h2></div>
+    <ul class="src">
+      <li><a href="https://en.wikipedia.org/wiki/Rancilio_Silvia">Wikipedia: Rancilio Silvia</a>, version changes V1 to V6, E and M.</li>
+      <li><a href="https://www.jetblackespresso.com.au/assets/files/Silvia%20E%20note%20for%20RSPb.pdf">Auber / Jetblack: Silvia E supplement</a>, the E's push-button power switch and timer module.</li>
+      <li><a href="https://www.wholelattelove.com/blogs/reviews/rancilio-silvia-review">Whole Latte Love: Silvia review</a>, current switch and LED layout.</li>
+      <li><a href="https://www.seattlecoffeegear.com/blogs/scg-blog/ask-gail-rancilio-silvia-v4">Seattle Coffee Gear: V4</a> and <a href="https://www.seattlecoffeegear.com/blogs/scg-blog/new-rancilio-silvia-v30">V3</a>, the replaceable element and V3 changes.</li>
+      <li><a href="https://docs.gaggimate.eu/docs/installation-silvia/">GaggiMate: Silvia installation</a> (a different mod project), the M3 thermocouple hole.</li>
+      <li><a href="https://support.clivecoffee.com/en/rancilio-silvia-resetting-the-safety/high-limit-switch">Clive Coffee: resetting the safety switch</a>.</li>
+    </ul>
+    <p class="fine" style="margin-top:10px">If your machine doesn't match any of these, or you can confirm something marked to check on Discord, that's worth posting in the Silvia thread.</p>
+  </section>
+</div>
+
+<script>
+(function(){
+  function mark(){
+    var m=window.SilviaMachine,p=m&&m.get(),v=p?p.ver:null;
+    Array.prototype.forEach.call(document.querySelectorAll('[data-card]'),function(c){c.classList.toggle('mine',c.getAttribute('data-card')===v)});
+    Array.prototype.forEach.call(document.querySelectorAll('[data-strip]'),function(c){c.classList.toggle('mine',c.getAttribute('data-strip')===v)});
+    Array.prototype.forEach.call(document.querySelectorAll('[data-yours]'),function(c){c.hidden=c.getAttribute('data-yours')!==v});
+  }
+  window.addEventListener('silvia-machine',mark);
+  mark();
+})();
+</script>

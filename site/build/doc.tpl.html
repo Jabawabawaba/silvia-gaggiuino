@@ -1,0 +1,31 @@
+<title>%%DOC_TITLE%%</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+%%BASECSS%%
+/* Reference docs, rendered from build/docs-*.md by md2html.py: a plain reading column. */
+.doc{max-width:74ch;display:grid;grid-template-columns:minmax(0,1fr);gap:12px;padding-bottom:24px}
+.doc>*{min-width:0}
+.doc h2{font:600 24px/1.1 var(--f-display);letter-spacing:.03em;text-transform:uppercase;margin:18px 0 0;border-bottom:2px solid var(--ink);padding-bottom:6px}
+.doc h3{font:600 19px/1.15 var(--f-display);letter-spacing:.03em;text-transform:uppercase;margin:8px 0 0}
+.doc p,.doc li{font-size:16px;line-height:1.6;margin:0;overflow-wrap:anywhere}
+.doc ul,.doc ol{margin:0;padding-left:22px;display:grid;grid-template-columns:minmax(0,1fr);gap:6px}
+.doc li{min-width:0}
+.doc li ul,.doc li ol{margin-top:6px}
+.doc code{font:500 .88em var(--f-mono);background:var(--surface-2);padding:1px 5px;border-radius:4px;overflow-wrap:anywhere}
+.doc pre{margin:6px 0;padding:10px 12px;background:var(--surface-2);border-radius:8px;overflow-x:auto}
+.doc pre code{background:none;padding:0}
+.doc table{font-size:15px}
+.doc hr{border:0;border-top:1px solid var(--line);margin:8px 0}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="plate"><span class="rivet" aria-hidden="true"></span><span><b>Reference</b></span><span>%%DOC_KIND%%</span><span class="rivet" aria-hidden="true"></span></div>
+    <h1>%%DOC_TITLE%%</h1>
+  </header>
+  <article class="doc">
+%%DOC_BODY%%
+  </article>
+</div>

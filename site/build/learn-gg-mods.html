@@ -1,0 +1,28 @@
+    <article class="pc" id="scales">
+      <div class="ph"><h3>Hardware scales</h3><span class="where">under the drip tray, to J8</span></div>
+      <div class="prose">
+        <p>Two 1 kg load cells on a printed mount under the drip tray area weigh the cup as the shot runs, so Gaggiuino can stop at a target weight and plot it live. Without them it still predicts the weight from the pump's flow; a Bluetooth scale is the other option.</p>
+        <h3>How it works</h3>
+        <p>A load cell is a metal bar with strain gauges glued to it, wired as a bridge. The weight of the cup bends the bar by a tiny amount and the bridge puts out a few millivolts at most. Each cell has its own HX711 channel, which amplifies and measures that very finely; the two share the clock line on J8 and each has its own data line, D1 and D2. The PCB adds the two, subtracts the tare and converts to grams after you calibrate with a known weight.</p>
+        <p>Gaggiuino's parts list has 750 g cells. On a Silvia the mount of choice is Joscha's "beefy" remix, Printables 1277828, built for 13 × 13 × 80 mm 1 kg cells.</p>
+      </div>
+      %%FIG:scale%%
+    </article>
+
+    <article class="pc" id="tof">
+      <div class="ph"><h3>Tank level sensor</h3><span class="where">above the tank, to J2</span></div>
+      <div class="prose">
+        <p>The ToFnLED board's distance sensor, mounted above the water, tells the screen how full the tank is, so you see it running low before the pump runs dry. It plugs into the Qwiic socket, J2, on the back of the PCB. The board also has an RGB LED to light the tank; the Silvia's tank is covered, so builders use it for the level reading.</p>
+        <h3>How it works</h3>
+        <p>A time-of-flight sensor fires a very short pulse of infrared light and times how long the reflection takes to come back from the water surface. Light covers a millimeter in about 3 trillionths of a second, so the chip, a VL53L0X in the Gen 2 code, has to time it extremely finely; it reports a distance, and the firmware turns the distance into a percentage using the ranges you set. The Silvia's tank is deeper than a Gaggia's, about 200 mm, so those ranges need changing in the ToFnLED settings.</p>
+      </div>
+      %%FIG:tof%%
+    </article>
+
+    <article class="pc nofig" id="leds">
+      <div class="ph"><h3>Switch lights</h3><span class="where">inside the three rockers</span></div>
+      <div class="prose">
+        <p>Once the brew, hot water and steam switches are on low voltage, their mains lamps go dark. The LED mod replaces each lamp with a small orange LED and resistor powered from the 5 V screen line, wired across the switch's spare pole so the light follows the switch. The power switch keeps its stock lamp.</p>
+        <p><a href="led-mod.html">The LED switch mod, step by step</a></p>
+      </div>
+    </article>
