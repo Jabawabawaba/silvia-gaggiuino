@@ -53,6 +53,31 @@ TAGS = {
 
 SYS_CLASS = {r["id"]: r["sys"] for r in RUNS}
 
+# parts you can tap, with the box that picks them; the runs that land on each come from their ends' wording
+PARTS = [
+    ("hw", "Hot water switch", (45, 28, 155, 142)), ("brew", "Brew switch", (205, 28, 315, 142)),
+    ("steam", "Steam switch", (365, 28, 475, 142)), ("lamp", "Heating lamp", (533, 28, 587, 142)),
+    ("pwr", "Power switch", (665, 28, 775, 142)), ("ssr", "Solid-state relay (SSR)", (160, 300, 320, 440)),
+    ("boiler", "Boiler: element, safety thermostat, thermocouple and ground", (78, 548, 302, 822)),
+    ("sol", "3-way solenoid valve", (380, 560, 460, 640)), ("pump", "Pump and its thermal fuse", (500, 560, 600, 650)),
+    ("inlet", "Power inlet", (630, 790, 812, 840)), ("psens", "Pressure sensor and tee", (818, 560, 872, 650)),
+    ("screen", "4.3 in screen", (980, 60, 1180, 172)), ("pcb", "Gaggiuino PCB", (930, 232, 1200, 828)),
+]
+PART_WORDS = [("Power inlet", "inlet"), ("Power switch", "pwr"), ("SSR", "ssr"), ("Safety thermostat", "boiler"),
+              ("Boiler", "boiler"), ("Thermocouple", "boiler"), ("Heating lamp", "lamp"), ("Pump", "pump"),
+              ("Solenoid", "sol"), ("PCB", "pcb"), ("Steam switch", "steam"), ("Brew switch", "brew"),
+              ("Hot water switch", "hw"), ("Pressure", "psens"), ("4.3 in", "screen")]
+
+
+def part_of(end):
+    for w, pid in PART_WORDS:
+        if end.startswith(w):
+            return pid
+    return ""
+
+
+ENDS = {r["id"]: [part_of(r["frm"]), part_of(r["to"])] for r in RUNS}
+
 
 def esc(s):
     return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
@@ -213,6 +238,12 @@ def build():
     o.append(text(1090, 250, "J1", "jn", "start"))
     o.append('</g>')
 
+    # ----- tap targets for parts, under the wires -----
+    o.append('<g class="phits">')
+    for pid, name, (x0, y0, x1, y1) in PARTS:
+        o.append(f'<rect x="{x0}" y="{y0}" width="{x1 - x0}" height="{y1 - y0}" rx="8" class="phit" data-part="{pid}"><title>{esc(name)}</title></rect>')
+    o.append('</g>')
+
     # ----- wires -----
     o.append('<g class="wires">')
     order = ["LV11", "LV9", "LV10", "LV7", "LV8", "LV1", "LV2", "LV3", "LV4", "LV5", "LV6",
@@ -223,13 +254,11 @@ def build():
         if isinstance(ds, str):
             ds = [ds]
         sysc = SYS_CLASS[rid]
-        o.append(f'<g class="run s-{sysc}" data-run="{rid}" tabindex="-1">')
-        for d in ds:
-            o.append(f'<path d="{d}" class="halo"/>')
-        for d in ds:
-            o.append(f'<path d="{d}" class="wire"/>')
-        for d in ds:
-            o.append(f'<path d="{d}" class="hit"/>')
+        a, b = ENDS[rid]
+        o.append(f'<g class="run s-{sysc}" data-run="{rid}" data-a="{a}" data-b="{b}" tabindex="-1">')
+        for k in ("halo", "wire", "flow", "hit"):
+            for d in ds:
+                o.append(f'<path d="{d}" class="{k}"/>')
         o.append('</g>')
     o.append('</g>')
 

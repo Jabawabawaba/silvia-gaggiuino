@@ -115,6 +115,21 @@ figcaption{font-size:14px;color:var(--muted);margin-top:8px;max-width:90ch}
 .run.sel .halo{stroke:var(--accent-soft)}
 .tag.sel rect{fill:var(--accent);stroke:var(--accent)}
 .tag.sel text{fill:var(--on-accent)}
+.flow{fill:none;stroke:transparent;stroke-linejoin:round;stroke-linecap:round}
+.run.sel .flow{stroke:var(--surface);stroke-width:2;stroke-dasharray:3 14;animation:wflow 1.1s linear infinite}
+@keyframes wflow{to{stroke-dashoffset:-17}}
+.phit{fill:transparent;cursor:pointer}
+.phit.sel{fill:var(--accent-soft);fill-opacity:.55;stroke:var(--accent);stroke-width:2}
+.stepper{display:inline-flex;align-items:center;gap:6px}
+.stepper button{appearance:none;border:1px solid var(--line);background:var(--surface);border-radius:999px;width:38px;height:38px;font:600 18px/1 var(--f-body);cursor:pointer;color:var(--ink)}
+.stepper span{font:500 13px var(--f-mono);color:var(--muted);min-width:9ch;text-align:center}
+.tright{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px}
+.msel{margin:0 0 8px;font-size:15px;min-height:1.5em;color:var(--muted)}
+.msel b{font:700 14px var(--f-mono);color:var(--ink);margin-right:6px}
+.msel .rt{color:var(--ink);font-weight:600}
+.ids{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.ids button{font:600 13px var(--f-mono);padding:4px 8px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);cursor:pointer}
+@media (prefers-reduced-motion:reduce){.run.sel .flow{animation:none;stroke:transparent}}
 
 .legend{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:10px;font-size:14px;color:var(--muted)}
 .legend span{display:inline-flex;align-items:center;gap:7px}
@@ -185,7 +200,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
       <span class="rivet" aria-hidden="true"></span>
     </div>
     <h1>Silvia Wiring Reference</h1>
-    <p class="lede">Every run in the custom harness, with its ID, ends, wire and starting length. The IDs match the printed wire labels. Tap a wire, a tag or a row to see that run on its own.</p>
+    <p class="lede">Every run in the custom harness, with its ID, ends, wire and starting length. The IDs match the printed wire labels. Tap a wire, a tag or a row to see that run on its own, tap a part to see every run that lands on it, or step through the runs with the arrows.</p>
     <div class="warn" role="note">
       <strong>Cross-check, not a validated schematic</strong>
       <p>There is no official Silvia schematic. This is redrawn from realNiche's community diagram (PCB v3.1/v4.0) with lengths from Talon's harness and the older RS diagram. Check each run against <a href="https://github.com/thejobbitt/gaggiuino_resources/tree/main/wiring_diagrams/rancilio_silvia" target="_blank" rel="noopener">realNiche's original</a> before you crimp, and pass the <a href="%%LINK_CHECKS%%" target="_blank" rel="noopener">power-on checks</a> before the machine is plugged in.</p>
@@ -201,8 +216,9 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
 
   <div class="toolbar">
     <div class="chips" id="chips" role="group" aria-label="Show circuit"></div>
-    <span class="hint" id="hint">On a small screen, scroll the drawing sideways.</span>
+    <div class="tright"><div class="stepper" role="group" aria-label="Step through the runs"><button type="button" id="m-prev" aria-label="Previous run">‹</button><span id="m-step" aria-live="polite"></span><button type="button" id="m-next" aria-label="Next run">›</button></div><span class="hint" id="hint">On a small screen, scroll the drawing sideways.</span></div>
   </div>
+  <p class="msel" id="msel" aria-live="polite"></p>
 
   <figure id="fig">
     <div class="scroll" id="scroll">%%SVG%%</div>
@@ -316,25 +332,44 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
   $('conn').innerHTML=CONN.map(function(c){return '<tr><td class="id">'+c[0]+'</td><td>'+esc(c[1])+'</td><td>'+esc(c[2])+'</td><td>'+esc(c[3])+'</td></tr>'}).join('');
 
   /* state */
-  var svg=document.querySelector('.dia'),layer='all',sel=null;
+  var svg=document.querySelector('.dia'),layer='all',sel=null,selPart=null;
+  var PARTN={};Array.prototype.forEach.call(svg.querySelectorAll('.phit'),function(r){PARTN[r.getAttribute('data-part')]=r.textContent});
+  var ENDS={};Array.prototype.forEach.call(svg.querySelectorAll('.run'),function(g){ENDS[g.getAttribute('data-run')]=[g.getAttribute('data-a'),g.getAttribute('data-b')]});
+  /* the stepper walks the drawn runs in the list's order */
+  var ORDER=[];groups.forEach(function(g){RUNS.forEach(function(r){if(r.sys===g[0]&&ENDS[r.id])ORDER.push(r.id)})});
+  function atPart(id){return !!(selPart&&ENDS[id]&&ENDS[id].indexOf(selPart)>=0)}
   function paint(){
-    var any=layer!=='all'||!!sel;
+    var any=layer!=='all'||!!sel||!!selPart;
     svg.classList.toggle('dim',any);
     Array.prototype.forEach.call(svg.querySelectorAll('.run,.tag'),function(el){
       var id=el.getAttribute('data-run'),r=byId[id];
-      var on=sel?id===sel:inLayer(r,layer);
+      var on=sel?id===sel:selPart?atPart(id):inLayer(r,layer);
       el.classList.toggle('off',!on);
       el.classList.toggle('sel',id===sel);
     });
-    Array.prototype.forEach.call(document.querySelectorAll('tr.row'),function(tr){tr.classList.toggle('sel',tr.getAttribute('data-row')===sel)});
+    Array.prototype.forEach.call(svg.querySelectorAll('.phit'),function(p){p.classList.toggle('sel',p.getAttribute('data-part')===selPart)});
+    Array.prototype.forEach.call(document.querySelectorAll('tr.row'),function(tr){var id=tr.getAttribute('data-row');tr.classList.toggle('sel',id===sel||atPart(id))});
     $('chips').innerHTML=LAYERS.map(function(l){
-      return '<button type="button" class="chip" data-layer="'+l[0]+'" aria-pressed="'+(layer===l[0]&&!sel)+'">'+(l[2]?'<span class="sw" style="background:'+l[2]+'"></span>':'')+l[1]+'</button>';
+      return '<button type="button" class="chip" data-layer="'+l[0]+'" aria-pressed="'+(layer===l[0]&&!sel&&!selPart)+'">'+(l[2]?'<span class="sw" style="background:'+l[2]+'"></span>':'')+l[1]+'</button>';
     }).join('');
+    var i=sel?ORDER.indexOf(sel):-1;
+    $('m-step').textContent=i>=0?(i+1)+' of '+ORDER.length:ORDER.length+' runs';
+    var ms=$('msel');
+    if(sel){var rr=byId[sel];ms.innerHTML='<b>'+rr.id+'</b><span class="rt">'+esc(rr.short||(rr.frm+' → '+rr.to))+'</span> · '+lenText(rr)}
+    else if(selPart){var n=ORDER.filter(atPart).length;ms.innerHTML='<span class="rt">'+esc(PARTN[selPart]||selPart)+'</span>: '+n+(n===1?' run lands here':' runs land here')}
+    else ms.textContent='';
     renderDetail();
   }
   function renderDetail(){
     var d=$('detail');
-    if(!sel){d.className='detail empty';d.innerHTML='<p class="d-note" style="color:var(--muted)">Tap any wire or tag in the drawing, or an ID in the list below, to see where that run starts and ends, what goes on each end, and how long to cut it.</p>';return}
+    if(selPart&&!sel){
+      var ids=ORDER.filter(atPart);
+      d.className='detail';d.style.borderLeftColor='var(--accent)';
+      d.innerHTML='<div class="d-head"><span class="d-route">'+esc(PARTN[selPart]||selPart)+'</span><button type="button" class="chip" id="clear" style="margin-left:auto">Show all runs</button></div>'+
+        '<div><span class="k">'+ids.length+(ids.length===1?' run lands':' runs land')+' here</span><div class="ids">'+ids.map(function(id){return '<button type="button" data-mrun="'+id+'">'+id+'</button>'}).join('')+'</div></div>';
+      return;
+    }
+    if(!sel){d.className='detail empty';d.innerHTML='<p class="d-note" style="color:var(--muted)">Tap any wire or tag in the drawing, or an ID in the list below, to see where that run starts and ends, what goes on each end, and how long to cut it. Tap a part to see every run that lands on it, or step through the runs with the arrows above the drawing.</p>';return}
     var r=byId[sel];
     d.className='detail';d.style.borderLeftColor=SYSCOLOR[r.sys];
     d.innerHTML='<div class="d-head"><span class="d-id">'+r.id+'</span><span class="d-route">'+esc(r.frm)+' → '+esc(r.to)+'</span><button type="button" class="chip" id="clear" style="margin-left:auto">Show all runs</button></div>'+
@@ -348,8 +383,8 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
       (r.note?'<p class="d-note">'+esc(r.note)+'</p>':'')+
       (svg.querySelector('[data-run="'+r.id+'"]')?'':'<p class="d-note" style="color:var(--muted)">Not drawn; optional runs are listed here only.</p>');
   }
-  function pick(id,scroll){
-    sel=(sel===id)?null:id;
+  function pick(id,scroll,keep){
+    sel=(sel===id&&!keep)?null:id;selPart=null;
     paint();
     if(sel&&scroll){
       var g=svg.querySelector('.run[data-run="'+sel+'"]');
@@ -359,12 +394,29 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
       }
     }
   }
+  function centerOn(el){
+    if(!el||!el.getBBox)return;
+    try{var bb=el.getBBox(),sc=$('scroll'),ratio=svg.clientWidth/1240;if(sc.scrollWidth>sc.clientWidth+2)sc.scrollTo({left:Math.max(0,(bb.x+bb.width/2)*ratio-sc.clientWidth/2),behavior:'smooth'})}catch(e){}
+  }
+  function step(n){
+    var i=sel?ORDER.indexOf(sel):-1;
+    i=i<0?(n>0?0:ORDER.length-1):(i+n+ORDER.length)%ORDER.length;
+    pick(ORDER[i],false,true);centerOn(svg.querySelector('.run[data-run="'+ORDER[i]+'"]'));
+  }
   svg.addEventListener('click',function(e){
     var g=e.target.closest('[data-run]');
-    if(g){pick(g.getAttribute('data-run'),false)}else if(sel){sel=null;paint()}
+    if(g){pick(g.getAttribute('data-run'),false);return}
+    var p=e.target.closest('[data-part]');
+    if(p){var id=p.getAttribute('data-part');sel=null;selPart=(selPart===id)?null:id;paint();return}
+    if(sel||selPart){sel=null;selPart=null;paint()}
   });
-  $('chips').addEventListener('click',function(e){var b=e.target.closest('[data-layer]');if(!b)return;layer=b.getAttribute('data-layer');sel=null;paint()});
-  $('detail').addEventListener('click',function(e){if(e.target.id==='clear'){sel=null;paint()}});
+  $('m-prev').addEventListener('click',function(){step(-1)});
+  $('m-next').addEventListener('click',function(){step(1)});
+  $('chips').addEventListener('click',function(e){var b=e.target.closest('[data-layer]');if(!b)return;layer=b.getAttribute('data-layer');sel=null;selPart=null;paint()});
+  $('detail').addEventListener('click',function(e){
+    if(e.target.id==='clear'){sel=null;selPart=null;paint();return}
+    var m=e.target.closest('[data-mrun]');if(m){pick(m.getAttribute('data-mrun'),false,true);centerOn(svg.querySelector('.run[data-run="'+m.getAttribute('data-mrun')+'"]'))}
+  });
   $('runs').addEventListener('click',function(e){var tr=e.target.closest('[data-row]');if(tr)pick(tr.getAttribute('data-row'),true)});
   var h=(location.hash||'').replace('#','').toUpperCase();
   if(byId[h])sel=h;
