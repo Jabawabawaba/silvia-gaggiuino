@@ -481,15 +481,45 @@ td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:ta
 #mini-tstat .now{fill:var(--w-l)}
 #mini-tstat .arm{transition:transform .12s}
 #mini-tstat .pin{transition:transform .12s}
-/* solenoid */
-#mini-sol .vbody{fill:url(#cut-brass);stroke:#6E5420}
-#mini-sol .vcoil{fill:#2F3439;stroke:#16181B;transition:fill .2s}
-#mini-sol.on .vcoil{fill:#7A3A10}
-#mini-sol .vwind line{stroke:#B98F45;stroke-width:2}
-#mini-sol .plunger rect{fill:#8C949B;stroke:#4A5057}
-#mini-sol .plunger .seal{fill:#2B2F34}
-#mini-sol .plunger{transition:transform .2s}
-#mini-sol.on .plunger{transform:translateY(-20px)}
+/* solenoid: a cutaway, so the seal that closes each port is in view */
+#mini-sol{--sol-w:#D3E7F6;--sol-p:#8DBFE6;--sol-dot:#1A63A6;--sol-shut:#C62828;--sol-open:#2E7D4F;--sol-spr:#59616A}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) #mini-sol{--sol-w:#1C3B55;--sol-p:#2C679C;--sol-dot:#C4E5FF;--sol-shut:#E5534B;--sol-open:#3E9B66;--sol-spr:#A3ABB3}}
+:root[data-theme="dark"] #mini-sol{--sol-w:#1C3B55;--sol-p:#2C679C;--sol-dot:#C4E5FF;--sol-shut:#E5534B;--sol-open:#3E9B66;--sol-spr:#A3ABB3}
+#mini-sol .vbody,#mini-sol .vtube{fill:url(#cut-brass);stroke:#6E5420}
+#mini-sol .vcoil{fill:#2F3439;stroke:#16181B;transition:fill .3s}
+#mini-sol .wd circle{fill:#8A6A33;transition:fill .3s}
+#mini-sol.on .vcoil{fill:#6B3210}
+#mini-sol.on .wd circle{fill:#F2A33A}
+#mini-sol .vcore{fill:url(#cut-chrome);stroke:#4A5057}
+#mini-sol .lip{fill:#8E6C2C}
+#mini-sol .lip.ex{fill:#737B82}
+#mini-sol .cav{fill:var(--sol-w);transition:fill .3s}
+#mini-sol .cavs{fill:none;stroke:var(--sol-w);stroke-width:9;transition:stroke .3s}
+#mini-sol .cav.p,#mini-sol.on .cav.q{fill:var(--sol-p)}
+#mini-sol .cavs.p,#mini-sol.on .cavs.q{stroke:var(--sol-p)}
+#mini-sol .plg{fill:url(#cut-chrome);stroke:#4A5057}
+#mini-sol .seal{fill:#202428}
+#mini-sol .plunger,#mini-sol .vspring{transition:transform .45s cubic-bezier(.3,.1,.2,1)}
+#mini-sol.on .plunger{transform:translateY(-18px)}
+#mini-sol .vspring{fill:none;stroke:var(--sol-spr);stroke-width:1.6;stroke-linejoin:round;transform-box:fill-box;transform-origin:50% 0}
+#mini-sol.on .vspring{transform:scaleY(.36)}
+#mini-sol .sflow{stroke:var(--sol-dot)}
+#mini-sol.on .sflow.feed.on,#mini-sol .sflow.vent.on{transition-delay:.35s}
+#mini-sol .ring{fill:none;stroke:var(--sol-shut);stroke-width:2.2;opacity:0;transition:opacity .2s .3s}
+#mini-sol .ring.in,#mini-sol.on .ring.ex{opacity:1}
+#mini-sol.on .ring.in{opacity:0}
+#mini-sol .badge rect{transition:fill .2s .3s}
+#mini-sol .badge text{font:700 9px var(--f-mono);letter-spacing:.06em;fill:#fff;transition:opacity 0s .3s}
+#mini-sol .b-in rect,#mini-sol.on .b-ex rect{fill:var(--sol-shut)}
+#mini-sol .b-ex rect,#mini-sol.on .b-in rect{fill:var(--sol-open)}
+#mini-sol .b-in .o,#mini-sol .b-ex .s,#mini-sol.on .b-in .s,#mini-sol.on .b-ex .o{opacity:0}
+#mini-sol.on .b-in .o,#mini-sol.on .b-ex .s{opacity:1}
+#mini-sol .lead{stroke:var(--muted);stroke-width:1;opacity:.6}
+#mini-sol .mv{fill:none;stroke:var(--accent);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+#mini-sol .why{transition:opacity .25s}
+#mini-sol .why-on,#mini-sol.on .why-off{opacity:0}
+#mini-sol.on .why-on{opacity:1}
+@media (prefers-reduced-motion:reduce){#mini-sol .plunger,#mini-sol .vspring,#mini-sol .ring,#mini-sol .badge rect,#mini-sol .badge text,#mini-sol .why{transition:none}}
 /* opv */
 #mini-opv .vbody{fill:url(#cut-brass);stroke:#6E5420}
 #mini-opv .seal{fill:#2B2F34}

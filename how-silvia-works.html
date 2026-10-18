@@ -481,15 +481,45 @@ td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:ta
 #mini-tstat .now{fill:var(--w-l)}
 #mini-tstat .arm{transition:transform .12s}
 #mini-tstat .pin{transition:transform .12s}
-/* solenoid */
-#mini-sol .vbody{fill:url(#cut-brass);stroke:#6E5420}
-#mini-sol .vcoil{fill:#2F3439;stroke:#16181B;transition:fill .2s}
-#mini-sol.on .vcoil{fill:#7A3A10}
-#mini-sol .vwind line{stroke:#B98F45;stroke-width:2}
-#mini-sol .plunger rect{fill:#8C949B;stroke:#4A5057}
-#mini-sol .plunger .seal{fill:#2B2F34}
-#mini-sol .plunger{transition:transform .2s}
-#mini-sol.on .plunger{transform:translateY(-20px)}
+/* solenoid: a cutaway, so the seal that closes each port is in view */
+#mini-sol{--sol-w:#D3E7F6;--sol-p:#8DBFE6;--sol-dot:#1A63A6;--sol-shut:#C62828;--sol-open:#2E7D4F;--sol-spr:#59616A}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) #mini-sol{--sol-w:#1C3B55;--sol-p:#2C679C;--sol-dot:#C4E5FF;--sol-shut:#E5534B;--sol-open:#3E9B66;--sol-spr:#A3ABB3}}
+:root[data-theme="dark"] #mini-sol{--sol-w:#1C3B55;--sol-p:#2C679C;--sol-dot:#C4E5FF;--sol-shut:#E5534B;--sol-open:#3E9B66;--sol-spr:#A3ABB3}
+#mini-sol .vbody,#mini-sol .vtube{fill:url(#cut-brass);stroke:#6E5420}
+#mini-sol .vcoil{fill:#2F3439;stroke:#16181B;transition:fill .3s}
+#mini-sol .wd circle{fill:#8A6A33;transition:fill .3s}
+#mini-sol.on .vcoil{fill:#6B3210}
+#mini-sol.on .wd circle{fill:#F2A33A}
+#mini-sol .vcore{fill:url(#cut-chrome);stroke:#4A5057}
+#mini-sol .lip{fill:#8E6C2C}
+#mini-sol .lip.ex{fill:#737B82}
+#mini-sol .cav{fill:var(--sol-w);transition:fill .3s}
+#mini-sol .cavs{fill:none;stroke:var(--sol-w);stroke-width:9;transition:stroke .3s}
+#mini-sol .cav.p,#mini-sol.on .cav.q{fill:var(--sol-p)}
+#mini-sol .cavs.p,#mini-sol.on .cavs.q{stroke:var(--sol-p)}
+#mini-sol .plg{fill:url(#cut-chrome);stroke:#4A5057}
+#mini-sol .seal{fill:#202428}
+#mini-sol .plunger,#mini-sol .vspring{transition:transform .45s cubic-bezier(.3,.1,.2,1)}
+#mini-sol.on .plunger{transform:translateY(-18px)}
+#mini-sol .vspring{fill:none;stroke:var(--sol-spr);stroke-width:1.6;stroke-linejoin:round;transform-box:fill-box;transform-origin:50% 0}
+#mini-sol.on .vspring{transform:scaleY(.36)}
+#mini-sol .sflow{stroke:var(--sol-dot)}
+#mini-sol.on .sflow.feed.on,#mini-sol .sflow.vent.on{transition-delay:.35s}
+#mini-sol .ring{fill:none;stroke:var(--sol-shut);stroke-width:2.2;opacity:0;transition:opacity .2s .3s}
+#mini-sol .ring.in,#mini-sol.on .ring.ex{opacity:1}
+#mini-sol.on .ring.in{opacity:0}
+#mini-sol .badge rect{transition:fill .2s .3s}
+#mini-sol .badge text{font:700 9px var(--f-mono);letter-spacing:.06em;fill:#fff;transition:opacity 0s .3s}
+#mini-sol .b-in rect,#mini-sol.on .b-ex rect{fill:var(--sol-shut)}
+#mini-sol .b-ex rect,#mini-sol.on .b-in rect{fill:var(--sol-open)}
+#mini-sol .b-in .o,#mini-sol .b-ex .s,#mini-sol.on .b-in .s,#mini-sol.on .b-ex .o{opacity:0}
+#mini-sol.on .b-in .o,#mini-sol.on .b-ex .s{opacity:1}
+#mini-sol .lead{stroke:var(--muted);stroke-width:1;opacity:.6}
+#mini-sol .mv{fill:none;stroke:var(--accent);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+#mini-sol .why{transition:opacity .25s}
+#mini-sol .why-on,#mini-sol.on .why-off{opacity:0}
+#mini-sol.on .why-on{opacity:1}
+@media (prefers-reduced-motion:reduce){#mini-sol .plunger,#mini-sol .vspring,#mini-sol .ring,#mini-sol .badge rect,#mini-sol .badge text,#mini-sol .why{transition:none}}
 /* opv */
 #mini-opv .vbody{fill:url(#cut-brass);stroke:#6E5420}
 #mini-opv .seal{fill:#2B2F34}
@@ -1142,20 +1172,36 @@ td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:ta
           <p>A coil sits on top of a brass valve body with an iron plunger in its core. Current through the coil lifts the plunger, which opens the boiler-to-group path and seals the drain. When the current stops, a spring drops the plunger: the boiler port closes and the group port connects to a drain tube that runs into the back of the drip tray. That release is the hiss you hear at the end of a shot, and it leaves the puck drier. Only the brew switch powers it; hot water leaves it shut.</p>
           <p class="gg"><b>In a Gaggiuino build:</b> kept, driven by the PCB from J13 instead of by the brew switch. Its ground spade stays bonded to earth.</p>
         </div>
-        <!-- SOLENOID VALVE: two states -->
+        <!-- SOLENOID VALVE: a cutaway, so you can see which seat each seal closes -->
 <figure class="mini" id="mini-sol">
-  <div class="mini-ctl"><button type="button" class="btn" data-sol aria-pressed="false">Brew switch off</button><span class="mini-note" data-sol-note>Off: the group is open to the drip tray.</span></div>
-  <svg viewBox="0 0 360 214" role="img" aria-label="A 3-way solenoid valve with ports to the boiler, the group and the drip tray. Energized, the plunger lifts and water flows from the boiler to the group. Off, a spring pushes the plunger down, closing the boiler port and opening the group to the drip tray, which lets the pressure out of the puck.">
-    <path d="M10,96 H100" class="pipe"/><path d="M180,150 V206" class="pipe"/><path d="M260,128 H350" class="pipe"/>
-    <path d="M10,96 H100 L140,120 L172,150 V206" class="sflow feed"/>
-    <path d="M180,206 V150 L210,128 H350" class="sflow vent"/>
-    <rect x="90" y="78" width="170" height="80" rx="8" class="vbody"/>
-    <rect x="122" y="16" width="106" height="64" rx="6" class="vcoil"/>
-    <g class="vwind"><line x1="134" y1="18" x2="134" y2="78"/><line x1="148" y1="18" x2="148" y2="78"/><line x1="162" y1="18" x2="162" y2="78"/><line x1="188" y1="18" x2="188" y2="78"/><line x1="202" y1="18" x2="202" y2="78"/><line x1="216" y1="18" x2="216" y2="78"/></g>
-    <g class="plunger"><rect x="165" y="40" width="20" height="70" rx="4"/><rect x="158" y="106" width="34" height="10" rx="3" class="seal"/></g>
-    <text x="10" y="80" class="cap">from boiler</text><text x="192" y="204" class="cap">to group</text><text x="350" y="116" class="cap" text-anchor="end">to drip tray</text>
+  <div class="mini-ctl"><button type="button" class="btn" data-sol aria-pressed="false">Brew switch off</button><span class="mini-note" data-sol-note>Off: the spring holds the lower seal on the boiler port. The group is open to the drip tray.</span></div>
+  <svg viewBox="0 0 360 236" role="img" aria-label="Cutaway of a 3-way solenoid valve. A plunger sits in a tube with a rubber seal at each end, a spring above it and a coil around it. Off, the spring pushes the plunger down so its lower seal shuts the port from the boiler, and the group port stays open past the plunger to the drip-tray port at the top. On, the coil pulls the plunger up: the lower seat opens so boiler water flows to the group, and the top seal shuts the drip-tray port.">
+    <path d="M10,206 H130" class="pipe"/><path d="M230,162 H350" class="pipe"/><path d="M180,32 V14 H350" class="pipe"/>
+    <rect x="158" y="44" width="44" height="96" rx="3" class="vtube"/>
+    <rect x="128" y="136" width="104" height="86" rx="8" class="vbody"/>
+    <g class="vcoilg">
+      <rect x="122" y="46" width="36" height="84" rx="5" class="vcoil"/><rect x="202" y="46" width="36" height="84" rx="5" class="vcoil"/>
+      <g class="wd"><circle cx="131" cy="55" r="3"/><circle cx="140" cy="55" r="3"/><circle cx="149" cy="55" r="3"/><circle cx="131" cy="65" r="3"/><circle cx="140" cy="65" r="3"/><circle cx="149" cy="65" r="3"/><circle cx="131" cy="75" r="3"/><circle cx="140" cy="75" r="3"/><circle cx="149" cy="75" r="3"/><circle cx="131" cy="85" r="3"/><circle cx="140" cy="85" r="3"/><circle cx="149" cy="85" r="3"/><circle cx="131" cy="95" r="3"/><circle cx="140" cy="95" r="3"/><circle cx="149" cy="95" r="3"/><circle cx="131" cy="105" r="3"/><circle cx="140" cy="105" r="3"/><circle cx="149" cy="105" r="3"/><circle cx="131" cy="115" r="3"/><circle cx="140" cy="115" r="3"/><circle cx="149" cy="115" r="3"/><circle cx="131" cy="125" r="3"/><circle cx="140" cy="125" r="3"/><circle cx="149" cy="125" r="3"/><circle cx="211" cy="55" r="3"/><circle cx="220" cy="55" r="3"/><circle cx="229" cy="55" r="3"/><circle cx="211" cy="65" r="3"/><circle cx="220" cy="65" r="3"/><circle cx="229" cy="65" r="3"/><circle cx="211" cy="75" r="3"/><circle cx="220" cy="75" r="3"/><circle cx="229" cy="75" r="3"/><circle cx="211" cy="85" r="3"/><circle cx="220" cy="85" r="3"/><circle cx="229" cy="85" r="3"/><circle cx="211" cy="95" r="3"/><circle cx="220" cy="95" r="3"/><circle cx="229" cy="95" r="3"/><circle cx="211" cy="105" r="3"/><circle cx="220" cy="105" r="3"/><circle cx="229" cy="105" r="3"/><circle cx="211" cy="115" r="3"/><circle cx="220" cy="115" r="3"/><circle cx="229" cy="115" r="3"/><circle cx="211" cy="125" r="3"/><circle cx="220" cy="125" r="3"/><circle cx="229" cy="125" r="3"/></g>
+    </g>
+    <rect x="164" y="28" width="32" height="28" rx="3" class="vcore"/>
+    <rect x="166" y="56" width="28" height="118" class="cav q"/><rect x="176" y="28" width="8" height="28" class="cav"/>
+    <path d="M180,172 V206 H128" class="cavs p"/><path d="M194,162 H232" class="cavs q"/>
+    <rect x="170" y="56" width="6" height="4" class="lip ex"/><rect x="184" y="56" width="6" height="4" class="lip ex"/>
+    <rect x="168" y="170" width="8" height="4" class="lip"/><rect x="184" y="170" width="8" height="4" class="lip"/>
+    <polyline points="180,56 171,59 189,63 171,67 189,71 171,75 189,79 180,84" class="vspring"/>
+    <g class="plunger"><rect x="175" y="78" width="10" height="6" rx="1.5" class="seal"/><rect x="170" y="84" width="20" height="80" rx="3" class="plg"/><rect x="170" y="164" width="20" height="6" rx="1.5" class="seal"/></g>
+    <rect x="165" y="161" width="30" height="16" rx="4" class="ring in"/><rect x="167" y="53" width="26" height="16" rx="4" class="ring ex"/>
+    <path d="M10,206 H180 V162 H350" class="sflow feed"/>
+    <path d="M350,162 H192 V72 H180 V14 H350" class="sflow vent"/>
+    <g class="badge b-ex"><rect x="203" y="54" width="34" height="14" rx="4"/><text x="220" y="64.2" text-anchor="middle" class="o">OPEN</text><text x="220" y="64.2" text-anchor="middle" class="s">SHUT</text></g>
+    <g class="badge b-in"><rect x="130" y="176" width="34" height="14" rx="4"/><text x="147" y="186.2" text-anchor="middle" class="o">OPEN</text><text x="147" y="186.2" text-anchor="middle" class="s">SHUT</text></g>
+    <path d="M118,63 H171" class="lead"/><path d="M118,111 H170" class="lead"/>
+    <text x="116" y="96" class="cap" text-anchor="end">coil</text><text x="116" y="67" class="cap" text-anchor="end">spring</text><text x="116" y="115" class="cap" text-anchor="end">plunger</text>
+    <g class="why why-off"><path d="M252,70 V112 M246,104 L252,112 L258,104" class="mv"/><text x="262" y="88" class="cap">spring pushes</text><text x="262" y="102" class="cap">plunger down</text></g>
+    <g class="why why-on"><path d="M252,112 V70 M246,78 L252,70 L258,78" class="mv"/><text x="262" y="88" class="cap">coil pulls</text><text x="262" y="102" class="cap">plunger up</text></g>
+    <text x="10" y="228" class="cap">from boiler</text><text x="350" y="182" class="cap" text-anchor="end">to group</text><text x="350" y="36" class="cap" text-anchor="end">to drip tray</text>
   </svg>
-  <figcaption>Simplified. When the brew switch goes off, the valve dumps the pressure left in the group into the drip tray, so the portafilter comes off cleanly and the puck is drier.</figcaption>
+  <figcaption>Simplified. The plunger has a seal at each end, so it always shuts one port: down, the boiler port; up, the drip-tray port. When the brew switch goes off, the spring drops it and the pressure left in the group vents to the drip tray, so the portafilter comes off cleanly and the puck is drier.</figcaption>
 </figure>
       </article>
 
@@ -1571,7 +1617,7 @@ td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:ta
       if(vt){clearTimeout(vt);vt=null}
       vent.classList.toggle('on',!on&&fromOn);
       if(!on&&fromOn)vt=setTimeout(function(){vent.classList.remove('on')},2200);
-      note.textContent=on?'On: boiler water flows to the group.':(fromOn?'Off: the pressure left in the group vents to the drip tray.':'Off: the boiler port is shut; the group is open to the drip tray.');
+      note.textContent=on?'On: the coil pulls the plunger up. The boiler port opens and the top seal shuts the drip-tray port.':(fromOn?'Off: the spring drops the plunger onto the boiler port, and the group vents to the drip tray.':'Off: the spring holds the lower seal on the boiler port. The group is open to the drip tray.');
     }
     b.addEventListener('click',function(){set(b.getAttribute('aria-pressed')!=='true',b.getAttribute('aria-pressed')==='true')});
     set(false,false);
