@@ -282,7 +282,7 @@
       if(vt){clearTimeout(vt);vt=null}
       vent.classList.toggle('on',!on&&fromOn);
       if(!on&&fromOn)vt=setTimeout(function(){vent.classList.remove('on')},2200);
-      note.textContent=on?'On: boiler water flows to the group.':(fromOn?'Off: the pressure left in the group vents to the drip tray.':'Off: the boiler port is shut; the group is open to the drip tray.');
+      note.textContent=on?'On: the coil pulls the plunger up. The boiler port opens and the top seal shuts the drip-tray port.':(fromOn?'Off: the spring drops the plunger onto the boiler port, and the group vents to the drip tray.':'Off: the spring holds the lower seal on the boiler port. The group is open to the drip tray.');
     }
     b.addEventListener('click',function(){set(b.getAttribute('aria-pressed')!=='true',b.getAttribute('aria-pressed')==='true')});
     set(false,false);
