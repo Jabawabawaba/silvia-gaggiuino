@@ -1,0 +1,276 @@
+  <section class="block" id="run" aria-labelledby="h-run">
+    <div class="sec-h"><h2 id="h-run">Run the machine</h2></div>
+    <div class="sim" id="sim">
+      <!-- the front: everything here works the way it does on the machine; learn-sim.js runs it -->
+      <svg id="sim-front" class="simf" viewBox="0 -22 560 492" role="group" aria-label="The machine from the front">
+        <defs>
+          <linearGradient id="sf-steel" x1="0" x2="1"><stop offset="0" stop-color="#8F989F"/><stop offset=".22" stop-color="#E4E8EB"/><stop offset=".5" stop-color="#C6CDD2"/><stop offset=".78" stop-color="#E9ECEE"/><stop offset="1" stop-color="#868F96"/></linearGradient>
+          <linearGradient id="sf-steelh" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#EEF1F3"/><stop offset=".6" stop-color="#C3CAD0"/><stop offset="1" stop-color="#959EA5"/></linearGradient>
+          <linearGradient id="sf-rock" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3A3F44"/><stop offset="1" stop-color="#15181B"/></linearGradient>
+          <linearGradient id="sf-rockp" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0E1012"/><stop offset="1" stop-color="#26292D"/></linearGradient>
+          <linearGradient id="sf-rocklit" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFB24A"/><stop offset="1" stop-color="#D96A12"/></linearGradient>
+          <linearGradient id="sf-rocklitp" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9A4A0E"/><stop offset="1" stop-color="#C9661A"/></linearGradient>
+          <linearGradient id="sf-recess" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5B636A"/><stop offset=".18" stop-color="#9BA3AA"/><stop offset="1" stop-color="#B9C0C6"/></linearGradient>
+          <radialGradient id="sf-orange"><stop offset="0" stop-color="#FFE7B0"/><stop offset=".45" stop-color="#FF9A2E"/><stop offset="1" stop-color="#E2541A"/></radialGradient>
+          <radialGradient id="sf-green"><stop offset="0" stop-color="#E4FFE9"/><stop offset=".45" stop-color="#4FE07A"/><stop offset="1" stop-color="#1D9A45"/></radialGradient>
+          <pattern id="sf-brush" width="5" height="60" patternUnits="userSpaceOnUse"><line x1="1" y1="0" x2="1" y2="60" stroke="#FFFFFF" stroke-opacity=".16"/><line x1="3.5" y1="0" x2="3.5" y2="60" stroke="#000000" stroke-opacity=".04"/></pattern>
+          <pattern id="sf-grate" width="7" height="9" patternUnits="userSpaceOnUse"><rect width="7" height="9" fill="#C9CFD4"/><rect x="1.5" y="2" width="4" height="5" rx="1.5" fill="#3B4045"/></pattern>
+          <filter id="sf-glow" x="-1" y="-1" width="3" height="3"><feGaussianBlur stdDeviation="3"/></filter>
+        </defs>
+        <rect class="counter" x="0" y="448" width="560" height="24"/>
+
+        <!-- a plain wall clock: the time going by -->
+        <g class="clock" transform="translate(62 72)">
+          <circle r="40" class="clk-rim"/><circle r="35" class="clk-face"/>
+          <g class="clk-ticks"><line y1="-33" y2="-27"/><line y1="-33" y2="-27" transform="rotate(30)"/><line y1="-33" y2="-27" transform="rotate(60)"/><line y1="-33" y2="-27" transform="rotate(90)"/><line y1="-33" y2="-27" transform="rotate(120)"/><line y1="-33" y2="-27" transform="rotate(150)"/><line y1="-33" y2="-27" transform="rotate(180)"/><line y1="-33" y2="-27" transform="rotate(210)"/><line y1="-33" y2="-27" transform="rotate(240)"/><line y1="-33" y2="-27" transform="rotate(270)"/><line y1="-33" y2="-27" transform="rotate(300)"/><line y1="-33" y2="-27" transform="rotate(330)"/></g>
+          <line id="f-hhr" class="clk-hr" y1="4" y2="-17"/><line id="f-hmin" class="clk-min" y1="5" y2="-26"/><line id="f-hsec" class="clk-sec" y1="8" y2="-30"/><circle r="2.6" class="clk-cap"/>
+        </g>
+
+        <!-- body: a tall steel box with a railed cup tray on top -->
+        <rect x="150" y="430" width="34" height="18" rx="3" class="foot"/><rect x="376" y="430" width="34" height="18" rx="3" class="foot"/>
+        <path d="M122,28 V14 H438 V28" class="rail"/>
+        <rect x="116" y="26" width="328" height="18" rx="4" fill="url(#sf-steelh)" class="edge"/>
+        <rect x="120" y="42" width="320" height="354" rx="8" fill="url(#sf-steel)" class="edge"/>
+        <rect x="120" y="42" width="320" height="354" rx="8" fill="url(#sf-brush)"/>
+        <rect x="432" y="46" width="8" height="346" fill="#000" opacity=".14"/>
+        <rect x="156" y="236" width="248" height="160" rx="6" fill="url(#sf-recess)" class="recess"/>
+
+        <!-- brew, hot water and steam rockers stacked on the left; each lights orange when it's on -->
+        <g id="f-sw-brew" class="rock lit-rk" role="button" tabindex="0" aria-pressed="false" aria-label="Brew switch" transform="translate(162 94)">
+          <rect x="-16" y="-23" width="32" height="46" rx="5" class="bezel"/>
+          <rect x="-13" y="-20" width="26" height="20" rx="3" class="rk-top"/><rect x="-13" y="0" width="26" height="20" rx="3" class="rk-bot"/>
+          <path d="M-6,-14 H4 V-10 Q4,-6 0,-6 H-2 Q-6,-6 -6,-10 Z M4,-12.5 Q7.5,-12.5 7.5,-10.5 Q7.5,-8.5 4,-8.5 M-8,-3.5 H6" class="ico"/>
+        </g>
+        <g id="f-sw-water" class="rock lit-rk" role="button" tabindex="0" aria-pressed="false" aria-label="Hot water switch" transform="translate(162 144)">
+          <rect x="-16" y="-23" width="32" height="46" rx="5" class="bezel"/>
+          <rect x="-13" y="-20" width="26" height="20" rx="3" class="rk-top"/><rect x="-13" y="0" width="26" height="20" rx="3" class="rk-bot"/>
+          <path d="M0,-17 C-4,-11 -6,-8.5 -6,-6.5 A6,6 0 0 0 6,-6.5 C6,-8.5 4,-11 0,-17 Z" class="ico"/>
+        </g>
+        <g id="f-sw-steam" class="rock lit-rk" role="button" tabindex="0" aria-pressed="false" aria-label="Steam switch" transform="translate(162 194)">
+          <rect x="-16" y="-23" width="32" height="46" rx="5" class="bezel"/>
+          <rect x="-13" y="-20" width="26" height="20" rx="3" class="rk-top"/><rect x="-13" y="0" width="26" height="20" rx="3" class="rk-bot"/>
+          <path d="M-5,-3 C-8,-7 -2,-10 -5,-16 M0,-3 C-3,-7 3,-10 0,-16 M5,-3 C2,-7 8,-10 5,-16" class="ico"/>
+        </g>
+        <!-- power: a rocker in the centre (a push button on the E), with its lights to the right -->
+        <g id="f-sw-pwr" class="rock m-only" role="button" tabindex="0" aria-pressed="false" aria-label="Power switch" transform="translate(280 98)">
+          <rect x="-18" y="-26" width="36" height="52" rx="6" class="bezel"/>
+          <rect x="-15" y="-23" width="30" height="23" rx="3" class="rk-top"/><rect x="-15" y="0" width="30" height="23" rx="3" class="rk-bot"/>
+          <path d="M0,-18 V-6" class="ico"/><circle cx="0" cy="11.5" r="5" class="ico"/>
+        </g>
+        <g id="f-pb-pwr" class="pbtn e-only" role="button" tabindex="0" aria-pressed="false" aria-label="Power button" transform="translate(280 98)">
+          <circle r="19" class="bezel"/><circle r="15" class="pb-face"/>
+          <path d="M-4.6,-3.5 A6,6 0 1 0 4.6,-3.5 M0,-7 V0.5" class="ico"/>
+        </g>
+        <g class="lamp bar-only" id="f-lp-bar" role="img" aria-label="Heating light, off"><rect x="310" y="76" width="9" height="44" rx="4.5" class="lp-bez"/><rect x="312" y="78" width="5" height="40" rx="2.5" class="lp"/><rect x="308" y="74" width="13" height="48" rx="6" class="lp-halo" filter="url(#sf-glow)"/></g>
+        <g class="led-only">
+          <g class="lamp grn" id="f-lp-pwr" role="img" aria-label="Power light, off"><circle cx="316" cy="86" r="7" class="lp-bez"/><circle cx="316" cy="86" r="4.6" class="lp"/><circle cx="316" cy="86" r="8" class="lp-halo" filter="url(#sf-glow)"/></g>
+          <g class="lamp" id="f-lp-heat" role="img" aria-label="Heating light, off"><circle cx="316" cy="110" r="7" class="lp-bez"/><circle cx="316" cy="110" r="4.6" class="lp"/><circle cx="316" cy="110" r="8" class="lp-halo" filter="url(#sf-glow)"/></g>
+        </g>
+
+        <!-- group: a steel cylinder round it on the V1, a cone-shaped collar after -->
+        <g class="v1-only"><rect x="242" y="210" width="76" height="40" rx="4" fill="url(#sf-steel)" class="edge"/><path d="M246,214 H314" class="ridge"/></g>
+        <g class="v2p-only"><path d="M236,250 L248,214 H312 L324,250 Z" fill="url(#sf-steel)" class="edge"/></g>
+        <line x1="242" y1="250" x2="318" y2="250" class="gasket"/>
+        <g id="f-gflash"></g>
+
+        <!-- steam wand: thin with a hex tip on the V1 and V2, thick on a ball joint from the V3 -->
+        <g class="thin-only"><circle cx="404" cy="152" r="5" fill="url(#sf-steel)" class="edge"/><path d="M404,156 C404,200 392,226 389,258 L386,324" class="wand thin"/><path d="M382.5,322 h7 l1.5,4 v6 h-10 v-6 z" class="wandtip"/></g>
+        <g class="thick-only"><circle cx="404" cy="152" r="8" fill="url(#sf-steel)" class="edge"/><path d="M404,160 C404,204 392,228 389,258 L386,322" class="wand"/><rect x="381.5" y="320" width="9" height="14" rx="3" class="wandtip"/></g>
+
+        <!-- steam knob, on the right side near the top: ribbed black, partly chrome from the V3 -->
+        <rect x="440" y="110" width="9" height="16" rx="2" fill="url(#sf-steelh)" class="edge"/>
+        <g id="f-knob" class="knobhit" role="button" tabindex="0" aria-pressed="false" aria-label="Steam knob" transform="translate(457 118)">
+          <circle r="15" class="knob"/><circle r="11.5" class="knob-rib"/><circle r="7" class="knob-cap"/><g id="f-knobp"><line x1="0" y1="-12.5" x2="0" y2="-5" class="knob-ptr"/></g>
+        </g>
+
+        <!-- drip tray -->
+        <g id="f-tray" role="button" tabindex="0" aria-label="Drip tray: empty it">
+          <rect x="150" y="386" width="260" height="11" rx="2" fill="url(#sf-grate)" class="grate"/>
+          <rect id="f-trayw" x="150" y="386" width="260" height="11" rx="2" class="trayw"/>
+          <rect x="148" y="396" width="264" height="38" rx="4" fill="url(#sf-steel)" class="edge"/>
+          <rect x="262" y="420" width="36" height="5" rx="2.5" class="pull"/>
+        </g>
+        <ellipse id="f-puddle" cx="280" cy="452" rx="0" ry="0" class="puddle"/>
+
+        <g id="f-streams">
+          <path id="f-gs1" class="fs water" d="M264,251 V390"/><path id="f-gs2" class="fs water" d="M280,251 V390"/><path id="f-gs3" class="fs water" d="M296,251 V390"/>
+          <path id="f-ss1" class="fs" d="M272,286 V390"/><path id="f-ss2" class="fs" d="M288,286 V390"/>
+          <path id="f-ws" class="fs water" d="M386,334 V390"/>
+        </g>
+
+        <!-- portafilter: ribbed black plastic on the V1 and V2, a commercial-style handle from the V3 -->
+        <g id="f-pf" class="pfhit" role="button" tabindex="0" aria-label="Portafilter: take it out">
+          <path d="M254,266 L184,306" class="pf-handle"/>
+          <g class="thin-only"><path d="M236,276 l3,5 M224,283 l3,5 M212,290 l3,5 M200,297 l3,5" class="pf-rib"/></g>
+          <g class="thick-only"><path d="M196,299 L180,308" class="pf-end"/></g>
+          <path d="M254,266 L238,275" class="pf-neck"/>
+          <path d="M246,251 H314 L308,274 H252 Z" fill="url(#sf-steel)" class="edge"/>
+          <path d="M248,256 H312" class="pf-ear"/>
+          <rect x="268" y="274" width="8" height="12" rx="2" class="spout"/><rect x="284" y="274" width="8" height="12" rx="2" class="spout"/>
+          <path d="M246,250 H316 L310,290 H262 L196,316 L176,300 L246,262 Z" class="hit"/>
+        </g>
+        <g id="f-pfout">
+          <g id="f-pfhandle" class="pfhit" role="button" tabindex="0" aria-label="Portafilter: lock it in"><path d="M64,432 L10,440" class="pf-handle"/><path d="M64,432 L56,433" class="pf-neck"/><rect x="2" y="424" width="60" height="24" class="hit"/></g>
+          <g id="f-pfbasket" class="pfhit" role="button" tabindex="0" aria-label="Basket: knock out or fill">
+            <path d="M62,432 Q62,446 92,446 Q122,446 122,432 Z" fill="url(#sf-steel)" class="edge"/>
+            <ellipse cx="92" cy="432" rx="30" ry="8.5" fill="url(#sf-steelh)" class="edge"/>
+            <ellipse cx="92" cy="432" rx="24.5" ry="6" class="pfc"/>
+            <g id="f-pfgr"><ellipse cx="92" cy="431" rx="21" ry="4.2" class="grounds"/><ellipse cx="86" cy="430.5" rx="5" ry="1.2" class="grounds-hi"/></g>
+            <rect x="60" y="420" width="64" height="28" class="hit"/>
+          </g>
+        </g>
+
+        <!-- cup and milk jug -->
+        <g id="f-cup" class="cuphit" role="button" tabindex="0" aria-label="Cup: move it">
+          <ellipse cx="0" cy="0" rx="25" ry="3.6" class="saucer"/>
+          <path d="M-18,-40 H18 L15,-5 Q14,-1 10,-1 H-10 Q-14,-1 -15,-5 Z" class="cupb"/>
+          <path d="M17,-31 Q28,-31 28,-21 Q28,-13 15,-12" class="cuph"/>
+          <g id="f-cupvap"><path d="M-6,-46 C-10,-54 -2,-58 -6,-66" class="vap"/><path d="M4,-46 C0,-54 8,-58 4,-66" class="vap"/></g>
+          <rect x="-26" y="-44" width="58" height="49" class="hit"/>
+        </g>
+        <g id="f-jug" class="jughit" role="button" tabindex="0" aria-label="Milk jug: move it">
+          <path d="M-24,-66 L-31,-74 H21 L25,-66 L24,-6 Q24,0 18,0 H-18 Q-24,0 -24,-6 Z" fill="url(#sf-steel)" class="edge"/>
+          <path d="M24,-58 Q40,-56 40,-38 Q40,-22 24,-20" class="jugh"/>
+          <g id="f-jugth"><line x1="10" y1="-92" x2="10" y2="-62" class="th-stem"/><circle cx="10" cy="-96" r="7" class="th-dial"/><line id="f-thn" x1="10" y1="-96" x2="10" y2="-101.5" class="th-n"/></g>
+          <rect x="-32" y="-78" width="74" height="80" class="hit"/>
+        </g>
+        <g id="f-puffs"></g>
+      </svg>
+
+      <!-- the inside, seen from the machine's right side: the front is on the left -->
+      <svg id="sim-x" class="simx" viewBox="0 0 680 460" role="img" aria-label="Inside the machine, from the right side, front on the left: tank, pump, over-pressure valve, boiler with its element inside, group, 3-way valve, steam wand">
+        <defs>
+          <linearGradient id="sx-brassb" x1="0" x2="1"><stop offset="0" stop-color="#9C7A36"/><stop offset=".4" stop-color="#E2C27C"/><stop offset=".7" stop-color="#C39A4E"/><stop offset="1" stop-color="#8E6C2C"/></linearGradient>
+          <linearGradient id="sx-chrome" x1="0" x2="1"><stop offset="0" stop-color="#7C848B"/><stop offset=".35" stop-color="#EEF1F3"/><stop offset=".65" stop-color="#B4BBC1"/><stop offset="1" stop-color="#737B82"/></linearGradient>
+          <linearGradient id="sx-steam" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF" stop-opacity=".95"/><stop offset="1" stop-color="#D8E2EA" stop-opacity=".75"/></linearGradient>
+          <radialGradient id="sx-glowg" cx="50%" cy="80%" r="60%"><stop offset="0" stop-color="#FF9A3C" stop-opacity=".9"/><stop offset=".6" stop-color="#F27A1A" stop-opacity=".3"/><stop offset="1" stop-color="#F27A1A" stop-opacity="0"/></radialGradient>
+          <pattern id="sx-grate" width="8" height="5" patternUnits="userSpaceOnUse"><rect width="8" height="5" fill="#B9C0C6"/><rect x="2" y="1" width="4" height="3" rx="1" fill="#3B4045"/></pattern>
+          <pattern id="sx-wool" width="6" height="6" patternUnits="userSpaceOnUse"><rect width="6" height="6" fill="#D9D4C7"/><path d="M0,6 L6,0" stroke="#B7AE98" stroke-width="1"/></pattern>
+          <clipPath id="sx-bclip"><rect x="172" y="82" width="116" height="134" rx="8"/></clipPath>
+          <clipPath id="sx-tclip"><rect x="502" y="72" width="124" height="256" rx="8"/></clipPath>
+          <clipPath id="sx-cclip"><path d="M209,354 H251 L248,394 H212 Z"/></clipPath>
+          <clipPath id="sx-jclip"><path d="M29,330 H95 L93,396 Q93,399 90,399 H34 Q31,399 31,396 Z"/></clipPath>
+          <clipPath id="sx-dclip"><rect x="42" y="404" width="380" height="18" rx="3"/></clipPath>
+          <clipPath id="sx-kclip"><path d="M189,296 H271 L266,316 H194 Z"/></clipPath>
+        </defs>
+        <rect class="counter" x="0" y="440" width="680" height="20"/>
+        <rect class="xshell" x="50" y="40" width="590" height="380" rx="14"/>
+        <rect class="xtop" x="46" y="32" width="598" height="10" rx="4"/>
+        <rect x="70" y="420" width="40" height="20" rx="3" class="foot"/><rect x="580" y="420" width="40" height="20" rx="3" class="foot"/>
+
+        <!-- tank, at the back; its lid lifts to fill it -->
+        <g id="x-tank" class="xhit" role="button" tabindex="0" aria-label="Water tank: fill it">
+          <rect x="500" y="70" width="128" height="260" rx="10" class="xtank"/>
+          <g clip-path="url(#sx-tclip)"><rect id="x-tankw" x="500" y="96" width="128" height="234" class="xtankw"/><path id="x-tanks" d="M500,96 H628" class="xsurf"/></g>
+          <path d="M610,92 H626" class="xmax"/>
+          <rect x="594" y="314" width="12" height="14" rx="2" class="xfilter"/>
+          <rect id="x-lid" x="496" y="56" width="136" height="14" rx="4" class="xlid"/>
+          <path id="x-pour" d="M556,14 V96" class="xpour"/>
+        </g>
+
+        <!-- pump, lying on the base under the tank: coil, piston, thermal protector -->
+        <g id="x-pumpv">
+          <rect x="466" y="352" width="114" height="34" rx="14" class="xpump"/>
+          <rect id="x-pcoil" x="494" y="346" width="58" height="46" rx="5" class="xcoil"/>
+          <g class="xwind"><line x1="502" y1="348" x2="502" y2="390"/><line x1="511" y1="348" x2="511" y2="390"/><line x1="520" y1="348" x2="520" y2="390"/><line x1="529" y1="348" x2="529" y2="390"/><line x1="538" y1="348" x2="538" y2="390"/><line x1="547" y1="348" x2="547" y2="390"/></g>
+          <rect x="474" y="364" width="98" height="10" rx="4" class="xslot"/>
+          <rect id="x-piston" x="508" y="365" width="30" height="8" rx="2" class="xpiston"/>
+          <rect x="556" y="339" width="14" height="7" rx="2" class="xpfuse"/>
+        </g>
+        <!-- over-pressure valve: a brass tee on the pump line, its spring cap on top, a return tube to the tank -->
+        <rect x="410" y="300" width="26" height="26" rx="3" fill="url(#sx-brassb)" class="xbrass"/>
+        <rect x="414" y="284" width="18" height="16" rx="2" fill="url(#sx-brassb)" class="xbrass"/>
+        <path d="M417,288 h12 M417,292 h12 M417,296 h12" class="xspring"/>
+        <rect id="x-opvplug" x="417" y="298" width="12" height="4" rx="1" class="xplug"/>
+
+        <!-- boiler: brass, standing on the group, the element in the water; brew and steam thermostats on top, the safety on the front -->
+        <rect x="152" y="62" width="156" height="174" rx="18" fill="url(#sx-wool)" class="xwool insul-only"/>
+        <rect x="160" y="70" width="140" height="158" rx="14" fill="url(#sx-brassb)" class="xbrass"/>
+        <rect x="172" y="82" width="116" height="134" rx="8" class="xcav"/>
+        <g clip-path="url(#sx-bclip)">
+          <rect x="172" y="82" width="116" height="134" fill="url(#sx-steam)" id="x-bhead"/>
+          <rect id="x-bwater" x="172" y="82" width="116" height="134"/>
+          <path id="x-bsurf" d="M172,82 H288" class="xsurf"/>
+          <g id="x-bub"></g>
+        </g>
+        <path id="x-elem" d="M300,212 H196 Q184,212 184,202 Q184,192 196,192 H300" class="xelem"/>
+        <rect x="300" y="188" width="10" height="8" rx="2" class="xelterm"/><rect x="300" y="208" width="10" height="8" rx="2" class="xelterm"/>
+        <rect id="x-glow" x="160" y="70" width="140" height="158" rx="14" fill="url(#sx-glowg)" opacity="0"/>
+        <g id="x-tb" transform="translate(206 61)"><rect x="-11" y="-5" width="22" height="9" rx="3" class="xtst"/><circle cx="-7" cy="-9" r="2" class="xterm"/><circle cx="7" cy="-9" r="2" class="xterm"/><line id="x-tbb" x1="-7" y1="-9" x2="8" y2="-9" class="xblade"/></g>
+        <g id="x-ts" transform="translate(248 61)"><rect x="-11" y="-5" width="22" height="9" rx="3" class="xtst"/><circle cx="-7" cy="-9" r="2" class="xterm"/><circle cx="7" cy="-9" r="2" class="xterm"/><line id="x-tsb" x1="-7" y1="-9" x2="8" y2="-9" class="xblade"/></g>
+        <g id="x-safety" class="xhit" role="button" tabindex="0" aria-label="Safety thermostat: reset it">
+          <rect x="146" y="150" width="16" height="26" rx="3" class="xsafe"/><circle id="x-safebtn" cx="146" cy="163" r="4.5" class="xsafebtn"/>
+        </g>
+
+        <!-- group under the boiler -->
+        <path d="M170,228 H290 V282 Q290,290 282,290 H178 Q170,290 170,282 Z" fill="url(#sx-chrome)" class="xedge" id="x-gbody"/>
+        <path id="x-gheat" d="M170,228 H290 V282 Q290,290 282,290 H178 Q170,290 170,282 Z" class="xheat" opacity="0"/>
+        <line x1="178" y1="290" x2="282" y2="290" class="xscreen"/>
+
+        <!-- 3-way valve beside the group: coil, plunger with a seal at each end, drain to the tray -->
+        <rect x="306" y="250" width="56" height="50" rx="5" fill="url(#sx-brassb)" class="xbrass"/>
+        <rect x="323" y="206" width="22" height="46" fill="url(#sx-brassb)" class="xbrass"/>
+        <rect id="x-vcoil" x="310" y="212" width="48" height="36" rx="4" class="xcoil"/>
+        <g class="xwd"><circle cx="316" cy="219" r="2"/><circle cx="316" cy="227" r="2"/><circle cx="316" cy="235" r="2"/><circle cx="316" cy="243" r="2"/><circle cx="352" cy="219" r="2"/><circle cx="352" cy="227" r="2"/><circle cx="352" cy="235" r="2"/><circle cx="352" cy="243" r="2"/></g>
+        <rect x="326" y="198" width="16" height="14" rx="2" fill="url(#sx-chrome)" class="xedge"/>
+        <rect x="328" y="212" width="12" height="78" class="xvcav" id="x-vcav"/>
+        <g id="x-vpl"><rect x="330" y="236" width="8" height="46" rx="2" fill="url(#sx-chrome)" class="xedge"/><rect x="330" y="282" width="8" height="5" rx="1" class="xseal"/><rect x="331.5" y="231" width="5" height="5" rx="1" class="xseal"/></g>
+        <circle id="x-vsin" cx="334" cy="291" r="3.2" class="xshut"/><circle id="x-vsex" cx="334" cy="211" r="3.2" class="xshut"/>
+
+        <!-- drip tray -->
+        <g id="x-tray" class="xhit" role="button" tabindex="0" aria-label="Drip tray: empty it">
+          <rect x="40" y="402" width="384" height="22" rx="4" class="xtray"/>
+          <g clip-path="url(#sx-dclip)"><rect id="x-trayw" x="42" y="422" width="380" height="0" class="xtrayw"/></g>
+          <rect x="40" y="398" width="384" height="5" fill="url(#sx-grate)" class="xgrate"/>
+        </g>
+
+        <g id="x-pipes"></g>
+
+        <!-- steam valve at the front, its knob through the side panel; the wand -->
+        <rect x="72" y="46" width="34" height="28" rx="5" fill="url(#sx-chrome)" class="xedge"/>
+        <g id="x-knob" transform="translate(89 60)"><circle r="14" class="xknob"/><g id="x-knobp"><line x1="0" y1="-11.5" x2="0" y2="-4" class="xknobm"/></g></g>
+
+        <!-- portafilter: basket, puck, water above it, spout -->
+        <g id="x-pf">
+          <path d="M186,305 L74,314" class="xhandle"/>
+          <path d="M178,292 H282 L274,323 H186 Z" fill="url(#sx-chrome)" class="xedge"/>
+          <path d="M189,296 H271 L266,316 H194 Z" class="xbasket"/>
+          <g clip-path="url(#sx-kclip)"><rect id="x-pfw" x="189" y="296" width="82" height="10" class="xpfw"/><rect id="x-puck" x="189" y="306" width="82" height="10" class="xpuck"/></g>
+          <rect x="225" y="323" width="10" height="11" rx="2" class="xspout"/>
+        </g>
+        <g id="x-rain"><line x1="184" y1="291" x2="184" y2="308"/><line x1="202" y1="291" x2="202" y2="308"/><line x1="220" y1="291" x2="220" y2="308"/><line x1="238" y1="291" x2="238" y2="308"/><line x1="256" y1="291" x2="256" y2="308"/><line x1="274" y1="291" x2="274" y2="308"/></g>
+
+        <!-- cup on the tray, in section -->
+        <g id="x-cup">
+          <path d="M204,352 H256 L252,394 Q251,398 246,398 H214 Q209,398 208,394 Z" class="xcup"/>
+          <path d="M209,354 H251 L248,394 H212 Z" class="xcupin"/>
+          <g clip-path="url(#sx-cclip)"><rect id="x-cupl" x="204" y="398" width="52" height="0"/><rect id="x-crema" x="204" y="398" width="52" height="0" class="xcrema"/></g>
+          <path d="M256,362 Q268,362 268,372 Q268,380 254,381" class="xcuph"/>
+          <g id="x-cupvap"><path d="M222,346 C218,338 226,334 222,326" class="vap"/><path d="M236,346 C232,338 240,334 236,326" class="vap"/></g>
+        </g>
+
+        <!-- milk jug under the wand, with a clip-on thermometer -->
+        <g id="x-jug">
+          <path d="M24,326 H100 L98,398 Q98,404 92,404 H32 Q26,404 26,398 Z" fill="url(#sx-chrome)" class="xedge"/>
+          <path d="M29,330 H95 L93,396 Q93,399 90,399 H34 Q31,399 31,396 Z" class="xjugin"/>
+          <g clip-path="url(#sx-jclip)"><rect id="x-milk" x="24" y="398" width="76" height="0" class="xmilk"/><rect id="x-foam" x="24" y="398" width="76" height="0" class="xfoam"/><g id="x-mbub"></g></g>
+          <line x1="36" y1="320" x2="36" y2="392" class="th-stem"/><circle cx="36" cy="312" r="9" class="th-dial"/>
+          <path d="M30.2,308.5 A6.8,6.8 0 0 1 36,305.2" class="th-zone"/>
+          <line id="x-thn" x1="36" y1="312" x2="36" y2="305.5" class="th-n"/>
+        </g>
+
+        <g id="x-flows"></g>
+        <g id="x-parts"></g>
+      </svg>
+
+      <div class="simbar" role="group" aria-label="Time">
+        <button type="button" class="simbtn" id="sim-reset" aria-label="Start over: a cold machine"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12a7 7 0 1 0 2.1-5" /><path d="M4 4v5h5"/></svg></button>
+        <span class="simseg">
+          <button type="button" class="simbtn" data-speed="1" aria-pressed="true" aria-label="Real time"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l7 6-7 6z" class="fill"/></svg></button>
+          <button type="button" class="simbtn" data-speed="5" aria-pressed="false" aria-label="Five times faster"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6l7 6-7 6z M12 6l7 6-7 6z" class="fill"/></svg></button>
+          <button type="button" class="simbtn" data-speed="20" aria-pressed="false" aria-label="Twenty times faster"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1 6l6 6-6 6z M8 6l6 6-6 6z M15 6l6 6-6 6z" class="fill"/></svg></button>
+        </span>
+      </div>
+    </div>
+  </section>
+

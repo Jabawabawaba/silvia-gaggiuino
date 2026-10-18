@@ -1,0 +1,162 @@
+/* ---------- run the machine: the front and the inside, side by side; nothing but what the machine shows ---------- */
+.sim{display:grid;grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);gap:12px;align-items:start}
+@media (max-width:880px){.sim{grid-template-columns:minmax(0,1fr);gap:10px}}
+.sim .simf,.sim .simx{display:block;width:100%;height:auto;background:var(--surface);border:1px solid var(--line);border-radius:14px;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
+.simbar{grid-column:1/-1;order:-1;display:flex;gap:10px;align-items:center;justify-content:flex-end}
+.simbtn{appearance:none;border:1px solid var(--line);background:var(--surface);border-radius:999px;width:44px;height:40px;display:inline-grid;place-items:center;cursor:pointer;color:var(--ink);padding:0}
+.simbtn svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.simbtn .fill{fill:currentColor;stroke:none}
+.simseg{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+.simseg .simbtn{border:0;border-radius:0;width:48px}
+.simseg .simbtn+.simbtn{border-left:1px solid var(--line)}
+.simbtn[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.sim [role=button]{cursor:pointer;outline:none}
+.sim .hit{fill:transparent;stroke:none}
+.sim [role=button]:hover,.sim [role=button]:focus-visible{filter:drop-shadow(0 0 2px var(--accent)) drop-shadow(0 0 4px var(--accent))}
+.sim.fresh #f-sw-pwr,.sim.fresh #f-pb-pwr{animation:simhint 1.8s ease-in-out infinite}
+@keyframes simhint{0%,100%{filter:none}50%{filter:drop-shadow(0 0 3px var(--accent)) drop-shadow(0 0 7px var(--accent))}}
+.sim .need{animation:simhint 1.8s ease-in-out infinite}
+.sim .wiggle{animation:simwig .36s linear}
+@keyframes simwig{0%,100%{transform:translateX(0)}25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
+.sim:not(.emodel) .e-only,.sim.emodel .m-only,.sim.leds .bar-only,.sim:not(.leds) .led-only,.sim:not(.v1) .v1-only,.sim.v1 .v2p-only,
+.sim:not(.thin) .thin-only,.sim.thin .thick-only,.sim:not(.insul) .insul-only{display:none}
+
+/* front */
+.simf .counter,.simx .counter{fill:var(--surface-2)}
+.simf .edge{stroke:#6E777E;stroke-width:1}
+.simf .ridge{stroke:#8F989F;stroke-width:1;opacity:.7}
+.simf .rail{fill:none;stroke:#A9B1B8;stroke-width:3;stroke-linejoin:round}
+.simf .foot,.simx .foot{fill:#2B2F33}
+.simf .badge{fill:#DDE2E5;stroke:#98A0A7;stroke-width:1.2}
+.simf .clk-rim{fill:#2B2F33}
+.simf .clk-face{fill:#F6F6F3}
+.simf .clk-ticks line{stroke:#2B2F33;stroke-width:2.2;stroke-linecap:round}
+.simf .clk-hr{stroke:#1B1E21;stroke-width:4;stroke-linecap:round}
+.simf .clk-min{stroke:#1B1E21;stroke-width:2.6;stroke-linecap:round}
+.simf .clk-sec{stroke:#C62828;stroke-width:1.3;stroke-linecap:round}
+.simf .clk-cap{fill:#C62828}
+.simf .bezel{fill:#24282C;stroke:#0C0E10}
+.simf .rk-top{fill:url(#sf-rock)}
+.simf .rk-bot{fill:url(#sf-rockp)}
+.simf .rock.on .rk-top{fill:url(#sf-rockp)}
+.simf .rock.on .rk-bot{fill:url(#sf-rock)}
+.simf .ico{fill:none;stroke:#EEF0F2;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.simf .lp-bez{fill:#9CA4AB;stroke:#5E656C}
+.simf .lp{fill:#5A2C14;transition:fill .12s}
+.simf .lp-halo{fill:#FF8A2A;opacity:0;transition:opacity .12s}
+.simf .lamp.on .lp{fill:url(#sf-orange)}
+.simf .lamp.on .lp-halo{opacity:.75}
+.simf .lit-rk.lit .rk-bot{fill:url(#sf-rocklit)}
+.simf .lit-rk.lit .rk-top{fill:url(#sf-rocklitp)}
+.simf .lit-rk.lit{filter:drop-shadow(0 0 4px #FF8A2A)}
+.simf .lamp.grn.on .lp{fill:url(#sf-green)}
+.simf .lamp.grn .lp-halo{fill:#4FE07A}
+.simf .pb-face{fill:url(#sf-rock);stroke:#0C0E10}
+.simf .pbtn.on .pb-face{fill:url(#sf-rockp)}
+.simf .ears{stroke:#8F989F;stroke-width:5;stroke-linecap:round}
+.simf .gasket{stroke:#2B2F33;stroke-width:2}
+.simf .wand{fill:none;stroke:#AEB6BC;stroke-width:7;stroke-linecap:round}
+.simf .wand.thin{stroke-width:4.5}
+.simf .wandtip{fill:#7E878E}
+.simf .knob{fill:#1E2124;stroke:#7E878E;stroke-width:1.2}
+.simf .knob-rib{fill:none;stroke:#454A50;stroke-width:3;stroke-dasharray:2 2.5}
+.simf .knob-cap{fill:url(#sf-steelh);stroke:#6E777E}
+.sim.thin .knob-cap{fill:#26292D;stroke:#454A50}
+.simf .knob-ptr{stroke:#E8ECEF;stroke-width:2.6;stroke-linecap:round}
+.sim:not(.thin) .knob-ptr{stroke:#1E2124}
+.simf #f-knobp{transition:transform .35s}
+.simf .trayw{fill:#4FA3E0;opacity:0}
+.simf .pull{fill:#6E777E}
+.simf .puddle{fill:#6FB6EA;opacity:.75}
+.simf .fs{fill:none;stroke-linecap:round;stroke-dasharray:16 3;opacity:0}
+.simf .fs.water{stroke:#8CC6F0}
+.simf .pf-handle{stroke:#1B1E21;stroke-width:13;stroke-linecap:round}
+.simf .pf-neck{stroke:#AEB6BC;stroke-width:7;stroke-linecap:round}
+.simf .pf-ear{stroke:#8F989F;stroke-width:2}
+.simf .pf-rib{stroke:#45494E;stroke-width:1.6;stroke-linecap:round}
+.simf .pf-end{stroke:#1B1E21;stroke-width:17;stroke-linecap:round}
+.simf .spout{fill:#8F989F}
+.simf .pfc{fill:#5D656C}
+.simf .grounds{fill:#5B3A21}
+.simf .grounds-hi{fill:#8A5A35;opacity:.7}
+.simf .spent .grounds{fill:#2E1D12}
+.simf .spent .grounds-hi{opacity:0}
+.simf .saucer{fill:#F2F3F1;stroke:#A9B0B5}
+.simf .cupb{fill:#F7F7F5;stroke:#A9B0B5}
+.simf .cuph{fill:none;stroke:#A9B0B5;stroke-width:4;stroke-linecap:round}
+.sim .vap{fill:none;stroke:#B9C4CC;stroke-width:2.2;stroke-linecap:round;opacity:0;animation:simvap 2.6s ease-in-out infinite}
+.sim .vap+.vap{animation-delay:1.3s}
+@keyframes simvap{0%{transform:translateY(4px);opacity:0}40%{opacity:.85}100%{transform:translateY(-9px);opacity:0}}
+.simf .jugh{fill:none;stroke:#9AA2A9;stroke-width:5;stroke-linecap:round}
+.sim .th-stem{stroke:#8F989F;stroke-width:2}
+.sim .th-dial{fill:#F5F6F4;stroke:#6E777E}
+.sim .th-n{stroke:#C62828;stroke-width:1.6;stroke-linecap:round}
+.sim .th-zone{fill:none;stroke:#2E7D4F;stroke-width:2.6}
+.sim .puff{fill:#E4EAEF;stroke:#B8C3CB;stroke-width:.8}
+.sim .bub{fill:#FFFFFF;fill-opacity:.85;stroke:#7FB2DA;stroke-width:.7}
+
+/* inside */
+.simx .xshell{fill:var(--surface);fill-opacity:.55;stroke:var(--muted);stroke-opacity:.5;stroke-width:1.5}
+.simx .xtop{fill:var(--surface-2);stroke:var(--muted);stroke-opacity:.5}
+.simx .xpanel{fill:var(--surface-2);stroke:var(--muted);stroke-opacity:.6}
+.simx .xtank{fill:var(--blue-soft);fill-opacity:.45;stroke:var(--blue);stroke-opacity:.6;stroke-width:1.5}
+.simx .xtankw{fill:#4F9BD8;fill-opacity:.38}
+.simx .xsurf{fill:none;stroke:#2F78B8;stroke-width:1.5}
+.simx .xmax{stroke:var(--muted);stroke-width:2}
+.simx .xfilter{fill:var(--muted);opacity:.7}
+.simx .xlid{fill:var(--surface-2);stroke:var(--muted)}
+.simx #x-lid{transform-box:fill-box;transform-origin:100% 100%;transition:transform .4s}
+.simx .xpour{stroke:#4F9BD8;stroke-width:5;stroke-dasharray:8 6;stroke-linecap:round;fill:none;opacity:0}
+.simx .xpump{fill:var(--surface-2);stroke:var(--muted);stroke-width:1.5}
+.simx .xcoil{fill:#2F3439;stroke:#16181B;transition:fill .2s}
+.simx .xcoil.on{fill:#7A3A10;stroke:#F2A33A}
+.simx .xwind line{stroke:#B98F45;stroke-width:2}
+.simx .xslot{fill:#2B3036;opacity:.55}
+.simx .xpiston{fill:#8C949B;stroke:#4A5057}
+.simx .xpfuse{fill:#C9B27A;stroke:#6E5420}
+.simx .xopv{fill:#26292D;stroke:#0C0E10}
+.simx .xspring{fill:none;stroke:#8C949B;stroke-width:1.4}
+.simx .xplug{fill:#8C949B}
+.simx .xedge{stroke:#5E656C;stroke-width:1.2}
+.simx .xbrass{stroke:#6E5420;stroke-width:1}
+.simx .xcav{fill:#1F2428;fill-opacity:.35}
+.simx .xelem{fill:none;stroke:#6E5A3E;stroke-width:4.5;stroke-linecap:round;stroke-linejoin:round}
+.simx .xelterm{fill:#3B3F44}
+.simx .xwool{stroke:#A39A84;stroke-width:1}
+.simx .xsafe{fill:var(--surface);stroke:var(--muted);stroke-width:1.2}
+.simx .xsafebtn{fill:#B13A2F;stroke:#6E1A12}
+.simx .tripped .xsafebtn{fill:#FF4A33;filter:drop-shadow(0 0 4px #FF4A33)}
+.simx .xtst{fill:var(--surface);stroke:var(--muted);stroke-width:1.2}
+.simx .xterm{fill:var(--muted)}
+.simx .xblade{stroke:var(--ink);stroke-width:2;stroke-linecap:round}
+.simx .xfuse{fill:#E9DFC6;stroke:#6E5420}
+.simx .xheat{fill:#FF7A1A}
+.simx .xscreen{stroke:#5E656C;stroke-width:2;stroke-dasharray:3 3}
+.simx .xwd circle{fill:#8A6A33;transition:fill .2s}
+.simx .xwd.on circle{fill:#F2A33A}
+.simx .xvcav{fill:#9FC9EC}
+.simx .xseal{fill:#202428}
+.simx #x-vpl{transition:transform .3s cubic-bezier(.3,.1,.2,1)}
+.simx .xshut{fill:#E5534B;opacity:0;transition:opacity .2s .25s}
+.simx .xtray{fill:var(--surface-2);stroke:var(--muted)}
+.simx .xtrayw{fill:#4F9BD8;fill-opacity:.6}
+.simx .xknob{fill:#1E2124}
+.simx .xknobm{stroke:#E8ECEF;stroke-width:2.5;stroke-linecap:round}
+.simx #x-knobp{transition:transform .35s}
+.simx .xhandle{stroke:#1B1E21;stroke-width:12;stroke-linecap:round}
+.simx .xbasket{fill:#3B4045}
+.simx .xpfw{fill:#4F9BD8;opacity:0}
+.simx .xpuck{fill:#5B3A21}
+.simx .xspout{fill:#8C949B}
+.simx #x-rain line{stroke:#4F9BD8;stroke-width:2.4;stroke-dasharray:6 4;stroke-linecap:round;opacity:0}
+.simx .xcup{fill:#F5F5F2;stroke:#A9B0B5}
+.simx .xcupin{fill:#E3E6E8}
+.simx .xcrema{fill:#C48A50}
+.simx .xcuph{fill:none;stroke:#A9B0B5;stroke-width:4;stroke-linecap:round}
+.simx .xjugin{fill:#D9DEE2}
+.simx .xmilk{fill:#F4F0E6}
+.simx .xfoam{fill:#FFFFFF}
+.simx .xp-w{fill:none;stroke:var(--muted);stroke-opacity:.45;stroke-width:9;stroke-linecap:round;stroke-linejoin:round}
+.simx .xp-b{fill:none;stroke-width:5;stroke-linecap:round;stroke-linejoin:round}
+.simx .xf{fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:6 8;opacity:0}
+@media (prefers-reduced-motion:reduce){.sim.fresh #f-sw-pwr,.sim.fresh #f-pb-pwr,.sim .need{animation:none;filter:drop-shadow(0 0 3px var(--accent))}.sim .wiggle{animation:none}.simf #f-knobp,.simx #x-knobp,.simx #x-vpl,.simx #x-lid{transition:none}.sim .vap{animation:none;opacity:.7}}
