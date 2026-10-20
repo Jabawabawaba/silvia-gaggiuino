@@ -1,0 +1,207 @@
+/* ---------- part figures: portafilter, steam wand, drip tray, switches and lamps, inlet ---------- */
+.mini-seg{display:inline-flex;gap:6px}
+.mini-ctl .chip{min-height:36px;padding:5px 12px}
+.mini .badge text{font:700 9px var(--f-mono);letter-spacing:.06em;fill:#fff}
+.mini{--pf-shut:#C62828;--pf-open:#2E7D4F;--w-steam:#9AA6B1;--w-hot:#2F8FD8}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .mini{--pf-shut:#E5534B;--pf-open:#3E9B66;--w-steam:#C9D2DA;--w-hot:#5AAFEA}}
+:root[data-theme="dark"] .mini{--pf-shut:#E5534B;--pf-open:#3E9B66;--w-steam:#C9D2DA;--w-hot:#5AAFEA}
+
+/* portafilter */
+#mini-pf .pf-turn,#mini-pf .pf-dir{fill:none;stroke:var(--accent);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+#mini-pf .pf-turnh{fill:var(--accent)}
+#mini-pf .pf-handle{stroke:#202326;stroke-width:15;stroke-linecap:round}
+#mini-pf .pf-neck{stroke:#8C949B;stroke-width:9;stroke-linecap:round}
+#mini-pf .pf-ring{fill:url(#cut-chrome);stroke:#5E656C}
+#mini-pf .pf-lug{fill:#6E767D;stroke:#3A3F44}
+#mini-pf .pf-rim{fill:url(#cut-chrome);stroke:#5E656C}
+#mini-pf .pf-puck{fill:#5A3A22;stroke:#3B2414}
+#mini-pf .pf-ear{fill:var(--accent);stroke:var(--accent-ink)}
+#mini-pf .pf-in{font:600 9.5px var(--f-mono);fill:#fff}
+#mini-pf .pf-grp{fill:url(#cut-chrome);stroke:#5E656C}
+#mini-pf .pf-in:not(.dk){paint-order:stroke;stroke:rgba(0,0,0,.35);stroke-width:2px}
+#mini-pf .pf-gasket{fill:#2B2F34}
+#mini-pf .pf-brim{fill:#AEB6BC;stroke:#5E656C}
+#mini-pf .pf-ticks path{stroke:#5E656C;stroke-width:1.4}
+#mini-pf .bk-lip{stroke:#8C949B;stroke-width:3;stroke-linecap:round}
+#mini-pf .bk-wall{fill:none;stroke:var(--muted);stroke-width:2;stroke-linejoin:round}
+#mini-pf .bk-cof{fill:#5A3A22;opacity:.85}
+#mini-pf .bk-holes{stroke:var(--surface);stroke-width:2.4;stroke-dasharray:2 3}
+#mini-pf .pf-badge rect{fill:var(--pf-shut);transition:fill .2s}
+#mini-pf .pf-badge .o{opacity:0}
+#mini-pf.sealed .pf-badge rect{fill:var(--pf-open)}
+#mini-pf.sealed .pf-badge .o{opacity:1}#mini-pf.sealed .pf-badge .s{opacity:0}
+
+/* steam valve and wand */
+#mini-wand .w-boiler{fill:url(#cut-alu);stroke:#5E656C}
+#mini-wand.brass .w-boiler{fill:url(#cut-brass);stroke:#6E5420}
+#mini-wand .w-water{fill:var(--blue-soft);stroke:#2F8FD8;stroke-opacity:.35;transition:y .4s,height .4s}
+#mini-wand .w-body{fill:url(#cut-brass);stroke:#6E5420}
+#mini-wand .w-cav{fill:var(--surface-2)}
+#mini-wand .w-cavs{stroke:var(--surface-2);stroke-width:8}
+#mini-wand .w-bonnet{fill:url(#cut-chrome);stroke:#5E656C}
+#mini-wand .w-spindle{fill:url(#cut-chrome);stroke:#4A5057}
+#mini-wand .w-thread{fill:none;stroke:#4A5057;stroke-width:1.2}
+#mini-wand .w-seal{fill:#202428}
+#mini-wand .w-knob{fill:#1E2124;stroke:#7E878E;stroke-width:1.2}
+#mini-wand .w-rib{fill:none;stroke:#454A50;stroke-width:3;stroke-dasharray:2 2.5}
+#mini-wand .w-ptr{stroke:#EEF0F2;stroke-width:2.4;stroke-linecap:round}
+#mini-wand .w-ring{fill:none;stroke:var(--pf-shut);stroke-width:2.2;transition:opacity .2s}
+#mini-wand.open .w-ring{opacity:0}
+#mini-wand .w-badge rect{fill:var(--pf-shut)}#mini-wand.open .w-badge rect{fill:var(--pf-open)}
+#mini-wand .w-badge .o,#mini-wand.open .w-badge .s{opacity:0}#mini-wand.open .w-badge .o{opacity:1}
+#mini-wand .w-wand{stroke:url(#cut-chrome);stroke:#AEB6BC;stroke-width:8;stroke-linecap:round}
+#mini-wand .w-tip{fill:#7E878E}
+#mini-wand .w-pann{fill:#24282C;stroke:#0C0E10}
+#mini-wand .w-hole{fill:var(--surface);stroke:#0C0E10}
+#mini-wand .w-air{fill:none;stroke:var(--muted);stroke-width:2;stroke-dasharray:4 4;opacity:.25}
+#mini-wand .w-airh{fill:var(--muted);opacity:.25}
+#mini-wand.flow.steam .w-air{opacity:1;animation:wfl8 .5s linear infinite}#mini-wand.flow.steam .w-airh{opacity:1}
+#mini-wand .w-jug{fill:none;stroke:var(--muted);stroke-width:2;stroke-linejoin:round}
+#mini-wand .w-milk{fill:#F3EEE4;stroke:none;opacity:.9}
+#mini-wand .w-pump{stroke:var(--w-hot);stroke-width:3;opacity:0}#mini-wand .w-pumph{fill:var(--w-hot);opacity:0}#mini-wand .w-pumpl{opacity:0}
+#mini-wand.water .w-pump,#mini-wand.water .w-pumph,#mini-wand.water .w-pumpl{opacity:1}
+#mini-wand .w-flow{fill:none;stroke-width:3.4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:6 10;opacity:0;transition:opacity .25s}
+#mini-wand .w-flow.s{stroke:var(--w-steam)}#mini-wand .w-flow.h{stroke:var(--w-hot)}
+#mini-wand.flow.steam .w-flow.s,#mini-wand.flow.water .w-flow.h{opacity:1;animation:wfl16 var(--wsp,1s) linear infinite}
+#mini-wand .w-jet{fill:none;stroke:var(--w-steam);stroke-width:3;stroke-linecap:round;stroke-dasharray:4 4;opacity:0}
+#mini-wand.flow.steam .w-jet{opacity:1;animation:wfl8 .3s linear infinite}
+#mini-wand.flow.water .w-jet{stroke:var(--w-hot);opacity:1;animation:wfl8 .3s linear infinite}
+#mini-wand .w-bub circle{fill:#fff;stroke:#C8BFAF;opacity:0}
+#mini-wand.flow.steam .w-bub circle{animation:wbub 1.1s ease-in infinite}
+#mini-wand.flow.steam .w-bub circle:nth-child(2){animation-delay:-.4s}#mini-wand.flow.steam .w-bub circle:nth-child(3){animation-delay:-.7s}#mini-wand.flow.steam .w-bub circle:nth-child(4){animation-delay:-.2s}#mini-wand.flow.steam .w-bub circle:nth-child(5){animation-delay:-.9s}
+#mini-wand.water .w-milk{fill:var(--blue-soft);opacity:1}
+#mini-wand .w-gc,#mini-wand.gc .w-pro{display:none}#mini-wand.gc .w-gc{display:inline}
+@keyframes wfl16{to{stroke-dashoffset:-16}}
+@keyframes wfl8{to{stroke-dashoffset:-8}}
+@keyframes wbub{0%{opacity:0;transform:translateY(0)}20%{opacity:.9}100%{opacity:0;transform:translateY(-30px)}}
+
+/* drip tray */
+#mini-tray .mini-ctl .btn{min-height:40px;padding:8px 13px}
+#mini-tray .t-group{fill:url(#cut-chrome);stroke:#5E656C}
+#mini-tray .t-screen{stroke:#5E656C;stroke-width:3;stroke-dasharray:4 3}
+#mini-tray .t-valve{fill:url(#cut-brass);stroke:#6E5420}
+#mini-tray .t-tube{fill:none;stroke:var(--muted);stroke-opacity:.45;stroke-width:7;stroke-linecap:round}
+#mini-tray .t-tray{fill:none;stroke:var(--muted);stroke-width:2.4;stroke-linejoin:round}
+#mini-tray .t-grille{fill:var(--surface-2);stroke:var(--muted);stroke-dasharray:6 3}
+#mini-tray .t-full{stroke:var(--bad);stroke-width:1.2;stroke-dasharray:4 4;opacity:.8}
+#mini-tray .t-water{fill:var(--blue-soft);stroke:#2F8FD8;stroke-opacity:.4;transition:y .6s,height .6s}
+#mini-tray.over .t-water{fill:var(--bad-soft);stroke:var(--bad)}
+#mini-tray .t-flow{fill:none;stroke:var(--w-hot);stroke-width:4;stroke-linecap:round;stroke-dasharray:7 7;opacity:0}
+#mini-tray.vent .t-flow{opacity:1;animation:wfl14 .35s linear infinite}
+#mini-tray .t-rain path{fill:none;stroke:var(--w-hot);stroke-width:2.4;stroke-linecap:round;stroke-dasharray:4 10;opacity:0}
+#mini-tray.rain .t-rain path{opacity:1;animation:wfl14 .3s linear infinite}
+#mini-tray .t-warn{opacity:0;transition:opacity .2s}#mini-tray.over .t-warn{opacity:1}
+#mini-tray .t-warn rect{fill:var(--bad)}
+#mini-tray .t-warn text{font:700 12px var(--f-mono);fill:#fff}
+@keyframes wfl14{to{stroke-dashoffset:-14}}
+
+/* switches and lamps */
+#mini-panel .sw-house{fill:var(--surface-2);stroke:var(--muted);stroke-width:1.4}
+#mini-panel .sw-stop{fill:var(--muted)}
+#mini-panel .sw-post{fill:#B98F45}
+#mini-panel .sw-ct{fill:#D9DDE0;stroke:#5E656C}
+#mini-panel .sw-armline{stroke:#B98F45;stroke-width:4;stroke-linecap:round}
+#mini-panel .sw-rod{stroke:#4A5057;stroke-width:3}
+#mini-panel .sw-spring{fill:none;stroke:var(--muted);stroke-width:1.4}
+#mini-panel .sw-tip{fill:#8C949B;stroke:#4A5057}
+#mini-panel .sw-cap{fill:#26292D;stroke:#0C0E10}
+#mini-panel .sw-rock{cursor:pointer}
+#mini-panel .sw-arm,#mini-panel .sw-plg,#mini-panel .sw-rock{transition:transform .25s cubic-bezier(.3,.1,.2,1)}
+#mini-panel .sw-arm{transform-origin:78px 76px;transform:rotate(-6deg)}
+#mini-panel .sw-plg{transform-origin:78px 38px;transform:rotate(22deg)}
+#mini-panel .sw-rock{transform-origin:78px 41px;transform:rotate(8deg)}
+#mini-panel.on .sw-arm{transform:rotate(6deg)}#mini-panel.on .sw-plg{transform:rotate(-22deg)}#mini-panel.on .sw-rock{transform:rotate(-8deg)}
+#mini-panel .sw-spade{fill:#C99A4A;stroke:#6E5420}
+#mini-panel .sw-face{fill:var(--surface-2);stroke:var(--line)}
+#mini-panel .sw-house2{fill:#1E2124;stroke:#0C0E10}
+#mini-panel .sw-bez{fill:#24282C;stroke:#0C0E10}
+#mini-panel .rk-a{fill:#3A3F44}#mini-panel .rk-b{fill:#15181B}
+#mini-panel.on .sw-fr[data-fr="pwr"] .rk-a{fill:#15181B}#mini-panel.on .sw-fr[data-fr="pwr"] .rk-b{fill:#3A3F44}
+#mini-panel .sw-fr.lit .rk-a,#mini-panel .sw-fr.lit .rk-b{fill:#4A1A14}
+#mini-panel .sw-fr.lit.glow .rk-a,#mini-panel .sw-fr.lit.glow .rk-b{fill:#E0402E}
+#mini-panel .sw-fr.lit.glow{filter:drop-shadow(0 0 4px #FF4A33)}
+#mini-panel[data-fr] .sw-fr{cursor:pointer}
+#mini-panel .lp-bez{fill:#9CA4AB;stroke:#5E656C}
+#mini-panel .lp{fill:#5A2020;transition:fill .15s}
+#mini-panel .sw-lp.glow .lp{fill:#FF4A3A;filter:drop-shadow(0 0 4px #FF4A3A)}
+#mini-panel .sw-rail{font:700 13px var(--f-mono);fill:var(--ink)}
+#mini-panel .sw-w{fill:none;stroke:var(--muted);stroke-width:2;stroke-linejoin:round}
+#mini-panel .sw-pin{fill:var(--surface);stroke:var(--ink);stroke-width:1.6}
+#mini-panel .sw-node{fill:var(--ink)}
+#mini-panel .sw-blade{stroke:var(--ink);stroke-width:2.6;stroke-linecap:round;transition:transform .25s}
+#mini-panel .sw-blade.p{transform-box:fill-box;transform-origin:0% 50%;transform:rotate(-30deg)}
+#mini-panel.on .sw-blade.p{transform:rotate(0)}
+#mini-panel #sw-ts,#mini-panel #sw-tsg{transform-box:fill-box;transform-origin:0% 50%}
+#mini-panel.ready #sw-ts,#mini-panel.ready #sw-tsg{transform:rotate(-18deg)}
+#mini-panel .sw-link{fill:none;stroke:var(--muted);stroke-width:1.2;stroke-dasharray:3 3}
+#mini-panel .sw-el{fill:none;stroke:var(--ink);stroke-width:2;stroke-linejoin:round;transition:stroke .3s}
+#mini-panel.heating .sw-el{stroke:var(--w-h);filter:drop-shadow(0 0 3px var(--w-h))}
+#mini-panel .sw-lamp circle{fill:var(--surface);stroke:var(--ink);stroke-width:1.6;transition:fill .15s}
+#mini-panel .sw-lamp path{stroke:var(--ink);stroke-width:1.4}
+#mini-panel .sw-lamp.glow circle{fill:#FFB347;filter:drop-shadow(0 0 5px #FF8A2A)}
+#mini-panel .sw-f{fill:none;stroke:var(--w-l);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:3 9;opacity:0}
+#mini-panel .sw-f.big{stroke-width:4;stroke-dasharray:8 6}
+#mini-panel .sw-f.on{opacity:1;animation:wfl12 .5s linear infinite}
+#mini-panel .sw-f.big.on{animation:wfl14 .35s linear infinite}
+#mini-panel .c-gc,#mini-panel .f-gc,#mini-panel.gc .c-pro,#mini-panel.gc .f-pro{display:none}
+#mini-panel.gc .c-gc,#mini-panel.gc .f-gc{display:inline}
+@keyframes wfl12{to{stroke-dashoffset:-12}}
+
+/* inlet and earth */
+#mini-inlet .in-panel{fill:url(#cut-chrome);stroke:#5E656C}
+#mini-inlet .in-flange{fill:#24282C;stroke:#0C0E10}
+#mini-inlet .in-recess{fill:#121417}
+#mini-inlet .in-pin{fill:#D9C27A;stroke:#6E5420}
+#mini-inlet .in-lead{stroke:var(--muted);stroke-width:1;opacity:.7}
+#mini-inlet.noearth .in-epin{display:none}
+#mini-inlet .in-house{fill:var(--surface-2);stroke:var(--line)}
+#mini-inlet .in-brkb{fill:var(--surface);stroke:var(--muted)}
+#mini-inlet .in-lever{fill:var(--ink);transition:transform .2s}
+#mini-inlet.tripped .in-lever{transform:translateY(6px)}
+#mini-inlet .in-case{fill:none;stroke:#8C949B;stroke-width:4;transition:fill .3s,stroke .3s}
+#mini-inlet.live .in-case{fill:var(--bad-soft);stroke:var(--bad)}
+#mini-inlet .in-box{fill:#24282C}
+#mini-inlet .in-w{fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;transition:stroke .3s,opacity .3s}
+#mini-inlet .in-w.l{stroke:var(--w-l)}#mini-inlet .in-w.n{stroke:var(--w-n)}#mini-inlet .in-w.e{stroke:var(--w-e)}
+#mini-inlet.tripped .in-w{stroke:var(--muted);opacity:.5}
+#mini-inlet.noearth #in-ew{display:none}
+#mini-inlet .in-wl{font:700 10.5px var(--f-mono);fill:var(--muted)}
+#mini-inlet .in-x{display:none}#mini-inlet.noearth .in-x{display:inline}
+#mini-inlet .in-x path{stroke:var(--bad);stroke-width:2.4;stroke-linecap:round}
+#mini-inlet .in-bolt{fill:#8C949B;stroke:#4A5057}
+#mini-inlet .in-sw{fill:var(--surface-2);stroke:var(--muted)}
+#mini-inlet .in-fault{display:none}#mini-inlet.fault .in-fault{display:inline}
+#mini-inlet .in-spark{fill:none;stroke:var(--accent);stroke-width:2;stroke-linejoin:round}
+#mini-inlet .in-f{fill:none;stroke:var(--w-l);stroke-width:3.4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:6 8;opacity:0}
+#mini-inlet .in-f.on{opacity:1;animation:wfl14 .3s linear infinite}
+#mini-inlet .in-msg{opacity:0;transition:opacity .2s}#mini-inlet .in-msg.on{opacity:1}
+#mini-inlet .in-msg rect{fill:var(--good)}#mini-inlet .in-msg.bad rect{fill:var(--bad)}
+#mini-inlet .in-msg text{font:700 11px var(--f-mono);fill:#fff}
+@media (prefers-reduced-motion:reduce){#mini-wand .w-flow,#mini-wand .w-jet,#mini-wand .w-air,#mini-wand .w-bub circle,#mini-tray .t-flow,#mini-tray .t-rain path,#mini-panel .sw-f,#mini-inlet .in-f{animation:none}#mini-wand.flow.steam .w-bub circle{opacity:.8}#mini-panel .sw-arm,#mini-panel .sw-plg,#mini-panel .sw-rock,#mini-panel .sw-blade,#mini-tray .t-water,#mini-wand .w-water{transition:none}}
+#mini-tray .t-fl{fill:var(--bad)}
+.mini{--pf-handle:#202326;--pf-handle-e:#202326;--sw-cap-e:#0C0E10}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .mini{--pf-handle:#30353A;--pf-handle-e:#7E878E;--sw-cap-e:#7E878E}}
+:root[data-theme="dark"] .mini{--pf-handle:#30353A;--pf-handle-e:#7E878E;--sw-cap-e:#7E878E}
+#mini-pf .pf-handle{stroke:var(--pf-handle)}
+#mini-pf .pf-handle-e{stroke:var(--pf-handle-e);stroke-width:17;stroke-linecap:round}
+#mini-panel .sw-cap{stroke:var(--sw-cap-e)}
+#mini-wand .w-needle{fill:url(#cut-chrome);stroke:#4A5057;stroke-linejoin:round}
+#mini-wand .w-ball{display:none}
+#mini-wand.sil .w-ball{display:inline}#mini-wand.sil.thin .w-ball{display:none}
+#mini-wand.thin .w-wand{stroke-width:5}
+
+/* Silvia front and heating light */
+#mini-panel .f-sil .lp{fill:#5A2C14}
+#mini-panel .sw-lp.grn .lp{fill:#173B24}
+#mini-panel .sw-lp.grn.glow .lp{fill:#3FBF6A;filter:drop-shadow(0 0 4px #3FBF6A)}
+#mini-panel .pb-face{fill:#2A2E33;stroke:#0C0E10}
+#mini-panel .e-pwr,#mini-panel.e .m-pwr,#mini-panel .led-only,#mini-panel.led .bar-only{display:none}
+#mini-panel.e .e-pwr,#mini-panel.led .led-only{display:inline}
+#mini-panel .sw-fr.m-pwr.glow .rk-a,#mini-panel .sw-fr.m-pwr.glow .rk-b{fill:#F08A2A}
+#mini-panel .sw-fr.m-pwr.glow{filter:drop-shadow(0 0 4px #FF8A2A)}
+#mini-panel #sw-sf{transform-box:fill-box;transform-origin:0% 50%}
+#mini-panel.tripped #sw-sf{transform:rotate(-24deg)}
+#mini-panel .f-sil .sw-fr.lit .rk-a,#mini-panel .f-sil .sw-fr.lit .rk-b{fill:#4A2A12}
+#mini-panel .f-sil .sw-fr.glow .rk-a,#mini-panel .f-sil .sw-fr.glow .rk-b{fill:#F08A2A}
+#mini-panel .f-sil .sw-fr.glow{filter:drop-shadow(0 0 4px #FF8A2A)}
+#mini-panel .f-sil .sw-lp:not(.grn).glow .lp{fill:#FF9A2E;filter:drop-shadow(0 0 4px #FF8A2A)}
