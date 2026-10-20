@@ -1,7 +1,8 @@
   /* ---------- Test yourself: the engine ----------
      Practice by topic, a list of what to review, and the final exam with its certificate. The page sets TY first:
        TY.key      where progress is kept in this browser
-       TY.Q        the questions: {id, k (topic), q, a (options, the first one right), why, r (review refs), w (machine condition)}
+       TY.Q        the questions: {id, k (topic), q, a (options, the first one right), why, r (review refs), w (machine condition),
+                   g (a group of questions asking the same thing, so an exam takes one at most)}
        TY.topics   [{k, name, d (one line), crit (every exam question in this topic must be right)}]
        TY.M        the machine: ok(w) (does a question fit the reader's machine), ready() (is it set well enough for the exam),
                    need() (what's still to set), label() (the machine in words), profile(), set() (opens the picker), on(fn) (changes)
@@ -209,8 +210,9 @@
     /* ---- the exam ---- */
     function startExam(){
       if(!allCleared()||!TY.M.ready())return;
-      var a=all(),ck=critK(),used={},list=[];
-      function take(arr,n){arr.forEach(function(q){if(n>0&&!used[q.id]){used[q.id]=1;list.push(q);n--}})}
+      var a=all(),ck=critK(),used={},grp={},list=[];
+      /* questions that ask the same thing another way share a group (g): an exam takes one of them at most */
+      function take(arr,n){arr.forEach(function(q){if(n>0&&!used[q.id]&&!(q.g&&grp[q.g])){used[q.id]=1;if(q.g)grp[q.g]=1;list.push(q);n--}})}
       var cr=a.filter(function(q){return q.k===ck});
       take(shuffle(cr.filter(function(q){return q.crit})).concat(shuffle(cr.filter(function(q){return !q.crit}))),TY.exam.crit);
       shuffle(TOP.filter(function(t){return t.k!==ck})).forEach(function(t){take(shuffle(a.filter(function(q){return q.k===t.k})),TY.exam.per)});

@@ -93,7 +93,7 @@ details.tb.danger .tb-body{border-left-color:var(--bad)}
     var l=(typeof t.map==='string'?[['On the wiring map',t.map]]:t.map).filter(function(x){return !x[2]||!m||m.matches(x[2])});
     return l.length?'<p class="tb-map">'+l.map(function(x){return '<a href="'+esc(mapHref(x[1],x[3]?{label:x[3]}:{}))+'">'+esc(x[0])+'</a>'}).join(' · ')+'</p>':'';
   }
-  function wlabel(w){return w.replace('model:E','E model').replace('ver:V1','V1 only').replace(/ver:V5,V6/,'V5–V6')}
+  function wlabel(w){return w.replace('model:E','E model').replace('ver:V1','V1 only').replace(/ver:V5,V6/,'V5 and V6')}
   var cat='all',q='';
   function visible(t){
     var m=M();if(t.w&&m&&!m.matches(t.w))return false;

@@ -1,1 +1,3154 @@
-[{"id":"safety-01","k":"safety","crit":true,"q":"Sample?","a":["A","B","C"],"why":"W","r":[["ck","c7"],["rb","p3d"],["tr","The screen stays black"],["map","part=ssr","SSR"],["gl","t-ssr"]]}]
+[
+ {
+  "id": "silvia-01",
+  "k": "silvia",
+  "q": "What does the OPV do on a stock Silvia?",
+  "a": [
+   "Sends water back to the tank once pressure passes its setting",
+   "Vents the group into the drip tray at the end of a shot",
+   "Lets steam out of the boiler when it gets too hot",
+   "Stops boiler water flowing back into the pump"
+  ],
+  "why": "The pump can push about 15 bar, well past brewing pressure. The OPV is a spring-loaded valve on the pump line that opens past its setting and returns the extra water to the tank, so the pressure can't climb any further.",
+  "r": [
+   [
+    "url",
+    "how-silvia-works.html#part-opv",
+    "How the Silvia works: the OPV"
+   ],
+   [
+    "gl",
+    "t-opv"
+   ]
+  ],
+  "src": "learn-silvia-parts.html (part-opv): 'When the pressure goes past its setting it opens and sends the extra water back to the tank, so the pressure can't climb any further.' (part-pump): 'It can push about 15 bar, well past brewing pressure, so something has to cap it: that's the OPV.'"
+ },
+ {
+  "id": "silvia-02",
+  "k": "silvia",
+  "q": "On a stock Silvia, what does the hot water switch power?",
+  "a": [
+   "The pump only, with the 3-way valve left shut",
+   "The pump and the 3-way valve together",
+   "The element, bypassing the brew thermostat",
+   "The 3-way valve only, with the pump off"
+  ],
+  "why": "Only the brew switch's second pole completes the 3-way valve's circuit. With hot water on, the pump pushes fresh water into the boiler and the only way out is the wand, which is how you prime and refill the boiler.",
+  "r": [
+   [
+    "url",
+    "how-silvia-works.html#circuit",
+    "How the Silvia works: the circuit"
+   ],
+   [
+    "url",
+    "how-silvia-works.html#part-panel",
+    "How the Silvia works: switches and lights"
+   ]
+  ],
+  "src": "learn-silvia-parts.html (part-panel): 'one feeds the pump and the 3-way valve, the other completes the valve's circuit, so only brew opens the valve. Hot water runs the pump alone.' learn-coach.js: 'Runs the pump with the 3-way valve shut ... It's how you prime and refill the boiler.'"
+ },
+ {
+  "id": "silvia-03",
+  "k": "silvia",
+  "q": "How does the stock steam switch get the boiler up to steam temperature?",
+  "a": [
+   "It bridges the brew thermostat, so heating runs on",
+   "It switches in a second, stronger heating element",
+   "It runs the pump to build pressure in the boiler",
+   "It moves the brew thermostat's set point higher"
+  ],
+  "why": "The steam switch powers nothing else. With the brew thermostat bridged, the element keeps heating until the steam thermostat opens at 140 °C.",
+  "r": [
+   [
+    "url",
+    "how-silvia-works.html#part-tstat",
+    "How the Silvia works: thermostats"
+   ],
+   [
+    "url",
+    "how-silvia-works.html#circuit",
+    "How the Silvia works: the circuit"
+   ]
+  ],
+  "src": "learn-silvia-parts.html (part-tstat): 'The steam thermostat opens at 140 °C; the steam switch bridges the brew thermostat so the element carries on up to it.' (part-panel): 'Steam bridges the brew thermostat and powers nothing else.'"
+ },
+ {
+  "id": "silvia-04",
+  "k": "silvia",
+  "q": "On a stock Silvia the heating light is on, but the boiler stays cold. What is the usual suspect?",
+  "a": [
+   "The safety thermostat has tripped",
+   "The brew thermostat has opened",
+   "The OPV is stuck open",
+   "The steam switch is still on"
+  ],
+  "why": "The stock heating light is wired around the safety thermostat, so it still shows the thermostats calling for heat after a tripped safety has cut the element. An open brew thermostat would put the light out.",
+  "r": [
+   [
+    "url",
+    "how-silvia-works.html#part-tstat",
+    "How the Silvia works: thermostats"
+   ],
+   [
+    "url",
+    "how-silvia-works.html#circuit",
+    "How the Silvia works: the circuit"
+   ]
+  ],
+  "src": "learn-silvia-parts.html (part-tstat): 'If the heating light is on but the boiler stays cold, a tripped safety is the usual suspect.' learn-silvia-body.html (#circuit): 'the heating light is wired from line to the point after the element, around the safety, so it shows the thermostats calling for heat even when a tripped safety has stopped the element.'",
+  "g": "trip"
+ },
+ {
+  "id": "silvia-05",
+  "k": "silvia",
+  "q": "The safety thermostat tripped after a long steaming session. What does the coach say to do?",
+  "a": [
+   "Let it cool, reset it, then refill the boiler through the wand",
+   "Press its reset button at once, while it's still hot",
+   "Wait for it to close by itself as the boiler cools",
+   "Switch the steam switch off and on to clear it"
+  ],
+  "why": "Steaming ran the boiler low and the element overheated, so the safety cut it. It only resets by hand once it has cooled, and the boiler needs refilling before it heats again: knob open, hot water on until water flows from the wand.",
+  "r": [
+   [
+    "url",
+    "how-silvia-works.html#run",
+    "How the Silvia works: run the machine"
+   ],
+   [
+    "url",
+    "how-silvia-works.html#part-tstat",
+    "How the Silvia works: thermostats"
+   ]
+  ],
+  "src": "learn-coach.js (trip slip): 'Steaming ran the boiler low and the element overheated, so the safety cut it.' 'Let it cool, press the red button on the boiler in the inside view, and refill the boiler through the wand.' (safety control): 'only resets by hand once it has cooled.' learn-silvia-parts.html: 'stays open until you press its red reset button.'"
+ },
+ {
+  "id": "silvia-06",
+  "k": "silvia",
+  "q": "Why does the site have you prime the boiler right after switching on?",
+  "a": [
+   "It often sits short of full, which risks the element",
+   "It pushes air out of the OPV so it can be set",
+   "It warms the heavy group faster for the first shot",
+   "It resets the brew thermostat after a cold night"
+  ],
+  "why": "A Silvia often sits short of full, and heating it that way risks the element; the first steam also comes out wet. Open the knob and switch hot water on until water flows from the wand, then both off.",
+  "r": [
+   [
+    "url",
+    "how-silvia-works.html#run",
+    "How the Silvia works: run the machine"
+   ],
+   [
+    "rb",
+    "p5d"
+   ]
+  ],
+  "src": "learn-coach.js (prime slip): 'A Silvia often sits short of full; heating it that way risks the element, and the first steam comes out wet.' Guide step 1: 'Prime the boiler straight away: open the knob and switch hot water on until water flows from the wand, then both off.'",
+  "g": "fill"
+ },
+ {
+  "id": "silvia-07",
+  "k": "silvia",
+  "q": "You've just steamed milk on a stock Silvia. What should happen before the next shot?",
+  "a": [
+   "Steam off, refill through the wand, then flush the group",
+   "Brew straight away while the boiler is hottest",
+   "Leave steam on until the heating light goes out",
+   "Switch off and let the boiler cool by itself"
+  ],
+  "why": "Right after steaming the boiler is near steam temperature and partly empty. Brewing then flashes water to steam at the group, which can scald, and burns the coffee. Refill through the wand, run water through the group until the heating light comes on, and brew once it goes out.",
+  "r": [
+   [
+    "url",
+    "how-silvia-works.html#run",
+    "How the Silvia works: run the machine"
+   ],
+   [
+    "url",
+    "how-silvia-works.html#part-wand",
+    "How the Silvia works: steam valve and wand"
+   ]
+  ],
+  "src": "learn-coach.js (hot-shot slip): 'The boiler was still near steam temperature, so the water flashed to steam at the group, which can scald, and the coffee came out burnt.' 'After steaming, switch steam off, refill through the wand, then run water through the group until the heating light comes on. Brew once it goes out again.'"
+ },
+ {
+  "id": "silvia-08",
+  "k": "silvia",
+  "q": "Why purge the steam wand into the drip tray before steaming milk?",
+  "a": [
+   "A full boiler sends out hot water before steam",
+   "It lets the boiler refill itself from the tank",
+   "It lowers the boiler pressure to a safe level",
+   "It warms the wand so the milk doesn't stick"
+  ],
+  "why": "Steam comes from the top of the boiler, but water spits out first. Open the knob with no jug until the water turns to steam and close it, or that water ends up in the milk.",
+  "r": [
+   [
+    "url",
+    "how-silvia-works.html#run",
+    "How the Silvia works: run the machine"
+   ],
+   [
+    "url",
+    "how-silvia-works.html#map",
+    "How the Silvia works: the machine by mode"
+   ]
+  ],
+  "src": "learn-coach.js (no-purge slip): 'The first thing out of the wand from a full boiler is hot water, and it went into the jug.' 'Purge first: open the knob with no jug until the water turns to steam, close it, then steam the milk.' learn-silvia-body.html (cap-steam): 'water spits out first, then steam from the top of the boiler.'"
+ },
+ {
+  "id": "silvia-09",
+  "k": "silvia",
+  "q": "At what milk temperature does the site say to close the steam knob?",
+  "a": [
+   "60 to 65 °C",
+   "45 to 50 °C",
+   "75 to 80 °C",
+   "90 to 95 °C"
+  ],
+  "why": "Above about 70 °C milk loses its sweetness and the foam breaks down, and it keeps rising a little after you close the knob. Close the knob first, then take the jug away.",
+  "r": [
+   [
+    "url",
+    "how-silvia-works.html#run",
+    "How the Silvia works: run the machine"
+   ]
+  ],
+  "src": "learn-coach.js guide step 6: 'stop at 60 to 65 °C on the thermometer. Close the knob, then take the jug away.' (milk-hot): 'Above about 70 °C milk loses its sweetness and the foam breaks down.' 'Close the knob at 60 to 65 °C; the milk keeps rising a little after.'"
+ },
+ {
+  "id": "silvia-10",
+  "k": "silvia",
+  "q": "Why do stock Silvia owners temperature-surf before a shot?",
+  "a": [
+   "The thermostat's swing makes brew temperature depend on timing",
+   "It brings the boiler up to steam temperature faster",
+   "It pushes air out of the pump before brewing",
+   "It keeps the safety thermostat from tripping"
+  ],
+  "why": "The brew thermostat opens near its setting but only closes again several degrees cooler, so the water keeps rising and falling. Flushing until the heating light comes on and timing the shot from the light lands at the same point in the swing every time.",
+  "r": [
+   [
+    "url",
+    "how-silvia-works.html#shot",
+    "How the Silvia works: a stock shot"
+   ],
+   [
+    "gl",
+    "t-temperature-surfing"
+   ]
+  ],
+  "src": "learn-silvia-body.html (#shot): 'It cools several degrees, the thermostat closes, and the cycle repeats ... The water temperature at any moment depends on where you are in that cycle.' 'Owners temperature-surf: flush until the light comes on, wait a fixed time, then start the shot, to land at the same point in the swing every time.' learn-silvia-parts.html (part-tstat): 'That gap is what makes the stock temperature swing up and down instead of holding still.'"
+ },
+ {
+  "id": "silvia-11",
+  "k": "silvia",
+  "q": "The heating light goes out after a few minutes. Why does a Silvia still need 15 to 20 minutes before the first shot?",
+  "a": [
+   "The heavy group is heated only by the boiler above it",
+   "The brew thermostat needs time to settle its swing",
+   "The boiler must build steam pressure before brewing",
+   "The element only reaches full power once it's warm"
+  ],
+  "why": "The group has no heater of its own: the boiler bolted on top warms it, and its mass takes far longer than the water. Lock the empty portafilter in so it heats with the group.",
+  "r": [
+   [
+    "url",
+    "how-silvia-works.html#part-group",
+    "How the Silvia works: group head"
+   ],
+   [
+    "url",
+    "how-silvia-works.html#run",
+    "How the Silvia works: run the machine"
+   ]
+  ],
+  "src": "learn-silvia-parts.html (part-group): 'The group has no heater of its own: it's warmed by the boiler above it'. (part-boiler): 'Because the group is bolted to it, the boiler heats the group too, which is why a Silvia needs a good warm-up before the first shot.' learn-coach.js guide step 2: 'wait 15 to 20 minutes ... The heating light goes out after a few minutes, but the heavy group takes far longer.'"
+ },
+ {
+  "id": "silvia-12",
+  "k": "silvia",
+  "q": "What does the diode inside the Silvia's vibratory pump do?",
+  "a": [
+   "Passes one half of each mains cycle, so each gives one stroke",
+   "Stops water flowing back from the boiler into the pump",
+   "Cuts power to the pump if the coil overheats",
+   "Steps the mains voltage down for the pump coil"
+  ],
+  "why": "On each pulse the coil pulls the piston and a spring pushes it back, so the pump strokes at mains frequency: 60 times a second on 60 Hz, 50 on 50 Hz. Check valves stop backflow, and some Silvias have a separate thermal fuse for overheating.",
+  "r": [
+   [
+    "url",
+    "how-silvia-works.html#part-pump",
+    "How the Silvia works: the pump"
+   ],
+   [
+    "gl",
+    "t-diode"
+   ]
+  ],
+  "src": "learn-silvia-parts.html (part-pump): 'A diode in the pump lets only one half of each mains cycle through the coil, so each cycle gives one pulse' 'Check valves only let water move toward the boiler' 'Some Silvias also have a thermal fuse in the pump's wiring that cuts it if the coil overheats.'",
+  "g": "diode"
+ },
+ {
+  "id": "silvia-13",
+  "k": "silvia",
+  "q": "What is the Silvia's earth connection for?",
+  "a": [
+   "Giving fault current a path so the protection trips",
+   "Carrying the element's return current to the plug",
+   "Providing the low-voltage ground for the PCB",
+   "Carrying current for the lamps in the rockers"
+  ],
+  "why": "Earth bonds the frame, boiler and valve body and carries no current in normal use; neutral is the return. If a live wire touches metal, earth lets the GFCI, RCD or breaker trip instead of leaving the case live. It must never connect to the PCB's low-voltage ground.",
+  "r": [
+   [
+    "url",
+    "how-silvia-works.html#part-inlet",
+    "How the Silvia works: power inlet and earth"
+   ],
+   [
+    "gl",
+    "t-earth"
+   ]
+  ],
+  "src": "learn-silvia-parts.html (part-inlet): 'Earth is bonded to the frame, the boiler and the valve body.' 'Earth never carries current in normal use. If a live wire touches metal, earth gives that fault current an easy way out, which trips a GFCI or RCD, or the breaker, instead of leaving the case live' 'Earth must never connect to the PCB's low-voltage ground.'"
+ },
+ {
+  "id": "silvia-14",
+  "k": "silvia",
+  "q": "With the boiler full, you switch hot water on but leave the steam knob shut. What happens?",
+  "a": [
+   "The pump just runs against the OPV",
+   "Hot water flows out through the group",
+   "The 3-way valve vents water to the tray",
+   "The safety thermostat trips to protect it"
+  ],
+  "why": "Hot water leaves the 3-way valve shut, so the wand is the only way out of the boiler. With the knob closed the water has nowhere to go. Open the knob first, then switch hot water on.",
+  "r": [
+   [
+    "url",
+    "how-silvia-works.html#run",
+    "How the Silvia works: run the machine"
+   ],
+   [
+    "url",
+    "how-silvia-works.html#map",
+    "How the Silvia works: the machine by mode"
+   ]
+  ],
+  "src": "learn-coach.js (water-shut slip): 'With the boiler full and the knob closed, the water has nowhere to go: the pump just runs against the over-pressure valve.' 'Open the knob first, then switch hot water on; it comes out of the wand.'"
+ },
+ {
+  "id": "silvia-15",
+  "k": "silvia",
+  "q": "Why wait a couple of seconds after switching brew off before taking the portafilter out?",
+  "a": [
+   "The 3-way valve vents the group's pressure first",
+   "The pump keeps running for a few seconds after",
+   "The boiler refills itself from the tank first",
+   "The group has to cool below boiling first"
+  ],
+  "why": "When brew goes off, the spring drops the 3-way valve's plunger and the pressure left above the puck rushes into the drip tray. Forced out while there's still pressure in the group, a portafilter sprays scalding water and grounds.",
+  "r": [
+   [
+    "url",
+    "how-silvia-works.html#part-sol",
+    "How the Silvia works: 3-way solenoid valve"
+   ],
+   [
+    "url",
+    "how-silvia-works.html#run",
+    "How the Silvia works: run the machine"
+   ]
+  ],
+  "src": "learn-coach.js (pf-stuck slip): 'There was still pressure in the group. Forced out, a real one sprays scalding water and grounds.' 'Switch brew off and give it a couple of seconds for the 3-way valve to vent the pressure into the drip tray, then take it out.' learn-silvia-body.html (cap-stop): 'the spring drops the plunger ... The pressure left above the puck rushes into the drip tray'."
+ },
+ {
+  "id": "silvia-16",
+  "k": "silvia",
+  "q": "In steam mode, what pushes steam out of the wand?",
+  "a": [
+   "Pressure from boiler water heated well above boiling",
+   "The pump, running while the steam switch is on",
+   "The 3-way valve, venting the boiler to the wand",
+   "The OPV, redirecting pump water to the wand"
+  ],
+  "why": "Steam mode heats the sealed boiler to around 140 °C, and the pressure that builds drives steam out when you open the knob. The steam switch doesn't run the pump; in hot water mode the pump pushes water out through the same wand.",
+  "r": [
+   [
+    "url",
+    "how-silvia-works.html#part-boiler",
+    "How the Silvia works: boiler"
+   ],
+   [
+    "url",
+    "how-silvia-works.html#part-wand",
+    "How the Silvia works: steam valve and wand"
+   ]
+  ],
+  "src": "learn-silvia-parts.html (part-boiler): 'For steam it's heated to around 140 °C, and the pressure that builds pushes steam out of the wand.' (part-wand): 'In steam mode the boiler is above boiling, so pressure drives steam out. In hot water mode the pump pushes fresh water into the boiler'. (part-panel): 'Steam bridges the brew thermostat and powers nothing else.'"
+ },
+ {
+  "id": "silvia-18",
+  "k": "silvia",
+  "q": "On your Silvia, what must you lift before you can reach the thermostats on the boiler?",
+  "a": [
+   "The insulation wrapped around the boiler",
+   "The 3-way valve and its coil",
+   "The group head, unbolted from below",
+   "The water tank and its lid"
+  ],
+  "why": "From V5 on the boiler is wrapped in insulation. Lift it to reach the thermostats and fit the thermocouple, then fold it back with the lead routed clear of the element terminals.",
+  "r": [
+   [
+    "url",
+    "which-silvia.html#v5",
+    "Which Silvia: V5"
+   ],
+   [
+    "rb",
+    "p3a2"
+   ]
+  ],
+  "w": "ver:V5,V6",
+  "src": "which.tpl.html (V5): 'Lift the boiler insulation to reach the thermostats, and refit it after.' (V6): 'Same as V5: insulated boiler'. learn-silvia-parts.html (part-boiler): 'From V5 on there's insulation around it to lift off first.' runbook-phases.js p3a2.",
+  "g": "insul"
+ },
+ {
+  "id": "silvia-19",
+  "k": "silvia",
+  "q": "On a stock Silvia E, what does the energy-saver module do?",
+  "a": [
+   "Turns it off after 30 minutes with no switch touched",
+   "Drops it to brew temperature after 30 minutes of steam",
+   "Turns it off 10 minutes after the heating light goes out",
+   "Cuts the element whenever the safety thermostat trips"
+  ],
+  "why": "The E's GICAR module switches it off after 30 minutes without use, and touching any switch restarts the 30 minutes. Gaggiuino's harness leaves the module out.",
+  "r": [
+   [
+    "url",
+    "which-silvia.html#h-em",
+    "Which Silvia: E and M"
+   ],
+   [
+    "tr",
+    "It turns itself off after about 30 minutes"
+   ]
+  ],
+  "w": "model:E",
+  "src": "learn-coach.js (auto-off slip): 'The E's energy saver turns it off after 30 minutes with no switch touched.' 'any switch you touch restarts the 30 minutes.' which.tpl.html (#h-em): 'It turns the heater off after 30 minutes without use.' 'Gaggiuino's harness leaves the module out'.",
+  "g": "eauto"
+ },
+ {
+  "id": "silvia-20",
+  "k": "silvia",
+  "q": "Why does your Silvia E need a different power switch for Gaggiuino?",
+  "a": [
+   "Its push button doesn't latch without the energy-saver module",
+   "Its push button can't carry the element's current",
+   "The PCB reads the power switch as a low-voltage input",
+   "Gaggiuino needs a push button for its own auto-off"
+  ],
+  "why": "The harness leaves the GICAR module out and relies on a power switch that latches and breaks both line and neutral. Plan on a double-pole rocker like the M's, and confirm the part on Discord.",
+  "r": [
+   [
+    "url",
+    "which-silvia.html#h-em",
+    "Which Silvia: E and M"
+   ],
+   [
+    "ck",
+    "g15"
+   ]
+  ],
+  "w": "model:E",
+  "src": "which.tpl.html (#h-em): 'Gaggiuino's harness leaves the module out and needs a power switch that latches, breaking line and neutral. Plan on a double-pole rocker like the M's, and confirm the part on Discord.' checks.tpl.html g15: 'The E model's push-button switch doesn't latch; it needs a double-pole rocker like the M model's.' trouble-data.js: 'the push-button power switch doesn't latch without its energy-saver module.'",
+  "g": "eswitch"
+ },
+ {
+  "id": "silvia-21",
+  "k": "silvia",
+  "q": "How is the OPV on your Silvia set?",
+  "a": [
+   "With washers, and adding washers can only lower it",
+   "With a two-nut adjuster you can turn either way",
+   "With a screw on the pump that sets its stroke",
+   "In the firmware, once Gaggiuino is installed"
+  ],
+  "why": "The V1 OPV has a single nut, not the two-nut adjuster of V2 and later. If [UT] Test OPV peaks too high, add washers; too low, take out washers a previous owner added, or replace the spring or the OPV.",
+  "r": [
+   [
+    "url",
+    "which-silvia.html#v1",
+    "Which Silvia: V1"
+   ],
+   [
+    "tr",
+    "The OPV won't adjust the way the guides show"
+   ]
+  ],
+  "w": "ver:V1",
+  "src": "which.tpl.html (V1): 'The OPV has a single nut and is set with washers.' learn-silvia-parts.html (part-opv): 'On a V1, adding washers can only lower it.' trouble-data.js: 'The V1 OPV has a single nut, not a two-nut adjuster. Adding washers can only lower its pressure.' 'Too high: add washers ... Too low: take out any washers a previous owner added. If it still reads low, replace the spring or the OPV.'",
+  "g": "v1opv"
+ },
+ {
+  "id": "silvia-22",
+  "k": "silvia",
+  "q": "Your Silvia is a 120 V machine with a 950 W element. About what should the element measure across its terminals?",
+  "a": [
+   "About 15 Ω",
+   "About 48 Ω",
+   "About 1.5 Ω",
+   "About 150 Ω"
+  ],
+  "why": "Power is voltage squared divided by resistance, so 950 W at 120 V is about 15 Ω. The power-on checks work out the expected figure from your rating plate.",
+  "r": [
+   [
+    "url",
+    "how-silvia-works.html#part-element",
+    "How the Silvia works: heating element"
+   ],
+   [
+    "ck",
+    "c1"
+   ]
+  ],
+  "w": "volts:120",
+  "src": "learn-silvia-parts.html (part-element): 'Power is voltage squared divided by resistance, so a 950 W element on 120 V measures about 15 Ω' 'The power-on checks compare your meter with the figure from your machine's rating plate.'"
+ },
+ {
+  "id": "silvia-23",
+  "k": "silvia",
+  "q": "Your Silvia is a 230 V machine with an 1100 W element. About what should the element measure across its terminals?",
+  "a": [
+   "About 48 Ω",
+   "About 15 Ω",
+   "About 4.8 Ω",
+   "About 480 Ω"
+  ],
+  "why": "Power is voltage squared divided by resistance, so 1100 W at 230 V is about 48 Ω, roughly three times a 120 V element. The power-on checks work out the expected figure from your rating plate.",
+  "r": [
+   [
+    "url",
+    "how-silvia-works.html#part-element",
+    "How the Silvia works: heating element"
+   ],
+   [
+    "ck",
+    "c1"
+   ]
+  ],
+  "w": "volts:230",
+  "src": "learn-silvia-parts.html (part-element): 'an 1100 W one on 230 V about 48 Ω' which.tpl.html (#h-em): 'The element's resistance is about three times higher on a 230 V machine'."
+ },
+ {
+  "id": "silvia-24",
+  "k": "silvia",
+  "q": "Why is the power rocker on your Silvia double pole?",
+  "a": [
+   "So it breaks line and neutral together",
+   "So it can switch the element and pump separately",
+   "So it can light the power and heating lamps",
+   "So brew and steam can run at the same time"
+  ],
+  "why": "Each pole breaks one mains conductor. Gaggiuino's harness keeps it on mains, with line through one pole and neutral through the other, and the power-on checks confirm it opens both.",
+  "r": [
+   [
+    "url",
+    "how-silvia-works.html#part-panel",
+    "How the Silvia works: switches and lights"
+   ],
+   [
+    "ck",
+    "e9"
+   ]
+  ],
+  "w": "model:M",
+  "src": "learn-silvia-parts.html (part-panel): 'The power switch is double pole: it breaks line and neutral together.' which.tpl.html (#h-em, Silvia M): 'The custom harness keeps it on mains and runs line through one pole and neutral through the other.' checks e9/e10."
+ },
+ {
+  "id": "gg-01",
+  "k": "gg",
+  "q": "After the conversion, which of these still protects the element without any software?",
+  "a": [
+   "The 165 °C safety thermostat in its supply",
+   "The brew thermostat on the boiler top",
+   "The steam thermostat, left in place",
+   "The brew switch's second pole"
+  ],
+  "why": "Gaggiuino keeps the power switch, the 165 °C safety thermostat, any pump thermal fuse and the earth bonding as they were, and none of them depend on software. The brew thermostat comes out and the steam thermostat no longer limits anything.",
+  "r": [
+   [
+    "url",
+    "how-gaggiuino-works.html#blocks",
+    "How Gaggiuino works: who does what now"
+   ],
+   [
+    "gl",
+    "t-safety-thermostat"
+   ]
+  ],
+  "src": "learn-gg-body.html (#blocks): 'What stays: the power switch still breaks mains, the 165 °C safety thermostat still sits in the element's supply, a pump thermal fuse stays if yours has one, and earth is bonded exactly as before. None of those depend on software.' learn-silvia-parts.html (part-tstat): 'the brew thermostat comes out ... The steam thermostat is left in place unwired, or removed; either way it no longer limits anything'."
+ },
+ {
+  "id": "gg-02",
+  "k": "gg",
+  "q": "What does the SSR do in a Gaggiuino Silvia?",
+  "a": [
+   "Switches mains to the element when the PCB signals it",
+   "Measures the boiler temperature for the PCB",
+   "Steps mains down to 5 V for the board",
+   "Drives the pump one mains cycle at a time"
+  ],
+  "why": "J9 R1 gives the SSR's + input 5 V when the element should be on. Inside, that lights an LED which fires a triac on the mains side, so the PCB and mains only meet through light.",
+  "r": [
+   [
+    "url",
+    "how-gaggiuino-works.html#ssr",
+    "How Gaggiuino works: the SSR"
+   ],
+   [
+    "map",
+    "part=ssr",
+    "The SSR on the wiring drawing"
+   ]
+  ],
+  "src": "learn-gg-parts.html (#ssr): 'The switch for the element.' 'J9 R1 feeds its + input' 'The input current lights an LED inside the relay ... fires a triac ... The PCB and mains only meet through light'. (#pcb): 'J9 gives the boiler's SSR 5 V on R1 when the element should be on.'"
+ },
+ {
+  "id": "gg-03",
+  "k": "gg",
+  "q": "How does Gaggiuino hold the boiler temperature steadier than the stock thermostat?",
+  "a": [
+   "Shorter element pulses as the boiler nears the target",
+   "A lower voltage to the element near the target",
+   "A relay that switches the old brew thermostat",
+   "Steam vented whenever the boiler runs too hot"
+  ],
+  "why": "The thermocouple reports continuously, the PCB decides and the SSR switches. In the public Gen 2 code the element is fully on more than 10 °C below the target, pulsed for smaller shares in the last 10 °C, and off at the target, so it settles instead of swinging.",
+  "r": [
+   [
+    "url",
+    "how-gaggiuino-works.html#temp",
+    "How Gaggiuino works: holding the temperature"
+   ],
+   [
+    "gl",
+    "t-hpwr"
+   ]
+  ],
+  "src": "learn-gg-body.html (#temp): 'Instead of the stock thermostat's long on and long off, the element gets short pulses as the boiler nears the target, so the temperature settles there instead of swinging around it.' 'More than 10 °C below the target the element is simply on. From 10 to 5 °C below it's pulsed for a fixed share of the time, and in the last 5 °C for a smaller share ... At the target it's off.'"
+ },
+ {
+  "id": "gg-04",
+  "k": "gg",
+  "q": "What does Gaggiuino's Offset setting account for?",
+  "a": [
+   "The gap between boiler reading and water at the group",
+   "The power difference between 120 V and 230 V",
+   "The delay between the PCB's signal and the SSR",
+   "The pressure lost between the pump and the puck"
+  ],
+  "why": "The thermocouple sits in the boiler top, but the shot meets the water at the group. The firmware adds Offset to the profile's temperature to get the boiler target. Change it only against a real measurement at the group head.",
+  "r": [
+   [
+    "url",
+    "how-gaggiuino-works.html#temp",
+    "How Gaggiuino works: holding the temperature"
+   ],
+   [
+    "rb",
+    "p6d"
+   ]
+  ],
+  "src": "learn-gg-temp.html: 'Offset: the gap between the boiler reading and the water at the group. The firmware adds it to the profile's temperature to get the boiler target.' runbook-phases.js p6d: 'Change it only if you can measure at the group head'."
+ },
+ {
+  "id": "gg-05",
+  "k": "gg",
+  "q": "A vibratory pump can't be slowed down like a motor. How does the PCB control it?",
+  "a": [
+   "It lets some mains cycles through and skips the rest",
+   "It lowers the voltage to the pump coil smoothly",
+   "It changes the frequency of the mains supply",
+   "It opens and closes the OPV to bleed pressure"
+  ],
+  "why": "Every stroke is a fixed squirt, so the PCB controls how many happen. A zero-cross detector marks each mains cycle and the STM32 decides whether to fire the pump's triac: asking for 50% lets every other cycle through. This is pulse skip modulation, PSM.",
+  "r": [
+   [
+    "url",
+    "how-gaggiuino-works.html#pump",
+    "How Gaggiuino works: driving the pump"
+   ],
+   [
+    "gl",
+    "t-psm"
+   ]
+  ],
+  "src": "learn-gg-pump.html: 'A vibratory pump can't be slowed down like a motor: every stroke is a fixed squirt. So the PCB controls how many strokes happen.' 'Asking for 50% lets every other cycle through ... This is pulse skip modulation, PSM.'"
+ },
+ {
+  "id": "gg-06",
+  "k": "gg",
+  "q": "Why does Gaggiuino want the OPV set at least 1 bar above your highest target pressure?",
+  "a": [
+   "No profile can push pressure past the OPV's setting",
+   "The firmware reads pressure from the OPV's spring",
+   "The OPV has to open at the start of every profile",
+   "The PCB switches the OPV off during a shot"
+  ],
+  "why": "The OPV still sits above all the pump control. Set below what a profile asks for, the pressure stops at the OPV. [UT] Test OPV with a blind basket should peak at 10.5 to 13 bar.",
+  "r": [
+   [
+    "url",
+    "how-gaggiuino-works.html#pump",
+    "How Gaggiuino works: driving the pump"
+   ],
+   [
+    "rb",
+    "p5f"
+   ]
+  ],
+  "src": "learn-gg-pump.html: 'The OPV still sits above all of this. Whatever a profile asks for, the pressure can't pass the OPV's setting, which is why Gaggiuino wants it at least 1 bar above your highest target.' learn-silvia-parts.html (part-opv): 'the [UT] Test OPV utility should peak at 10.5 to 13 bar.'"
+ },
+ {
+  "id": "gg-07",
+  "k": "gg",
+  "q": "Why must a Gaggiuino thermocouple be the ungrounded type?",
+  "a": [
+   "So the earthed boiler can't reach the 5 V side",
+   "A grounded one would trip the safety thermostat",
+   "Grounded probes only come with an M4 thread",
+   "Ungrounded probes respond faster to heat"
+  ],
+  "why": "Its tip screws into the earthed boiler, and the MAX31855 that reads it must never have its minus input tied to ground, or it reports a short or reads wrong. An ungrounded probe insulates the junction inside its sheath.",
+  "r": [
+   [
+    "url",
+    "how-gaggiuino-works.html#ground",
+    "How Gaggiuino works: why the low-voltage side floats"
+   ],
+   [
+    "ck",
+    "b6"
+   ]
+  ],
+  "src": "learn-gg-ground.html: 'Its tip is screwed into the earthed boiler, and the MAX31855 that reads it must never have its minus input tied to its ground; if it does, it reports a short to ground or reads wrong. An ungrounded thermocouple, with the junction insulated inside the probe, keeps the tip electrically off the boiler'."
+ },
+ {
+  "id": "gg-10",
+  "k": "gg",
+  "q": "After the conversion, what does turning the brew switch on do electrically?",
+  "a": [
+   "Ties a PCB input pin to the low-voltage ground",
+   "Sends mains through the switch to the pump",
+   "Puts 5 V straight onto the 3-way valve coil",
+   "Feeds 3.3 V from the switch into the PCB"
+  ],
+  "why": "A pull-up holds each input at 3.3 V, so an open switch reads high, which means off. Closing the switch pulls the pin to ground and it reads low: on. That's why the power-on checks want under 1 Ω with a switch on and OL with it off.",
+  "r": [
+   [
+    "url",
+    "how-gaggiuino-works.html#switches",
+    "How Gaggiuino works: switches on low voltage"
+   ],
+   [
+    "ck",
+    "f1"
+   ]
+  ],
+  "src": "learn-gg-parts.html (#switches): 'Each one, when on, connects a PCB input pin to the low-voltage ground' 'A pull-up resistor holds each input at 3.3 V ... So an open switch reads high, which the firmware treats as off. Closing the switch ties the pin to ground and it reads low: on. That's why the power-on checks want under 1 Ω with a switch on and OL with it off.'",
+  "g": "sw"
+ },
+ {
+  "id": "gg-11",
+  "k": "gg",
+  "q": "Why can none of the stock mains wiring stay on the brew, hot water or steam switches?",
+  "a": [
+   "Mains on a PCB input pin destroys it",
+   "The switches would read on and off backwards",
+   "It would stop the safety thermostat tripping",
+   "The switch lamps would burn out on 5 V"
+  ],
+  "why": "These switches now only report to the PCB. Mains on an input pin destroys it, and wiring the pump around the PCB's pump output can short the triac that drives it.",
+  "r": [
+   [
+    "url",
+    "how-gaggiuino-works.html#switches",
+    "How Gaggiuino works: switches on low voltage"
+   ],
+   [
+    "ck",
+    "f10"
+   ]
+  ],
+  "src": "learn-gg-parts.html (#switches): 'None of the stock mains wiring can stay on these switches. Mains on an input pin destroys it, and wiring the pump around the PCB's pump output can short the triac that drives it.'",
+  "g": "hw"
+ },
+ {
+  "id": "gg-12",
+  "k": "gg",
+  "q": "After the conversion, the brew, hot water and steam switch lights stay dark. Why?",
+  "a": [
+   "Their lamps ran on mains, which the switches no longer carry",
+   "The PCB only lights them while a shot is running",
+   "The 5 V screen line is too weak to light them",
+   "The safety thermostat cuts their supply when cold"
+  ],
+  "why": "That's expected. The LED switch mod brings them back: each lamp is replaced by a small orange LED and resistor powered from the 5 V screen line, wired across the switch's spare pole so the light follows the switch.",
+  "r": [
+   [
+    "url",
+    "how-gaggiuino-works.html#leds",
+    "How Gaggiuino works: switch lights"
+   ],
+   [
+    "tr",
+    "The switch lights went dark"
+   ]
+  ],
+  "src": "learn-gg-mods.html (#leds): 'Once the brew, hot water and steam switches are on low voltage, their mains lamps go dark. The LED mod replaces each lamp with a small orange LED and resistor powered from the 5 V screen line, wired across the switch's spare pole so the light follows the switch.' trouble-data.js: 'Expected. The lamps ran on mains; on low voltage they stay dark.'"
+ },
+ {
+  "id": "gg-13",
+  "k": "gg",
+  "q": "How do the optional hardware scales weigh the shot?",
+  "a": [
+   "Two load cells under the drip tray, each on an HX711 channel",
+   "A ToF sensor measuring the level in the cup",
+   "The pressure sensor's reading summed over the shot",
+   "A strain gauge built into the portafilter handle"
+  ],
+  "why": "The cup's weight bends each load cell's bar slightly and its strain-gauge bridge puts out a few millivolts. The HX711 channels on J8 measure it, and the PCB adds the two, subtracts the tare and converts to grams after calibration. Without scales, Gaggiuino predicts weight from the pump's flow.",
+  "r": [
+   [
+    "url",
+    "how-gaggiuino-works.html#scales",
+    "How Gaggiuino works: hardware scales"
+   ],
+   [
+    "map",
+    "run=OP1",
+    "The scales cable on the wiring drawing"
+   ]
+  ],
+  "src": "learn-gg-mods.html (#scales): 'Two 1 kg load cells on a printed mount under the drip tray area weigh the cup as the shot runs' 'Without them it still predicts the weight from the pump's flow' 'Each cell has its own HX711 channel ... the two share the clock line on J8 ... The PCB adds the two, subtracts the tare and converts to grams after you calibrate with a known weight.'"
+ },
+ {
+  "id": "gg-14",
+  "k": "gg",
+  "q": "Why do the ToF tank sensor's ranges need changing on a Silvia?",
+  "a": [
+   "Its tank is deeper than a Gaggia's, about 200 mm",
+   "Its tank is shallower than a Gaggia's",
+   "Its tank lid blocks the sensor's infrared pulse",
+   "Its sensor reads the drip tray instead of the tank"
+  ],
+  "why": "The sensor times an infrared pulse's round trip to the water surface and reports a distance. The firmware turns that into a percentage using the ranges you set, so they need setting for the Silvia's deeper tank in the ToFnLED settings.",
+  "r": [
+   [
+    "url",
+    "how-gaggiuino-works.html#tof",
+    "How Gaggiuino works: tank level sensor"
+   ],
+   [
+    "rb",
+    "p6c"
+   ]
+  ],
+  "src": "learn-gg-mods.html (#tof): 'it reports a distance, and the firmware turns the distance into a percentage using the ranges you set. The Silvia's tank is deeper than a Gaggia's, about 200 mm, so those ranges need changing in the ToFnLED settings.'",
+  "g": "tof"
+ },
+ {
+  "id": "gg-15",
+  "k": "gg",
+  "q": "Why is max steam set to 150 °C in the firmware on a Silvia build?",
+  "a": [
+   "The steam thermostat no longer limits anything",
+   "The steam thermostat opens at 150 °C",
+   "The thermocouple stops reading above 150 °C",
+   "The SSR is only rated to 150 °C"
+  ],
+  "why": "realNiche's harness doesn't wire the steam thermostat, whether it stays on the boiler or comes out. That setting and the 165 °C safety thermostat are the only limits, and a steam target set too high can keep tripping the safety.",
+  "r": [
+   [
+    "rb",
+    "p6e"
+   ],
+   [
+    "url",
+    "how-silvia-works.html#part-tstat",
+    "How the Silvia works: thermostats"
+   ]
+  ],
+  "src": "runbook-phases.js p6e: 'The steam thermostat is off the heater line now, even if it's still on the boiler, so this setting and the 165 °C safety thermostat are the only limits.' p2d: 'realNiche's harness doesn't wire it'. trouble-data.js (safety keeps tripping): 'A steam target set too high. The steam thermostat is off the heater line after the conversion, so only the firmware setting keeps steam below the 165 °C safety.'",
+  "g": "steam"
+ },
+ {
+  "id": "gg-16",
+  "k": "gg",
+  "q": "Which loads does the PCB switch at mains voltage itself, with parts on the board?",
+  "a": [
+   "The pump on J12 and the 3-way valve on J13",
+   "The element on J9 and the pump on J12",
+   "The element and the heating light on J11",
+   "The 3-way valve on J13 and the element on J10"
+  ],
+  "why": "The pump is switched by a triac on the board and the valve by a small optically isolated solid-state relay. The element is different: J9 only sends a 5 V signal to the separate SSR, which switches the element's mains.",
+  "r": [
+   [
+    "url",
+    "how-gaggiuino-works.html#pcb",
+    "How Gaggiuino works: the PCB"
+   ],
+   [
+    "map",
+    "part=pcb",
+    "The PCB on the wiring drawing"
+   ]
+  ],
+  "src": "learn-gg-parts.html (#pcb): 'The pump on J12 and the 3-way valve on J13 are switched at mains voltage by solid-state parts on the board' 'The pump is switched by a triac' 'The 3-way valve is switched by a small optically isolated solid-state relay' 'J9 gives the boiler's SSR 5 V on R1 when the element should be on.'",
+  "g": "jmains"
+ },
+ {
+  "id": "gg-17",
+  "k": "gg",
+  "q": "What does the pressure sensor send to the PCB?",
+  "a": [
+   "A voltage from 0.5 V at 0 bar to 4.5 V at 12 bar",
+   "A resistance that drops as the pressure rises",
+   "One pulse for every pump stroke it feels",
+   "A digital reading sent over Wi-Fi to the screen"
+  ],
+  "why": "Water pressure bends a diaphragm with strain gauges on it, and electronics in the sensor turn that into a voltage on the P pin. The ADS1015 on the PCB converts it to a number, which pressure profiling uses to adjust the pump.",
+  "r": [
+   [
+    "url",
+    "how-gaggiuino-works.html#xdcr",
+    "How Gaggiuino works: pressure sensor"
+   ],
+   [
+    "map",
+    "run=LV9",
+    "The pressure sensor cable on the wiring drawing"
+   ]
+  ],
+  "src": "learn-gg-parts.html (#xdcr): 'electronics in the sensor body turn that into a voltage on the signal pin: 0.5 V at 0 bar, rising evenly to 4.5 V at 12 bar. The ADS1015 on the PCB converts that voltage to a number.' 'the PCB reads it continuously and adjusts the pump to follow the curve.'"
+ },
+ {
+  "id": "gg-18",
+  "k": "gg",
+  "q": "In a Gen 3 build, which job belongs to the screen rather than the STM32 on the PCB?",
+  "a": [
+   "Storing profiles and running the Wi-Fi web page",
+   "Reading the thermocouple and pressure sensor",
+   "Deciding cycle by cycle when to fire the pump",
+   "Sending the SSR its 5 V signal to heat"
+  ],
+  "why": "The touch screen is a small computer on an ESP32-S3. It draws the interface, stores profiles and settings, runs the Gaggiuino Wi-Fi network and gaggiuino.local, and installs updates. It talks to the PCB over a serial link on J1, while the STM32 reads the sensors and switches the loads.",
+  "r": [
+   [
+    "url",
+    "how-gaggiuino-works.html#screen",
+    "How Gaggiuino works: the screen"
+   ],
+   [
+    "map",
+    "part=screen",
+    "The screen on the wiring drawing"
+   ]
+  ],
+  "src": "learn-gg-parts.html (#screen): 'a small computer of its own, built on an ESP32-S3 Wi-Fi chip. It draws the interface, stores your profiles and settings, runs the Gaggiuino Wi-Fi network and the web page at gaggiuino.local, and installs updates for itself and the board. It talks to the PCB over a serial link on J1'. (#pcb): 'it reads every sensor and switch, runs the shot profile, and switches the loads.'"
+ },
+ {
+  "id": "plan-01",
+  "k": "plan",
+  "q": "Rancilio never printed a version number on the Silvia. How do you work out which version you have?",
+  "a": [
+   "From features like the wand, collar and lights",
+   "From the version code on the rating plate",
+   "From the serial number stamped on the boiler body",
+   "From a date code printed inside the drip tray"
+  ],
+  "why": "Owners and sellers named the versions from the changes Rancilio made, so you match your machine's features against the Which Silvia page.",
+  "r": [
+   [
+    "url",
+    "which-silvia.html",
+    "Which Silvia is mine"
+   ]
+  ],
+  "src": "which.tpl.html lede: 'Rancilio never put version numbers on the machine; owners and sellers made them up from the changes. Find yours below'"
+ },
+ {
+  "id": "plan-02",
+  "k": "plan",
+  "q": "Which feature tells you a Silvia is a V5 or V6 rather than an earlier version?",
+  "a": [
+   "Round LEDs beside the power switch",
+   "A thick 10 mm steam wand on a ball joint",
+   "A vertical bar heating light on the front",
+   "A brushed-steel cylinder around the group"
+  ],
+  "why": "V5 brought two round LEDs, one for power and one for heating, in place of the vertical bar light every earlier version has. The 10 mm wand arrived with V3, so it doesn't set V5 apart.",
+  "r": [
+   [
+    "url",
+    "which-silvia.html#v5",
+    "Which Silvia: V5"
+   ]
+  ],
+  "src": "which.tpl.html V5: 'Round LEDs beside the power switch, one for power and one for heating, instead of the vertical bar light.' V4: 'A vertical bar heating light, as on all earlier versions.' V3: 'Thick 10 mm commercial-style steam wand ... on a ball joint'"
+ },
+ {
+  "id": "plan-03",
+  "k": "plan",
+  "q": "A V4 looks like a V3 from the outside. What is different inside?",
+  "a": [
+   "The element screws in and is replaceable",
+   "The boiler is wrapped in a layer of insulation",
+   "The OPV has a single nut set with washers",
+   "The power switch is a momentary push button"
+  ],
+  "why": "From V4 the element screws into the boiler, so a failed one is a part, not a new boiler. Boiler insulation came with V5, the washer-set OPV is the V1's, and the push button belongs to the Silvia E.",
+  "r": [
+   [
+    "url",
+    "which-silvia.html#v4",
+    "Which Silvia: V4"
+   ]
+  ],
+  "src": "which.tpl.html V4: 'Looks like a V3 from the outside. Inside, the element screws into the boiler and can be replaced on its own.' 'A replaceable element: a failed one is a part, not a boiler.'"
+ },
+ {
+  "id": "plan-04",
+  "k": "plan",
+  "q": "On a Silvia made from 2002 up to V3, why check the element carefully before you buy or start the build?",
+  "a": [
+   "It's soldered in, so a dead one means a new boiler half",
+   "Gaggiuino needs a higher-wattage element than stock",
+   "The SSR can only switch a screw-in replaceable element",
+   "The thermocouple screws into one of the element's terminals"
+  ],
+  "why": "From 2002 until V4 the element is soldered into the boiler. A failed one can't be swapped on its own, so measure it before you commit.",
+  "r": [
+   [
+    "url",
+    "silvia-specifics.html",
+    "Silvia specifics: what each version changes"
+   ],
+   [
+    "url",
+    "used-checklist.html",
+    "Used Silvia checklist"
+   ]
+  ],
+  "w": "ver:V1,V2,V3",
+  "src": "index.tpl.html (ver:V1,V2,V3): 'From 2002 until V4 the element is soldered into the boiler, so a dead one means a new boiler half. Measure it before you start.' docs-silvia-specifics.md: 'V1 from 2002, V2 and V3: the element is soldered into the boiler; a dead one means a new boiler half. Measure it before buying.'"
+ },
+ {
+  "id": "plan-08",
+  "k": "plan",
+  "q": "Which Silvia versions come as an E or an M model, and what does the E add?",
+  "a": [
+   "V5 and V6; the E has a 30-minute auto-off",
+   "V1 to V4; the E adds a built-in PID controller",
+   "Every version; the E has a larger brass boiler",
+   "V3 and V4; the E has a second steam boiler"
+  ],
+  "why": "From V5 the Silvia is sold as the M, with manual off, and in Europe as the E, whose energy-saver module turns the heater off after 30 minutes without use. Earlier versions count as M.",
+  "r": [
+   [
+    "url",
+    "which-silvia.html#h-em",
+    "Which Silvia: E and M"
+   ],
+   [
+    "gl",
+    "t-e-and-m"
+   ]
+  ],
+  "src": "docs-silvia-specifics.md: 'From V5 it's sold as the Silvia M (manual off) and, in Europe, the Silvia E with a 30-minute auto-off.' which.tpl.html: 'It turns the heater off after 30 minutes without use.' 'Every machine before V5 works this way.'"
+ },
+ {
+  "id": "plan-09",
+  "k": "plan",
+  "q": "Does this site's build apply to the Silvia Pro or Pro X?",
+  "a": [
+   "No, they're different dual-boiler machines",
+   "Yes, with the same harness as the Silvia",
+   "Only the Pro X, which shares the Silvia's boiler",
+   "Yes, but only the 230 V versions"
+  ],
+  "why": "The site covers only the single-boiler Silvia, V1 to V6. The Pro and Pro X are dual-boiler machines, and none of the Gaggiuino Silvia notes apply to them.",
+  "r": [
+   [
+    "url",
+    "which-silvia.html",
+    "Which Silvia is mine"
+   ],
+   [
+    "url",
+    "used-checklist.html",
+    "Used Silvia checklist"
+   ]
+  ],
+  "src": "which.tpl.html: 'The single-boiler Silvia only; none of this is for the Silvia Pro or Pro X.' used-silvia-checklist.html ask-model: 'The Pro models are dual-boiler machines. None of the Gaggiuino Silvia notes apply to them.'"
+ },
+ {
+  "id": "plan-10",
+  "k": "plan",
+  "q": "How is a Silvia wired for Gaggiuino, whatever its version?",
+  "a": [
+   "A custom harness from realNiche's diagram",
+   "The stock wiring plus a plug-in Gaggiuino adapter",
+   "A separate official schematic for each version",
+   "The Gaggia Classic's stock-wiring method"
+  ],
+  "why": "There's no official Silvia schematic and no stock-wiring integration, so every version gets the full custom harness. realNiche's community diagram is the reference everyone uses.",
+  "r": [
+   [
+    "url",
+    "how-gaggiuino-works.html#harness",
+    "How Gaggiuino works: the harness"
+   ],
+   [
+    "url",
+    "wiring.html",
+    "Wiring reference"
+   ]
+  ],
+  "src": "docs-silvia-specifics.md: 'There's no stock-wiring integration for a Silvia, so every version gets the full custom harness.' 'There is no official Silvia schematic. realNiche's \"Rancillio Silvia Wiring\" (PCB v3.1/v4.0, 110 to 240 V) is the reference everyone uses'"
+ },
+ {
+  "id": "plan-11",
+  "k": "plan",
+  "q": "What changes in the harness on a 230 V Silvia compared with a 120 V one?",
+  "a": [
+   "Nothing: the same harness covers 110 to 240 V",
+   "The mains runs move up to thicker 14 AWG wire",
+   "The SSR moves onto the neutral side of the element",
+   "A second safety thermostat is added in series"
+  ],
+  "why": "realNiche's diagram covers 110 to 240 V, so the harness is the same. What differs is the element's resistance, which is higher at 230 V, and the protection, an RCD rather than a GFCI.",
+  "r": [
+   [
+    "url",
+    "which-silvia.html#h-em",
+    "Which Silvia: E, M and voltage"
+   ]
+  ],
+  "src": "which.tpl.html: 'Read the rating plate. The harness is the same at both voltages (realNiche's diagram covers 110 to 240 V). The element's resistance is about three times higher on a 230 V machine, and the circuit protection is an RCD rather than a GFCI.'"
+ },
+ {
+  "id": "plan-12",
+  "k": "plan",
+  "q": "There is no Silvia kit. What does Talon advise buying from an approved supplier, with the rest sourced yourself?",
+  "a": [
+   "The PCB v4 and the 4.3\" screen",
+   "A complete Gaggia kit with its tap block",
+   "The thermocouple and pressure fittings",
+   "A pre-cut mains harness"
+  ],
+  "why": "Buy the PCB v4 and 4.3\" screen, then source the rest from the official BOM's STM32 section. The Gaggia tubing, tap block and fittings don't apply to a Silvia.",
+  "r": [
+   [
+    "url",
+    "silvia-specifics.html",
+    "Silvia specifics: buying parts"
+   ],
+   [
+    "url",
+    "parts-tracker.html",
+    "Parts tracker"
+   ]
+  ],
+  "src": "docs-silvia-specifics.md: 'No Silvia kit. Talon (Oct 2025): buy the PCB v4 and the 4.3\" screen from an approved supplier ... and source the rest yourself. Only the STM32 section of the official BOM applies; skip the Gaggia tubing, tap block and fittings.'"
+ },
+ {
+  "id": "plan-13",
+  "k": "plan",
+  "q": "Which thermocouple does a Silvia build need?",
+  "a": [
+   "M3 thread, ungrounded K-type",
+   "M4 thread, as in the official BOM",
+   "M3 thread, grounded K-type",
+   "M4 thread, ungrounded J-type"
+  ],
+  "why": "It screws into one of the M3 holes the thermostat clamps used, so it's M3, not the BOM's M4. It must be ungrounded because the boiler is earthed and the PCB's 5 V side floats.",
+  "r": [
+   [
+    "url",
+    "how-gaggiuino-works.html#tc",
+    "How Gaggiuino works: the thermocouple"
+   ],
+   [
+    "gl",
+    "t-m3-m4"
+   ]
+  ],
+  "src": "docs-silvia-specifics.md: 'Thermocouple: M3, ungrounded K-type, not the BOM's M4.' 'The thermostats are clamped to the boiler top with M3 screws, and the M3 thermocouple screws into one of those holes'. wiring-parts.js boiler: 'an ungrounded K-type, because the PCB's 5 V side floats.'"
+ },
+ {
+  "id": "plan-14",
+  "k": "plan",
+  "q": "What is the open-barrel crimper for in this build?",
+  "a": [
+   "The bare spades crimped at the boiler",
+   "The JST pins on the screen and sensor cables",
+   "The fork spades on the SSR terminals",
+   "Clamping the thermocouple wires into J4"
+  ],
+  "why": "Boiler ends get uninsulated spades crimped with an open-barrel crimper, then silicone tape. Forks and butt splices take an insulated crimper, JST pins need a fine-pitch crimper, and J4 is a screw terminal.",
+  "r": [
+   [
+    "rb",
+    "p2f"
+   ],
+   [
+    "rb",
+    "p0f"
+   ]
+  ],
+  "src": "silvia-parts-tracker.html crimper: 'Crimps the bare spades at the boiler, where insulated connectors can't take the heat.' runbook-phases.js p0f: 'open-barrel crimper for the boiler spades, insulated crimper for butt splices and forks'. parts tracker elec: 'The JST PH pins need a fine-pitch crimper or pre-crimped leads'. runs.py LV10: 'Screw terminal'"
+ },
+ {
+  "id": "plan-15",
+  "k": "plan",
+  "q": "What must your multimeter be able to do for the power-on checks?",
+  "a": [
+   "Measure continuity and resistance",
+   "Measure AC current with a clamp",
+   "Read temperature with a probe",
+   "Measure capacitance and frequency"
+  ],
+  "why": "The checks prove the wiring with continuity and resistance readings before the machine sees mains. Any auto-ranging meter with those two functions works.",
+  "r": [
+   [
+    "url",
+    "parts-tracker.html",
+    "Parts tracker: multimeter"
+   ],
+   [
+    "ck",
+    "a2"
+   ]
+  ],
+  "src": "silvia-parts-tracker.html meter: 'Runs the power-on checks: continuity and resistance readings that prove the wiring before the machine sees mains.' 'Auto-ranging, with continuity and resistance.' 'any store-brand auto-ranging meter with those two functions works.'"
+ },
+ {
+  "id": "plan-16",
+  "k": "plan",
+  "q": "Looking over a used Silvia, which finding does the checklist treat as a deal-breaker?",
+  "a": [
+   "Water or mineral trails under the boiler",
+   "Water escaping around the portafilter",
+   "No power cord included with the machine",
+   "A PID controller fitted by a previous owner"
+  ],
+  "why": "Trails under the boiler point to a leaking boiler gasket or fitting. A leaking group gasket is a cheap fix, a missing cord is cheap to replace, and a PID comes out during the install anyway.",
+  "r": [
+   [
+    "url",
+    "used-checklist.html",
+    "Used Silvia checklist"
+   ]
+  ],
+  "src": "used-silvia-checklist.html: leak-boiler 'No water or mineral trails under the boiler' sev:'deal', 'Trails point to a leaking boiler gasket or fitting.' run-gasket: 'A leaking group gasket is a cheap fix'. look-cord: 'A missing cord is cheap to replace.' ask-mods: 'A PID is fine; it comes out during the Gaggiuino install anyway.'"
+ },
+ {
+  "id": "plan-17",
+  "k": "plan",
+  "q": "Your V1's boiler was made before May 2000. What should you confirm before buying a thermocouple?",
+  "a": [
+   "How a thermocouple mounts on that older boiler",
+   "Whether that boiler needs a grounded thermocouple",
+   "Whether its element is rated for 230 V",
+   "Whether its OPV has a two-nut adjuster"
+  ],
+  "why": "Silvia boilers changed design in May 2000. Confirm on Discord how a thermocouple mounts on an earlier one, and check its terminal layout before following the boiler end of the harness.",
+  "r": [
+   [
+    "rb",
+    "p3a1"
+   ],
+   [
+    "url",
+    "which-silvia.html#v1",
+    "Which Silvia: V1"
+   ]
+  ],
+  "w": "early",
+  "src": "runbook-phases.js p3a1 (w:early): 'Silvia boilers changed design in May 2000. Before you buy a thermocouple, confirm on Discord how one mounts on an earlier boiler.' wiring.tpl.html early rule: 'Confirm the thermocouple mounting and the terminal layout on yours before following the boiler end of this harness.'"
+ },
+ {
+  "id": "safety-01",
+  "k": "safety",
+  "q": "Before you open the Silvia or take a meter reading, what happens to the power cord?",
+  "a": [
+   "It comes out of the wall and the inlet",
+   "It stays plugged in with the power switch off",
+   "It comes out of the wall, but the inlet end can stay",
+   "It stays in, as long as the outlet is GFCI-protected"
+  ],
+  "why": "Cord out at both ends, and it stays out for every step until the checks pass. Mains can kill you, and the inlet pins are your probe points for the checks.",
+  "r": [
+   [
+    "rb",
+    "p2a"
+   ],
+   [
+    "ck",
+    "a1"
+   ]
+  ],
+  "crit": true,
+  "src": "runbook-phases.js p2a: 'Cord out of the wall and the inlet.' checks.tpl.html a1: 'Cord out of the wall and out of the machine ... Both ends. The inlet pins are your probe points for the next sections.' index.tpl.html: 'Mains can kill you: cord out for every step until the checks pass.'"
+ },
+ {
+  "id": "safety-02",
+  "k": "safety",
+  "q": "Check c3 finds the 165 °C safety thermostat open while the boiler is cold. What do you do?",
+  "a": [
+   "Press its reset button; replace it if it stays open",
+   "Bridge it with a jumper wire so the boiler can heat",
+   "Move its leads across to the steam thermostat",
+   "Remove it, since the thermocouple takes over"
+  ],
+  "why": "Open when cold means it has tripped or failed. Reset it and read it again; if it still reads open, replace it, and find out why it tripped. Never bypass it: it's the hardware limit on the element.",
+  "r": [
+   [
+    "ck",
+    "c3"
+   ],
+   [
+    "url",
+    "how-silvia-works.html#part-tstat",
+    "How the Silvia works: the thermostats"
+   ]
+  ],
+  "crit": true,
+  "src": "checks.tpl.html c3 fix (updated): 'Press its reset button and read it again; if it still reads open, replace it, and find out why it tripped. Never bypass it.'"
+ },
+ {
+  "id": "safety-03",
+  "k": "safety",
+  "q": "Check c4 shows the pump's thermal fuse is open. What's the fix?",
+  "a": [
+   "Replace the fuse before the pump runs",
+   "Bridge the fuse, since the PCB protects the pump",
+   "Wire the pump neutral straight to J10",
+   "Swap the two pump leads and measure again"
+  ],
+  "why": "An open pump fuse needs replacing before the pump will run. Never bridge a thermal fuse or the safety thermostat to get the machine running.",
+  "r": [
+   [
+    "ck",
+    "c4"
+   ],
+   [
+    "tr",
+    "The pump doesn't run"
+   ]
+  ],
+  "crit": true,
+  "src": "checks.tpl.html c4 fix: 'An open pump fuse needs replacing before the pump will run.' trouble.tpl.html warning: 'Never bridge the safety thermostat or a thermal fuse to get it running.'"
+ },
+ {
+  "id": "safety-04",
+  "k": "safety",
+  "q": "After the conversion, what keeps the boiler from overheating when you steam?",
+  "a": [
+   "Max steam setting and the 165 °C safety thermostat",
+   "The steam thermostat still clamped on the boiler top",
+   "The brew thermostat, now wired in series with the SSR",
+   "The thermal fuse on the pump's neutral side"
+  ],
+  "why": "realNiche's harness doesn't wire the steam thermostat, so it limits nothing even if it stays on the boiler. Max steam at 150 °C and the 165 °C safety thermostat are the only limits.",
+  "r": [
+   [
+    "rb",
+    "p6e"
+   ],
+   [
+    "rb",
+    "p2d"
+   ]
+  ],
+  "src": "runbook-phases.js p6e: 'The steam thermostat is off the heater line now, even if it's still on the boiler, so this setting and the 165 °C safety thermostat are the only limits.' p2d: 'realNiche's harness doesn't wire it, so it no longer limits anything'. p2c: the brew thermostat comes out.",
+  "g": "steam"
+ },
+ {
+  "id": "safety-05",
+  "k": "safety",
+  "q": "Checks b1 to b4 measure from the inlet earth pin to the chassis, boiler ground, solenoid ground and group. What reading passes?",
+  "a": [
+   "Under 1 Ω",
+   "OL, an open circuit",
+   "About the element's resistance",
+   "Anything over 100 Ω"
+  ],
+  "why": "Earth must reach every exposed metal part, so each path should read under 1 Ω once the meter leads are subtracted. A higher reading means a break in G1, G2 or a spade.",
+  "r": [
+   [
+    "ck",
+    "b1"
+   ],
+   [
+    "ck",
+    "b4"
+   ]
+  ],
+  "src": "checks.tpl.html section b: 'Earth must reach every exposed metal part and must stay off the 5 V side.' b1 to b4 type 'low': 'Expect under 1 Ω'. Leads field: 'Subtracted from the \"under 1 Ω\" checks.' b1 fix: 'Check the inlet earth lead (G1) and its spades.' b3 fix: 'Check G2'"
+ },
+ {
+  "id": "safety-06",
+  "k": "safety",
+  "q": "Check b5 measures from the inlet earth pin to J7 GND, the PCB's 5 V ground. What must it read?",
+  "a": [
+   "OL: earth and the 5 V ground never meet",
+   "Under 1 Ω: both sides share one ground",
+   "A few ohms, like the thermocouple loop",
+   "About the element's expected resistance"
+  ],
+  "why": "The PCB's 5 V side deliberately floats so the thermocouple reads correctly. Never bond it to earth; a low reading means something joins them, like a grounded thermocouple or a pinched wire.",
+  "r": [
+   [
+    "ck",
+    "b5"
+   ],
+   [
+    "url",
+    "how-gaggiuino-works.html#ground",
+    "How Gaggiuino works: why the 5 V side floats"
+   ]
+  ],
+  "crit": true,
+  "src": "checks.tpl.html b5: 'Earth and the 5 V ground must never meet; the DC side floats so the thermocouple reads correctly.' type 'open'. Fix: 'Look for a grounded thermocouple, a pinched low-voltage wire, or a sensor touching metal.' learn-gg-ground.html: 'So never bond the 5 V ground to earth'",
+  "g": "b5"
+ },
+ {
+  "id": "safety-09",
+  "k": "safety",
+  "q": "Every power-on check passes except one. Can you plug in for first power-on?",
+  "a": [
+   "No: fix it and pass every check first",
+   "Yes, if the failed one is a Look and pull check",
+   "Yes, with the covers off so you can watch",
+   "Yes, if the outlet is GFCI- or RCD-protected"
+  ],
+  "why": "The runbook stops before first power-on until every check passes. The meter checks catch shorts, open circuits and wrong connections while there's no mains in the machine, which is the safe time to find them.",
+  "r": [
+   [
+    "rb",
+    "p4z"
+   ],
+   [
+    "rb",
+    "p5a0"
+   ]
+  ],
+  "crit": true,
+  "src": "runbook-phases.js p5 stop: 'Don't plug in until every check on the power-on checklist passes.' p4 goal: 'prove it with the meter before the cord goes anywhere near the wall.' checks.tpl.html warn: 'A basic multimeter catches shorts, open circuits and wrong connections'"
+ },
+ {
+  "id": "safety-10",
+  "k": "safety",
+  "q": "What should the machine be plugged into for first power-on?",
+  "a": [
+   "A GFCI- or RCD-protected outlet",
+   "A power strip with surge protection",
+   "An extension cord with its own switch",
+   "Any outlet, as long as the checks passed"
+  ],
+  "why": "A GFCI, called an RCD outside North America, cuts power within milliseconds if current leaks to earth. A basic meter can't test insulation under voltage, which is why first power-on goes through one.",
+  "r": [
+   [
+    "rb",
+    "p5b"
+   ],
+   [
+    "gl",
+    "t-gfci"
+   ]
+  ],
+  "crit": true,
+  "src": "runbook-phases.js p0d: 'a {outlet} for first power-on'; p5b: 'Use a {outlet}.' machine.js outlet: 'GFCI- or RCD-protected outlet'. checks.tpl.html warn: 'it can't test insulation under voltage. For first power-on, use a GFCI-protected outlet'. gen_glossary.py GFCI: 'cuts power within milliseconds if current leaks to earth'"
+ },
+ {
+  "id": "safety-11",
+  "k": "safety",
+  "q": "When do the top cover and panels go back on?",
+  "a": [
+   "Before first power-on, then the Covers on checks",
+   "After the first fill, once you've watched for leaks",
+   "After calibration, once the build is finished",
+   "Only once the first shot has run without trouble"
+  ],
+  "why": "Close it up before mains, then run the Covers on checks, still unplugged. Closing up is where a wire gets pinched against the case, most often the screen cable at the vent.",
+  "r": [
+   [
+    "rb",
+    "p5a0"
+   ],
+   [
+    "ck",
+    "h1"
+   ]
+  ],
+  "crit": true,
+  "src": "runbook-phases.js p5a0: 'Top cover and every panel back on ... Then run Covers on, the last section of the power-on checks, before anything gets plugged in.' checks.tpl.html h intro: 'Closing up is where a wire gets pinched against the case, and the screen cable at the vent is the usual one.' warn: 'For first power-on ... keep the covers on.'"
+ },
+ {
+  "id": "safety-13",
+  "k": "safety",
+  "q": "Why does the hot water switch move to low voltage instead of keeping its stock mains wiring?",
+  "a": [
+   "Mains pump wiring around the PCB shorts its triac",
+   "Mains on that switch would drain the boiler too fast",
+   "So the switch lamp keeps working from the 5 V side",
+   "The PCB can only power one mains switch at a time"
+  ],
+  "why": "Wiring the pump around the PCB's pump output can short the triac that drives it, and mains on a PCB input pin destroys that pin. Never leave the stock mains hot water wiring in place.",
+  "r": [
+   [
+    "url",
+    "how-gaggiuino-works.html#switches",
+    "How Gaggiuino works: switches on low voltage"
+   ],
+   [
+    "map",
+    "part=hw",
+    "The hot water switch on the wiring drawing"
+   ]
+  ],
+  "crit": true,
+  "src": "learn-gg-parts.html: 'None of the stock mains wiring can stay on these switches. Mains on an input pin destroys it, and wiring the pump around the PCB's pump output can short the triac that drives it.' wiring-parts.js hw: 'Keep it off mains: switching the pump around the PCB would short its pump output.' index.tpl.html: 'never leave the stock mains hot water wiring in place.' trouble-data.js: 'The lamps ran on mains; on low voltage they stay dark.'",
+  "g": "hw"
+ },
+ {
+  "id": "safety-14",
+  "k": "safety",
+  "q": "At first power-on, with the boiler full, the temperature falls while the SSR light is on. What do you do?",
+  "a": [
+   "Switch off and unplug: the J4 wires are reversed",
+   "Keep going, since cold water is still mixing in",
+   "Raise the Temperature Offset until it starts to climb",
+   "Turn the steam switch on so it heats faster"
+  ],
+  "why": "A reversed thermocouple makes the controller see a falling temperature, so it may keep heating. Unplug, swap the J4 wires, and retest by warming the tip in your hand.",
+  "r": [
+   [
+    "tr",
+    "The temperature falls while the element heats"
+   ],
+   [
+    "rb",
+    "p5d2"
+   ]
+  ],
+  "crit": true,
+  "src": "runbook-phases.js p5d2: 'Once the boiler is full, the temperature must climb while the SSR light is on. If it falls instead, switch off and unplug: the thermocouple wires are reversed at J4.' trouble-data.js: 'The controller sees a falling temperature and may keep heating.' check: 'Switch off and unplug now.' 'warm the thermocouple in your hand and the reading must rise.'",
+  "g": "tcrev"
+ },
+ {
+  "id": "safety-15",
+  "k": "safety",
+  "q": "The breaker, GFCI or RCD trips when you switch on. What's the first thing to do?",
+  "a": [
+   "Leave it unplugged and stop resetting it",
+   "Reset it and try a few more times",
+   "Move to an outlet without GFCI protection",
+   "Disconnect the earth lead so it stops tripping"
+  ],
+  "why": "A trip usually means line or neutral touching earth, a leaking element or water on the wiring. Leave it unplugged, rerun the covers-on short checks, then open it up and find the fault.",
+  "r": [
+   [
+    "tr",
+    "The breaker or {gfci} trips when you plug in or switch on"
+   ],
+   [
+    "ck",
+    "h3"
+   ]
+  ],
+  "crit": true,
+  "src": "trouble-data.js (d:1, unplug now): causes 'Line or neutral touching earth', 'The element leaking to its sheath.', 'Water on the wiring'. check: 'Leave it unplugged; don't keep resetting the breaker.' 'With the covers on, rerun [h3] and [h4]. Then open it up and rerun [d1], [d2], [d5], [d6] and [c2].'"
+ },
+ {
+  "id": "safety-16",
+  "k": "safety",
+  "q": "A pressure fitting leaks after a test run and needs tightening. What comes first?",
+  "a": [
+   "Unplug the machine and let it cool",
+   "Switch off but leave it plugged in",
+   "Run [UT] Tube Fill to clear the line",
+   "Open the steam knob to release pressure"
+  ],
+  "why": "Unplug and let it cool before touching fittings. The site gives the same rule for lifting the top cover on a used machine: unplugged and cooled down.",
+  "r": [
+   [
+    "tr",
+    "Leaks at the tee, elbow or sensor"
+   ],
+   [
+    "rb",
+    "p5g"
+   ]
+  ],
+  "src": "trouble-data.js leaks: 'Unplug and let it cool before touching fittings.' used-silvia-checklist.html: 'Only lift the top cover with the machine unplugged and cooled down'. runbook-phases.js p5g: 'Switch off and unplug first.'",
+  "g": "leak"
+ },
+ {
+  "id": "safety-18",
+  "k": "safety",
+  "q": "The LED switch mod changes the brew, steam and hot water switches. What about the power switch?",
+  "a": [
+   "Leave it alone: it still carries mains",
+   "Give it an LED from the 5 V screen line as well",
+   "Move it to low voltage on J7 like the others",
+   "Swap it for a push button with a built-in LED"
+  ],
+  "why": "Only brew, steam and hot water run on low voltage. The power switch stays on mains, breaking line and neutral, so its stock lamp keeps working and the mod doesn't touch it.",
+  "r": [
+   [
+    "url",
+    "led-mod.html",
+    "LED switch mod"
+   ],
+   [
+    "url",
+    "wiring.html#h-rules",
+    "Wiring reference: spades and routing"
+   ]
+  ],
+  "src": "silvia-switch-led-mod.html callout: 'Three switches only. The power switch still carries mains and keeps its stock lamp. Leave it alone.' wiring.tpl.html rule 'Power switch': 'It stays on mains and breaks both wires ... Its own lamp keeps working.'"
+ },
+ {
+  "id": "install-01",
+  "k": "install",
+  "q": "In the runbook, what comes straight after the Phase 1 bench test?",
+  "a": [
+   "Stripping the old wiring and building the new harness",
+   "Fitting the sensors, SSR, PCB and screen in the machine",
+   "Plugging in to fill the boiler and prime the pump",
+   "Running [UT] PZ Cal to tune Gaggiuino to the pump"
+  ],
+  "why": "The phases run: before you start, bench test, prep and harness, mechanical, wire and check, first power-on, calibrate, finish. The new harness is built on the bench in Phase 2, before anything is mounted in Phase 3.",
+  "r": [
+   [
+    "rb",
+    "p2a"
+   ],
+   [
+    "rb",
+    "p2e"
+   ]
+  ],
+  "src": "runbook-phases.js: p0 'Before you start', p1 'Bench test', p2 'Prep and harness' (goal: 'Strip the old wiring with a record of where it went, then build the new harness on the bench.'), p3 'Mechanical', p4 'Wire and check', p5 'First power-on', p6 'Calibrate', p7 'Finish'"
+ },
+ {
+  "id": "install-02",
+  "k": "install",
+  "q": "How is the PCB powered for the Phase 1 bench test?",
+  "a": [
+   "From its USB-C port, no mains near it",
+   "From a short mains lead on J10 and J11",
+   "From a 12 V bench supply on the J9 header",
+   "Through the machine's wiring, covers off"
+  ],
+  "why": "The bench test proves the PCB, screen and sensors on USB-C power alone. Mains only comes in Phase 5, after every power-on check passes.",
+  "r": [
+   [
+    "rb",
+    "p1e"
+   ]
+  ],
+  "src": "runbook-phases.js p1e: 'Power it from the PCB's USB-C. No mains anywhere near it yet.'; p5 stop: 'Don't plug in until every check on the power-on checklist passes.'"
+ },
+ {
+  "id": "install-03",
+  "k": "install",
+  "q": "How do the thermocouple's bare wires go into the J4 screw terminal?",
+  "a": [
+   "Each folded over, with no insulation in the clamp",
+   "Tinned with solder first, then clamped hard",
+   "Clamped by their insulation, for strain relief",
+   "Crimped into JST-PH pins, then pushed in"
+  ],
+  "why": "Fold each bare wire over before clamping it in J4, and keep the insulation out of the clamp. J4 is a screw terminal, not a JST plug.",
+  "r": [
+   [
+    "rb",
+    "p1c"
+   ],
+   [
+    "map",
+    "run=LV10",
+    "The thermocouple run on the wiring drawing"
+   ]
+  ],
+  "src": "runbook-phases.js p1c: 'Fold each bare wire over before clamping it in J4, and keep the insulation out of the clamp.'; runs.py CONNECTORS J4: 'Screw terminal'"
+ },
+ {
+  "id": "install-04",
+  "k": "install",
+  "q": "How does the runbook have you fit the M3 thermocouple in the boiler top?",
+  "a": [
+   "Finger tight, with paste rated 180 °C or more",
+   "Wrench tight, with PTFE tape on the thread",
+   "Finger tight, with Loctite 55 on the thread",
+   "Wrench tight, so the lead can't rotate"
+  ],
+  "why": "Thermal paste rated to 180 °C or more, finger tight only, with the wire free to rotate. The lead is routed around the front of the boiler.",
+  "r": [
+   [
+    "rb",
+    "p3a"
+   ],
+   [
+    "url",
+    "how-gaggiuino-works.html#tc",
+    "How Gaggiuino works: the thermocouple"
+   ]
+  ],
+  "src": "runbook-phases.js p3a: 'Thermal paste rated to 180 °C or more, finger tight only, with the wire free to rotate. Route the lead around the front of the boiler.'"
+ },
+ {
+  "id": "install-05",
+  "k": "install",
+  "q": "Which thermostat must stay on the boiler, in the heater line?",
+  "a": [
+   "The 165 °C safety thermostat with the reset button",
+   "The brew thermostat, now wired to the PCB",
+   "The steam thermostat, as the steam limit",
+   "None: the PCB and thermocouple replace them all"
+  ],
+  "why": "The brew thermostat comes out and the thermocouple takes one of its holes, and realNiche's harness doesn't wire the steam thermostat. The 165 °C safety thermostat stays in the heater line and is never bypassed.",
+  "r": [
+   [
+    "rb",
+    "p2c"
+   ],
+   [
+    "gl",
+    "t-safety-thermostat"
+   ]
+  ],
+  "src": "runbook-phases.js p2c: 'Remove the brew thermostat... The 165 °C safety thermostat stays; it has a reset button on top.'; p2d: 'realNiche's harness doesn't wire it'; runs.py AC5 note: 'The 165 C safety thermostat stays in the heater line. Never bypass it.'"
+ },
+ {
+  "id": "install-06",
+  "k": "install",
+  "q": "Where does the pressure transducer actually seal when you fit it?",
+  "a": [
+   "On a flat O-ring pressed into the elbow",
+   "On PTFE tape wrapped around its own thread",
+   "On Loctite 55 applied to its own thread",
+   "On its tapered thread, tightened firmly home"
+  ],
+  "why": "The transducer seals on an O-ring, not its thread: press the flat O-ring flush into the elbow's 1/4\" socket, then fit it hand tight plus at most a quarter turn. Loctite 55 goes on the tee and elbow threads only.",
+  "r": [
+   [
+    "rb",
+    "p3b"
+   ],
+   [
+    "url",
+    "how-gaggiuino-works.html#xdcr",
+    "How Gaggiuino works: the pressure sensor"
+   ]
+  ],
+  "src": "runbook-phases.js p3b: 'The transducer seals on an O-ring, not its thread: press the flat 11 × 6 mm O-ring flush into the elbow's 1/4\" socket first... then hand tight plus at most a quarter turn, never more.'; checks.tpl.html g11: 'Loctite 55 on the tee and elbow threads only'"
+ },
+ {
+  "id": "install-07",
+  "k": "install",
+  "q": "Why does the SSR get mounted flat on metal, on the Silvia's left wall?",
+  "a": [
+   "It turns several watts into heat while it conducts",
+   "Its metal base is the harness's main earth point",
+   "The wall shields the PCB from its switching noise",
+   "It has to sit as close to the boiler as it can"
+  ],
+  "why": "While it conducts, the SSR drops up to 1.6 V, which at a Silvia's element current turns several watts into heat. The runbook mounts it on the left wall, clear of the pump.",
+  "r": [
+   [
+    "rb",
+    "p3c"
+   ],
+   [
+    "url",
+    "how-gaggiuino-works.html#ssr",
+    "How Gaggiuino works: the SSR"
+   ]
+  ],
+  "src": "learn-gg-parts.html #ssr: 'While it conducts it drops up to 1.6 V, which at a Silvia's element current turns several watts into heat, so it needs to sit flat on metal.'; runbook-phases.js p3c: 'Mount the SSR on the left wall... clear of the pump.'"
+ },
+ {
+  "id": "install-08",
+  "k": "install",
+  "q": "When mounting the PCB, why must no metal screw through its mounting holes touch the chassis?",
+  "a": [
+   "It could tie the floating 5 V side to earth",
+   "It could short the J10 and J11 mains spades",
+   "It could block the board's Wi-Fi signal",
+   "It could shift the pressure sensor's zero"
+  ],
+  "why": "The PCB's 5 V ground floats so the thermocouple, screwed into the earthed boiler, reads correctly, so nothing on the low-voltage side may touch the chassis. The runbook holds the housing with thin velcro strips.",
+  "r": [
+   [
+    "url",
+    "how-gaggiuino-works.html#ground",
+    "How Gaggiuino works: earth and the floating 5 V side"
+   ],
+   [
+    "rb",
+    "p3d"
+   ]
+  ],
+  "src": "learn-gg-ground.html: 'never bond the 5 V ground to earth... nothing on the low-voltage side should touch the chassis, including a metal screw through one of the board's mounting holes'; runbook-phases.js p3d: 'Thin velcro strips hold it.'"
+ },
+ {
+  "id": "install-09",
+  "k": "install",
+  "q": "How does the runbook protect the screen cable where it passes through the vent?",
+  "a": [
+   "A heat-shrink sleeve, left unshrunk",
+   "A wrap of self-fusing silicone tape",
+   "A bead of hot glue along the vent edge",
+   "Heat-shrink shrunk tight over the plug"
+  ],
+  "why": "The cable passes through the vent inside an unshrunk heat-shrink sleeve so the sharp edge can't cut it. Strain relief also goes where the screen cable leaves the machine.",
+  "r": [
+   [
+    "rb",
+    "p3e"
+   ],
+   [
+    "ck",
+    "g9"
+   ]
+  ],
+  "src": "runbook-phases.js p3e: 'Pass the cable through the vent inside an unshrunk heat-shrink sleeve so the sharp edge can't cut it.'; p4d: 'At the SSR and where the screen cable leaves the machine.'"
+ },
+ {
+  "id": "install-10",
+  "k": "install",
+  "q": "The boiler ends get bare spades and self-fusing silicone tape. When does the tape go on?",
+  "a": [
+   "Once fitted and probed by the checks",
+   "Before crimping, so the barrel is covered",
+   "After the first heat-up at power-on",
+   "Right after crimping, before it's fitted"
+  ],
+  "why": "Each bare boiler spade is crimped with the open-barrel crimper and taped once it's fitted and the meter checks have probed it. Check g1 is the reminder to wrap any left bare.",
+  "r": [
+   [
+    "rb",
+    "p2f"
+   ],
+   [
+    "ck",
+    "g1"
+   ]
+  ],
+  "src": "runbook-phases.js p2f: 'Uninsulated spades. Each gets self-fusing silicone tape once it's fitted and the power-on checks have probed it; check g1 is the reminder.'"
+ },
+ {
+  "id": "install-11",
+  "k": "install",
+  "q": "What is the first thing to do right after switching on for the first time?",
+  "a": [
+   "Open the steam knob and run Flush",
+   "Enter the Silvia starting settings",
+   "Run [UT] Test OPV with a blank basket",
+   "Let it heat up to the brew setpoint"
+  ],
+  "why": "Open the steam knob and run Flush until water comes steadily out of the steam wand, which means the boiler is full and the air is out. It keeps the element from heating a dry or half-empty boiler.",
+  "r": [
+   [
+    "rb",
+    "p5d"
+   ]
+  ],
+  "src": "runbook-phases.js p5d: 'Straight after switch-on, before anything else: open the steam knob and turn on Flush. Run it until water comes steadily out of the steam wand... it keeps the element from heating a dry or half-empty boiler.'",
+  "g": "fill"
+ },
+ {
+  "id": "install-13",
+  "k": "install",
+  "q": "Once the boiler is full, in which order does the runbook run the utility profiles?",
+  "a": [
+   "Tube Fill, then Test OPV, then PZ Cal",
+   "PZ Cal, then Tube Fill, then Test OPV",
+   "Test OPV, then PZ Cal, then Tube Fill",
+   "Tube Fill, then PZ Cal, then Test OPV"
+  ],
+  "why": "[UT] Tube Fill pushes the air out of the sensor line, then [UT] Test OPV checks for a 10.5 to 13 bar peak with a blank basket. [UT] PZ Cal, which calibrates the pump, comes in Phase 6.",
+  "r": [
+   [
+    "rb",
+    "p5e"
+   ],
+   [
+    "rb",
+    "p6a"
+   ]
+  ],
+  "src": "runbook-phases.js p5e 'Run [UT] Tube Fill... fills the sensor line so there is no air in it', p5f 'Run [UT] Test OPV with a blank basket: Peak pressure 10.5 to 13 bar', p6a 'Run [UT] PZ Cal: Calibrates Pump Zero'"
+ },
+ {
+  "id": "install-14",
+  "k": "install",
+  "q": "Where do the runbook's Silvia starting settings (DreamSteam off, offset 5 and so on) come from?",
+  "a": [
+   "The Silvia thread on Discord, not official defaults",
+   "The official defaults, which suit every machine",
+   "Rancilio's own service manual for the Silvia",
+   "The screen's automatic boiler tuning routine"
+  ],
+  "why": "They are starting values from the Discord thread. The official manual recommends its defaults for Gaggia machines only and says DreamSteam is not recommended for the Silvia.",
+  "r": [
+   [
+    "rb",
+    "p5c"
+   ],
+   [
+    "url",
+    "silvia-specifics.html",
+    "Silvia specifics"
+   ]
+  ],
+  "src": "docs-silvia-specifics.md Settings: 'Starting values from the thread, not official defaults (the manual recommends its defaults for Gaggia models only)'; DreamSteam 'Off (the official manual itself says not recommended for the Silvia)'; runbook-phases.js p5c src 'Discord'"
+ },
+ {
+  "id": "install-16",
+  "k": "install",
+  "q": "How does the runbook have you check the tee, elbow, sensor and thermocouple for leaks?",
+  "a": [
+   "Unplugged, touching a dry paper towel to each",
+   "Plugged in, during Test OPV, top cover off",
+   "Plugged in, with a flashlight while it heats",
+   "Unplugged, once the covers are back on"
+  ],
+  "why": "Switch off and unplug first, lift the top cover and touch a dry paper towel to each fitting. Then close it up and rerun h1 to h4 of the power-on checks before plugging back in.",
+  "r": [
+   [
+    "rb",
+    "p5g"
+   ],
+   [
+    "ck",
+    "h1"
+   ]
+  ],
+  "src": "runbook-phases.js p5g: 'Switch off and unplug first. Lift the top cover and touch a dry paper towel to the tee, elbow, sensor and thermocouple. Close it up and rerun h1 to h4 of the power-on checks before you plug back in'",
+  "g": "leak"
+ },
+ {
+  "id": "install-17",
+  "k": "install",
+  "q": "Which switches does the LED switch mod fit LEDs to?",
+  "a": [
+   "Brew, steam and hot water only",
+   "All four, including the power switch",
+   "Brew and steam, plus the power switch",
+   "Only brew and steam; hot water is left"
+  ],
+  "why": "The power switch still carries mains and keeps its stock lamp, so the mod leaves it alone. Only the three switches that moved to low voltage lose their lights.",
+  "r": [
+   [
+    "url",
+    "led-mod.html",
+    "LED switch mod"
+   ],
+   [
+    "url",
+    "how-gaggiuino-works.html#leds",
+    "How Gaggiuino works: switch lights"
+   ]
+  ],
+  "src": "silvia-switch-led-mod.html intro: 'Three switches only. The power switch still carries mains and keeps its stock lamp. Leave it alone.'"
+ },
+ {
+  "id": "install-18",
+  "k": "install",
+  "q": "After the LED mod, which spade does each switch's PCB input wire go on?",
+  "a": [
+   "The center spade on the ground side",
+   "The center spade on the 5 V side",
+   "The outer spade of the marked pole",
+   "Either outer spade; the poles are equal"
+  ],
+  "why": "Both poles close together, so the 5 V pole lights the LED while the ground pole pulls the input low. On the 5 V side the input would see 5 V every time the switch turned on, which reads as off.",
+  "r": [
+   [
+    "url",
+    "led-mod.html#s8",
+    "LED switch mod: wire it in"
+   ],
+   [
+    "tr",
+    "LED mod: an LED won't light, or its switch does nothing"
+   ]
+  ],
+  "src": "silvia-switch-led-mod.html s8: 'the PCB input goes to the center spade on the ground side... On the 5 V side, the input would see 5 V every time the switch turns on.'; trouble-data.js: 'the input sees 5 V when the switch is on and reads it as off'"
+ },
+ {
+  "id": "install-19",
+  "k": "install",
+  "q": "Your Silvia's boiler is insulated. When does the insulation go back on?",
+  "a": [
+   "After the thermocouple is in, lead routed out",
+   "Before the thermostats come off the boiler",
+   "After first power-on, once leaks are checked",
+   "Never: Gaggiuino's control makes it unneeded"
+  ],
+  "why": "From V5 on, fold the insulation back to reach the thermostats in Phase 2. It goes back on in Phase 3 after the thermocouple, with the lead routed out clear of the element terminals.",
+  "r": [
+   [
+    "rb",
+    "p3a2"
+   ],
+   [
+    "rb",
+    "p3a0"
+   ]
+  ],
+  "w": "ver:V5,V6",
+  "src": "runbook-phases.js p3a0: 'From V5 on the boiler is insulated. Fold it back to reach the thermostats before you take any off. It goes back on in Phase 3, after the thermocouple.'; p3a2: 'with the thermocouple lead routed out cleanly, clear of the element terminals.'",
+  "g": "insul"
+ },
+ {
+  "id": "install-20",
+  "k": "install",
+  "q": "Your Silvia E has a push-button power switch and a GICAR energy-saver module. What does the harness need?",
+  "a": [
+   "Both out; fit a latching double-pole rocker",
+   "Both kept, with the module rewired to J5",
+   "The module out, the push button kept as is",
+   "Both kept, wired in ahead of the power inlet"
+  ],
+  "why": "The custom harness leaves the energy-saver module out and needs a power switch that latches on and off by itself, breaking line and neutral like the M model's rocker. Confirm the part on Discord before buying.",
+  "r": [
+   [
+    "rb",
+    "p2b1"
+   ],
+   [
+    "ck",
+    "g15"
+   ]
+  ],
+  "w": "model:E",
+  "src": "runbook-phases.js p2b1: 'The custom harness leaves the module out and needs a power switch that latches on and off by itself, so fit a double-pole rocker like the M model's. Confirm the part on Discord before buying.'",
+  "g": "eswitch"
+ },
+ {
+  "id": "wiring-01",
+  "k": "wiring",
+  "q": "Which line-up of PCB headers is right?",
+  "a": [
+   "J1 screen, J4 thermocouple, J6 pressure sensor",
+   "J1 thermocouple, J4 pressure sensor, J6 screen",
+   "J1 pressure sensor, J4 screen, J6 thermocouple",
+   "J1 screen, J4 pressure sensor, J6 thermocouple"
+  ],
+  "why": "The screen talks to the PCB on J1, the thermocouple clamps into the J4 screw terminal and the pressure sensor plugs into J6 (5V, GND, P).",
+  "r": [
+   [
+    "url",
+    "wiring.html#h-conn",
+    "Wiring: PCB v4 connector map"
+   ],
+   [
+    "map",
+    "runs=LV9,LV10,LV11",
+    "The sensor and screen cables on the wiring drawing"
+   ]
+  ],
+  "src": "runs.py CONNECTORS: ['J1', 'Screen', 'GND, TX, RX, 5V'], ['J4', 'Thermocouple', '-, +', 'Screw terminal'], ['J6', 'Pressure transducer', '5V, GND, P']"
+ },
+ {
+  "id": "wiring-02",
+  "k": "wiring",
+  "q": "How do the two SSR control wires from J9 connect?",
+  "a": [
+   "R1 to SSR +, GND to SSR -",
+   "R1 to SSR -, GND to SSR +",
+   "R2 to SSR +, R1 to SSR -",
+   "Either way round; it doesn't matter"
+  ],
+  "why": "Polarity matters: J9 gives the SSR 5 V on R1 when the element should be on, so R1 goes to + and GND to -. R2 is unused on a Silvia.",
+  "r": [
+   [
+    "map",
+    "runs=LV7,LV8",
+    "The SSR control wires on the wiring drawing"
+   ],
+   [
+    "ck",
+    "f7"
+   ]
+  ],
+  "src": "runs.py LV7 note: 'Polarity matters: R1 to +, GND to -.'; CONNECTORS J9 'GND, R1, R2 (R2 unused)'; learn-gg-parts.html: 'J9 gives the boiler's SSR 5 V on R1 when the element should be on.'"
+ },
+ {
+  "id": "wiring-03",
+  "k": "wiring",
+  "q": "Where does the hot water switch's signal wire land on the PCB?",
+  "a": [
+   "J5 B15",
+   "J5 A12",
+   "J7 S",
+   "J7 GND"
+  ],
+  "why": "realNiche's schematic puts the hot water switch on J5 B15, and Talon confirmed Gen 3 reads it there. A12 is the component build's pin, so a switch wired to it does nothing.",
+  "r": [
+   [
+    "map",
+    "run=LV3",
+    "The hot water signal wire on the wiring drawing"
+   ],
+   [
+    "ck",
+    "f5"
+   ]
+  ],
+  "src": "docs-silvia-specifics.md: 'Hot water on B15, not A12: realNiche's schematic puts the switch on J5 B15, and Talon confirmed on Discord in October 2026 that Gen 3 reads it there... A12 is the component (Lego) build pin.'; trouble-data.js 'A switch does nothing' cause: 'Hot water on J5 A12 instead of B15.'"
+ },
+ {
+  "id": "wiring-04",
+  "k": "wiring",
+  "q": "Which matches the PCB's four mains spades?",
+  "a": [
+   "J10 neutral, J11 line, J12 pump, J13 valve",
+   "J10 line, J11 neutral, J12 pump, J13 valve",
+   "J10 neutral, J11 line, J12 valve, J13 pump",
+   "J10 pump, J11 valve, J12 neutral, J13 line"
+  ],
+  "why": "Mains comes into the board on J10 (neutral) and J11 (line). J12 runs the pump and J13 opens the 3-way valve, both switched at mains by parts on the board.",
+  "r": [
+   [
+    "map",
+    "part=pcb",
+    "The PCB on the wiring drawing"
+   ],
+   [
+    "ck",
+    "g6"
+   ]
+  ],
+  "src": "runs.py CONNECTORS: J10 'AC Neutral', J11 'AC Line', J12 'Pump', J13 'Solenoid (3-way valve)'; learn-gg-parts.html: 'The pump on J12 and the 3-way valve on J13 are switched at mains voltage by solid-state parts on the board'",
+  "g": "jmains"
+ },
+ {
+  "id": "wiring-05",
+  "k": "wiring",
+  "q": "Switched line lands on SSR load terminal 1. What else does that terminal feed?",
+  "a": [
+   "PCB J11, the board's line input",
+   "The 165 °C safety thermostat",
+   "The boiler's ground spade",
+   "The PCB's J9 control header"
+  ],
+  "why": "AC3 brings switched line to SSR terminal 1 on a fork shared with AC4, which powers the PCB through J11 and feeds its pump and valve outputs. Terminal 2 is the one that feeds the safety thermostat.",
+  "r": [
+   [
+    "map",
+    "runs=AC3,AC4",
+    "The line runs at SSR terminal 1 on the wiring drawing"
+   ],
+   [
+    "map",
+    "part=ssr",
+    "The SSR on the wiring drawing"
+   ]
+  ],
+  "src": "runs.py AC3 note: 'Switched line into the SSR. The same SSR terminal also feeds the PCB through AC4.'; AC4 'SSR load terminal 1 to PCB J11 (AC Line)... Powers the PCB and feeds its pump and solenoid outputs.'"
+ },
+ {
+  "id": "wiring-06",
+  "k": "wiring",
+  "q": "What does SSR load terminal 2 feed?",
+  "a": [
+   "The safety thermostat, then the element",
+   "PCB J11, then the pump and valve outputs",
+   "The element directly, with no thermostat",
+   "The heating lamp, then the neutral chain"
+  ],
+  "why": "The heater path runs from SSR terminal 2 through the 165 °C safety thermostat to the element. The safety thermostat stays in that line and is never bypassed.",
+  "r": [
+   [
+    "map",
+    "runs=AC5,AC6",
+    "The heater path on the wiring drawing"
+   ],
+   [
+    "ck",
+    "g5"
+   ]
+  ],
+  "src": "wiring-parts.js ssr: 'terminal 2 feeds the 165 °C safety thermostat and then the element.'; runs.py AC5 note: 'The 165 C safety thermostat stays in the heater line. Never bypass it.'"
+ },
+ {
+  "id": "wiring-07",
+  "k": "wiring",
+  "q": "How is the power switch wired in the new harness?",
+  "a": [
+   "Breaks line and neutral; supply on outer spades",
+   "Breaks line only; supply on the center spades",
+   "Low voltage, as an input the PCB reads",
+   "Breaks neutral only; loads on outer spades"
+  ],
+  "why": "The power switch stays on mains and breaks both line and neutral, one per pole. The inlet goes on the outer spades and the loads come off the center spades.",
+  "r": [
+   [
+    "map",
+    "part=pwr",
+    "The power switch on the wiring drawing"
+   ],
+   [
+    "ck",
+    "e9"
+   ]
+  ],
+  "src": "wiring-parts.js pwr: 'The power switch, still on mains: it breaks both line and neutral, one per pole. Supply goes on the outer spades, the loads come off the center ones.'"
+ },
+ {
+  "id": "wiring-08",
+  "k": "wiring",
+  "q": "Why does the heating lamp light only while the boiler is being heated?",
+  "a": [
+   "It's wired across the element, after the SSR",
+   "The PCB drives it from J9's spare R2 pin",
+   "It sits on the steam switch's spare pole",
+   "It's in series with the pump's thermal fuse"
+  ],
+  "why": "AC7 takes the heater line after the safety thermostat and AC8 takes neutral, so the lamp only gets power when the SSR feeds the element. It shows the PCB's heat pulses.",
+  "r": [
+   [
+    "map",
+    "part=lamp",
+    "The heating lamp on the wiring drawing"
+   ],
+   [
+    "tr",
+    "The heating light never lights, or never goes out"
+   ]
+  ],
+  "src": "wiring-parts.js lamp: 'The heating lamp, wired across the element: it lights whenever the SSR is feeding the element... So it shows the PCB's heat pulses'; runs.py AC7 'Safety thermostat, terminal 2 to Heating lamp, L spade'"
+ },
+ {
+  "id": "wiring-09",
+  "k": "wiring",
+  "q": "Your Silvia's round heating LED has more than two wires. What does the site say to do?",
+  "a": [
+   "Ask on Discord before rewiring it",
+   "Wire it across the element anyway",
+   "Leave it on the switched line, as stock",
+   "Move it to the brew switch's spare pole"
+  ],
+  "why": "From V5 on, trace where the LED's wires go before cutting. The harness normally puts it across the element on AC7 and AC8, but with more than two wires, or if the E's energy-saver module drives it, ask on Discord first.",
+  "r": [
+   [
+    "rb",
+    "p2b2"
+   ],
+   [
+    "map",
+    "part=lamp",
+    "The heating light on the wiring drawing"
+   ]
+  ],
+  "w": "ver:V5,V6",
+  "src": "runbook-phases.js p2b2: 'In the new harness it goes across the element instead, AC7 to the heater line after the safety thermostat and AC8 to neutral... If your lamp has more than two wires, or the E's energy-saver module drives it, ask on Discord before rewiring it.'"
+ },
+ {
+  "id": "wiring-10",
+  "k": "wiring",
+  "q": "Which wire does the harness use for its mains runs and its low-voltage runs?",
+  "a": [
+   "18 AWG silicone mains, 22 AWG low voltage",
+   "22 AWG silicone mains, 18 AWG low voltage",
+   "14 AWG solid mains, 18 AWG low voltage",
+   "18 AWG PVC mains, 22 AWG low voltage"
+  ],
+  "why": "Mains runs are 18 AWG silicone wire rated 200 °C and low-voltage runs are 22 AWG. Only 200 °C silicone wire may touch the boiler or steam wand.",
+  "r": [
+   [
+    "url",
+    "cut-list.html#h-wire",
+    "Cut list: wire"
+   ],
+   [
+    "url",
+    "wiring.html#h-rules",
+    "Wiring: spades and routing"
+   ]
+  ],
+  "src": "wiring.tpl.html legend: 'Mains runs 18 AWG silicone, rated 200 °C', 'Low-voltage runs 22 AWG plus sensor leads'; h-rules: 'Only 200 °C silicone wire may touch the boiler or steam wand.'; cutlist.tpl.html: '200 °C silicone wire throughout'"
+ },
+ {
+  "id": "wiring-11",
+  "k": "wiring",
+  "q": "How should the screen cable be checked against J1?",
+  "a": [
+   "Pin by pin: GND, TX, RX, 5V",
+   "By wire color, against the PCB",
+   "Cut open and re-crimped by color",
+   "By color, with blue and yellow swapped"
+  ],
+  "why": "Blue and yellow can be swapped between cable revisions, so check connection points, not colors. Don't take a pre-made cable apart.",
+  "r": [
+   [
+    "map",
+    "run=LV11",
+    "The screen cable on the wiring drawing"
+   ],
+   [
+    "rb",
+    "p1d"
+   ]
+  ],
+  "src": "runs.py LV11 note: 'Check connection points, not colors: blue and yellow can be swapped between cable revisions. Don't take pre-made cables apart.'; trouble-data.js: 'Check J1 pin by pin: GND, TX, RX, 5V.'",
+  "g": "j1"
+ },
+ {
+  "id": "wiring-12",
+  "k": "wiring",
+  "q": "How is each brew, steam and hot water switch wired on low voltage?",
+  "a": [
+   "One pole: signal on center spade, ground on outer",
+   "Across poles: signal and ground on the two centers",
+   "Across poles: signal and ground on the two outers",
+   "On mains: line on one pole, neutral on the other"
+  ],
+  "why": "Each switch uses its ground pole, with the PCB signal on the center spade and the ground chain on the outer spade, so switching on joins the signal to ground. The other pole stays free for the LED mod.",
+  "r": [
+   [
+    "map",
+    "runs=LV1,LV2,LV3,LV4,LV5,LV6",
+    "The switch signal and ground wires on the wiring drawing"
+   ],
+   [
+    "url",
+    "wiring.html#h-rules",
+    "Wiring: spades and routing"
+   ]
+  ],
+  "src": "wiring.tpl.html h-rules: 'Use one pole of each switch, the ground pole. The PCB signal goes on its center spade and ground on its outer spade. The other pole stays free; the LED mod puts 5 V on its outer spade.'",
+  "g": "sw"
+ },
+ {
+  "id": "wiring-14",
+  "k": "wiring",
+  "q": "Where does the inlet's earth wire go in the new harness?",
+  "a": [
+   "The boiler ground spade",
+   "J7 GND, to share one ground",
+   "The SSR's negative control terminal",
+   "The PCB's J10 neutral spade"
+  ],
+  "why": "G1 runs inlet earth to the boiler ground spade, and G2 joins the solenoid's ground to it. Earth never connects to the PCB's 5 V ground, which floats so the thermocouple reads correctly.",
+  "r": [
+   [
+    "map",
+    "runs=G1,G2",
+    "The earth runs on the wiring drawing"
+   ],
+   [
+    "url",
+    "how-gaggiuino-works.html#ground",
+    "How Gaggiuino works: earth and the floating 5 V side"
+   ]
+  ],
+  "src": "runs.py G1 'Power inlet, earth pin to Boiler ground spade... Earth never connects to the PCB's 5 V ground (official warning).'; docs-silvia-specifics.md: 'Earth never connects to the PCB's 5 V ground, which floats so the thermocouple reads correctly.'"
+ },
+ {
+  "id": "wiring-15",
+  "k": "wiring",
+  "q": "Two 18 AWG runs share one terminal, as at the lamp or the pump. How are they crimped?",
+  "a": [
+   "Into one blue spade sized for two wires",
+   "Into one red spade, crimped extra hard",
+   "Each in its own red spade, stacked",
+   "Twisted together into one red spade"
+  ],
+  "why": "Two 18 AWG wires never go into a red spade. Where two runs meet at one terminal, both go into a single spade sized for two wires: blue, or a bare spade sized for 16 to 14 AWG.",
+  "r": [
+   [
+    "url",
+    "wiring.html#h-rules",
+    "Wiring: spades and routing"
+   ],
+   [
+    "ck",
+    "g2"
+   ]
+  ],
+  "src": "wiring.tpl.html h-rules: 'Two 18 AWG wires never go into a red spade. Use a blue spade, or a bare spade sized for 16 to 14 AWG [site uses a range dash], at the SSR, the safety thermostat, the lamp, the pump, the solenoid and the boiler ground.'; legend: 'Where two wires meet at one spade, both go into a single spade sized for two wires.'"
+ },
+ {
+  "id": "wiring-16",
+  "k": "wiring",
+  "q": "Why do the boiler ends get uninsulated spades wrapped in self-fusing silicone tape?",
+  "a": [
+   "Nylon-insulated spades are rated to only 105 °C",
+   "Bare spades bond the wire to the boiler's earth",
+   "Insulated spades won't fit the boiler terminals",
+   "The silicone tape keeps the boiler's heat in"
+  ],
+  "why": "Nylon-insulated spades are rated to 105 °C, so they stay away from the boiler. Bare spades crimped with an open-barrel crimper and wrapped in silicone tape go there instead, and on the hot solenoid too.",
+  "r": [
+   [
+    "url",
+    "wiring.html#h-rules",
+    "Wiring: spades and routing"
+   ],
+   [
+    "map",
+    "part=boiler",
+    "The boiler on the wiring drawing"
+   ]
+  ],
+  "src": "wiring.tpl.html h-rules 'At the boiler': 'Uninsulated spades crimped with an open-barrel crimper, then wrapped in self-fusing silicone tape. Nylon-insulated spades are rated to 105 °C and stay away from the boiler. The solenoid sits on the group and gets hot too'"
+ },
+ {
+  "id": "wiring-17",
+  "k": "wiring",
+  "q": "How is a run's ID marked at its boiler end?",
+  "a": [
+   "Written on the jacket in oil-based marker",
+   "A paper flag label sealed with clear tape",
+   "A paper flag under the silicone tape",
+   "Sticker paper wrapped around the spade"
+  ],
+  "why": "Paper and tape adhesive won't last on the boiler, so those ends get the ID written on the silicone jacket in oil-based permanent marker. Every other end gets a printed flag label.",
+  "r": [
+   [
+    "url",
+    "wire-labels.html",
+    "Wire labels"
+   ],
+   [
+    "rb",
+    "p0g"
+   ]
+  ],
+  "src": "labels.tpl.html 'Mark by hand': 'These ends sit on the boiler, where paper and tape adhesive won't last. Write the ID on the silicone jacket with an oil-based permanent marker, which the official guide recommends for silicone.'"
+ },
+ {
+  "id": "wiring-18",
+  "k": "wiring",
+  "q": "Building the harness on the bench, how do you cut and label each run?",
+  "a": [
+   "Cut a little long, label both ends, then crimp",
+   "Cut to the exact length, crimp, then label",
+   "Crimp one end, then cut to fit in the machine",
+   "Cut a little long, crimp, then label one end"
+  ],
+  "why": "The lengths are starting points from Talon's harness and the older RS diagram, so cut a little long. Both labels go on before crimping, and each names where the other end goes.",
+  "r": [
+   [
+    "rb",
+    "p2e"
+   ],
+   [
+    "url",
+    "cut-list.html#h-cut",
+    "Cut list: cut and crimp"
+   ]
+  ],
+  "src": "runbook-phases.js p2e: 'Start from the cut list, cut a little long, and put both labels on before crimping.'; cutlist.tpl.html: 'Lengths are starting points from Talon's harness and the older RS diagram'; labels.tpl.html: 'Each label says which end it sits on and where the other end goes'"
+ },
+ {
+  "id": "wiring-19",
+  "k": "wiring",
+  "q": "Where do the brew and steam switch signals and their ground chain land?",
+  "a": [
+   "J7: B for brew, S for steam, chain to GND",
+   "J5: B15 for brew, A12 for steam, chain to GND",
+   "J9: R1 for brew, R2 for steam, chain to GND",
+   "J7: S for brew, B for steam, chain to earth"
+  ],
+  "why": "J7 carries GND, S (steam) and B (brew). The ground chain runs across all three switches to J7 GND, and hot water alone goes to J5 B15.",
+  "r": [
+   [
+    "map",
+    "runs=LV1,LV2,LV4,LV5,LV6",
+    "The brew and steam wires and ground chain on the wiring drawing"
+   ],
+   [
+    "url",
+    "wiring.html#h-conn",
+    "Wiring: PCB v4 connector map"
+   ]
+  ],
+  "src": "runs.py CONNECTORS J7: 'Switches', 'GND, S (steam), B (brew)'; LV1 'PCB J7 S to Steam switch', LV2 'PCB J7 B to Brew switch', LV4 'Start of the switch ground chain'; docs-silvia-specifics.md: 'steam to J7 S, brew to J7 B, hot water to J5 B15, with the ground chain to J7 GND'"
+ },
+ {
+  "id": "checks-01",
+  "k": "checks",
+  "q": "Why do the component checks (section c) come before the shorts and path checks?",
+  "a": [
+   "They take leads off; later checks prove each lead is back",
+   "They need the power switch on, which the shorts don't",
+   "They need the PCB unplugged, and it only goes back on after",
+   "They warm the coils, which the shorts checks rely on"
+  ],
+  "why": "c1, c5 and c6 take leads off. The shorts and paths then test the wiring as it will actually run, and the path checks in section e prove each lead went back on.",
+  "r": [
+   [
+    "ck",
+    "c8"
+   ]
+  ],
+  "src": "checks.tpl.html, changed-list note: 'The component checks take leads off, so they now come before the shorts and paths'. Section c intro: 'taken before the shorts and paths below so those test the wiring as it will run. Power switch off.' c8: 'The path checks in section e prove each lead is back.' a3: 'The PCB stays connected unless a check says otherwise.'"
+ },
+ {
+  "id": "checks-02",
+  "k": "checks",
+  "q": "How do you set up the meter in check a2, before any reading?",
+  "a": [
+   "Lowest Ω range, leads touched together and noted",
+   "Highest Ω range, then zeroed against the chassis",
+   "AC volts range, then a test of the outlet you'll use",
+   "DC volts range, then a reading of the 5 V pin"
+  ],
+  "why": "Touch the leads together and enter that reading under Meter leads. The page subtracts it from every check that must read under 1 Ω. The shorts checks later switch to the highest Ω range.",
+  "r": [
+   [
+    "ck",
+    "a2"
+   ],
+   [
+    "gl",
+    "t-continuity"
+   ]
+  ],
+  "src": "checks.tpl.html a2: 'Meter set to resistance or continuity. Lowest Ω range. Touch the leads together and enter that reading under Meter leads above.' Meter leads field: 'Subtracted from the \"under 1 Ω\" checks.' d1 to d4: 'Highest Ω range.'"
+ },
+ {
+  "id": "checks-03",
+  "k": "checks",
+  "q": "Check d1 probes inlet L to inlet earth with the power switch on. Which reading passes?",
+  "a": [
+   "OL, meaning there is no path",
+   "Under 1 Ω, after the leads",
+   "Close to the element's resistance",
+   "A steady value, neither OL nor 0"
+  ],
+  "why": "OL means the reading is off the meter's scale, usually because the circuit is open. That's the right answer on every shorts check; any reading here means line touches earth somewhere.",
+  "r": [
+   [
+    "ck",
+    "d1"
+   ],
+   [
+    "gl",
+    "t-ol"
+   ]
+  ],
+  "src": "glossary.html t-ol: 'What a multimeter shows when the reading is off its scale, usually because the circuit is open. On the power-on checks, OL is the right answer for every short test.' checks.tpl.html d1 type open ('Expect OL (open)'), fix: 'Line touches earth somewhere.'"
+ },
+ {
+  "id": "checks-04",
+  "k": "checks",
+  "q": "With the power switch on, inlet N to inlet earth (d2) reads 3 Ω. What does that tell you?",
+  "a": [
+   "A fail: neutral touches earth somewhere",
+   "A pass: neutral and earth join inside",
+   "A pass: it proves the G1 earth lead",
+   "A pass: the pump's diode is conducting"
+  ],
+  "why": "Every shorts check must read OL. A reading means neutral is touching earth, often a bare spade or a wire pinched against the frame. Find it before you plug in.",
+  "r": [
+   [
+    "ck",
+    "d2"
+   ],
+   [
+    "gl",
+    "t-ol"
+   ]
+  ],
+  "src": "checks.tpl.html section d intro: 'With the power switch ON (still unplugged), mains must not reach earth or the 5 V side.' d2 type open, fix: 'Neutral touches earth somewhere.' trouble-data.js breaker trip cause: 'Line or neutral touching earth: a bare spade, or a wire pinched against the frame.'"
+ },
+ {
+  "id": "checks-05",
+  "k": "checks",
+  "q": "What should inlet earth pin to bare chassis metal (b1) read?",
+  "a": [
+   "Under 1 Ω, after subtracting the leads",
+   "OL, because earth must stay isolated",
+   "A few ohms, like the thermocouple loop",
+   "Over 100 Ω, like line to neutral"
+  ],
+  "why": "Earth must reach every exposed metal part. A higher reading means earth isn't reaching the chassis, so check the inlet earth lead G1 and its spades.",
+  "r": [
+   [
+    "ck",
+    "b1"
+   ],
+   [
+    "map",
+    "run=G1",
+    "The inlet earth lead G1 on the wiring drawing"
+   ]
+  ],
+  "src": "checks.tpl.html section b intro: 'Earth must reach every exposed metal part and must stay off the 5 V side.' b1 type low ('Expect under 1 Ω'), how: 'Use a screw head or a scratch-free bare spot on the frame.' fix: 'Earth isn't reaching the chassis. Check the inlet earth lead (G1) and its spades.'"
+ },
+ {
+  "id": "checks-06",
+  "k": "checks",
+  "q": "Why must inlet earth to the PCB's 5 V ground (b5) read OL?",
+  "a": [
+   "The DC side floats so the thermocouple reads right",
+   "The meter can't read through the PCB's 5 V regulator",
+   "Earth reaches the 5 V side only through the SSR",
+   "The 5 V ground is bonded to earth at the screen"
+  ],
+  "why": "Earth and the 5 V ground must never meet. If b5 shows a reading, look for a grounded thermocouple, a pinched low-voltage wire, or a sensor touching metal.",
+  "r": [
+   [
+    "ck",
+    "b5"
+   ],
+   [
+    "gl",
+    "t-gnd"
+   ]
+  ],
+  "src": "checks.tpl.html b5 how: 'Earth and the 5 V ground must never meet; the DC side floats so the thermocouple reads correctly.' fix: 'Something joins earth to the 5 V ground. Look for a grounded thermocouple, a pinched low-voltage wire, or a sensor touching metal.' glossary t-gnd: 'On this PCB it is not connected to earth.'",
+  "g": "b5"
+ },
+ {
+  "id": "checks-07",
+  "k": "checks",
+  "q": "Check c1 compares the boiler element's resistance to an expected value. Which two numbers set it?",
+  "a": [
+   "Element wattage and rated voltage",
+   "Pump wattage and the lead reading",
+   "Boiler volume and target temperature",
+   "Element wattage and the SSR rating"
+  ],
+  "why": "The page works out the expected resistance from the power and voltage on the rating plate, and passes readings within 15%. If the element has its own wattage stamped on it, use that, since the machine plate includes the pump.",
+  "r": [
+   [
+    "ck",
+    "c1"
+   ],
+   [
+    "rb",
+    "p0b"
+   ]
+  ],
+  "src": "checks.tpl.html fields: 'Element power, from the rating plate' 'Sets the expected element resistance.' 'Enter the rated voltage too; the expected resistance depends on it.' range expText: 'Expect about X Ω (±15%)'. c1 how: 'If the element has its own wattage stamped on it, use that above rather than the machine plate, which includes the pump.' runbook p0b: 'The power-on checks use the element wattage to work out its expected resistance.'"
+ },
+ {
+  "id": "checks-08",
+  "k": "checks",
+  "q": "Element terminal to boiler body (c2) shows a reading instead of OL. What now?",
+  "a": [
+   "Don't power it: the element needs replacing",
+   "Carry on: the element sheath is meant to be earthed",
+   "Tape the terminal, then rerun the check",
+   "Swap the two element leads and measure again"
+  ],
+  "why": "A reading means the element is leaking to its sheath. It must not be powered. A leaking element is also one cause of a breaker or GFCI trip.",
+  "r": [
+   [
+    "ck",
+    "c2"
+   ],
+   [
+    "tr",
+    "The breaker or {gfci} trips when you plug in or switch on"
+   ]
+  ],
+  "src": "checks.tpl.html c2 type open, fix: 'The element is leaking to its sheath. Don't power it; the element needs replacing.' trouble-data.js breaker trip causes: 'The element leaking to its sheath.'"
+ },
+ {
+  "id": "checks-10",
+  "k": "checks",
+  "q": "Across the pump coil (c5), the meter reads OL one way and a steady value with the probes swapped. What does that mean?",
+  "a": [
+   "Normal: the pump's diode blocks one way",
+   "An open coil, so the pump needs replacing",
+   "The pump thermal fuse has opened",
+   "A short inside one half of the coil"
+  ],
+  "why": "Ulka pumps have a diode in series, so OL one way is normal. Enter the lower reading. Only OL both ways means an open coil or fuse.",
+  "r": [
+   [
+    "ck",
+    "c5"
+   ],
+   [
+    "gl",
+    "t-diode"
+   ]
+  ],
+  "src": "checks.tpl.html c5 how: 'Ulka pumps have a diode in series, so measure with the probes one way, then swapped, and enter the lower reading. OL one way is normal; press OL only if it reads OL both ways.' fix: 'OL both ways means an open coil or fuse; near zero means a shorted coil.'",
+  "g": "diode"
+ },
+ {
+  "id": "checks-11",
+  "k": "checks",
+  "q": "Which reading across the solenoid coil (c6), leads off, is a pass?",
+  "a": [
+   "A steady value, neither OL nor near 0",
+   "OL, the same as the shorts checks",
+   "Under 1 Ω, the same as the earth checks",
+   "About the element's expected resistance"
+  ],
+  "why": "OL means an open coil and near zero means a shorted one. Record the value: e8 should later read close to it, which proves both valve leads went back on.",
+  "r": [
+   [
+    "ck",
+    "c6"
+   ],
+   [
+    "map",
+    "part=sol",
+    "The 3-way valve on the wiring drawing"
+   ]
+  ],
+  "src": "checks.tpl.html c6 'Across its two coil spades, leads off. Record the value.' type coil: 'Expect a steady value, not OL or 0'. fix: 'OL means an open coil; near zero means a shorted coil.' e8: 'It should read close to c6, and proves both solenoid leads are back on.'"
+ },
+ {
+  "id": "checks-12",
+  "k": "checks",
+  "q": "Unclamped from J4, what should the thermocouple loop (c7) read across its two wires?",
+  "a": [
+   "A few ohms",
+   "OL, an open loop",
+   "Exactly 0 Ω",
+   "Several megohms"
+  ],
+  "why": "A few ohms is normal for the loop. OL means the thermocouple or its lead is broken.",
+  "r": [
+   [
+    "ck",
+    "c7"
+   ],
+   [
+    "map",
+    "run=LV10",
+    "The thermocouple run on the wiring drawing"
+   ]
+  ],
+  "src": "checks.tpl.html c7 'Thermocouple loop. Across its two wires, unclamped from J4. A few ohms is normal.' type tc: 'Expect a few Ω, not OL'. fix: 'OL means a broken thermocouple or lead.'"
+ },
+ {
+  "id": "checks-13",
+  "k": "checks",
+  "q": "With the power switch on, inlet L to inlet N (d7) reads close to the element's expected resistance. What does that point to?",
+  "a": [
+   "The SSR passing current, or the element wired around it",
+   "A healthy circuit, once the PCB's supply has fully charged",
+   "The pump's diode conducting in one direction",
+   "An open safety thermostat in the heater line"
+  ],
+  "why": "d7 should read OL, or a high value that climbs as the PCB's supply charges. Near the element's resistance means the element gets mains without the SSR switching it. Find it before plugging in.",
+  "r": [
+   [
+    "ck",
+    "d7"
+   ],
+   [
+    "map",
+    "part=ssr",
+    "The SSR on the wiring drawing"
+   ]
+  ],
+  "src": "checks.tpl.html d7 how: 'May read OL, or a high value that climbs as the PCB's supply charges.' type notshort: 'Expect OL or over 100 Ω'. fix: 'a reading near the element's expected resistance (shown under Element power) means the SSR is passing current or the element is wired around it. Find it before plugging in.'"
+ },
+ {
+  "id": "checks-14",
+  "k": "checks",
+  "q": "With the power switch off, inlet L to PCB J11 (e9) still reads under 1 Ω. What's the likely fault?",
+  "a": [
+   "Inlet and load wires on the wrong switch spades",
+   "A shorted SSR between its two load terminals",
+   "The safety thermostat stuck in its closed state",
+   "The line wire pinched against the frame"
+  ],
+  "why": "The switch must break line, and e10 checks it breaks neutral too. The inlet goes to the switch's outer spades and the loads to its center spades.",
+  "r": [
+   [
+    "ck",
+    "e9"
+   ],
+   [
+    "map",
+    "part=pwr",
+    "The power switch on the wiring drawing"
+   ]
+  ],
+  "src": "checks.tpl.html e9 'Same probes as e1, power switch off. Should now be open.' fix: 'The switch isn't breaking line. Check that the inlet goes to the outer spades and the loads to the center spades.' e1 path: 'AC1, the switch, AC3, SSR terminal 1, AC4.' Section e intro: 'the power switch breaks both line and neutral.'"
+ },
+ {
+  "id": "checks-15",
+  "k": "checks",
+  "q": "Check g15 asks whether the power switch latches on and off by itself. What does that mean for a Silvia E?",
+  "a": [
+   "Its push button doesn't latch; fit a double-pole rocker",
+   "Its rocker breaks only line, so it needs an inline fuse",
+   "Its switch only works with the energy-saver module kept in",
+   "Its push button must be rewired to the J7 plug"
+  ],
+  "why": "The harness relies on the power switch breaking both line and neutral. The E's push-button switch doesn't latch, so it needs a double-pole rocker like the M model's.",
+  "r": [
+   [
+    "ck",
+    "g15"
+   ],
+   [
+    "gl",
+    "t-e-and-m"
+   ]
+  ],
+  "w": "model:E",
+  "src": "checks.tpl.html g15: 'The power switch latches on and off by itself. The harness relies on it breaking both line and neutral. The E model's push-button switch doesn't latch; it needs a double-pole rocker like the M model's.' trouble-data.js: 'The custom harness leaves the module out entirely.'",
+  "g": "eswitch"
+ },
+ {
+  "id": "checks-16",
+  "k": "checks",
+  "q": "Why does the Covers on section repeat the earth and shorts checks after the panels go back on?",
+  "a": [
+   "Closing up can pinch a wire against the case",
+   "The wiring only settles once the screws are tight",
+   "The covers shield the meter from interference",
+   "The PCB only wakes its inputs once enclosed"
+  ],
+  "why": "Closing up is where a wire gets pinched against the case, and the screen cable at the vent is the usual one. Run h1 to h6 still unplugged, before the first plug-in.",
+  "r": [
+   [
+    "ck",
+    "h3"
+   ],
+   [
+    "rb",
+    "p5a0"
+   ]
+  ],
+  "src": "checks.tpl.html section h intro: 'After the top cover and panels are back on (runbook Phase 5), still unplugged. Closing up is where a wire gets pinched against the case, and the screen cable at the vent is the usual one.' h3 fix: 'Line touches earth since the covers went on: a wire is pinched or a spade is touching the case.' runbook p5a0."
+ },
+ {
+  "id": "trouble-02",
+  "k": "trouble",
+  "q": "Your converted Silvia E switches itself off after about 30 minutes. What's the likely cause?",
+  "a": [
+   "The energy-saver module is still in the circuit",
+   "The safety thermostat trips once the boiler is hot",
+   "The pump thermal fuse opens after long use",
+   "The SSR overheats and cuts out the element"
+  ],
+  "why": "The E's push button comes with a 30-minute auto-off. The custom harness leaves that module out entirely: inlet to the switch's outer spades, loads from its center spades, nothing to the module.",
+  "r": [
+   [
+    "tr",
+    "It turns itself off after about 30 minutes"
+   ],
+   [
+    "gl",
+    "t-e-and-m"
+   ]
+  ],
+  "w": "model:E",
+  "src": "trouble-data.js, power, w:'model:E': cause 'The E's energy-saver module is still in the circuit.' check 'The custom harness leaves the module out entirely. Trace the power switch: inlet to its outer spades, loads from its center spades, nothing to the module.' glossary t-e-and-m: 'the Silvia E (sold in Europe) has a push button with a 30-minute auto-off.'",
+  "g": "eauto"
+ },
+ {
+  "id": "trouble-03",
+  "k": "trouble",
+  "q": "The screen stays black. What's the most likely cause?",
+  "a": [
+   "The J1 cable wired by color, not by pin",
+   "The thermocouple reversed at J4",
+   "Hot water wired to J5 A12 instead of B15",
+   "The SSR control wires swapped at J9"
+  ],
+  "why": "Blue and yellow vary between cable revisions, so check J1 pin by pin: GND, TX, RX, 5V. Don't take a pre-made cable apart; reseat it.",
+  "r": [
+   [
+    "tr",
+    "The screen stays black"
+   ],
+   [
+    "map",
+    "run=LV11",
+    "The screen cable on the wiring drawing"
+   ]
+  ],
+  "src": "trouble-data.js, screen: causes 'The J1 cable wired by color rather than by pin; blue and yellow vary between cable revisions.' check 'Check J1 pin by pin: GND, TX, RX, 5V.' 'Don't take a pre-made cable apart; reseat it.'",
+  "g": "j1"
+ },
+ {
+  "id": "trouble-04",
+  "k": "trouble",
+  "q": "You can't reach gaggiuino.local over your home Wi-Fi. Which networks can Gaggiuino join?",
+  "a": [
+   "2.4 GHz networks",
+   "5 GHz networks",
+   "Whichever band is stronger",
+   "The band your phone is on"
+  ],
+  "why": "If your Wi-Fi is 5 GHz only, Gaggiuino can't join it. Pick a 2.4 GHz network in Settings, System, Connect. If .local still won't open, use the machine's address from your router's device list.",
+  "r": [
+   [
+    "tr",
+    "You can't find the Gaggiuino network or gaggiuino.local"
+   ]
+  ],
+  "src": "trouble-data.js, screen: cause 'Your Wi-Fi is 5 GHz only; Gaggiuino joins 2.4 GHz networks.' 'Some phones and browsers don't open .local addresses.' check 'In Settings, System, Connect, pick a 2.4 GHz network.' 'Find the machine's address in your router's device list and open that instead.'"
+ },
+ {
+  "id": "trouble-05",
+  "k": "trouble",
+  "q": "At first power-on, the temperature reading falls while the element heats. What do you do first?",
+  "a": [
+   "Switch off and unplug",
+   "Raise the Temperature Offset",
+   "Wait for the boiler to fill",
+   "Lower the steam target"
+  ],
+  "why": "The thermocouple is reversed at J4, and the controller may keep heating while it sees the reading fall. Swap the two J4 wires, then warm the thermocouple in your hand on the bench: the reading must rise.",
+  "r": [
+   [
+    "tr",
+    "The temperature falls while the element heats"
+   ],
+   [
+    "ck",
+    "g14"
+   ]
+  ],
+  "src": "trouble-data.js, heat, d:1: cause 'The thermocouple is reversed at J4. The controller sees a falling temperature and may keep heating.' check 'Switch off and unplug now.' 'Swap the two thermocouple wires at J4, folding the bare ends over again.' 'Retest on the bench: warm the thermocouple in your hand and the reading must rise.'",
+  "g": "tcrev"
+ },
+ {
+  "id": "trouble-06",
+  "k": "trouble",
+  "q": "The temperature reading is jumpy, stuck or far off. Which cause does the site list first?",
+  "a": [
+   "Insulation clamped in J4 instead of bare wire",
+   "The SSR control wires reversed at J9",
+   "The OPV set too close to shot pressure",
+   "A missing strain relief on the wiring at the SSR"
+  ],
+  "why": "J4 must clamp bare wire folded over, with no insulation in the clamp. Next come a grounded thermocouple or earth touching the 5 V ground, a broken lead, and a lead routed beside mains.",
+  "r": [
+   [
+    "tr",
+    "The temperature reading is jumpy, stuck or far off"
+   ],
+   [
+    "ck",
+    "b6"
+   ]
+  ],
+  "src": "trouble-data.js, heat: causes in order 'Insulation clamped in J4 instead of bare wire.' 'A grounded thermocouple, or earth touching the 5 V ground. The DC side has to float.' 'A broken thermocouple or lead.' 'The lead routed alongside mains wires.' check 'Refit J4 with the bare wire folded over and no insulation in the clamp.'"
+ },
+ {
+  "id": "trouble-07",
+  "k": "trouble",
+  "q": "The SSR light comes on but the boiler doesn't heat. What do you suspect first?",
+  "a": [
+   "The safety thermostat has tripped",
+   "The thermocouple is reversed",
+   "The SSR control wires are swapped",
+   "The pump thermal fuse is open"
+  ],
+  "why": "Unplugged, take the top off and press the reset button. If it clicks, it had tripped, so find out why before using it. A failed SSR is the last suspect, once every check passes.",
+  "r": [
+   [
+    "tr",
+    "The SSR light comes on but the boiler doesn't heat"
+   ],
+   [
+    "map",
+    "runs=AC3,AC5,AC6,AC9",
+    "The heater path on the wiring drawing"
+   ]
+  ],
+  "src": "trouble-data.js, heat: causes, first 'The safety thermostat has tripped. It has a reset button on top.' last 'The SSR failed open'. check 'Unplugged, take the top off and press the reset button. If it clicks, it had tripped; find out why before using it.' 'If every check passes, replace the SSR.'",
+  "g": "trip"
+ },
+ {
+  "id": "trouble-08",
+  "k": "trouble",
+  "q": "Which of these symptoms means stop using the machine and unplug now?",
+  "a": [
+   "It keeps heating past the target",
+   "The pressure reading is noisy",
+   "The switch lights went dark",
+   "The tank level reads wrong"
+  ],
+  "why": "Heating past the target can come from a reversed or loose thermocouple, an SSR failed closed, or the element wired around the SSR. Switch off, unplug, and rerun d7.",
+  "r": [
+   [
+    "tr",
+    "It keeps heating past the target"
+   ],
+   [
+    "ck",
+    "d7"
+   ]
+  ],
+  "src": "trouble-data.js, heat, d:1 'It keeps heating past the target': causes 'A reversed thermocouple (see above), or one loose and out of contact so the reading lags.' 'The SSR failed closed.' 'The element wired around the SSR.' check 'Switch off and unplug.' 'Rerun [d7]'. The other three symptoms have no d flag."
+ },
+ {
+  "id": "trouble-09",
+  "k": "trouble",
+  "q": "The safety thermostat keeps tripping. What must you never do?",
+  "a": [
+   "Bridge it to keep the machine running",
+   "Reset it once you've fixed the cause",
+   "Fill the boiler through the wand first",
+   "Check the thermocouple is finger tight"
+  ],
+  "why": "The safety thermostat is the last line against overheating. Find the cause first, most often a boiler heated dry or half empty, then reset it.",
+  "r": [
+   [
+    "tr",
+    "The safety thermostat keeps tripping"
+   ],
+   [
+    "ck",
+    "c3"
+   ]
+  ],
+  "src": "trouble-data.js, heat, d:1: check 'Don't bridge it. Fix the cause, then reset it.' 'Check the thermocouple is finger tight with paste under it.' cause 'The boiler heated dry or half empty. After it's been drained, fill it through the wand before it heats'. trouble.tpl.html: 'Never bridge the safety thermostat or a thermal fuse to get it running.'"
+ },
+ {
+  "id": "trouble-11",
+  "k": "trouble",
+  "q": "Pressure reads 0.0 bar during a shot. What's the most likely cause?",
+  "a": [
+   "J6 wired out of order",
+   "The OPV set too high",
+   "The thermocouple reversed",
+   "Hot water wired to J5 A12"
+  ],
+  "why": "J6 runs 5V, GND, P, so check LV9 pin by pin. Next come a transducer screwed in too far, which can damage its O-ring, and air in the sensor line.",
+  "r": [
+   [
+    "tr",
+    "Pressure reads 0.0 bar during a shot"
+   ],
+   [
+    "map",
+    "run=LV9",
+    "The pressure sensor run on the wiring drawing"
+   ]
+  ],
+  "src": "trouble-data.js, pressure: causes 'J6 wired out of order: 5V, GND, P.' 'The transducer screwed in too far. Overtightening can damage its O-ring and stop it reading.' 'Air in the sensor line.' check 'Check [LV9] pin by pin.'"
+ },
+ {
+  "id": "trouble-12",
+  "k": "trouble",
+  "q": "On a V1, Test OPV peaks too high. How do you bring it down?",
+  "a": [
+   "Add washers to the OPV",
+   "Turn the second adjuster nut",
+   "Remove any added washers",
+   "Fit a stiffer OPV spring"
+  ],
+  "why": "The V1 OPV has a single nut, not the two-nut adjuster of V2 and later. Adding washers can only lower its pressure. Then rerun Test OPV.",
+  "r": [
+   [
+    "tr",
+    "The OPV won't adjust the way the guides show"
+   ],
+   [
+    "url",
+    "which-silvia.html#v1",
+    "Which Silvia: V1"
+   ]
+  ],
+  "w": "ver:V1",
+  "src": "trouble-data.js, pressure, w:'ver:V1': cause 'The V1 OPV has a single nut, not a two-nut adjuster. Adding washers can only lower its pressure.' check 'Too high: add washers, then rerun [UT] Test OPV.' 'Too low: take out any washers a previous owner added.' 'V2 and later have a two-nut adjuster.' which-silvia V1: 'The OPV has a single nut and is set with washers.'",
+  "g": "v1opv"
+ },
+ {
+  "id": "trouble-13",
+  "k": "trouble",
+  "q": "The hot water switch does nothing. Which wiring slip does the site call out?",
+  "a": [
+   "Its signal on J5 A12 instead of B15",
+   "Its signal on J7 S instead of J7 B",
+   "Its ground taken from J9 instead of J7",
+   "Its signal on the SSR's control terminal"
+  ],
+  "why": "The firmware reads the hot water switch on J5 B15, as realNiche's schematic shows. Check that LV3 lands on B15, then rerun f5 and f6 with the plugs off the PCB.",
+  "r": [
+   [
+    "tr",
+    "A switch does nothing"
+   ],
+   [
+    "ck",
+    "f5"
+   ]
+  ],
+  "src": "trouble-data.js, switch 'A switch does nothing': cause 'Hot water on J5 A12 instead of B15. The firmware reads the hot water switch on B15, as realNiche's schematic shows.' check 'Rerun [f1] to [f6] with the plugs off the PCB.' 'Check [LV3] lands on B15.' checks.tpl.html f5: 'B15, not A12.'"
+ },
+ {
+  "id": "trouble-15",
+  "k": "trouble",
+  "q": "The ST-Link won't connect to the PCB. What do you check first?",
+  "a": [
+   "That the PCB's USB-C is unplugged",
+   "That the screen cable is plugged in",
+   "That the machine is on mains power",
+   "That the Wi-Fi is set to 2.4 GHz"
+  ],
+  "why": "A plugged-in USB-C is the first cause listed. Then check the four wires (3.3V, SWDIO, SWCLK, GND), and try the older ST-Link utility if STM32CubeProgrammer won't see it.",
+  "r": [
+   [
+    "tr",
+    "The ST-Link won't connect"
+   ],
+   [
+    "gl",
+    "t-st-link"
+   ]
+  ],
+  "src": "trouble-data.js, fw: causes 'The PCB's USB-C is plugged in.' 'A wiring slip on 3.3V, SWDIO, SWCLK and GND.' 'STM32CubeProgrammer not working with your ST-Link.' check 'Unplug the USB-C, check the four wires, and try the older ST-Link utility if CubeProgrammer won't see it.'"
+ },
+ {
+  "id": "trouble-16",
+  "k": "trouble",
+  "q": "The ToFnLED tank level reads wrong on a Silvia. What's the likely cause?",
+  "a": [
+   "Ranges set for a Gaggia's tank",
+   "The ToF sensor plugged into J8",
+   "Hardware scales left turned off",
+   "Air trapped in the sensor line"
+  ],
+  "why": "The Silvia's tank is deeper, about 200 mm. Set the ranges in the ToFnLED settings, then check at known fill levels.",
+  "r": [
+   [
+    "tr",
+    "The tank level reads wrong"
+   ],
+   [
+    "url",
+    "how-gaggiuino-works.html#tof",
+    "How Gaggiuino works: the tank level sensor"
+   ]
+  ],
+  "src": "trouble-data.js, extras: cause 'Ranges set for a Gaggia tank. The Silvia's is deeper, about 200 mm.' check 'Set the ranges in the ToFnLED settings, then check at known fill levels.' how-gaggiuino-works #tof: 'It plugs into the Qwiic socket, J2'.",
+  "g": "tof"
+ }
+]

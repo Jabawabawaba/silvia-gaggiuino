@@ -60,7 +60,7 @@ Starting values from the thread, not official defaults (the manual recommends it
 
 ## First power-on and calibration
 
-Per the official Gen 3 manual: fill the boiler with Flush until water runs 5+ seconds **before anything else**, run [UT] Tube Fill (T-fitting installs), then [UT] Test OPV with a blank basket: 10.5 to 13 bar, water moving through the OPV tubing, no leaks. Then [UT] PZ Cal for the pump. Watch that the temperature rises while the SSR light is on; if it falls, the thermocouple is reversed at J4. **[Official]**
+Fill the boiler **before anything else**: open the steam knob and run Flush until water comes steadily from the wand (Rancilio's way of filling a Silvia), then close the knob and run water through the group for 5 seconds or more, as the official Gen 3 manual asks. Then run [UT] Tube Fill (T-fitting installs), then [UT] Test OPV with a blank basket: 10.5 to 13 bar, water moving through the OPV tubing, no leaks. Then [UT] PZ Cal for the pump. Watch that the temperature rises while the SSR light is on; if it falls, the thermocouple is reversed at J4. **[Official]**
 
 ## Extras
 

@@ -23,7 +23,7 @@
           p:'The PCB powers it with 5 V and reads its signal on J6, then adjusts the pump to follow a pressure or flow profile.'};
       case 'screen':
         return {w:'The 4.3" touch screen, a small computer of its own: it draws the interface, keeps your profiles and settings, and runs the Wi-Fi network and the web page at gaggiuino.local.',
-          p:'It talks to the PCB over a serial link on J1 (GND, TX, RX, 5V), which also powers it. Wire it by pin, not by colour.'};
+          p:'It talks to the PCB over a serial link on J1 (GND, TX, RX, 5V), which also powers it. Wire it by pin, not by color.'};
       case 'brew':
         return {w:'The brew switch, now low voltage: the signal goes on its center spade and the ground chain on its outer spade.',
           p:'On, it joins J7 B to the 5 V ground and the PCB starts a shot: pump, valve and the profile you picked.'};

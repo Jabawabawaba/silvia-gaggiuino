@@ -7,7 +7,7 @@ import html, re
 
 E = [
     # --- abbreviations and part numbers ---
-    ("AC", "alternating current", "Mains electricity, which reverses direction 60 times a second in North America and 50 in most other places. Also the prefix on the site's mains harness runs, AC1 to AC14.", [("Wiring reference", "wiring.html")]),
+    ("AC", "alternating current", "Mains electricity, which swings back and forth 60 full cycles a second in North America (60 Hz) and 50 in most other places (50 Hz). Also the prefix on the site's mains harness runs, AC1 to AC14.", [("Wiring reference", "wiring.html")]),
     ("ADC", "analog-to-digital converter", "A chip that turns a voltage into a number. On the Gaggiuino PCB an ADS1015 does this for the pressure sensor.", [("How Gaggiuino works", "how-gaggiuino-works.html#xdcr")]),
     ("ADS1015", "", "The 12-bit ADC on the Gaggiuino PCB that reads the pressure sensor's 0.5 to 4.5 V signal from J6.", [("How Gaggiuino works", "how-gaggiuino-works.html#xdcr")]),
     ("AP", "access point", "The Wi-Fi network the Gaggiuino screen creates itself, called Gaggiuino AP, so a phone can connect to it directly before it joins your home Wi-Fi.", []),
@@ -128,7 +128,7 @@ E = [
     ("Steam wand", "", "The pipe that delivers steam, or hot water, from the boiler for milk.", [("How the Silvia works", "how-silvia-works.html#part-wand")]),
     ("Strain gauge", "", "A thin foil whose resistance changes as it's stretched. Load cells and pressure sensors are built on them.", []),
     ("Tee, elbow", "", "Plumbing fittings: a tee splits a line in two, an elbow turns it. Most Silvia builds put the pressure sensor on a tee at the OPV, through an elbow.", []),
-    ("Temperature surfing", "", "Timing a stock Silvia shot by the heating light to start at a known point in the thermostat's swing.", [("How the Silvia works", "how-silvia-works.html#part-tstat")]),
+    ("Temperature surfing", "", "Timing a stock Silvia shot by the heating light to start at a known point in the thermostat's swing.", [("How the Silvia works", "how-silvia-works.html#shot")]),
     ("Thermal fuse", "", "A cut-out that opens if a part overheats. Some Silvias have one in the pump's wiring.", [("How the Silvia works", "how-silvia-works.html#part-pump")]),
     ("Thermoblock", "", "A heater that warms water as it flows through, instead of keeping a boilerful hot. Gaggiuino's docs use it to describe what Brew Delta does.", [("How Gaggiuino works", "how-gaggiuino-works.html#temp")]),
     ("Thermal paste", "", "Paste that fills the air gaps between a sensor and the metal it sits on, so heat reaches the sensor faster.", []),

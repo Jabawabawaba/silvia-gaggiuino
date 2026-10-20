@@ -215,12 +215,12 @@ h2{font:600 22px/1.1 var(--f-display);letter-spacing:.05em;text-transform:upperc
       <summary>Silvia versions by year</summary>
       <table class="vtable">
         <tbody>
-          <tr><td>V1</td><td>First version</td><td>1997 – 2006</td></tr>
-          <tr><td>V2</td><td></td><td>2006 – 2009</td></tr>
-          <tr><td>V3</td><td>Improved steam wand</td><td>2009 – 2014</td></tr>
-          <tr><td>V4</td><td></td><td>2014 – 2016</td></tr>
-          <tr><td>V5</td><td>Also sold as Silvia E</td><td>2016 – 2020</td></tr>
-          <tr><td>V6</td><td>Current. US model is the Silvia M</td><td>2020 – now</td></tr>
+          <tr><td>V1</td><td>First version</td><td>1997 to 2006</td></tr>
+          <tr><td>V2</td><td></td><td>2006 to 2008</td></tr>
+          <tr><td>V3</td><td>Improved steam wand</td><td>2008 to 2014</td></tr>
+          <tr><td>V4</td><td></td><td>2014 to 2016</td></tr>
+          <tr><td>V5</td><td>Also sold as Silvia E</td><td>2016 to 2020</td></tr>
+          <tr><td>V6</td><td>Current. US model is the Silvia M</td><td>2020 to now</td></tr>
         </tbody>
       </table>
       <p class="fine">All six are single-boiler machines with the 3-way solenoid, and the Discord Silvia notes cover each of them. The Silvia Pro and Pro X are different machines and are not covered. "Build adds" is the Gaggiuino kit, Silvia parts and missing tools from your budget plan. Prices checked October 14, 2026.</p>
@@ -259,7 +259,7 @@ h2{font:600 22px/1.1 var(--f-display);letter-spacing:.05em;text-transform:upperc
       {id:'run-flow',t:'Pump primes and water flows from the group',w:'Steady flow with the brew switch on. A pump that buzzes without moving water needs work.',sev:'haggle'},
       {id:'run-sound',t:'Pump sounds steady, not rattling or straining',w:'Vibration pumps are loud, but the sound should be even.',sev:'note'},
       {id:'run-gasket',t:'No water escaping around the portafilter while brewing',w:'A leaking group gasket is a cheap fix and a fair bargaining point.',sev:'haggle'},
-      {id:'run-solenoid',t:'Releases pressure into the drip tray when the brew switch goes off',w:"That's the 3-way solenoid working. The build mounts its pressure sensor on this valve.",sev:'haggle'},
+      {id:'run-solenoid',t:'Releases pressure into the drip tray when the brew switch goes off',w:"That's the 3-way solenoid working. Gaggiuino needs it, and the PCB drives it after the conversion.",sev:'haggle'},
       {id:'run-water',t:'Hot water switch delivers water from the wand',w:'Confirms the hot water switch and circuit work.',sev:'note'},
       {id:'run-steam',t:'Steam builds strong and dry',w:"Strong steam is the Silvia's main advantage over a Gaggia Classic.",sev:'haggle'}
     ]},
@@ -276,7 +276,7 @@ h2{font:600 22px/1.1 var(--f-display);letter-spacing:.05em;text-transform:upperc
   ];
   var SEV={deal:'Deal-breaker',haggle:'Bargaining point',note:'Note'};
   var VERDICTS=[['undecided','Undecided'],['buy','Buy it'],['offer','Make an offer'],['walk','Walk away']];
-  var VERSIONS=[['','Not sure yet'],['V1','V1 (1997 to 2006)'],['V2','V2 (2006 to 2009)'],['V3','V3 (2009 to 2014)'],['V4','V4 (2014 to 2016)'],['V5','V5 (2016 to 2020)'],['V6','V6 (2020 to now)']];
+  var VERSIONS=[['','Not sure yet'],['V1','V1 (1997 to 2006)'],['V2','V2 (2006 to 2008)'],['V3','V3 (2008 to 2014)'],['V4','V4 (2014 to 2016)'],['V5','V5 (2016 to 2020)'],['V6','V6 (2020 to now)']];
   var ALL=[];SECTIONS.forEach(function(s){s.items.forEach(function(i){ALL.push(i)})});
   var BUILD_LO=370,BUILD_HI=490;
   var KEY='used-silvia-checklist-v1';
