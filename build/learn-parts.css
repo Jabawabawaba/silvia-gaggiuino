@@ -131,8 +131,15 @@
 #mini-panel .sw-blade{stroke:var(--ink);stroke-width:2.6;stroke-linecap:round;transition:transform .25s}
 #mini-panel .sw-blade.p{transform-box:fill-box;transform-origin:0% 50%;transform:rotate(-30deg)}
 #mini-panel.on .sw-blade.p{transform:rotate(0)}
-#mini-panel #sw-ts,#mini-panel #sw-tsg{transform-box:fill-box;transform-origin:0% 50%}
-#mini-panel.ready #sw-ts,#mini-panel.ready #sw-tsg{transform:rotate(-18deg)}
+#mini-panel #sw-tb,#mini-panel #sw-tsm,#mini-panel #sw-tbg,#mini-panel #sw-tsmg{transform-box:fill-box;transform-origin:0% 50%}
+#mini-panel.bopen #sw-tb,#mini-panel.bopen #sw-tbg,#mini-panel.sopen #sw-tsm,#mini-panel.sopen #sw-tsmg{transform:rotate(-18deg)}
+#mini-panel .sw-blade.st{transform-box:fill-box;transform-origin:0% 50%;transform:rotate(-30deg)}
+#mini-panel.steam .sw-blade.st{transform:rotate(0)}
+#mini-panel.steam .sw-fr[data-fr="steam"] .rk-a{fill:#15181B}#mini-panel.steam .sw-fr[data-fr="steam"] .rk-b{fill:#3A3F44}
+#mini-panel [data-fr]{cursor:pointer}
+#mini-panel .mini-seg{flex-wrap:wrap}
+#mini-panel .mini-ctl+.mini-ctl{padding-top:8px}
+#mini-panel .cap.sm{font-size:10.5px}
 #mini-panel .sw-link{fill:none;stroke:var(--muted);stroke-width:1.2;stroke-dasharray:3 3}
 #mini-panel .sw-el{fill:none;stroke:var(--ink);stroke-width:2;stroke-linejoin:round;transition:stroke .3s}
 #mini-panel.heating .sw-el{stroke:var(--w-h);filter:drop-shadow(0 0 3px var(--w-h))}
