@@ -77,7 +77,7 @@
   (function(){
     var fig=$('mini-panel');if(!fig)return;
     var bp=fig.querySelector('[data-sw="pwr"]'),bt=fig.querySelector('[data-sw="ts"]'),bs=fig.querySelector('[data-sw="safe"]'),note=fig.querySelector('[data-sw-note]');
-    var on=false,ready=false,tripped=false,kind='pro';
+    var on=false,ready=false,tripped=false,kind='pro',ctl=false;   /* ctl: the power button works through an Eco board or the E's controller */
     function F(id){return $(id)}
     function flows(list){qa('.sw-f',fig).forEach(function(p){p.classList.toggle('on',list.indexOf(p.id)>=0)})}
     function glow(sel,v){qa('[data-lp="'+sel+'"]',fig).forEach(function(e){e.classList.toggle('glow',!!v)})}
@@ -92,9 +92,9 @@
         /* the heating light sits across the safety and element, so it lights whenever the thermostats are closed */
         var lit=on&&!ready;glow('heat',lit);glow('rk',on&&!fig.classList.contains('led'));
         flows(!on?[]:heat?['sw-fh','sw-fp','sw-fl']:lit?['sw-fl','sw-fp']:['sw-fp']);
-        note.textContent=!on?'Off: both poles of the power switch are open, so nothing past it has power.':
-          ready?'Hot enough: the thermostats open. Both ends of the heating light now sit at line, so it goes dark.':
-          tripped?'Safety tripped: the element gets nothing, but the thermostats are still closed, so the heating light stays on.':
+        note.textContent=!on?(ctl?OFF_CTL_E:OFF_2P):
+          ready?'Hot enough: the thermostats open, so no current flows through the heating light and it goes dark.':
+          tripped?'Safety tripped: the element gets nothing, but in the usual stock wiring the heating light stays on, because the thermostats are still closed.':
           'Heating: the thermostats are closed, so the element and the heating light both get the full voltage.';
         return;
       }
@@ -102,10 +102,15 @@
       var g=kind==='gc'?'g':'';
       flows(!on?[]:ready?['sw-fr'+g,'sw-fp'+g]:['sw-fh'+g,'sw-fp'+g]);
       var gc=kind==='gc',lamp=gc?'ready lamp':'brew lamp';
-      note.textContent=!on?(gc?'Off: the power switch is open, so nothing past it has power.':'Off: both poles of the power switch are open, so nothing past it has power.'):
-        ready?(gc?'Hot enough: a thermostat opens.':'Hot enough: the thermostat opens.')+' A tiny current through the '+lamp+' and the element lights the lamp, far too little to heat.':
+      note.textContent=!on?(gc?OFF_1P:ctl?OFF_CTL_G:OFF_2P):
+        ready?(gc?'Hot enough: a thermostat opens.':'Hot enough: the thermostat opens.')+' A tiny current through the '+lamp+' and the element lights the lamp, far too little to heat'+(gc?'. The element is still wired in, so treat it as live.':', though both ends of the element still sit at line.'):
         (gc?'Heating: the closed thermostats short out the ':'Heating: the closed thermostat shorts out the ')+lamp+', so it stays dark and the element gets the full voltage.';
     }
+    /* off isn't dead: a single-pole switch may break neutral, and the inlet side of any switch stays live */
+    var OFF_2P='Off: both poles are open, so nothing past the switch has power. The inlet and the switch\'s input spades stay live while it\'s plugged in.',
+        OFF_1P='Off: the switch breaks one wire only. If line and neutral are swapped at the inlet, everything past it stays live. Unplug before opening it.',
+        OFF_CTL_G='Off, as drawn. On an Eco-board machine the button works through the board, whose circuit isn\'t published: treat its wires as mains even when it\'s off.',
+        OFF_CTL_E='Off, as drawn. On the E the button works through its controller, whose switching isn\'t documented: treat its wires as mains even when it\'s off.';
     function toggle(){on=!on;upd()}
     bp.addEventListener('click',toggle);
     bt.addEventListener('click',function(){ready=!ready;upd()});
@@ -113,8 +118,8 @@
     qa('[data-fr="pwr"],#sw-rock',fig).forEach(function(e){e.addEventListener('click',toggle)});
     function adapt(){
       var m=PFM.get();
-      if(m.site==='g'){kind=m.fam==='GC'?'gc':'pro';fig.classList.toggle('gc',kind==='gc')}
-      else{kind='silvia';var v=m.ver||'V6',led=v==='V5'||v==='V6';fig.classList.toggle('led',led);fig.classList.toggle('e',!!m.e)}
+      if(m.site==='g'){kind=m.fam==='GC'?'gc':'pro';ctl=!!m.eco;fig.classList.toggle('gc',kind==='gc')}
+      else{kind='silvia';ctl=!!m.e;var v=m.ver||'V6',led=v==='V5'||v==='V6';fig.classList.toggle('led',led);fig.classList.toggle('e',!!m.e)}
       upd();
     }
     window.addEventListener(PFM.ev,adapt);adapt();

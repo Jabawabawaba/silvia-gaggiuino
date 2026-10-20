@@ -231,15 +231,14 @@
     <path d="M152,29 H172" class="pipe thin"/>
     <rect x="172" y="12" width="36" height="34" rx="4" class="t-valve"/>
     <text x="214" y="24" class="cap">3-way valve</text>
-    <path d="M190,46 V156" class="t-tube"/>
+    <path d="M190,46 V146" class="t-tube"/>
     <text x="182" y="100" class="cap" text-anchor="end">drain tube</text>
-    <rect x="262" y="96" width="42" height="36" rx="3" class="t-cup"/><path d="M304,104 q10,0 10,10 q0,10 -10,10" class="t-cup h"/>
     <clipPath id="t-clip"><path d="M22,140 V188 Q22,194 28,194 H332 Q338,194 338,188 V140 Z"/></clipPath>
     <g clip-path="url(#t-clip)"><rect x="20" y="194" width="320" height="0" class="t-water" id="t-water"/></g>
     <path d="M20,140 V188 Q20,196 28,196 H332 Q340,196 340,188 V140" class="t-tray"/>
     <path d="M22,154 H338" class="t-full"/><text x="28" y="167" class="cap t-fl">full</text>
     <rect x="18" y="132" width="324" height="8" rx="2" class="t-grille"/>
-    <path d="M190,46 V160" class="t-flow" id="t-fv"/>
+    <path d="M190,46 V150" class="t-flow" id="t-fv"/>
     <g class="t-rain" id="t-rain"><path d="M60,44 V190"/><path d="M76,44 V190"/><path d="M92,44 V190"/><path d="M108,44 V190"/><path d="M124,44 V190"/></g>
     <g class="t-warn" id="t-warn"><rect x="112" y="64" width="136" height="22" rx="5"/><text x="180" y="79" text-anchor="middle">Full: empty it</text></g>
   </svg>
@@ -295,13 +294,13 @@
       <path d="M18,160 H68 V248 H262 V160 H340" class="sw-f" id="sw-fp"/>
     </g>
   </svg>
-  <figcaption>Simplified: the brew and steam thermostats are drawn as one, and the power switch's two poles break line and neutral together. The heating light sits across the safety and the element, not across the thermostats, so it lights whenever they're calling for heat, even if the safety has tripped and the element is cold.<span data-when="ver:V5,V6"> From the V5 the power and heating lights are LEDs, green and orange.</span><span data-when="ver:V5,V6;model:E"> On the E the power button works through the auto-off controller, drawn here as a plain switch.</span></figcaption>
+  <figcaption>Simplified: the brew and steam thermostats are drawn as one, and the power switch's two poles break line and neutral together. In the usual stock wiring, from community drawings of the harness, the heating light sits across the safety and the element, not across the thermostats, so it lights whenever they're calling for heat, even if the safety has tripped and the element is cold. Trace yours before relying on it. While the machine is plugged in, treat every wire as live.<span data-when="ver:V5,V6"> From the V5 the power and heating lights are LEDs, green and orange.</span><span data-when="ver:V5,V6;model:E"> On the E the power button works through the auto-off controller, drawn here as a plain switch, and the controller may drive the lights; treat its wires as mains even when it's off.</span></figcaption>
 </figure>
 
 <!-- POWER INLET AND EARTH: what the earth wire does when something goes wrong -->
 <figure class="mini" id="mini-inlet">
   <div class="mini-ctl"><button type="button" class="btn" data-in="fault" aria-pressed="false">Line wire touches the case</button><button type="button" class="chip" data-in="earth" aria-pressed="true">Earth wire connected</button></div>
-  <svg viewBox="0 0 360 232" role="img" aria-label="Top left, the inlet seen from behind the machine: two flat pins for line and neutral and an earth pin between them, set higher. Below, the circuit: line and neutral run from the outlet through the cord and inlet to the power switch, and earth runs to the machine's metal frame. If a loose line wire touches the case, the fault current runs through the earth wire back to the outlet and the breaker or GFCI trips. Without the earth wire nothing trips, and the case is left live.">
+  <svg viewBox="0 0 360 232" role="img" aria-label="Top left, the inlet seen from behind the machine: two flat pins for line and neutral and an earth pin between them, set higher. Below, the circuit: line and neutral run from the outlet through the cord and inlet to the power switch, and earth runs to the machine's metal frame. If a loose line wire touches the case, the fault current runs through the earth wire back to the outlet and a GFCI, or the breaker on a solid short, trips. Without the earth wire nothing trips until someone touches the case, and the case is left live.">
     <g class="in-face">
       <rect x="18" y="10" width="92" height="74" rx="4" class="in-panel"/>
       <rect x="26" y="16" width="76" height="60" rx="7" class="in-flange"/>
@@ -323,7 +322,7 @@
       <path d="M86,150 H112 M126,150 H262" class="in-w l"/>
       <path d="M86,168 H112 M126,168 H262" class="in-w n"/>
       <path d="M86,190 H112 M126,190 H170 V218" class="in-w e" id="in-ew"/>
-      <circle cx="170" cy="222" r="5" class="in-bolt"/><text x="180" y="219" class="cap">earth bolt</text>
+      <circle cx="170" cy="222" r="5" class="in-bolt"/><text x="180" y="219" class="cap">earth point</text>
       <text x="96" y="146" class="in-wl">L</text><text x="96" y="164" class="in-wl">N</text><text x="96" y="186" class="in-wl in-epin">E</text>
       <g class="in-x" id="in-x"><path d="M90,184 l12,12 M102,184 l-12,12"/></g>
       <rect x="262" y="138" width="70" height="42" rx="4" class="in-sw"/><text x="297" y="155" class="cap" text-anchor="middle">switch,</text><text x="297" y="168" class="cap" text-anchor="middle">then the rest</text>
@@ -334,5 +333,5 @@
       <g class="in-msg bad" id="in-live"><rect x="214" y="186" width="120" height="18" rx="4"/><text x="274" y="198.5" text-anchor="middle">Case is live</text></g>
           </g>
   </svg>
-  <figcaption>Simplified. Earth carries nothing in normal use. If a line wire comes loose and touches metal, earth gives that fault current an easy way back, so the breaker or <span data-mtext="gfci">GFCI</span> trips instead of leaving the case live. On the Silvia, earth is bonded to the frame, the boiler and the valve body.</figcaption>
+  <figcaption>Simplified. Earth carries next to nothing in normal use. If a line wire comes loose and touches metal, earth gives that fault current an easy way back, so the <span data-mtext="gfci">GFCI</span> trips, or the breaker on a solid short, instead of leaving the case live. Without earth nothing trips until someone touches the case, and even then a <span data-mtext="gfci">GFCI</span> only trips once current has gone through them. On the Silvia, earth is bonded to the frame, the boiler and the valve body.</figcaption>
 </figure>

@@ -81,8 +81,6 @@
 #mini-tray .t-screen{stroke:#5E656C;stroke-width:3;stroke-dasharray:4 3}
 #mini-tray .t-valve{fill:url(#cut-brass);stroke:#6E5420}
 #mini-tray .t-tube{fill:none;stroke:var(--muted);stroke-opacity:.45;stroke-width:7;stroke-linecap:round}
-#mini-tray .t-cup{fill:var(--surface);stroke:var(--muted);stroke-width:1.6}
-#mini-tray .t-cup.h{fill:none}
 #mini-tray .t-tray{fill:none;stroke:var(--muted);stroke-width:2.4;stroke-linejoin:round}
 #mini-tray .t-grille{fill:var(--surface-2);stroke:var(--muted);stroke-dasharray:6 3}
 #mini-tray .t-full{stroke:var(--bad);stroke-width:1.2;stroke-dasharray:4 4;opacity:.8}
@@ -124,8 +122,8 @@
 #mini-panel .sw-fr.lit.glow{filter:drop-shadow(0 0 4px #FF4A33)}
 #mini-panel[data-fr] .sw-fr{cursor:pointer}
 #mini-panel .lp-bez{fill:#9CA4AB;stroke:#5E656C}
-#mini-panel .lp{fill:#5A2C14;transition:fill .15s}
-#mini-panel .sw-lp.glow .lp{fill:#FF9A2E;filter:drop-shadow(0 0 4px #FF8A2A)}
+#mini-panel .lp{fill:#5A2020;transition:fill .15s}
+#mini-panel .sw-lp.glow .lp{fill:#FF4A3A;filter:drop-shadow(0 0 4px #FF4A3A)}
 #mini-panel .sw-rail{font:700 13px var(--f-mono);fill:var(--ink)}
 #mini-panel .sw-w{fill:none;stroke:var(--muted);stroke-width:2;stroke-linejoin:round}
 #mini-panel .sw-pin{fill:var(--surface);stroke:var(--ink);stroke-width:1.6}
@@ -206,3 +204,4 @@
 #mini-panel .f-sil .sw-fr.lit .rk-a,#mini-panel .f-sil .sw-fr.lit .rk-b{fill:#4A2A12}
 #mini-panel .f-sil .sw-fr.glow .rk-a,#mini-panel .f-sil .sw-fr.glow .rk-b{fill:#F08A2A}
 #mini-panel .f-sil .sw-fr.glow{filter:drop-shadow(0 0 4px #FF8A2A)}
+#mini-panel .f-sil .sw-lp:not(.grn).glow .lp{fill:#FF9A2E;filter:drop-shadow(0 0 4px #FF8A2A)}
