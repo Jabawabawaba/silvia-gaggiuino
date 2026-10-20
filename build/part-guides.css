@@ -1,0 +1,211 @@
+/* Part guides: per part, a drawing that steps through the install (sticky beside the written steps on wide screens,
+   above them on phones, where the current step's text sits right under it). */
+.pg-jump{display:flex;flex-wrap:wrap;gap:8px}
+.pg-jump a{text-decoration:none;color:inherit}
+.pg-where{margin:0 0 12px;font-size:15.5px;max-width:75ch}
+.pg-meta{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px 28px;margin:0 0 16px}
+.pg-meta ul{margin:6px 0 0;padding-left:20px;display:grid;gap:4px;font-size:15px}
+.pg-meta p{margin:6px 0 0;font-size:15px}
+.pg-note{border:1px solid var(--accent);background:var(--accent-soft);border-radius:10px;padding:10px 14px;margin:0 0 14px;font-size:15px;max-width:880px}
+.pg-note p{margin:0}
+.pg-note p+p{margin-top:6px}
+@media (max-width:760px){.pg-meta{grid-template-columns:minmax(0,1fr)}}
+.pg-vars{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
+.pg{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,1fr);gap:18px 26px;align-items:start}
+.pg-figcol{position:sticky;top:calc(14px + var(--nav-cover,0px));transition:top .22s ease}
+.pg-fig{margin:0;border:1px solid var(--line);border-radius:14px;background:var(--surface);overflow:hidden}
+.pg-fig>svg{display:block;width:100%;height:auto;padding:8px 8px 2px}
+.pg-defs{position:absolute;width:0;height:0;overflow:hidden}
+.pg-ctl{display:flex;align-items:center;gap:6px;padding:6px 8px;border-top:1px solid var(--line)}
+.pg-ctl button{appearance:none;border:1px solid var(--line);background:var(--bg);border-radius:10px;min-width:44px;min-height:40px;display:inline-grid;place-items:center;cursor:pointer;color:var(--ink)}
+.pg-ctl button:disabled{opacity:.35;cursor:default}
+.pg-ctl button svg{display:block;width:18px;height:18px;padding:0;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.pg-ctl .pg-pos{flex:1;text-align:center;font:500 13px var(--f-mono);color:var(--muted)}
+.pg-drawn{margin:0;padding:0 12px 8px;font-size:13px;color:var(--muted)}
+.pg-now{display:none;margin:10px 2px 0;font-size:15px}
+.pg-now b{display:block;font-weight:600}
+.pg-steps{list-style:none;margin:0;padding:0;display:grid;gap:6px;counter-reset:none}
+.pg-steps li{border:1px solid transparent;border-radius:12px;padding:8px 12px 10px;transition:background .2s,border-color .2s}
+.pg-steps li.cur{background:var(--surface);border-color:var(--accent)}
+.pg-sb{appearance:none;border:0;background:none;padding:2px 0;display:flex;gap:10px;align-items:baseline;text-align:left;cursor:pointer;width:100%;color:inherit;min-height:32px}
+.pg-sb .pg-n{flex:none;width:26px;height:26px;border-radius:50%;display:inline-grid;place-items:center;font:600 13px var(--f-mono);border:1.5px solid var(--line);background:var(--bg);transform:translateY(-2px)}
+.pg-steps li.cur .pg-n{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.pg-sb .pg-t{font-weight:600;font-size:16.5px;line-height:1.3}
+.pg-steps p{margin:4px 0 0 36px;font-size:15px;color:var(--ink)}
+.pg-steps li:not(.cur) p{color:var(--muted)}
+.pg-steps .pg-links{font-size:14px}
+@media (max-width:860px){
+  .pg{grid-template-columns:minmax(0,1fr)}
+  .pg-figcol{position:static}
+  .pg-now{display:block}
+}
+.pg-src{display:grid;gap:4px;font-size:14.5px;color:var(--muted);padding-left:18px;margin:0}
+
+/* ---- drawings ---- */
+.pg-fig .cap{font:500 11px var(--f-mono);fill:var(--muted)}
+.pg-fig .lbl{font:600 12.5px var(--f-mono);fill:var(--ink)}
+.pg-fig .tiny{font:600 9px var(--f-mono);fill:#4A4136}
+.pg-fig .onmetal{fill:#2B3036}
+.pg-fig .alu{fill:url(#pg-alu);stroke:#5E656C;stroke-width:1.2}
+.pg-fig .hatch{fill:url(#pg-hatch)}
+.pg-fig .water{fill:#7FBDEB;opacity:.35}
+.pg-fig .hole{fill:#2B3036}
+.pg-fig .thr{fill:none;stroke:#5E656C;stroke-width:1.1}
+.pg-fig .thrc{fill:none;stroke:#8D959C;stroke-width:1;stroke-dasharray:2 2}
+.pg-fig .thrl{fill:none;stroke:rgba(0,0,0,.35);stroke-width:1}
+.pg-fig .facet{fill:none;stroke:rgba(0,0,0,.28);stroke-width:1}
+.pg-fig .brass{fill:url(#pg-brass);stroke:#6E5420;stroke-width:1.1}
+.pg-fig .copper{fill:url(#pg-copper);stroke:#6B3A18;stroke-width:1.1}
+.pg-fig .steel{fill:url(#pg-steel);stroke:#59616A;stroke-width:1.1}
+.pg-fig .steel2{fill:url(#pg-steelh);stroke:#59616A;stroke-width:1.1}
+.pg-fig .steelc{fill:#C3CAD0;stroke:#59616A;stroke-width:1.1}
+.pg-fig .tbody{fill:#8C949B;stroke:#3E454C;stroke-width:1.2}
+.pg-fig .tcap{fill:#B9C0C6;stroke:#3E454C;stroke-width:1}
+.pg-fig .ceramic{fill:#F1E9DA;stroke:#8C7F68;stroke-width:1.2}
+.pg-fig .ceramic2{fill:#E8DCC2;stroke:#8C7F68;stroke-width:1.1}
+.pg-fig .tab,.pg-fig .spade{fill:#DDE1E4;stroke:#59616A;stroke-width:1}
+.pg-fig .conn{fill:#E9ECEE;stroke:#59616A;stroke-width:1.1}
+.pg-fig .sleeve{fill:#D7DBDE;stroke:#59616A;stroke-width:1}
+.pg-fig .sleeveS{fill:#E05A47;opacity:.45;stroke:#B13A2F;stroke-width:1}
+.pg-fig .lead2{fill:none;stroke:#8D959C;stroke-width:2}
+.pg-fig .wire-m{fill:none;stroke:#A0521F;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+.pg-fig .jumper{fill:none;stroke:#D98400;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+.pg-fig .jl{fill:#965300}
+.pg-fig .braid{fill:none;stroke:#79828A;stroke-width:6;stroke-linecap:round}
+.pg-fig .braid2{fill:none;stroke:#C2C8CD;stroke-width:2;stroke-dasharray:2 3;stroke-linecap:round}
+.pg-fig .tcwire{fill:none;stroke:#A2AAB1;stroke-width:3.5;stroke-linecap:round}
+.pg-fig .paste{fill:#C9CDD1;stroke:#8E969E;stroke-width:.8}
+.pg-fig .pasteon{opacity:.92}
+.pg-fig .syr{fill:#F3F5F6;stroke:#59616A;stroke-width:1.1}
+.pg-fig .syrp{fill:#8E969E;stroke:#59616A}
+.pg-fig .spn{fill:#9AA3AB;stroke:#3E454C;stroke-width:1.2}
+.pg-fig .nono{fill:none;stroke:#C8392C;stroke-width:3.5;stroke-linecap:round}
+.pg-fig .chassis{fill:none;stroke:var(--muted);stroke-width:1.4;stroke-dasharray:6 5}
+.pg-fig .keep{fill:url(#pg-keep);stroke:#B13A2F;stroke-width:1.2;stroke-dasharray:4 3}
+.pg-fig .pcb{fill:#2F6B4F;stroke:#1C4532;stroke-width:1.2}
+.pg-fig .pcb+text.lbl,.pg-fig text.onpcb{fill:#F2F5F3}
+.pg-fig .term{fill:#2D63A8;stroke:#1D3F6E;stroke-width:1.1}
+.pg-fig .screw{fill:url(#pg-steel);stroke:#3E454C;stroke-width:1.1}
+.pg-fig .slot{stroke:#3E454C;stroke-width:2;stroke-linecap:round}
+.pg-fig .tclead{fill:none;stroke:#D98400;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1}
+.pg-fig .draw{stroke-dasharray:1}
+.pg-fig .meter{fill:#F2C230;stroke:#6E5420;stroke-width:1.2}
+.pg-fig .lcd{fill:#C9D6B8;stroke:#4E5A44;stroke-width:1}
+.pg-fig .lcdt{font:600 17px var(--f-mono);fill:#1E2618}
+.pg-fig .jack{fill:#1E2226}
+.pg-fig .jack.r{fill:#C8392C}
+.pg-fig .collet{fill:#3E454C;stroke:#1E2226;stroke-width:1}
+.pg-fig .oring-w{fill:#FFFFFF;stroke:#59616A;stroke-width:1}
+.pg-fig .oring-g{fill:#3FA35B;stroke:#226B37;stroke-width:1}
+.pg-fig .oring-d{fill:#2E3236;stroke:#0E1012;stroke-width:1}
+.pg-fig .cable{fill:none;stroke:#3E454C;stroke-width:5;stroke-linecap:round}
+.pg-fig .mark{fill:none;stroke:#C8392C;stroke-width:2;stroke-linecap:round}
+.pg-fig .lead{fill:none;stroke:var(--muted);stroke-width:1}
+.pg-fig .ptfe{fill:#FBFBF8;stroke:#8E969E;stroke-width:1.1}
+.pg-fig .hose{fill:none;stroke:#7E878E;stroke-width:12;stroke-linecap:round}
+.pg-fig .hose2{fill:none;stroke:#B6BCC1;stroke-width:3;stroke-dasharray:3 3}
+.pg-fig .hoseB{fill:none;stroke:#8B9399;stroke-width:10;stroke-linecap:round}
+.pg-fig .ptfeL{fill:none;stroke:#F4F4F0;stroke-width:8;stroke-linecap:round;filter:drop-shadow(0 0 .6px #59616A)}
+.pg-fig .pushT{fill:#E9ECEE;stroke:#59616A;stroke-width:1.1}
+.pg-fig .clamp{fill:#C3CAD0;stroke:#3E454C;stroke-width:1.1}
+.pg-fig .pumpb{fill:#2E3440;stroke:#14181D;stroke-width:1.2}
+.pg-fig .pumpb+text.lbl{fill:#E7E9EB}
+.pg-fig .cap-screw{fill:#3E454C;stroke:#14181D;stroke-width:1}
+.pg-fig .dimln{fill:none;stroke:var(--ink);stroke-width:1.2}
+.pg-fig .dimln.acc{stroke:var(--accent);stroke-width:2}
+.pg-fig .magring{fill:none;stroke:var(--accent);stroke-width:2.5}
+.pg-fig .wfill{fill:#5AA7E0;opacity:.85}
+.pg-fig .waterln{fill:none;stroke:#5AA7E0;stroke-width:4;stroke-linecap:round}
+.pg-fig .foam{fill:#F2D28A;opacity:.45;stroke:#B58B2E;stroke-width:1.2;stroke-dasharray:4 3}
+.pg-fig .ring{fill:none;stroke:rgba(0,0,0,.18);stroke-width:1.2}
+.pg-fig .pin{fill:#DDE1E4;stroke:#59616A;stroke-width:1.1}
+.pg-fig .pinc{fill:#59616A}
+.pg-fig .rbtn{fill:#D9473A;stroke:#7E1F17;stroke-width:1}
+.pg-fig .cutln{fill:none;stroke:#C8392C;stroke-width:2.2;stroke-dasharray:4 3}
+.pg-fig .drop{fill:#5AA7E0}
+/* wires, SSR and switches */
+.pg-fig .ins-r{fill:#C8392C;stroke:#7E1F17;stroke-width:1}
+.pg-fig .ins-k{fill:#2B3036;stroke:#0E1012;stroke-width:1}
+.pg-fig .ins-p{fill:#7046B8;stroke:#3F2470;stroke-width:1}
+.pg-fig .cu{fill:url(#pg-copper);stroke:#94532A;stroke-width:.6}
+.pg-fig .strand{fill:none;stroke:#7A4220;stroke-width:.6;opacity:.7}
+.pg-fig .blade{fill:#8E969E;stroke:#3E454C;stroke-width:1.2}
+.pg-fig .flagw{fill:#FFFFFF;stroke:#59616A;stroke-width:1}
+.pg-fig .jaw{fill:#3E454C;stroke:#14181D;stroke-width:1}
+.pg-fig .die-r{fill:#D9473A}
+.pg-fig .metal{fill:url(#pg-steel);stroke:#59616A;stroke-width:1}
+.pg-fig .isl{fill:#D64534;stroke:#7E1F17;stroke-width:1}
+.pg-fig .isl-b{fill:#2F6FC0;stroke:#1D3F6E;stroke-width:1}
+.pg-fig .dimple{fill:rgba(0,0,0,.28)}
+.pg-fig .slv{fill:#E05A47;opacity:.5;stroke:#B13A2F;stroke-width:1}
+.pg-fig .wing{fill:none;stroke:#8E969E;stroke-width:4;stroke-linecap:round}
+.pg-fig .gun{fill:#3E454C;stroke:#14181D;stroke-width:1}
+.pg-fig .heatw path{fill:none;stroke:#F2A33A;stroke-width:2.4;stroke-linecap:round;opacity:.9}
+.pg-fig .wire-w{fill:none;stroke:#F4F4F0;stroke-width:4;stroke-linecap:round;filter:drop-shadow(0 0 .7px #59616A)}
+.pg-fig .wire-g{fill:none;stroke:#8E969E;stroke-width:4;stroke-linecap:round}
+.pg-fig .lvw{fill:none;stroke:var(--w-lv);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.pg-fig .lvg{fill:none;stroke:var(--w-lvg);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.pg-fig .lvc{fill:#DDE1E4}
+.pg-fig .okc{fill:#2D7A4C}
+.pg-fig .okt{fill:none;stroke:#FFFFFF;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+.pg-fig .tug path{fill:none;stroke:var(--accent);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.pg-fig .ssrb{fill:#23272C;stroke:#0E1012;stroke-width:1.2}
+.pg-fig .ssrt{font:700 15px var(--f-mono);fill:#E7E9EB}
+.pg-fig .ssrs{font:500 11px var(--f-mono);fill:#AEB5BC}
+.pg-fig .onssr{fill:#E7E9EB}
+.pg-fig .plate{fill:#C3CAD0;stroke:#59616A;stroke-width:1}
+.pg-fig .led{fill:#5A2A26;stroke:#14181D;stroke-width:1}
+.pg-fig .led.on{animation:pgblink 1.4s ease-in-out infinite}
+.pg-fig .cover{fill:#CFE6F5;opacity:.28;stroke:#7FA6C2;stroke-width:1.5}
+.pg-fig .wallp{fill:#D3D8DC;stroke:#8D959C;stroke-width:1.2}
+.pg-fig .vent{fill:#2B3036}
+.pg-fig .funnel{fill:#3E454C;stroke:#14181D;stroke-width:1}
+.pg-fig .funnel+text{fill:#E7E9EB}
+.pg-fig .swbody{fill:#B9C0C6;stroke:#3E454C;stroke-width:1.2}
+.pg-fig .fadedtab{opacity:.4}
+.pg-fig .tagb{fill:#FFF6C9;stroke:#9A7B1C;stroke-width:1}
+.pg-fig .tagt{font:600 10.5px var(--f-mono);fill:#3B2F07}
+.pg-fig .tie{fill:none;stroke:#2B3036;stroke-width:3;stroke-linecap:round}
+.pg-fig .blkh{fill:#2B3036;stroke:#0E1012;stroke-width:1.2}
+.pg-fig .wallbg{fill:var(--surface)}
+.pg-fig .jig{animation:pgjig .9s ease-in-out infinite}
+.pg-fig .tug path{animation:pgtug .9s ease-in-out infinite}
+@keyframes pgblink{0%,100%{fill:#5A2A26}50%{fill:#FF4A3D}}
+@keyframes pgjig{0%,100%{transform:translateX(0)}50%{transform:translateX(3px)}}
+@keyframes pgtug{0%,100%{opacity:.35}50%{opacity:1}}
+@media (prefers-reduced-motion: reduce){.pg-fig .jig,.pg-fig .tug path,.pg-fig .led.on{animation:none}.pg-fig .led.on{fill:#FF4A3D}}
+/* pieces that only run during their steps */
+.pg-fig [data-loop]{display:none}
+.pg-fig [data-loop].run{display:inline}
+.pg-fig .turnarc{fill:none;stroke:var(--accent);stroke-width:2.6;stroke-dasharray:6 5;stroke-linecap:round;animation:pgflow .9s linear infinite}
+.pg-fig .turnhd{fill:none;stroke:var(--accent);stroke-width:2.6;stroke-linecap:round}
+.pg-fig .pulse circle{fill:none;stroke:var(--accent);stroke-width:2.5;transform-box:fill-box;transform-origin:center;animation:pgpulse 1.4s ease-out infinite}
+.pg-fig .drips .drop{animation:pgdrip 1s ease-in infinite}
+.pg-fig .drips .d2{animation-delay:.5s}
+.pg-fig .bubs circle{fill:#FFFFFF;stroke:#5AA7E0;stroke-width:1;offset-path:path("M366,226 V206 C366,176 356,150 322,150 H276");animation:pgbub 2.2s linear infinite}
+.pg-fig .bubs .b2{animation-delay:.7s}
+.pg-fig .bubs .b3{animation-delay:1.4s}
+.pg-fig [data-run].on>*{animation:pgpress 1.6s ease-in-out infinite}
+@keyframes pgflow{to{stroke-dashoffset:-11}}
+@keyframes pgpulse{0%{transform:scale(.6);opacity:.9}100%{transform:scale(1.25);opacity:0}}
+@keyframes pgdrip{0%{transform:translateY(0);opacity:0}15%{opacity:1}100%{transform:translateY(46px);opacity:0}}
+@keyframes pgbub{0%{offset-distance:0%;opacity:0}10%{opacity:1}90%{opacity:1}100%{offset-distance:100%;opacity:0}}
+@keyframes pgpress{0%,60%,100%{transform:translateY(0)}75%{transform:translateY(4px)}}
+@media (prefers-reduced-motion: reduce){
+  .pg-fig .turnarc,.pg-fig .pulse circle,.pg-fig .drips .drop,.pg-fig .bubs circle,.pg-fig [data-run].on>*{animation:none}
+  .pg-fig .pulse circle{opacity:.8}
+  .pg-fig .bubs circle{offset-distance:50%}
+  .pg-figcol{transition:none}
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .pg-fig .hole{fill:#0D0F11}:root:not([data-theme="light"]) .pg-fig .ins-k,:root:not([data-theme="light"]) .pg-fig .ssrb{stroke:#6B727B}}
+:root[data-theme="dark"] .pg-fig .hole{fill:#0D0F11}
+:root[data-theme="dark"] .pg-fig .ins-k,:root[data-theme="dark"] .pg-fig .ssrb{stroke:#6B727B}
+/* Silvia drawings */
+.pg-fig .clampb{fill:none;stroke:#8D959C;stroke-width:6;stroke-linejoin:round}
+.pg-fig .insul{fill:#E8DFC9;stroke:#9C8F70;stroke-width:1.2;opacity:.96}
+.pg-fig .quilt{fill:none;stroke:#B8AB8A;stroke-width:1;stroke-dasharray:3 4}
+.pg-fig .cord{fill:none;stroke:#FFFFFF;stroke-width:2;stroke-linecap:round;filter:drop-shadow(0 0 .6px #59616A)}
+.pg-fig .tapeb{fill:#E05A47;opacity:.38;stroke:#B13A2F;stroke-width:1}
+.pg-fig .tapel{fill:none;stroke:#B13A2F;stroke-width:1.2;opacity:.6}
+.pg-fig .mkt{font:700 10px var(--f-mono);fill:#FFFFFF}
+.pg-fig .pbtn{fill:#2B3036;stroke:#0E1012;stroke-width:1.2}

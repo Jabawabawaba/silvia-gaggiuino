@@ -1,0 +1,124 @@
+<title>Part Guides</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+%%BASECSS%%
+%%INCLUDE:part-guides.css%%
+</style>
+%%INCLUDE:part-defs.svg.html%%
+<div class="wrap">
+  <header class="top">
+    <div class="plate"><span class="rivet" aria-hidden="true"></span><span><b>Install</b></span><span>Part guides</span><span>five guides, drawn step by step</span><span class="rivet" aria-hidden="true"></span></div>
+    <h1>Part Guides</h1>
+    <p class="lede">The thermocouple, the pressure sensor, the wires themselves, the SSR and the switches, each drawn step by step for a Silvia. Tap a step to watch it, or step through with the arrows. The <a href="%%LINK_RUNBOOK%%">runbook</a> has the same work in order with everything else, and the <a href="%%LINK_WIRING%%">wiring reference</a> has every run.</p>
+    <nav class="pg-jump" aria-label="Guides on this page"><a class="chip" href="#tc">Thermocouple</a><a class="chip" href="#ps">Pressure sensor</a><a class="chip" href="#wire">Making the wires</a><a class="chip" href="#ssr">SSR</a><a class="chip" href="#sw">Switches</a></nav>
+  </header>
+
+  <div class="warn"><strong>Cord out, boiler cold</strong><p>Unplug the machine and let the boiler cool before you open it. The drawings show what your hands do, not to scale. There's no official Silvia guide: these steps follow realNiche's harness and the Silvia builds on the Gaggiuino Discord, as the rest of this site does.</p></div>
+
+  <section class="block" id="tc" aria-labelledby="h-tc">
+    <div class="sec-h"><h2 id="h-tc">Thermocouple</h2><span class="sum">K type · M3 · ungrounded</span></div>
+    <p class="pg-where" id="pg-tc-where"></p>
+    <div class="pg-meta">
+      <div><span class="k">You need</span><ul><li>The thermocouple: K type, ungrounded, M3 thread (not the official parts list's M4)</li><li>Thermal paste rated for 180 °C or more</li><li>A screwdriver for the thermostat's clamp screws</li><li>A multimeter</li></ul></div>
+      <div><span class="k">What it does</span><p>It reports the boiler's temperature to the PCB on J4, in place of the brew thermostat. Ungrounded means its junction is insulated from the probe body, because the PCB's low-voltage side floats; <a href="how-gaggiuino-works.html#ground">How Gaggiuino works</a> explains why.</p></div>
+    </div>
+    <div class="pg" id="pg-tc-g">
+      <div class="pg-figcol">
+        <figure class="pg-fig">%%INCLUDE:part-tc.svg.html%%
+          <div class="pg-ctl"><button type="button" class="pg-prev" aria-label="Previous step"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button><span class="pg-pos" aria-live="polite"></span><button type="button" class="pg-next" aria-label="Next step"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button><button type="button" class="pg-again" aria-label="Play this step again"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg></button></div>
+        </figure>
+        <p class="pg-now" aria-hidden="true"></p>
+      </div>
+      <ol class="pg-steps"></ol>
+    </div>
+  </section>
+
+  <section class="block" id="ps" aria-labelledby="h-ps">
+    <div class="sec-h"><h2 id="h-ps">Pressure sensor</h2><span class="sum">1.2 MPa · OPV tee</span></div>
+    <p class="pg-where" id="pg-ps-where"></p>
+    <div class="pg-meta">
+      <div><span class="k">You need</span><ul><li>The sensor (0 to 1.2 MPa, G1/4) and its flat white O-ring, about 11 mm across</li><li>Juun's parts: a 1/8" FFM tee and a 1/4"F to 1/8"M elbow</li><li>Loctite 55 thread cord</li><li>Two spanners</li><li>A little foam, if its readings turn out noisy</li></ul></div>
+      <div><span class="k">What it does</span><p>It tells the PCB the brew pressure, 0 to 12 bar, on J6, so Gaggiuino can profile pressure. It seals on its O-ring, not on its thread. No tap block fits a Silvia, so it goes on a tee.</p></div>
+    </div>
+    <div class="pg" id="pg-ps-g">
+      <div class="pg-figcol">
+        <figure class="pg-fig">%%INCLUDE:part-ps.svg.html%%
+          <div class="pg-ctl"><button type="button" class="pg-prev" aria-label="Previous step"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button><span class="pg-pos" aria-live="polite"></span><button type="button" class="pg-next" aria-label="Next step"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button><button type="button" class="pg-again" aria-label="Play this step again"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg></button></div>
+        </figure>
+        <p class="pg-now" aria-hidden="true"></p>
+      </div>
+      <ol class="pg-steps"></ol>
+    </div>
+  </section>
+
+  <section class="block" id="wire" aria-labelledby="h-wire">
+    <div class="sec-h"><h2 id="h-wire">Making the wires</h2><span class="sum">cut · strip · crimp · tape · pull-test</span></div>
+    <p class="pg-where" id="pg-wire-where"></p>
+    <div class="pg-meta">
+      <div><span class="k">You need</span><ul><li>18 AWG 200 °C silicone wire for mains and 22 AWG for low voltage, cut from the <a href="%%LINK_CUTLIST%%">cut list</a> (a Silvia harness runs longer than a Gaggia one)</li><li>A wire stripper</li><li>An insulated crimper (red and blue dies) for spades, forks and butt splices</li><li>An open-barrel crimper for the bare boiler spades</li><li>Red and blue 6.3 mm spades, forks for the SSR, uninsulated 6.3 mm spades and red butt splices</li><li>Self-fusing silicone tape, an oil-based marker and your printed <a href="%%LINK_LABELS%%">wire labels</a></li></ul></div>
+      <div><span class="k">Which crimper is which</span><p>An insulated crimper has colored, rounded dies and squashes a nylon sleeve. An open-barrel crimper has small B-shaped dies that roll a bare terminal's tabs over the wire. Most hardware-store crimpers are the insulated kind; the bare spades at the boiler need the open-barrel one.</p></div>
+    </div>
+    <div class="pg" id="pg-wire-g">
+      <div class="pg-figcol">
+        <figure class="pg-fig">%%INCLUDE:part-wire.svg.html%%
+          <div class="pg-ctl"><button type="button" class="pg-prev" aria-label="Previous step"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button><span class="pg-pos" aria-live="polite"></span><button type="button" class="pg-next" aria-label="Next step"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button><button type="button" class="pg-again" aria-label="Play this step again"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg></button></div>
+        </figure>
+        <p class="pg-now" aria-hidden="true"></p>
+      </div>
+      <ol class="pg-steps"></ol>
+    </div>
+  </section>
+
+  <section class="block" id="ssr" aria-labelledby="h-ssr">
+    <div class="sec-h"><h2 id="h-ssr">Solid-state relay</h2><span class="sum">40 A · left wall</span></div>
+    <p class="pg-where" id="pg-ssr-where"></p>
+    <div class="pg-meta">
+      <div><span class="k">You need</span><ul><li>The SSR: 3 to 32 V DC control, 24 to 480 V AC load, 40 A</li><li>One screw, washers and a nut, and a drill, or a small bracket</li><li>Forks for all four screws: one sized for two wires on load terminal 1</li><li>A screwdriver</li></ul></div>
+      <div><span class="k">What it does</span><p>It switches the element on the board's command, with the board's 5 V side isolated from mains. <a href="how-gaggiuino-works.html#ssr">How Gaggiuino works</a> explains it.</p></div>
+    </div>
+    <div class="pg" id="pg-ssr-g">
+      <div class="pg-figcol">
+        <figure class="pg-fig">%%INCLUDE:part-ssr.svg.html%%
+          <div class="pg-ctl"><button type="button" class="pg-prev" aria-label="Previous step"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button><span class="pg-pos" aria-live="polite"></span><button type="button" class="pg-next" aria-label="Next step"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button><button type="button" class="pg-again" aria-label="Play this step again"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg></button></div>
+        </figure>
+        <p class="pg-now" aria-hidden="true"></p>
+      </div>
+      <ol class="pg-steps"></ol>
+    </div>
+  </section>
+
+  <section class="block" id="sw" aria-labelledby="h-sw">
+    <div class="sec-h"><h2 id="h-sw">Switches</h2><span class="sum">brew · steam · hot water · power</span></div>
+    <p class="pg-where" id="pg-sw-where"></p>
+    <div class="pg-meta">
+      <div><span class="k">You need</span><ul><li>The low-voltage switch wires (22 AWG) with red spades, and red butt splices if you join the ground chain that way</li><li>The power switch's runs: AC1, AC2, AC3, AC8 and AC9, with one blue spade for AC8 and AC9</li><li data-when="model:E">A latching double-pole rocker, in place of the E's push button</li></ul></div>
+      <div><span class="k">What changes</span><p>Each switch is two switches side by side (two poles) that flip together, each with a center and an outer spade. Brew, steam and hot water stop switching mains: one pole of each, when on, joins a PCB input to the 5 V ground. The power switch keeps mains and breaks both line and neutral.</p></div>
+    </div>
+    <div class="pg" id="pg-sw-g">
+      <div class="pg-figcol">
+        <figure class="pg-fig">%%INCLUDE:part-sw.svg.html%%
+          <div class="pg-ctl"><button type="button" class="pg-prev" aria-label="Previous step"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button><span class="pg-pos" aria-live="polite"></span><button type="button" class="pg-next" aria-label="Next step"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button><button type="button" class="pg-again" aria-label="Play this step again"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg></button></div>
+        </figure>
+        <p class="pg-now" aria-hidden="true"></p>
+      </div>
+      <ol class="pg-steps"></ol>
+    </div>
+  </section>
+
+  <section class="block" id="src" aria-labelledby="h-src">
+    <div class="sec-h"><h2 id="h-src">Sources</h2></div>
+    <ul class="pg-src">
+      <li>realNiche's <a href="https://github.com/thejobbitt/gaggiuino_resources/tree/main/wiring_diagrams/rancilio_silvia">Rancilio Silvia wiring diagram</a> (PCB v3.1/v4.0): every run, the switch poles, and the SSR's terminals.</li>
+      <li>The Gaggiuino Discord's Rancilio Silvia install thread (Talon, Juun and others): the M3 thermocouple, the SSR on the left wall, bare spades and silicone tape at the boiler, blue spades for doubled runs, red butt splices in the ground chain, and Juun's OPV tee parts, as collected on <a href="silvia-specifics.html">Silvia specifics</a> and <a href="discord-notes.html">Discord notes</a>.</li>
+      <li>GaggiMate's <a href="https://docs.gaggimate.eu/docs/installation-silvia/">Silvia installation</a> guide (a different mod project): which clamp hole to use for the thermocouple.</li>
+      <li>Gaggiuino, official docs: the flat O-ring under the pressure sensor, <a href="https://gaggiuino.github.io/#/learning/wiring-basics">wiring basics</a> (connectors and crimping) and the PCB's floating 5 V side. Docs read October 2026.</li>
+      <li>On this site: the <a href="%%LINK_RUNBOOK%%">runbook</a>, the <a href="%%LINK_WIRING%%">wiring reference</a> and the <a href="%%LINK_CHECKS%%">power-on checks</a>.</li>
+    </ul>
+  </section>
+</div>
+
+<script>
+%%INCLUDE:part-guides.js%%
+</script>

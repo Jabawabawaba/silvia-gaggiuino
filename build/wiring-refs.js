@@ -1,10 +1,15 @@
   /* ---------- back-links from the wiring drawing ----------
      For whatever is picked (a run, a part or a set of runs), every place on the site whose instructions link to it.
-     Found from those pages' own link data, so the two directions can't drift apart: the runbook steps' map fields
-     (runbook-phases.js), the troubleshooting symptoms' (trouble-data.js) and the power-on checks' MAPS
-     (checks-map.js, titles pulled from checks.tpl.html at build), plus the LED switch mod's wiring step.
+     Found from those pages' own link data, so the two directions can't drift apart: the part guides' step map fields
+     (part-guides-data.js), the runbook steps' (runbook-phases.js), the troubleshooting symptoms' (trouble-data.js)
+     and the power-on checks' MAPS (checks-map.js, titles pulled from checks.tpl.html at build), plus the LED switch
+     mod's wiring step.
      Whole-harness and layer links are left out: they point at everything. */
   var REFS=(function(){
+    var PGD=(function(){
+%%INCLUDE:part-guides-data.js%%
+      return G;
+    })();
     var RB=(function(){
 %%INCLUDE:runbook-phases.js%%
       return PHASES;
@@ -18,7 +23,10 @@
       return MAPS;
     })();
     var CKT=%%CHECK_INDEX%%;
-    var LINK={runbook:'%%LINK_RUNBOOK%%',checks:'%%LINK_CHECKS%%',trouble:'%%LINK_TROUBLE%%',led:'%%LINK_LED%%'};
+    var LINK={runbook:'%%LINK_RUNBOOK%%',checks:'%%LINK_CHECKS%%',trouble:'%%LINK_TROUBLE%%',led:'%%LINK_LED%%',guides:'%%LINK_GUIDES%%'};
+    var GNAME={tc:'Thermocouple',ps:'Pressure sensor',wire:'Making the wires',ssr:'SSR',sw:'Switches'};
+    /* cables that come with their parts: nothing to make */
+    var MADE=['LV9','LV10','LV11','OP1','OP2'];
     /* the LED switch mod's own wiring step: the switch signal and ground runs, and the LED runs */
     var LED=[['LED switch mod, step 8: Wire it in','#s8','runs:LV1,LV2,LV3,LV4,LV5,LV6,OP3,OP4,OP5']];
     function M(){return window.SilviaMachine||null}
@@ -47,11 +55,32 @@
       return false;
     }
     function hit(map,sel,c){return targets(map).some(function(x){return ok(x[2])&&covers(resolve(x[1],c),sel,c)})}
+    function hitDirect(map,sel,c){return targets(map).some(function(x){if(!ok(x[2]))return false;var r=resolve(x[1],c);return sel.t==='part'?r.part===sel.id:covers({runs:r.runs,part:null},sel,c)})}
     function tslug(i){var s='t-'+TR[i].s.toLowerCase().replace(/\{[a-z]+\}/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,60),n=0;for(var j=0;j<i;j++)if(TR[j].s===TR[i].s)n++;return n?s+'-'+(n+1):s}
     function fillT(s){var m=M();return String(s).replace(/\{gfci\}/g,m?m.text('gfci'):'GFCI or RCD').replace(/\{outlet\}/g,m?m.text('outlet'):'GFCI- or RCD-protected outlet').replace(/\{volts\}/g,m?m.text('volts'):'your mains voltage')}
     function html(sel,c){
       if(!sel)return '';
       var groups=[];
+      /* part guides: one link per guide, to the first step (of the ones shown for this Silvia) that covers it */
+      var pg=[],wired=false;
+      Object.keys(GNAME).forEach(function(k){
+        var d=PGD[k];if(!d)return;
+        var shown=(d.steps.all||[]).filter(function(s){return ok(s.when)}),at=-1;
+        /* a step that names the pick itself beats one that only covers it through a part */
+        for(var i=0;i<shown.length&&at<0;i++)if(hitDirect(shown[i].map,sel,c))at=i;
+        for(i=0;i<shown.length&&at<0;i++)if(hit(shown[i].map,sel,c))at=i;
+        if(at>=0){pg.push('<a href="'+base(LINK.guides)+'#'+k+'/'+(at+1)+'">'+e(GNAME[k]+', step '+(at+1)+': '+shown[at].t)+'</a>');if(k==='wire')wired=true}
+      });
+      /* every wire you make: how to make it, and the bare-spade step when it has a boiler end */
+      if(sel.t==='run'&&!wired&&MADE.indexOf(sel.id)<0){
+        var r=c.runs.filter(function(x){return x.id===sel.id})[0];
+        if(r){
+          var bare=/Uninsulated/.test((r.ends||[]).join(' ')),ws=(PGD.wire.steps.all||[]).filter(function(s){return ok(s.when)}),bi=-1;
+          ws.forEach(function(s,i){if(bi<0&&/^Bare spades/.test(s.t))bi=i});
+          pg.push(bare&&bi>=0?'<a href="'+base(LINK.guides)+'#wire/'+(bi+1)+'">'+e('Making the wires, step '+(bi+1)+': '+ws[bi].t)+'</a>':'<a href="'+base(LINK.guides)+'#wire">Making the wires</a>');
+        }
+      }
+      if(pg.length)groups.push(['Part guides',pg]);
       var rb=[];
       RB.forEach(function(p,pi){p.steps.forEach(function(s){
         if(s.map==null||!ok(s.w))return;

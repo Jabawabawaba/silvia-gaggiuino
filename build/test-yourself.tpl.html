@@ -67,6 +67,11 @@ var TY=(function(){
 %%INCLUDE:trouble-data.js%%
     return T;
   })();
+  var PGD=(function(){
+%%INCLUDE:part-guides-data.js%%
+    return G;
+  })();
+  var GNAME={tc:'Thermocouple',ps:'Pressure sensor',wire:'Making the wires',ssr:'SSR',sw:'Switches'};
   var CKT=%%CHECK_INDEX%%;
   var GL=%%GLOSSARY_INDEX%%;
   function prof(){return (SM&&SM.get())||{}}
@@ -90,6 +95,13 @@ var TY=(function(){
         for(var b=0;b<ph.steps.length;b++){var s=ph.steps[b];if(s.id===r[1]){if(s.w&&!ok(s.w))return null;return {h:'runbook.html#'+s.id,l:'Runbook, '+ph.n+': '+fillT(stepT(s.t))}}}
       }
       return null;
+    }
+    /* a part guide step, counted among the steps shown for this Silvia, as the guide page counts them */
+    if(k==='pg'){
+      var d=PGD[r[1]];if(!d)return null;
+      var shown=(d.steps.all||[]).filter(function(s){return ok(s.when)});
+      for(var j=0;j<shown.length;j++)if(shown[j].t===r[3])return {h:'part-guides.html#'+r[1]+'/'+(j+1),l:'Part guides: '+GNAME[r[1]]+', step '+(j+1)+': '+r[3]};
+      return {h:'part-guides.html#'+r[1],l:'Part guides: '+GNAME[r[1]]};
     }
     return null;
   }

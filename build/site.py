@@ -32,6 +32,7 @@ PAGES = [
     ("AeEeTNkB5mBChPXBAGSjVG", "silvia-parts-tracker.html", "parts-tracker.html", "Parts tracker", "plan"),
     (None, "test-yourself.tpl.html", "test-yourself.html", "Test yourself", "plan"),
     ("Gq87FYxKzHytcFKB93RWDL", "silvia-install-runbook.html", "runbook.html", "Runbook", "install"),
+    (None, "part-guides.tpl.html", "part-guides.html", "Part guides", "install"),
     ("D9WraKUFqQPNH1bvFE5VPV", "silvia-wiring-reference.html", "wiring.html", "Wiring", "install"),
     (None, "cutlist.tpl.html", "cut-list.html", "Cut list", "install"),
     ("M4rDRUCjSCyrQEubSFssd6", "silvia-wire-labels.html", "wire-labels.html", "Wire labels", "install"),

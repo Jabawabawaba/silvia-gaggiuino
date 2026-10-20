@@ -109,7 +109,7 @@ E = [
     ("Loctite 55", "", "A thread-sealing cord for tapered pipe threads that can be readjusted after it's wound on.", []),
     ("Main Divider", "", "A Gaggiuino heating setting. From 10 to 5 °C below the target the element is on one part in Main Divider + 1 of the time; at 5 that's one part in six.", [("How Gaggiuino works", "how-gaggiuino-works.html#temp")]),
     ("Neutral", "", "The mains return conductor. It's near earth voltage but carries the full load current, so it's treated as live.", []),
-    ("O-ring", "", "A rubber ring that seals a joint. The pressure sensor seals on a flat 11 × 6 mm O-ring pressed into its fitting, not on its thread.", []),
+    ("O-ring", "", "A rubber ring that seals a joint. The pressure sensor seals on a flat white O-ring, about 11 mm across, pressed into its fitting, not on its thread.", []),
     ("Offset", "", "A Gaggiuino setting that corrects for the difference between the thermocouple reading and the water temperature at the group.", []),
     ("Optocoupler", "", "A light source and a light sensor in one package, so a signal can cross between circuits without a wire. It's how an SSR isolates the PCB from mains.", [("How Gaggiuino works", "how-gaggiuino-works.html#ssr")]),
     ("Overshoot", "", "When the temperature carries on past the target after the heater stops, because heat is still soaking through.", [("How Gaggiuino works", "how-gaggiuino-works.html#temp")]),

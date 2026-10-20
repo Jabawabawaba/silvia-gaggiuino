@@ -936,6 +936,12 @@
     "map",
     "run=LV9",
     "The pressure sensor cable on the wiring drawing"
+   ],
+   [
+    "pg",
+    "ps",
+    null,
+    "Plug it into J6"
    ]
   ],
   "src": "learn-gg-parts.html (#xdcr): 'electronics in the sensor body turn that into a voltage on the signal pin: 0.5 V at 0 bar, rising evenly to 4.5 V at 12 bar. The ADS1015 on the PCB converts that voltage to a number.' 'the PCB reads it continuously and adjusts the pump to follow the curve.'"
@@ -1213,6 +1219,12 @@
    [
     "rb",
     "p0f"
+   ],
+   [
+    "pg",
+    "wire",
+    null,
+    "Bare spades at the boiler"
    ]
   ],
   "src": "silvia-parts-tracker.html crimper: 'Crimps the bare spades at the boiler, where insulated connectors can't take the heat.' runbook-phases.js p0f: 'open-barrel crimper for the boiler spades, insulated crimper for butt splices and forks'. parts tracker elec: 'The JST PH pins need a fine-pitch crimper or pre-crimped leads'. runs.py LV10: 'Screw terminal'"
@@ -1691,6 +1703,12 @@
     "map",
     "run=LV10",
     "The thermocouple run on the wiring drawing"
+   ],
+   [
+    "pg",
+    "tc",
+    null,
+    "Clamp it in J4 and check it"
    ]
   ],
   "src": "runbook-phases.js p1c: 'Fold each bare wire over before clamping it in J4, and keep the insulation out of the clamp.'; runs.py CONNECTORS J4: 'Screw terminal'"
@@ -1715,6 +1733,12 @@
     "url",
     "how-gaggiuino-works.html#tc",
     "How Gaggiuino works: the thermocouple"
+   ],
+   [
+    "pg",
+    "tc",
+    null,
+    "Screw it in, finger tight only"
    ]
   ],
   "src": "runbook-phases.js p3a: 'Thermal paste rated to 180 °C or more, finger tight only, with the wire free to rotate. Route the lead around the front of the boiler.'"
@@ -1786,6 +1810,12 @@
     "url",
     "how-gaggiuino-works.html#ssr",
     "How Gaggiuino works: the SSR"
+   ],
+   [
+    "pg",
+    "ssr",
+    null,
+    "Screw it to the wall"
    ]
   ],
   "src": "learn-gg-parts.html #ssr: 'While it conducts it drops up to 1.6 V, which at a Silvia's element current turns several watts into heat, so it needs to sit flat on metal.'; runbook-phases.js p3c: 'Mount the SSR on the left wall... clear of the pump.'"
@@ -1856,6 +1886,12 @@
    [
     "ck",
     "g1"
+   ],
+   [
+    "pg",
+    "wire",
+    null,
+    "Bare spades at the boiler"
    ]
   ],
   "src": "runbook-phases.js p2f: 'Uninsulated spades. Each gets self-fusing silicone tape once it's fitted and the power-on checks have probed it; check g1 is the reminder.'"
@@ -1946,6 +1982,12 @@
    [
     "ck",
     "h1"
+   ],
+   [
+    "pg",
+    "ps",
+    null,
+    "Fill it and test it"
    ]
   ],
   "src": "runbook-phases.js p5g: 'Switch off and unplug first. Lift the top cover and touch a dry paper towel to the tee, elbow, sensor and thermocouple. Close it up and rerun h1 to h4 of the power-on checks before you plug back in'",
@@ -2044,6 +2086,12 @@
    [
     "ck",
     "g15"
+   ],
+   [
+    "pg",
+    "sw",
+    null,
+    "E model: fit a latching rocker"
    ]
   ],
   "w": "model:E",
@@ -2095,6 +2143,12 @@
    [
     "ck",
     "f7"
+   ],
+   [
+    "pg",
+    "ssr",
+    null,
+    "Control wires: + and −"
    ]
   ],
   "src": "runs.py LV7 note: 'Polarity matters: R1 to +, GND to -.'; CONNECTORS J9 'GND, R1, R2 (R2 unused)'; learn-gg-parts.html: 'J9 gives the boiler's SSR 5 V on R1 when the element should be on.'"
@@ -2169,6 +2223,12 @@
     "map",
     "part=ssr",
     "The SSR on the wiring drawing"
+   ],
+   [
+    "pg",
+    "ssr",
+    null,
+    "Load terminal 1: two wires, one fork"
    ]
   ],
   "src": "runs.py AC3 note: 'Switched line into the SSR. The same SSR terminal also feeds the PCB through AC4.'; AC4 'SSR load terminal 1 to PCB J11 (AC Line)... Powers the PCB and feeds its pump and solenoid outputs.'"
@@ -2193,6 +2253,12 @@
    [
     "ck",
     "g5"
+   ],
+   [
+    "pg",
+    "ssr",
+    null,
+    "Load terminal 2: to the safety thermostat"
    ]
   ],
   "src": "wiring-parts.js ssr: 'terminal 2 feeds the 165 °C safety thermostat and then the element.'; runs.py AC5 note: 'The 165 C safety thermostat stays in the heater line. Never bypass it.'"
@@ -2217,6 +2283,12 @@
    [
     "ck",
     "e9"
+   ],
+   [
+    "pg",
+    "sw",
+    null,
+    "Power switch: supply on the outer spades"
    ]
   ],
   "src": "wiring-parts.js pwr: 'The power switch, still on mains: it breaks both line and neutral, one per pole. Supply goes on the outer spades, the loads come off the center ones.'"
@@ -2341,6 +2413,12 @@
     "url",
     "wiring.html#h-rules",
     "Wiring: spades and routing"
+   ],
+   [
+    "pg",
+    "sw",
+    null,
+    "Signal wires on the center spades"
    ]
   ],
   "src": "wiring.tpl.html h-rules: 'Use one pole of each switch, the ground pole. The PCB signal goes on its center spade and ground on its outer spade. The other pole stays free; the LED mod puts 5 V on its outer spade.'",
@@ -2391,6 +2469,12 @@
    [
     "ck",
     "g2"
+   ],
+   [
+    "pg",
+    "wire",
+    null,
+    "Two wires on one terminal"
    ]
   ],
   "src": "wiring.tpl.html h-rules: 'Two 18 AWG wires never go into a red spade. Use a blue spade, or a bare spade sized for 16 to 14 AWG [site uses a range dash], at the SSR, the safety thermostat, the lamp, the pump, the solenoid and the boiler ground.'; legend: 'Where two wires meet at one spade, both go into a single spade sized for two wires.'"
@@ -2416,6 +2500,12 @@
     "map",
     "part=boiler",
     "The boiler on the wiring drawing"
+   ],
+   [
+    "pg",
+    "wire",
+    null,
+    "Bare spades at the boiler"
    ]
   ],
   "src": "wiring.tpl.html h-rules 'At the boiler': 'Uninsulated spades crimped with an open-barrel crimper, then wrapped in self-fusing silicone tape. Nylon-insulated spades are rated to 105 °C and stay away from the boiler. The solenoid sits on the group and gets hot too'"
@@ -2489,6 +2579,12 @@
     "url",
     "wiring.html#h-conn",
     "Wiring: PCB v4 connector map"
+   ],
+   [
+    "pg",
+    "sw",
+    null,
+    "Ground chain on the outer spades"
    ]
   ],
   "src": "runs.py CONNECTORS J7: 'Switches', 'GND, S (steam), B (brew)'; LV1 'PCB J7 S to Steam switch', LV2 'PCB J7 B to Brew switch', LV4 'Start of the switch ground chain'; docs-silvia-specifics.md: 'steam to J7 S, brew to J7 B, hot water to J5 B15, with the ground chain to J7 GND'"
@@ -2743,6 +2839,12 @@
     "map",
     "run=LV10",
     "The thermocouple run on the wiring drawing"
+   ],
+   [
+    "pg",
+    "tc",
+    null,
+    "Clamp it in J4 and check it"
    ]
   ],
   "src": "checks.tpl.html c7 'Thermocouple loop. Across its two wires, unclamped from J4. A few ohms is normal.' type tc: 'Expect a few Ω, not OL'. fix: 'OL means a broken thermocouple or lead.'"
