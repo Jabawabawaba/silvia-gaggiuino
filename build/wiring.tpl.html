@@ -299,6 +299,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
 <script>
 (function(){
 %%INCLUDE:wiring-refs.js%%
+%%INCLUDE:wiring-parts.js%%
   var RUNS=%%RUNS%%;
   var SYS=%%SYS%%;
   var CONN=%%CONN%%;
@@ -390,7 +391,9 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     if(selPart&&!sel){
       var ids=ORDER.filter(atPart);
       d.className='detail';d.style.borderLeftColor='var(--accent)';
+      var pi=partInfo(selPart);
       d.innerHTML='<div class="d-head"><span class="d-route">'+esc(PARTN[selPart]||selPart)+'</span><button type="button" class="chip" id="clear" style="margin-left:auto">Show all runs</button></div>'+
+        (pi?'<p class="d-note">'+esc(pi.w)+'</p>'+(pi.p?'<p class="d-note"><span class="k" style="margin-right:6px">With Gaggiuino</span>'+esc(pi.p)+'</p>':''):'')+
         '<div><span class="k">'+ids.length+(ids.length===1?' run lands':' runs land')+' here</span><div class="ids">'+ids.map(function(id){return '<button type="button" data-mrun="'+id+'">'+id+'</button>'}).join('')+'</div></div>';
       return;
     }
