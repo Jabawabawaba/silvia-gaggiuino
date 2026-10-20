@@ -335,6 +335,7 @@ h2{font:600 22px/1.1 var(--f-display);letter-spacing:.05em;text-transform:upperc
 .moved[hidden]{display:none}
 .i-how{margin:0;color:var(--muted);font-size:14.5px;max-width:62ch}
 .i-tags{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.maplk{font-size:13.5px;margin-left:4px}
 .tag{font:600 10.5px/1 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;padding:4px 6px;border-radius:4px;background:var(--surface-2);color:var(--muted)}
 .tag.on{background:var(--accent-soft);color:var(--accent-ink)}
 .exp{font:500 13px var(--f-mono);color:var(--ink)}
@@ -369,7 +370,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
   @page{margin:12mm 11mm}
   body{background:#fff;color:#000;font-size:10pt;line-height:1.3}
   .wrap{max-width:none;padding:0}
-  .lede,.bar,.runrow,.i-side,.foot,[data-print],.fix,.moved{display:none!important}
+  .lede,.bar,.runrow,.i-side,.foot,[data-print],.fix,.moved,.maplk{display:none!important}
   .print-only{display:block}
   #print-for{display:block;font-size:10pt}
   h1{font-size:22pt}
@@ -541,6 +542,30 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     ]}
   ];
   var ITEMS={};SECTIONS.forEach(function(s){s.items.forEach(function(i){ITEMS[i.id]=i})});
+  /* Links into the wiring page's drawing; wiring.html reads them (applyHash there). A target is 'run:AC5' (| between
+     alternatives), 'part:ssr', 'runs:AC1,AC3', 'short:J7' (every run whose name starts that way), 'layer:E', or ''
+     for the whole harness; join two with ';'. o.label names a set of runs. The Silvia has one drawing, so the
+     Gaggia site's path and schematic options aren't used here. */
+  function mapHref(t,o){
+    o=o||{};var q=[];
+    if(t)t.split(';').forEach(function(x){var i=x.indexOf(':');q.push(x.slice(0,i)+'='+encodeURIComponent(x.slice(i+1)))});
+    if(o.label)q.push('label='+encodeURIComponent(o.label));
+    return 'wiring.html#map'+(q.length?'?'+q.join('&'):'');
+  }
+
+  /* where each check sits on the wiring reference's drawing (see maplink.js); path checks light the runs their text names */
+  var SWL='runs:LV1,LV2,LV3,LV4,LV5,LV6';
+  var MAPS={a3:'',b1:'layer:E',b2:'run:G1',b3:'runs:G1,G2',b5:'short:J7',b6:'run:LV10',
+    c1:'part:boiler',c2:'part:boiler',c3:'runs:AC5,AC6',c4:'part:pump',c5:'part:pump',c6:'part:sol',c7:'run:LV10',c8:'runs:AC6,AC9,AC14,AC10,AC13,AC11',
+    d3:'short:J7',d4:'short:J7',d5:'run:AC14',d6:'run:AC13',
+    e1:'runs:AC1,AC3,AC4',e2:'runs:AC2,AC8,AC10,AC11,AC12',e3:'runs:AC2,AC9',e4:'runs:AC5,AC6',e5:'run:AC13',e6:'run:AC14',e7:'runs:AC14,AC11,AC12',e8:'runs:AC13,AC12',e9:'runs:AC1,AC3,AC4',e10:'runs:AC2,AC8,AC10,AC11,AC12',
+    f1:'runs:LV2,LV4,LV5',f2:'runs:LV2,LV4,LV5',f3:'runs:LV1,LV4',f4:'runs:LV1,LV4',f5:'runs:LV3,LV4,LV5,LV6',f6:'runs:LV3,LV4,LV5,LV6',f7:'run:LV7',f8:'run:LV8',f9:SWL,f10:SWL,
+    g1:'part:boiler',g4:'part:ssr',g5:'runs:AC5,AC6',g6:'part:pcb',g7:'part:boiler',g8:'run:LV10',g9:'run:LV11',g12:'',g13:'part:pcb',g14:'run:LV10',g15:'part:pwr',h2:'layer:E'};
+  function mapLink(it){
+    if(!(it.id in MAPS))return '';
+    var u=mapHref(MAPS[it.id],{label:it.id+': '+it.t}).replace(/^wiring\.html/,'wiring.html'.split('#')[0]);
+    return '<a class="maplk" href="'+esc(u)+'" target="_blank" rel="noopener">Show on the map</a>';
+  }
   var UNITS={'Ω':1,'kΩ':1e3,'MΩ':1e6};
   var KEY='silvia-power-on-checks-v2',OLDKEY='silvia-power-on-checks-v1',MOVEDKEY='silvia-power-on-checks-moved';
   function $(id){return document.getElementById(id)}
@@ -637,7 +662,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     }
     return '<div class="item" id="'+it.id+'" data-item="'+it.id+'" data-r="'+(res||'')+'">'+
       '<div class="i-main"><div class="i-title"><span class="cid">'+it.id+'</span>'+esc(it.t)+'</div>'+(it.how?'<p class="i-how">'+esc(it.how)+'</p>':'')+
-      '<div class="i-tags">'+tags+(it.type!=='check'?'<span class="exp" data-exp="'+it.id+'">'+esc(expText(it,r))+'</span>':'')+'</div></div>'+
+      '<div class="i-tags">'+tags+(it.type!=='check'?'<span class="exp" data-exp="'+it.id+'">'+esc(expText(it,r))+'</span>':'')+mapLink(it)+'</div></div>'+
       '<div class="i-side">'+side+'</div>'+
       '<div class="pline print-only" data-pline="'+it.id+'">'+plineHtml(it,r)+'</div>'+
       '<p class="fix" data-fix="'+it.id+'"'+(res==='fail'&&it.fix?'':' hidden')+'>'+esc(it.fix||'')+'</p></div>';

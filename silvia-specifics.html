@@ -382,17 +382,17 @@ td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:ta
 <h2>Wiring</h2>
 <p>There is no official Silvia schematic. realNiche's "Rancillio Silvia Wiring" (PCB v3.1/v4.0, 110–240 V) is the reference everyone uses: <a href="https://github.com/thejobbitt/gaggiuino_resources/tree/main/wiring_diagrams/rancilio_silvia">github.com/thejobbitt/gaggiuino_resources/tree/main/wiring_diagrams/rancilio_silvia</a>. The site's wiring reference is a redraw of it with run IDs and lengths.</p>
 <ul>
-<li><strong>Power switch</strong> stays on mains and breaks both line and neutral, one per pole. Supply on the outer spades, loads off the center spades.
+<li><strong>Power switch</strong> stays on mains and breaks both line and neutral, one per pole. Supply on the outer spades, loads off the center spades. <a href="wiring.html#map?part=pwr">On the wiring map</a>.
 </li>
-<li><strong>Line:</strong> switched line feeds both SSR load terminal 1 and PCB J11. SSR terminal 2 feeds the 165 °C safety thermostat, then the boiler element, with the heating lamp across the element.
+<li><strong>Line:</strong> switched line feeds both SSR load terminal 1 and PCB J11. SSR terminal 2 feeds the 165 °C safety thermostat, then the boiler element, with the heating lamp across the element. <a href="wiring.html#map?runs=AC1,AC3,AC4,AC5,AC6,AC7&amp;label=Line%20and%20heater">On the wiring map</a>.
 </li>
-<li><strong>Neutral:</strong> a daisy chain from the power switch to the lamp, pump (through its thermal fuse where fitted; realNiche's diagram shows 110 °C), solenoid and PCB J10, plus a run to the element.
+<li><strong>Neutral:</strong> a daisy chain from the power switch to the lamp, pump (through its thermal fuse where fitted; realNiche's diagram shows 110 °C), solenoid and PCB J10, plus a run to the element. <a href="wiring.html#map?layer=N">On the wiring map</a>.
 </li>
-<li><strong>PCB outputs:</strong> J12 pump, J13 solenoid.
+<li><strong>PCB outputs:</strong> J12 pump, J13 solenoid. <a href="wiring.html#map?runs=AC14,AC13&amp;label=PCB%20outputs">On the wiring map</a>.
 </li>
-<li><strong>Earth:</strong> inlet earth to the boiler ground spade, solenoid ground to the boiler ground spade. Earth never connects to the PCB's 5 V ground, which floats so the thermocouple reads correctly. <strong>[Official]</strong>
+<li><strong>Earth:</strong> inlet earth to the boiler ground spade, solenoid ground to the boiler ground spade. Earth never connects to the PCB's 5 V ground, which floats so the thermocouple reads correctly. <strong>[Official]</strong> <a href="wiring.html#map?layer=E">On the wiring map</a>.
 </li>
-<li><strong>Switches:</strong> brew, steam and hot water each use one pole. Signal on the center spade, ground on the outer spade: steam to J7 S, brew to J7 B, hot water to <strong>J5 B15</strong>, with the ground chain to J7 GND.
+<li><strong>Switches:</strong> brew, steam and hot water each use one pole. Signal on the center spade, ground on the outer spade: steam to J7 S, brew to J7 B, hot water to <strong>J5 B15</strong>, with the ground chain to J7 GND. <a href="wiring.html#map?runs=LV1,LV2,LV3,LV4,LV5,LV6&amp;label=Switch%20signal%20and%20ground%20wires">On the wiring map</a>.
 </li>
 <li><strong>Hot water on B15, not A12:</strong> realNiche's schematic puts the switch on J5 B15, and Talon confirmed on Discord in October 2026 that Gen 3 reads it there. In the public STM32 firmware, <code>pindef.h</code> reads <code>waterPin</code> as PB15 when built with <code>SINGLE_BOARD</code>, which every <code>all-pcb-*</code> target defines; A12 is the component (Lego) build pin. Brew plus steam together also triggers hot water mode. Keep the switch low voltage; switching the pump in mains around the PCB's output shorts its triac. <strong>[Firmware + Discord]</strong>
 </li>

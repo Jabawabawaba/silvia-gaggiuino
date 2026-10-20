@@ -452,7 +452,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     <div class="ro"><span class="k">Doubled terminals</span><span class="v" id="r-dbl"></span><span class="s">Each needs a spade sized for two 18 AWG wires</span></div>
   </section>
 
-  <div class="toolbar">
+  <div class="toolbar" id="maptop" style="scroll-margin-top:12px">
     <div class="chips" id="chips" role="group" aria-label="Show circuit"></div>
     <div class="tright"><div class="stepper" role="group" aria-label="Step through the runs"><button type="button" id="m-prev" aria-label="Previous run">‹</button><span id="m-step" aria-live="polite"></span><button type="button" id="m-next" aria-label="Next run">›</button></div><span class="hint" id="hint">On a small screen, scroll the drawing sideways.</span></div>
   </div>
@@ -570,36 +570,44 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
   $('conn').innerHTML=CONN.map(function(c){return '<tr><td class="id">'+c[0]+'</td><td>'+esc(c[1])+'</td><td>'+esc(c[2])+'</td><td>'+esc(c[3])+'</td></tr>'}).join('');
 
   /* state */
-  var svg=document.querySelector('.dia'),layer='all',sel=null,selPart=null;
+  var svg=document.querySelector('.dia'),layer='all',sel=null,selPart=null,selSet=null,setLabel='';
   var PARTN={};Array.prototype.forEach.call(svg.querySelectorAll('.phit'),function(r){PARTN[r.getAttribute('data-part')]=r.textContent});
   var ENDS={};Array.prototype.forEach.call(svg.querySelectorAll('.run'),function(g){ENDS[g.getAttribute('data-run')]=[g.getAttribute('data-a'),g.getAttribute('data-b')]});
   /* the stepper walks the drawn runs in the list's order */
   var ORDER=[];groups.forEach(function(g){RUNS.forEach(function(r){if(r.sys===g[0]&&ENDS[r.id])ORDER.push(r.id)})});
   function atPart(id){return !!(selPart&&ENDS[id]&&ENDS[id].indexOf(selPart)>=0)}
+  function inSet(id){return !!(selSet&&selSet.indexOf(id)>=0)}
   function paint(){
-    var any=layer!=='all'||!!sel||!!selPart;
+    var any=layer!=='all'||!!sel||!!selPart||!!selSet;
     svg.classList.toggle('dim',any);
     Array.prototype.forEach.call(svg.querySelectorAll('.run,.tag'),function(el){
       var id=el.getAttribute('data-run'),r=byId[id];
-      var on=sel?id===sel:selPart?atPart(id):inLayer(r,layer);
+      var on=sel?id===sel:selSet?inSet(id):selPart?atPart(id):inLayer(r,layer);
       el.classList.toggle('off',!on);
-      el.classList.toggle('sel',id===sel);
+      el.classList.toggle('sel',id===sel||inSet(id));
     });
     Array.prototype.forEach.call(svg.querySelectorAll('.phit'),function(p){p.classList.toggle('sel',p.getAttribute('data-part')===selPart)});
-    Array.prototype.forEach.call(document.querySelectorAll('tr.row'),function(tr){var id=tr.getAttribute('data-row');tr.classList.toggle('sel',id===sel||atPart(id))});
+    Array.prototype.forEach.call(document.querySelectorAll('tr.row'),function(tr){var id=tr.getAttribute('data-row');tr.classList.toggle('sel',id===sel||atPart(id)||inSet(id))});
     $('chips').innerHTML=LAYERS.map(function(l){
-      return '<button type="button" class="chip" data-layer="'+l[0]+'" aria-pressed="'+(layer===l[0]&&!sel&&!selPart)+'">'+(l[2]?'<span class="sw" style="background:'+l[2]+'"></span>':'')+l[1]+'</button>';
+      return '<button type="button" class="chip" data-layer="'+l[0]+'" aria-pressed="'+(layer===l[0]&&!sel&&!selPart&&!selSet)+'">'+(l[2]?'<span class="sw" style="background:'+l[2]+'"></span>':'')+l[1]+'</button>';
     }).join('');
     var i=sel?ORDER.indexOf(sel):-1;
     $('m-step').textContent=i>=0?(i+1)+' of '+ORDER.length:ORDER.length+' runs';
     var ms=$('msel');
     if(sel){var rr=byId[sel];ms.innerHTML='<b>'+rr.id+'</b><span class="rt">'+esc(rr.short||(rr.frm+' → '+rr.to))+'</span> · '+lenText(rr)}
+    else if(selSet){ms.innerHTML=(setLabel?'<span class="rt">'+esc(setLabel)+'</span>: ':'')+selSet.map(function(id){return '<b>'+esc(id)+'</b>'}).join(' ')}
     else if(selPart){var n=ORDER.filter(atPart).length;ms.innerHTML='<span class="rt">'+esc(PARTN[selPart]||selPart)+'</span>: '+n+(n===1?' run lands here':' runs land here')}
     else ms.textContent='';
     renderDetail();
   }
   function renderDetail(){
     var d=$('detail');
+    if(selSet&&!sel){
+      d.className='detail';d.style.borderLeftColor='var(--accent)';
+      d.innerHTML='<div class="d-head"><span class="d-route">'+esc(setLabel||'The runs that page pointed to')+'</span><button type="button" class="chip" id="clear" style="margin-left:auto">Show all runs</button></div>'+
+        '<div><span class="k">'+selSet.length+' runs, in order</span><div class="ids">'+selSet.map(function(id){return '<button type="button" data-mrun="'+id+'">'+id+'</button>'}).join('')+'</div></div><p class="d-note" style="color:var(--muted)">Tap one to see it on its own.</p>';
+      return;
+    }
     if(selPart&&!sel){
       var ids=ORDER.filter(atPart);
       d.className='detail';d.style.borderLeftColor='var(--accent)';
@@ -622,7 +630,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
       (svg.querySelector('[data-run="'+r.id+'"]')?'':'<p class="d-note" style="color:var(--muted)">Not drawn; optional runs are listed here only.</p>');
   }
   function pick(id,scroll,keep){
-    sel=(sel===id&&!keep)?null:id;selPart=null;
+    sel=(sel===id&&!keep)?null:id;selPart=null;selSet=null;
     paint();
     if(sel&&scroll){
       var g=svg.querySelector('.run[data-run="'+sel+'"]');
@@ -645,20 +653,42 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     var g=e.target.closest('[data-run]');
     if(g){pick(g.getAttribute('data-run'),false);return}
     var p=e.target.closest('[data-part]');
-    if(p){var id=p.getAttribute('data-part');sel=null;selPart=(selPart===id)?null:id;paint();return}
-    if(sel||selPart){sel=null;selPart=null;paint()}
+    if(p){var id=p.getAttribute('data-part');sel=null;selSet=null;selPart=(selPart===id)?null:id;paint();return}
+    if(sel||selPart||selSet){sel=null;selPart=null;selSet=null;paint()}
   });
   $('m-prev').addEventListener('click',function(){step(-1)});
   $('m-next').addEventListener('click',function(){step(1)});
-  $('chips').addEventListener('click',function(e){var b=e.target.closest('[data-layer]');if(!b)return;layer=b.getAttribute('data-layer');sel=null;selPart=null;paint()});
+  $('chips').addEventListener('click',function(e){var b=e.target.closest('[data-layer]');if(!b)return;layer=b.getAttribute('data-layer');sel=null;selPart=null;selSet=null;paint()});
   $('detail').addEventListener('click',function(e){
-    if(e.target.id==='clear'){sel=null;selPart=null;paint();return}
+    if(e.target.id==='clear'){sel=null;selPart=null;selSet=null;paint();return}
     var m=e.target.closest('[data-mrun]');if(m){pick(m.getAttribute('data-mrun'),false,true);centerOn(svg.querySelector('.run[data-run="'+m.getAttribute('data-mrun')+'"]'))}
   });
   $('runs').addEventListener('click',function(e){var tr=e.target.closest('[data-row]');if(tr)pick(tr.getAttribute('data-row'),true)});
-  var h=(location.hash||'').replace('#','').toUpperCase();
-  if(byId[h])sel=h;
+  /* links from the other pages (maplink.js builds them): wiring.html#map?run=AC5, part=ssr (| between alternatives),
+     runs=AC1,AC3 or short=J7 (every run whose name starts that way) for a set, layer=E for a layer; the older #AC5 still works */
+  function applyHash(){
+    var h=location.hash||'';
+    if(h.indexOf('#map')!==0){var id=h.replace('#','').toUpperCase();if(!byId[id])return;sel=id;selPart=null;selSet=null;layer='all';paint();$('maptop').scrollIntoView({block:'start'});centerOn(svg.querySelector('.run[data-run="'+id+'"]'));return}
+    var q={},i=h.indexOf('?');if(i>=0)try{new URLSearchParams(h.slice(i+1)).forEach(function(v,k){q[k]=v})}catch(e){}
+    var asked=!!(q.run||q.part||q.runs||q.short||q.layer),got=false,ids=[];
+    sel=null;selPart=null;selSet=null;setLabel=q.label||'';layer='all';
+    if(q.run)q.run.split('|').some(function(id){if(byId[id]){sel=id;got=true}return got});
+    if(!got&&q.part)q.part.split('|').some(function(id){if(PARTN[id]){selPart=id;got=true}return got});
+    if(!got&&(q.runs||q.short)){
+      if(q.runs)q.runs.split(',').forEach(function(id){if(byId[id]&&ids.indexOf(id)<0)ids.push(id)});
+      if(q.short)q.short.split(',').forEach(function(p){RUNS.forEach(function(r){if(r.short&&r.short.indexOf(p)===0&&ids.indexOf(r.id)<0)ids.push(r.id)})});
+      if(ids.length===1){sel=ids[0];got=true}else if(ids.length){selSet=ids;got=true}
+    }
+    if(!got&&q.layer&&LAYERS.some(function(l){return l[0]===q.layer})&&RUNS.some(function(r){return ENDS[r.id]&&inLayer(r,q.layer)})){layer=q.layer;got=true}
+    paint();
+    if(asked&&!got)$('msel').innerHTML='<span class="rt">'+esc(q.label?q.label+': not':'Not')+' on this drawing, so the whole harness is showing.</span>';
+    else if(layer!=='all'){var ln=LAYERS.filter(function(l){return l[0]===layer})[0];$('msel').innerHTML=(setLabel?'<span class="rt">'+esc(setLabel)+'</span>: ':'')+esc(ln[1])+' runs lit'}
+    $('maptop').scrollIntoView({block:'start'});
+    var first=sel||(selSet&&selSet[0]);if(first)centerOn(svg.querySelector('.run[data-run="'+first+'"]'));else if(selPart)centerOn(svg.querySelector('.phit[data-part="'+selPart+'"]'));
+  }
+  window.addEventListener('hashchange',applyHash);
   paint();
+  applyHash();
 })();
 </script>
 <footer class="site-foot"><div class="in"><nav class="foot-nav" aria-label="All pages"><a class="fn-home" href="index.html">Silvia × Gaggiuino home</a><div class="fn-g"><span class="gl">Learn</span><a href="conversion.html">The conversion</a><a href="how-silvia-works.html">How the Silvia works</a><a href="how-gaggiuino-works.html">How Gaggiuino works</a><a href="glossary.html">Glossary</a></div><div class="fn-g"><span class="gl">Plan</span><a href="budget.html">Budget</a><a href="used-checklist.html">Used Silvia check</a><a href="which-silvia.html">Which Silvia</a><a href="parts-tracker.html">Parts tracker</a></div><div class="fn-g"><span class="gl">Install</span><a href="runbook.html">Runbook</a><a href="wiring.html" aria-current="page">Wiring</a><a href="cut-list.html">Cut list</a><a href="wire-labels.html">Wire labels</a><a href="power-on-checks.html">Power-on checks</a></div><div class="fn-g"><span class="gl">After</span><a href="troubleshooting.html">Troubleshooting</a><a href="led-mod.html">LED switch mod</a></div></nav><p><strong>Mains voltage.</strong> This conversion puts your hands near 120/230 V wiring. Work only with the cord out, check everything with a meter before first power-on, and stop if anything here disagrees with the official Gaggiuino docs or your own reading of the machine. Nothing on this site has been reviewed by the Gaggiuino project. You are responsible for your own build.</p><p>Unofficial community material for the Rancilio Silvia, built on the work of realNiche, Talon, Juun, mjr and others on the Gaggiuino Discord, and the official docs at <a href="https://gaggiuino.github.io/">gaggiuino.github.io</a>. Content is <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>, the same terms as realNiche's diagrams. · <a href="https://github.com/Jabawabawaba/silvia-gaggiuino">Source and issues on GitHub</a></p></div></footer></body></html>
