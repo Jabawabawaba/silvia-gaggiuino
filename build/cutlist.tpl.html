@@ -21,6 +21,7 @@
 .panel th{padding:6px 6px}
 .note{font-size:13.5px;color:var(--muted)}
 .cut td.id{font:600 14px var(--f-mono);white-space:nowrap}
+.cut td.id a{color:inherit;text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px}
 .cut td.len{font:500 14px var(--f-mono);white-space:nowrap;font-variant-numeric:tabular-nums}
 .cut td.len small{display:block;font:400 12.5px var(--f-body);color:var(--muted);white-space:normal;min-width:14ch}
 .cut tr.done td{color:var(--muted)}
@@ -116,6 +117,7 @@
   var SWATCH={red:'#C2412F',orange:'#E08A1E',blue:'#2F5FB3',green:'#2D7A4C',white:'#F4F4F2',black:'#1B1D20',yellow:'#E3C21A'};
   var STOCK={AC1:1,AC2:1,G1:1};
   function $(id){return document.getElementById(id)}
+%%INCLUDE:maplink.js%%
   function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
   var st={slack:15,stock:false,led:false,mm:{},cut:{}};
   try{var sv=JSON.parse(localStorage.getItem(KEY)||'null');if(sv&&typeof sv==='object'){st.slack=typeof sv.slack==='number'?sv.slack:15;st.stock=!!sv.stock;st.led=!!sv.led;st.mm=sv.mm&&typeof sv.mm==='object'?sv.mm:{};st.cut=sv.cut&&typeof sv.cut==='object'?sv.cut:{}}}catch(e){}
@@ -181,7 +183,7 @@
         else if(r.mm)lenCell=c+' mm<small>'+r.mm+' mm + '+st.slack+'%</small>';
         else lenCell='<label class="vh" for="mm-'+r.id+'">Length for '+r.id+' in mm</label><input class="mm" id="mm-'+r.id+'" data-mm="'+r.id+'" type="number" inputmode="numeric" min="0" step="10" placeholder="'+(/^LV[56]$/.test(r.id)?'100':'mm')+'" value="'+(typeof st.mm[r.id]==='number'?st.mm[r.id]:'')+'">'+(c?' → '+c+' mm':'')+'<small>'+esc(r.lenNote||'Measure')+'</small>';
         var ends=(r.k||[]).map(function(k){var kind=k.split(':')[0];return KIND[kind]?KIND[kind][0].replace('6.3 mm female spade','Spade').replace('JST-PH 2.0 crimp terminal','JST crimp')+(k.indexOf(':')>0?' (shared)':''):(kind==='tc'?'J4 screw terminal':kind==='pig'?'Part\'s own lead':'Pre-made cable')}).join(' · ');
-        html+='<tr class="'+(d?'done':'')+'" data-row="'+r.id+'"><td class="tick"><input type="checkbox" data-cut="'+r.id+'"'+(d?' checked':'')+' aria-label="'+r.id+' cut and crimped"></td><td class="id">'+r.id+'</td><td>'+esc(r.frm)+' → '+esc(r.to)+'</td><td>'+(isWire?'<span class="swatch" style="background:'+(SWATCH[r.color]||'transparent')+'"></span>'+esc(gaugeOf(r))+' '+esc(r.color):esc(r.gauge))+'</td><td class="len">'+lenCell+'</td><td class="ends">'+esc(ends)+'</td></tr>';
+        html+='<tr class="'+(d?'done':'')+'" data-row="'+r.id+'"><td class="tick"><input type="checkbox" data-cut="'+r.id+'"'+(d?' checked':'')+' aria-label="'+r.id+' cut and crimped"></td><td class="id"><a class="idmap" href="'+esc(mapHref('run:'+r.id))+'" title="Show '+r.id+' on the wiring map">'+r.id+'</a></td><td>'+esc(r.frm)+' → '+esc(r.to)+'</td><td>'+(isWire?'<span class="swatch" style="background:'+(SWATCH[r.color]||'transparent')+'"></span>'+esc(gaugeOf(r))+' '+esc(r.color):esc(r.gauge))+'</td><td class="len">'+lenCell+'</td><td class="ends">'+esc(ends)+'</td></tr>';
       });
     });
     $('cut').innerHTML=html;

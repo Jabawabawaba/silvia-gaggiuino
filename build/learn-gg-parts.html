@@ -28,7 +28,7 @@
     <article class="pc" id="ssr">
       <div class="ph"><h3>Solid-state relay (SSR)</h3><span class="where">screwed to the left wall</span></div>
       <div class="prose">
-        <p>The switch for the element. It's an SSR-40DA: a relay controlled by 3 to 32 V DC that switches AC, with no moving contacts. J9 R1 feeds its + input and J9 GND its −. Its two load screws sit in the element's supply, ahead of the safety thermostat.</p>
+        <p>The switch for the element. It's an SSR-40DA: a relay controlled by 3 to 32 V DC that switches AC, with no moving contacts. J9 R1 feeds its + input and J9 GND its −. Its two load screws sit in the element's supply, ahead of the safety thermostat. The <a href="wiring.html#map?part=ssr">wiring map</a> shows everything that lands on it.</p>
         <h3>How it works</h3>
         <p>The input current lights an LED inside the relay. On the other side of an insulating gap, a light-sensitive switch sees it and fires a triac, a semiconductor switch for AC, which carries the element current. The PCB and mains only meet through light, which is what keeps the low-voltage side isolated. A zero-cross SSR only turns on where the mains wave crosses zero, and a triac lets go at the next zero, so the element switches cleanly in whole half-cycles.</p>
         <p>While it conducts it drops up to 1.6 V, which at a Silvia's element current turns several watts into heat, so it needs to sit flat on metal. Fork spades on all four screws, never a bare wire under a screw, and buy from a known seller: counterfeit SSR-40DAs with undersized triacs are common.</p>
@@ -39,7 +39,7 @@
     <article class="pc" id="tc">
       <div class="ph"><h3>Thermocouple</h3><span class="where">boiler top, to J4</span></div>
       <div class="prose">
-        <p>The temperature sensor. Silvia builders on Discord, and GaggiMate's Silvia guide, use an ungrounded K-type with an M3 thread, screwed into one of the holes the brew or steam thermostat's clamp used, with thermal paste and only finger tight. Gaggiuino's own parts list has an M4 probe, for Gaggias. If your boiler was made before May 2000, check how one mounts before you buy.</p>
+        <p>The temperature sensor. Silvia builders on Discord, and GaggiMate's Silvia guide, use an ungrounded K-type with an M3 thread, screwed into one of the holes the brew or steam thermostat's clamp used, with thermal paste and only finger tight. Gaggiuino's own parts list has an M4 probe, for Gaggias. If your boiler was made before May 2000, check how one mounts before you buy. The <a href="wiring.html#map?run=LV10">wiring map</a> shows its lead to J4.</p>
         <h3>How it works</h3>
         <p>Two different alloys, chromel and alumel, are joined at the tip. When the tip is hotter than the far ends, a tiny voltage appears between them, about 41 microvolts per degree. The MAX31855 chip on the PCB measures it, adds the temperature at its own end (the cold junction), and hands the STM32 a reading. "Ungrounded" means the junction is insulated inside the probe's sheath, which matters because the boiler is earthed; <a href="#ground">see why the low-voltage side floats</a>.</p>
         <p>Polarity matters. Swapped wires make the reading fall as the boiler heats, so the controller may keep heating. The public Gen 2 firmware cuts the heater once the reading drops to 0 °C, Gen 3's behavior isn't published, and the 165 °C safety thermostat is the last line. That's why the runbook has you watch the temperature rise at first power-on.</p>
@@ -50,7 +50,7 @@
     <article class="pc" id="xdcr">
       <div class="ph"><h3>Pressure sensor</h3><span class="where">on a tee in the water line, to J6</span></div>
       <div class="prose">
-        <p>A 0 to 1.2 MPa (0 to 12 bar) pressure transducer with a 1/4" thread, powered from 5 V. It's what lets Gaggiuino profile pressure: the PCB reads it continuously and adjusts the pump to follow the curve.</p>
+        <p>A 0 to 1.2 MPa (0 to 12 bar) pressure transducer with a 1/4" thread, powered from 5 V. It's what lets Gaggiuino profile pressure: the PCB reads it continuously and adjusts the pump to follow the curve. The <a href="wiring.html#map?run=LV9">wiring map</a> shows its cable to J6.</p>
         <h3>How it works</h3>
         <p>Water pressure bends a thin metal diaphragm. Strain gauges on the diaphragm change resistance as it flexes, and electronics in the sensor body turn that into a voltage on the signal pin: 0.5 V at 0 bar, rising evenly to 4.5 V at 12 bar. The ADS1015 on the PCB converts that voltage to a number.</p>
         <p>Most Silvia builds on Discord put it on a 1/8" tee at the OPV, through an elbow that keeps it clear of the steam pipes; some use the 3-way valve's bottom port, and both work. The tapered fittings take Loctite 55. The sensor seals on an O-ring, not its thread: press the flat 11 × 6 mm O-ring flush into the elbow's 1/4" socket first, because the sensor's own base O-ring often can't reach the seat, then fit it hand tight plus at most a quarter turn. [UT] Tube Fill pushes the air out of its line.</p>
@@ -61,7 +61,7 @@
     <article class="pc nofig" id="screen">
       <div class="ph"><h3>Screen</h3><span class="where">on top, to J1</span></div>
       <div class="prose">
-        <p>The 4.3" touch screen is a small computer of its own, built on an ESP32-S3 Wi-Fi chip. It draws the interface, stores your profiles and settings, runs the Gaggiuino Wi-Fi network and the web page at gaggiuino.local, and installs updates for itself and the board. It talks to the PCB over a serial link on J1, which also powers it.</p>
+        <p>The 4.3" touch screen is a small computer of its own, built on an ESP32-S3 Wi-Fi chip. It draws the interface, stores your profiles and settings, runs the Gaggiuino Wi-Fi network and the web page at gaggiuino.local, and installs updates for itself and the board. It talks to the PCB over a serial link on J1, which also powers it. The <a href="wiring.html#map?run=LV11">wiring map</a> shows the cable.</p>
         <p>The cable is wired by pin, not by color: blue and yellow swap between cable revisions. With a funnel mount on a Silvia it needs a longer cable than a Gaggia's front mount.</p>
       </div>
     </article>
@@ -77,7 +77,7 @@
     <article class="pc" id="switches">
       <div class="ph"><h3>Switches on low voltage</h3><span class="where">J7 and J5</span></div>
       <div class="prose">
-        <p>The brew, hot water and steam rockers stay on the front panel but only report now. Each one, when on, connects a PCB input pin to the low-voltage ground: steam to J7 S, brew to J7 B, hot water to J5 B15, with a ground chain across all three to J7 GND.</p>
+        <p>The brew, hot water and steam rockers stay on the front panel but only report now. Each one, when on, connects a PCB input pin to the low-voltage ground: steam to J7 S, brew to J7 B, hot water to J5 B15, with a ground chain across all three to J7 GND. The <a href="wiring.html#map?runs=LV1%2CLV2%2CLV3%2CLV4%2CLV5%2CLV6&amp;label=Switch%20signal%20and%20ground%20wires">wiring map</a> shows those wires.</p>
         <h3>How it works</h3>
         <p>A pull-up resistor holds each input at 3.3 V: 10 kΩ on the board for brew and steam, and the STM32's own built-in one for hot water on J5. So an open switch reads high, which the firmware treats as off. Closing the switch ties the pin to ground and it reads low: on. That's why the power-on checks want under 1 Ω with a switch on and OL with it off.</p>
         <p>None of the stock mains wiring can stay on these switches. Mains on an input pin destroys it, and wiring the pump around the PCB's pump output can short the triac that drives it.</p>

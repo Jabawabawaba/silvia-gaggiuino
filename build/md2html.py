@@ -21,6 +21,8 @@ def inline(text):
         p = html.escape(part, quote=False)
         p = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", p)
         p = re.sub(r"\[([^\]]+)\]\((https?://[^)\s]+)\)", r'<a href="\2">\1</a>', p)
+        # links to this site's own pages, such as [wiring map](wiring.html#map?part=ssr)
+        p = re.sub(r"\[([^\]]+)\]\(([a-z0-9-]+\.html(?:#[^)\s]*)?)\)", r'<a href="\2">\1</a>', p)
         # bare URLs become links that show without the scheme (and never swallow a sentence's closing punctuation)
         p = re.sub(r'(?<!href=")(?<!">)(https?://[^\s<]*[^\s<.,;:)])', lambda m: f'<a href="{m.group(1)}">{re.sub(r"^https?://(www\.)?", "", m.group(1))}</a>', p)
         out.append(p)

@@ -5,7 +5,7 @@
 
 runs.py is the single source of truth for harness runs; the wiring, labels and cut list pages use it.
 """
-import json, os, sys
+import json, os, re, sys
 sys.path.insert(0, os.path.dirname(__file__))
 from runs import RUNS, SYS, CONNECTORS
 from wiring_svg import build as build_svg
@@ -41,6 +41,7 @@ def runs_json():
 def render(name, mode="artifact"):
     tpl, _ = FILES[name]
     s = open(os.path.join(HERE, tpl)).read()
+    s = re.sub(r"%%INCLUDE:([A-Za-z0-9_.-]+)%%", lambda m: open(os.path.join(HERE, m.group(1))).read(), s)
     links = SITE if mode == "site" else dict(ART_EXTRA, **ART)
     for k in SITE:
         s = s.replace("%%LINK_" + k + "%%", links.get(k, "#"))
