@@ -23,7 +23,7 @@
         lamps:['The heating light',(K.leds?'The orange LED. ':'The orange bar. ')+'On while the boiler heats; when it goes out, the boiler has reached temperature: brew, or steam with steam on. That\'s the Silvia\'s only "ready" signal.'],
         knob:['Steam knob','Opens the steam valve to the wand: steam once the boiler is at steam temperature, hot water with the hot water switch on, and from a full boiler, water first.'],
         safety:['Safety thermostat','The red button on the boiler in the inside view. It cuts the element if it runs dry, and only resets by hand once it has cooled. The heating light stays on while it\'s tripped.'],
-        pf:['Portafilter','Tap it to take it out and tap its handle to lock it in. It won\'t come out while there\'s pressure in the group. Tap the basket to dose it, or to knock out a spent puck.'],
+        pf:['Portafilter','Tap it to take it out and tap its handle to lock it in. Never force it out while there\'s pressure in the group: here it just won\'t budge, on a real machine it sprays scalding water and grounds. Tap the basket to dose it, or to knock out a spent puck.'],
         cup:['Cup','Tap it to move it between the cup warmer on top and the drip tray under the spouts.'],
         jug:['Milk jug','Tap it to put it under the wand or take it away. The clip-on thermometer shows the milk\'s temperature.'],
         tank:['Tank and drip tray','Tap the tank in the inside view to refill it; tap the drip tray to empty it.'],
@@ -36,9 +36,9 @@
     function renderGuide(){
       var steps=[
         'Fill the tank and switch on. Prime the boiler straight away: open the knob and switch hot water on until water flows from the wand, then both off.',
-        'Lock the empty portafilter in so it heats with the group, put the cup on the warmer, and wait 15 to 20 minutes (5x or 20x saves the wait). The heating light goes out after a few minutes, but the heavy group takes far longer.',
+        'Lock the empty portafilter in, loosely, so it heats with the group, put the cup on the warmer, and wait 15 to 20 minutes (5x or 20x saves the wait). The heating light goes out after a few minutes, but the heavy group takes far longer.',
         'Run about 10 seconds of water through the empty portafilter. The heating light comes on; wait for it to go out again. That\'s temperature surfing.',
-        'Take the portafilter out, dose the basket and lock it back in. Cup on the drip tray. Switch brew on for 25 to 30 seconds, about 35 to 45 ml, and switch it off.',
+        'Take the portafilter out, dose the basket and lock it back in. Cup on the drip tray. Switch brew on for 25 to 30 seconds, about 40 ml in the cup, and switch it off.',
         'Milk: switch steam on and wait for '+OUT+', about 2 minutes. Purge first: open the knob with no jug until the water turns to steam, and close it.',
         'Jug under the wand, open the knob. It foams while the milk is cold; stop at 60 to 65 °C on the thermometer. Close the knob, then take the jug away.',
         'Switch steam off and refill the boiler: open the knob and switch hot water on until water flows from the wand, then both off. Before the next shot, run water through the group until the heating light comes on.',
@@ -75,7 +75,7 @@
       if(!s.pwr){slip('brew-off','Nothing happens with the power off','Brew needs the machine switched on: the pump and valve have no power.',['pwr','brew'],'Switch power on first and give it time to heat.');B=null;return}
       if(B.dosed){
         if(!B.tray)slip('no-cup','The coffee went into the drip tray','The cup was still on the warmer, so the shot ran straight into the tray.',['cup','brew'],'Tap the cup down onto the drip tray before switching brew on. Keeping it on the warmer until then is right: it starts the shot warm.');
-        if(B.tw0>112)slip('hot-shot','Brewing straight after steaming','The boiler was still near steam temperature, so the water flashed to steam at the group and the coffee came out burnt.',['steam','brew','lamps'],'After steaming, switch steam off, refill through the wand, then run water through the group until the heating light comes on. Brew once it goes out again.');
+        if(B.tw0>112)slip('hot-shot','Brewing straight after steaming','The boiler was still near steam temperature, so the water flashed to steam at the group, which can scald, and the coffee came out burnt.',['steam','brew','lamps'],'After steaming, switch steam off, refill through the wand, then run water through the group until the heating light comes on. Brew once it goes out again.');
         else if(B.tw0<85)slip('early-shot','Brewing before the machine was ready','The boiler hadn\'t reached brew temperature, so the shot ran cool.',['lamps','brew'],'Give it 15 to 20 minutes from cold with the portafilter locked in, then wait for '+OUT+'.');
       }
     }
@@ -109,8 +109,8 @@
       if(Tq>0&&Tq<86&&b.g0>=75)N.push('Surf the temperature: run about 10 seconds through the group, wait for the heating light to go out, then brew.');
       if(b.tray){
         L.push([v>=25&&v<=52,r0(secs)+' s for '+r0(v)+' ml'+(v<25?(secs<22?': stopped early.':Tq<86?': it ran slow, as a cold puck does.':': it ran slow.'):v>52?': ran long, so thin and bitter.':'.')]);
-        if(v<25&&secs<22)N.push('Let it run 25 to 30 seconds, about 35 to 45 ml.');
-        if(v>52)N.push('Stop at about 30 seconds or 45 ml.');
+        if(v<25&&secs<22)N.push('Let it run 25 to 30 seconds, about 40 ml in the cup.');
+        if(v>52)N.push('Stop at about 30 seconds.');
       }else N.push('Tap the cup onto the drip tray before brewing.');
       if(b.dry)N.push('Refill the tank before it runs dry.');
       var good=L.filter(function(x){return x[0]}).length;
@@ -155,7 +155,7 @@
       var s=sim.get();
       if(ev==='reset'||ev==='setup'){B=null;M=null;st={purge:0,idle:0,pwrAt:null,lastPwr:0,acted:false,steamed:false};if(ev==='reset'){seen={};n={shot:0,milk:0};feed.innerHTML='<p class="ck-empty">'+e(EMPTY)+'</p>'}renderGuide();return}
       if(ev==='blocked'){
-        if(a==='f-pf')slip('pf-stuck','The portafilter won\'t come out yet','There was still pressure in the group, so it stays locked.',['pf','brew'],'Switch brew off and give it a couple of seconds: the 3-way valve vents the pressure into the drip tray, then it comes out.');
+        if(a==='f-pf')slip('pf-stuck','Don\'t force the portafilter','There was still pressure in the group. Forced out, a real one sprays scalding water and grounds.',['pf','brew'],'Switch brew off and give it a couple of seconds for the 3-way valve to vent the pressure into the drip tray, then take it out.');
         if(a==='x-safety')slip('reset-hot','The safety won\'t reset yet','The element is still too hot; the button only resets once it has cooled.',['safety','water','knob'],'Wait a few minutes with the machine on, then press it again. Then refill the boiler before heating: knob open, hot water on until water flows from the wand.');
         return;
       }
@@ -167,7 +167,7 @@
         if(a==='f-jug'&&s.jug.pos!=='wand'&&M){if(s.knob)M.offOpen=true;endMilk(s);if(s.knob)slip('jug-open','The jug came off with the knob open','On a real machine the steam blows milk everywhere as the tip leaves the surface.',['knob','jug'],'Close the knob first, then take the jug away.')}
         if(a==='f-sw-steam'&&s.steam){st.purge=0;st.idle=0;st.steamed=true}
         if(a==='f-sw-steam'&&!s.steam&&M)endMilk(s);
-        if(a==='f-sw-water'&&s.water&&!s.knob&&s.pwr&&s.vol>=K.full*0.98)slip('water-shut','Hot water with the knob shut','With the boiler full and the knob closed, the pump has nowhere to push.',['water','knob'],'Open the knob first, then switch hot water on; it comes out of the wand.');
+        if(a==='f-sw-water'&&s.water&&!s.knob&&s.pwr&&s.vol>=K.full*0.98)slip('water-shut','Hot water with the knob shut','With the boiler full and the knob closed, the water has nowhere to go: the pump just runs against the over-pressure valve.',['water','knob'],'Open the knob first, then switch hot water on; it comes out of the wand.');
         return;
       }
       if(ev!=='step')return;
@@ -180,7 +180,7 @@
       /* not primed: heating with the boiler short of full */
       if(s.pwr&&!st.steamed&&st.pwrAt!=null&&s.t-st.pwrAt>45&&s.t-st.pwrAt<600&&s.vol<K.full*0.97&&!s.water)slip('prime','The boiler wasn\'t primed','A Silvia often sits short of full; heating it that way risks the element, and the first steam comes out wet.',['water','knob','lamps'],'Right after switching on, open the knob and switch hot water on until water flows from the wand, then both off.');
       if(B){B.maxP=Math.max(B.maxP,s.P);B.flash=Math.max(B.flash,q.flash||0);if(s.air||s.tank<=0.5)B.dry=true;
-        if(B.dosed&&s.t-B.t0>55)slip('long-shot','A very long shot','Past about 45 ml the coffee turns thin and bitter: the puck has given what it has.',['brew'],'Switch brew off at 25 to 30 seconds, about 35 to 45 ml.')}
+        if(B.dosed&&s.t-B.t0>55)slip('long-shot','A very long shot','Run well past 30 seconds, the coffee turns thin and bitter as the puck runs out of flavour.',['brew'],'Switch brew off at 25 to 30 seconds, about 40 ml in the cup.')}
       if(s.brew&&!B&&s.pwr)startShot(s);
       if(!s.brew&&B)endShot(s);
       var out=(q.qW||0)+(q.mS||0);
