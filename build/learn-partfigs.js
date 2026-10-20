@@ -14,7 +14,7 @@
     function K(k){return fig.querySelector('[data-k="'+k+'"]')}
     var note=fig.querySelector('[data-ts-note]'),bSteam=fig.querySelector('[data-ts="steam"]'),bRe=fig.querySelector('[data-ts="restart"]'),bFix=fig.querySelector('[data-ts="fix"]'),fb=qa('[data-fault]',fig);
     var SPEED=8,TAU=4,W=300,X1=350,SX=320/300,site='g',TH,P=1.35,KL=0.0022,gc=false;
-    var T,q,bD,sD,cut,steam=false,fault='none',hist,heatH,hold=0,held='';
+    var T,q,bD,sD,cut,steam=false,fault='none',hist,heatH,hold=0,held='',cycled=false;   /* cycled: the brew disc has snapped at least once since the start */
     function Y(t){return 150-(t-20)*142/190}
     function zig(x0,x1,y,n,amp){var w=(x1-x0)/n,p=[x0+','+y];for(var i=1;i<n;i++)p.push((x0+w*i).toFixed(1)+','+(i%2?y-amp:y+amp));p.push(x1+','+y);return p.join(' ')}
     function conf(){
@@ -27,7 +27,7 @@
         var t=K('tg-'+r[0]+'-t');if(t){t.setAttribute('y',(Y(r[1])-3).toFixed(1));t.textContent=t.textContent.replace(/ [\d.]+ °C$/,'')+' '+r[1]+' °C'}
       });
     }
-    function reset(){T=20;q=0;bD=false;sD=false;cut=false;hist=[];heatH=[]}
+    function reset(){T=20;q=0;bD=false;sD=false;cut=false;hist=[];heatH=[];cycled=false}
     /* contacts: a disc that hasn't snapped, or welded contacts, conduct. The steam switch is around the brew thermostat. */
     function bCond(){return !bD||fault==='b'}
     function sCond(){return !sD||fault==='s'}
@@ -36,7 +36,7 @@
       var on=heating();
       q+=((on?P:0)-q)*Math.min(1,dt/TAU);      /* the elements stay hot for a moment after they switch off, so the boiler overshoots */
       T+=(q-KL*(T-20))*dt;
-      if(!bD&&T>=TH.bo)bD=true;else if(bD&&T<=TH.bc)bD=false;
+      if(!bD&&T>=TH.bo){bD=true;cycled=true}else if(bD&&T<=TH.bc)bD=false;
       if(!sD&&T>=TH.so)sD=true;else if(sD&&T<=TH.sc)sD=false;
       if(!cut&&T>=TH.cut)cut=true;
     }
@@ -93,6 +93,7 @@
       if(steam&&T>=TH.bc)return 'Heating to steam temperature: the steam switch bypasses the brew thermostat, so it\'s the steam thermostat that switches the '+EL+' now.';
       if(!on&&T>TH.bo+4)return 'Cooling back to brew temperature: the brew thermostat stays open until the boiler drops to '+TH.bc+' °C.';
       if(!on)return 'At brew temperature: the brew thermostat has snapped open. It closes again about '+bw+' °C cooler, so the boiler swings up and down.';
+      if(cycled)return 'Heating again: the brew thermostat closed at '+TH.bc+' °C, so the '+EL+' '+(g?'are':'is')+' back on until it opens at '+TH.bo+' °C.';
       return 'Heating: both thermostats are closed, so the '+EL+' '+(g?'are':'is')+' on.';
     }
     function say(force){if(hold>0&&!force){hold--;return}var t=held||noteFor();held='';if(t!==note.textContent)note.textContent=t}
