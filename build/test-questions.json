@@ -83,7 +83,7 @@
    "The OPV is stuck open",
    "The steam switch is still on"
   ],
-  "why": "The stock heating light is wired around the safety thermostat, so it still shows the thermostats calling for heat after a tripped safety has cut the element. An open brew thermostat would put the light out.",
+  "why": "On the stock harness GaggiMate drew, the heating light is wired around the safety thermostat, so it still shows the thermostats calling for heat after a tripped safety has cut the element. An open brew thermostat would put the light out. Some versions may differ.",
   "r": [
    [
     "url",
@@ -102,14 +102,14 @@
  {
   "id": "silvia-05",
   "k": "silvia",
-  "q": "The safety thermostat tripped after a long steaming session. What does the coach say to do?",
+  "q": "The safety thermostat tripped after a long steaming session. What's the right fix?",
   "a": [
-   "Let it cool, reset it, then refill the boiler through the wand",
+   "Unplug it, let it cool, reset it, then refill through the wand",
    "Press its reset button at once, while it's still hot",
    "Wait for it to close by itself as the boiler cools",
    "Switch the steam switch off and on to clear it"
   ],
-  "why": "Steaming ran the boiler low and the element overheated, so the safety cut it. It only resets by hand once it has cooled, and the boiler needs refilling before it heats again: knob open, hot water on until water flows from the wand.",
+  "why": "Steaming ran the boiler low and the element overheated, so the safety cut it. Its reset button is on the boiler under the top cover, next to the element terminals, so unplug before you open it. It only resets once it has cooled. Then plug in, switch on and refill straight away: knob open, hot water on until water flows from the wand.",
   "r": [
    [
     "url",
@@ -134,7 +134,7 @@
    "It warms the heavy group faster for the first shot",
    "It resets the brew thermostat after a cold night"
   ],
-  "why": "A Silvia often sits short of full, and heating it that way risks the element; the first steam also comes out wet. Open the knob and switch hot water on until water flows from the wand, then both off.",
+  "why": "A Silvia is often left short of full, for example after steaming without a refill, and heating it that way risks the element. Open the knob and switch hot water on until water flows from the wand, then both off.",
   "r": [
    [
     "url",
@@ -395,7 +395,7 @@
  {
   "id": "silvia-18",
   "k": "silvia",
-  "q": "On your Silvia, what must you lift before you can reach the thermostats on the boiler?",
+  "q": "With the top cover off, what must you lift to reach the thermostats on your Silvia's boiler?",
   "a": [
    "The insulation wrapped around the boiler",
    "The 3-way valve and its coil",
@@ -423,12 +423,12 @@
   "k": "silvia",
   "q": "On a stock Silvia E, what does the energy-saver module do?",
   "a": [
-   "Turns it off after 30 minutes with no switch touched",
+   "Switches it off 30 minutes after the last coffee or hot water",
    "Drops it to brew temperature after 30 minutes of steam",
    "Turns it off 10 minutes after the heating light goes out",
    "Cuts the element whenever the safety thermostat trips"
   ],
-  "why": "The E's GICAR module switches it off after 30 minutes without use, and touching any switch restarts the 30 minutes. Gaggiuino's harness leaves the module out.",
+  "why": "Rancilio's manual: the E switches off 30 minutes after the last coffee or hot water. Steaming doesn't restart the timer, so the manual says to run the coffee switch for a few seconds before you steam. The ON/OFF button starts it again. Gaggiuino's harness leaves the module out.",
   "r": [
    [
     "url",
@@ -450,7 +450,7 @@
   "q": "Why does your Silvia E need a different power switch for Gaggiuino?",
   "a": [
    "Its push button doesn't latch without the energy-saver module",
-   "Its push button can't carry the element's current",
+   "Its push button is wired through the steam thermostat",
    "The PCB reads the power switch as a low-voltage input",
    "Gaggiuino needs a push button for its own auto-off"
   ],
@@ -531,7 +531,7 @@
    "About 4.8 Ω",
    "About 480 Ω"
   ],
-  "why": "Power is voltage squared divided by resistance, so 1100 W at 230 V is about 48 Ω, roughly three times a 120 V element. The power-on checks work out the expected figure from your rating plate.",
+  "why": "Power is voltage squared divided by resistance, so 1100 W at 230 V is about 48 Ω, roughly three times a 120 V element. Rancilio's manual lists 1150 W at 230 V (about 46 Ω), so go by your own plate: the power-on checks work out the expected figure from it.",
   "r": [
    [
     "url",
@@ -697,12 +697,12 @@
   "k": "gg",
   "q": "Why does Gaggiuino want the OPV set at least 1 bar above your highest target pressure?",
   "a": [
-   "No profile can push pressure past the OPV's setting",
+   "It starts bleeding water below its setting, unseen by the firmware",
    "The firmware reads pressure from the OPV's spring",
    "The OPV has to open at the start of every profile",
    "The PCB switches the OPV off during a shot"
   ],
-  "why": "The OPV still sits above all the pump control. Set below what a profile asks for, the pressure stops at the OPV. [UT] Test OPV with a blind basket should peak at 10.5 to 13 bar.",
+  "why": "OPVs don't open all at once: the official guide says one set to 9 bar can start sending water back to the tank around 8 bar. Gaggiuino can't tell when that happens, and no profile can push past the setting. [UT] Test OPV with a blank basket should peak at 10.5 to 13 bar.",
   "r": [
    [
     "url",
@@ -770,12 +770,12 @@
   "k": "gg",
   "q": "Why can none of the stock mains wiring stay on the brew, hot water or steam switches?",
   "a": [
-   "Mains on a PCB input pin destroys it",
+   "It would switch loads around the PCB",
    "The switches would read on and off backwards",
    "It would stop the safety thermostat tripping",
    "The switch lamps would burn out on 5 V"
   ],
-  "why": "These switches now only report to the PCB. Mains on an input pin destroys it, and wiring the pump around the PCB's pump output can short the triac that drives it.",
+  "why": "These switches now only report to the PCB. Their stock wiring ran the pump and 3-way valve straight from mains, which would bypass the PCB's outputs and can short the pump triac. Mains reaching an input pin, through a slip or a shared pole, destroys it.",
   "r": [
    [
     "url",
@@ -867,7 +867,7 @@
  {
   "id": "gg-15",
   "k": "gg",
-  "q": "Why is max steam set to 150 °C in the firmware on a Silvia build?",
+  "q": "Why is Steam Temperature (max steam) set to 150 °C on a Silvia build?",
   "a": [
    "The steam thermostat no longer limits anything",
    "The steam thermostat opens at 150 °C",
@@ -1103,14 +1103,14 @@
  {
   "id": "plan-10",
   "k": "plan",
-  "q": "How is a Silvia wired for Gaggiuino, whatever its version?",
+  "q": "How does this site wire every Silvia version for Gaggiuino?",
   "a": [
    "A custom harness from realNiche's diagram",
    "The stock wiring plus a plug-in Gaggiuino adapter",
    "A separate official schematic for each version",
    "The Gaggia Classic's stock-wiring method"
   ],
-  "why": "There's no official Silvia schematic and no stock-wiring integration, so every version gets the full custom harness. realNiche's community diagram is the reference everyone uses.",
+  "why": "There's no official Silvia schematic or stock-wiring guide, so the site uses the full custom harness from realNiche's community diagram, the reference Silvia builders on Discord use.",
   "r": [
    [
     "url",
@@ -1200,11 +1200,11 @@
   "q": "What is the open-barrel crimper for in this build?",
   "a": [
    "The bare spades crimped at the boiler",
-   "The JST pins on the screen and sensor cables",
+   "The insulated butt splices in the switch ground chain",
    "The fork spades on the SSR terminals",
    "Clamping the thermocouple wires into J4"
   ],
-  "why": "Boiler ends get uninsulated spades crimped with an open-barrel crimper, then silicone tape. Forks and butt splices take an insulated crimper, JST pins need a fine-pitch crimper, and J4 is a screw terminal.",
+  "why": "Boiler ends get uninsulated spades crimped with an open-barrel crimper, then silicone tape. Forks and insulated butt splices take an insulated crimper, JST pins a fine-pitch one, and J4 is a screw terminal.",
   "r": [
    [
     "rb",
@@ -1251,7 +1251,7 @@
    "No power cord included with the machine",
    "A PID controller fitted by a previous owner"
   ],
-  "why": "Trails under the boiler point to a leaking boiler gasket or fitting. A leaking group gasket is a cheap fix, a missing cord is cheap to replace, and a PID comes out during the install anyway.",
+  "why": "Water under the boiler drips toward the element terminals and mains wiring, and mineral trails mean it has leaked for a while. Fixing it can mean taking the boiler off. A leaking group gasket is a cheap fix, a missing cord is cheap to replace, and a PID comes out during the install anyway.",
   "r": [
    [
     "url",
@@ -1294,7 +1294,7 @@
    "It comes out of the wall and the inlet",
    "It stays plugged in with the power switch off",
    "It comes out of the wall, but the inlet end can stay",
-   "It stays in, as long as the outlet is GFCI-protected"
+   "It stays in, as long as the outlet has {gfci} protection"
   ],
   "why": "Cord out at both ends, and it stays out for every step until the checks pass. Mains can kill you, and the inlet pins are your probe points for the checks.",
   "r": [
@@ -1364,12 +1364,12 @@
   "k": "safety",
   "q": "After the conversion, what keeps the boiler from overheating when you steam?",
   "a": [
-   "Max steam setting and the 165 °C safety thermostat",
+   "The Steam Temperature setting and the 165 °C safety thermostat",
    "The steam thermostat still clamped on the boiler top",
    "The brew thermostat, now wired in series with the SSR",
    "The thermal fuse on the pump's neutral side"
   ],
-  "why": "realNiche's harness doesn't wire the steam thermostat, so it limits nothing even if it stays on the boiler. Max steam at 150 °C and the 165 °C safety thermostat are the only limits.",
+  "why": "realNiche's harness doesn't wire the steam thermostat, so it limits nothing even if it stays on the boiler. Steam Temperature at 150 °C and the 165 °C safety thermostat are the only limits.",
   "r": [
    [
     "rb",
@@ -1509,12 +1509,12 @@
   "k": "safety",
   "q": "Why does the hot water switch move to low voltage instead of keeping its stock mains wiring?",
   "a": [
-   "Mains pump wiring around the PCB shorts its triac",
+   "Mains pump wiring would bypass the PCB's pump triac",
    "Mains on that switch would drain the boiler too fast",
    "So the switch lamp keeps working from the 5 V side",
    "The PCB can only power one mains switch at a time"
   ],
-  "why": "Wiring the pump around the PCB's pump output can short the triac that drives it, and mains on a PCB input pin destroys that pin. Never leave the stock mains hot water wiring in place.",
+  "why": "Stock, the hot water switch feeds the pump straight from mains. Left that way it shorts across the triac on the PCB's pump output, so the PCB can't control the pump, and the switch never reaches its B15 input. Never leave the stock mains hot water wiring in place.",
   "r": [
    [
     "url",
@@ -1534,7 +1534,7 @@
  {
   "id": "safety-14",
   "k": "safety",
-  "q": "At first power-on, with the boiler full, the temperature falls while the SSR light is on. What do you do?",
+  "q": "At first power-on, with the boiler full, the temperature falls while the heating light is on. What do you do?",
   "a": [
    "Switch off and unplug: the J4 wires are reversed",
    "Keep going, since cold water is still mixing in",
@@ -1559,11 +1559,11 @@
  {
   "id": "safety-15",
   "k": "safety",
-  "q": "The breaker, GFCI or RCD trips when you switch on. What's the first thing to do?",
+  "q": "The breaker or {gfci} trips when you switch on. What's the first thing to do?",
   "a": [
-   "Leave it unplugged and stop resetting it",
+   "Unplug it and stop resetting the breaker",
    "Reset it and try a few more times",
-   "Move to an outlet without GFCI protection",
+   "Move to an outlet without {gfci} protection",
    "Disconnect the earth lead so it stops tripping"
   ],
   "why": "A trip usually means line or neutral touching earth, a leaking element or water on the wiring. Leave it unplugged, rerun the covers-on short checks, then open it up and find the fault.",
@@ -1614,7 +1614,7 @@
    "Move it to low voltage on J7 like the others",
    "Swap it for a push button with a built-in LED"
   ],
-  "why": "Only brew, steam and hot water run on low voltage. The power switch stays on mains, breaking line and neutral, so its stock lamp keeps working and the mod doesn't touch it.",
+  "why": "Only brew, steam and hot water run on low voltage. The power switch stays on mains, breaking line and neutral, so the mod doesn't touch it.",
   "r": [
    [
     "url",
@@ -1961,7 +1961,7 @@
    "Brew and steam, plus the power switch",
    "Only brew and steam; hot water is left"
   ],
-  "why": "The power switch still carries mains and keeps its stock lamp, so the mod leaves it alone. Only the three switches that moved to low voltage lose their lights.",
+  "why": "The power switch still carries mains, so the mod leaves it alone. Only the three switches that moved to low voltage lose their lights.",
   "r": [
    [
     "url",
@@ -2109,7 +2109,7 @@
    "J7 S",
    "J7 GND"
   ],
-  "why": "realNiche's schematic puts the hot water switch on J5 B15, and Talon confirmed Gen 3 reads it there. A12 is the component build's pin, so a switch wired to it does nothing.",
+  "why": "realNiche's schematic puts the hot water switch on J5 B15, and Talon confirmed Gen 3 reads it there. A12 is the component (Lego) build's pin, not the one the PCB firmware reads.",
   "r": [
    [
     "map",
@@ -2181,7 +2181,7 @@
    "The safety thermostat, then the element",
    "PCB J11, then the pump and valve outputs",
    "The element directly, with no thermostat",
-   "The heating lamp, then the neutral chain"
+   "The steam thermostat, then the element"
   ],
   "why": "The heater path runs from SSR terminal 2 through the 165 °C safety thermostat to the element. The safety thermostat stays in that line and is never bypassed.",
   "r": [
@@ -2451,7 +2451,7 @@
   "a": [
    "Cut a little long, label both ends, then crimp",
    "Cut to the exact length, crimp, then label",
-   "Crimp one end, then cut to fit in the machine",
+   "Crimp both ends, then label it once fitted",
    "Cut a little long, crimp, then label one end"
   ],
   "why": "The lengths are starting points from Talon's harness and the older RS diagram, so cut a little long. Both labels go on before crimping, and each names where the other end goes.",
@@ -2543,9 +2543,9 @@
    "OL, meaning there is no path",
    "Under 1 Ω, after the leads",
    "Close to the element's resistance",
-   "A steady value, neither OL nor 0"
+   "A few hundred ohms, through the PCB"
   ],
-  "why": "OL means the reading is off the meter's scale, usually because the circuit is open. That's the right answer on every shorts check; any reading here means line touches earth somewhere.",
+  "why": "OL means the reading is off the meter's scale, usually because the circuit is open. That's the right answer on every shorts check; a low reading here means line touches earth somewhere.",
   "r": [
    [
     "ck",
@@ -2568,7 +2568,7 @@
    "A pass: it proves the G1 earth lead",
    "A pass: the pump's diode is conducting"
   ],
-  "why": "Every shorts check must read OL. A reading means neutral is touching earth, often a bare spade or a wire pinched against the frame. Find it before you plug in.",
+  "why": "Every shorts check should read OL. A low reading like this means neutral is touching earth, often a bare spade or a wire pinched against the frame. Find it before you plug in.",
   "r": [
    [
     "ck",
@@ -2655,14 +2655,14 @@
  {
   "id": "checks-08",
   "k": "checks",
-  "q": "Element terminal to boiler body (c2) shows a reading instead of OL. What now?",
+  "q": "Element terminal to boiler body (c2) reads a few kilohms instead of OL. What now?",
   "a": [
    "Don't power it: the element needs replacing",
    "Carry on: the element sheath is meant to be earthed",
    "Tape the terminal, then rerun the check",
    "Swap the two element leads and measure again"
   ],
-  "why": "A reading means the element is leaking to its sheath. It must not be powered. A leaking element is also one cause of a breaker or GFCI trip.",
+  "why": "A reading that low means the element is leaking to its sheath. It must not be powered. A leaking element is also one cause of a breaker or {gfci} trip.",
   "r": [
    [
     "ck",
@@ -2707,7 +2707,7 @@
    "A steady value, neither OL nor near 0",
    "OL, the same as the shorts checks",
    "Under 1 Ω, the same as the earth checks",
-   "About the element's expected resistance"
+   "Several megohms, nearly open"
   ],
   "why": "OL means an open coil and near zero means a shorted one. Record the value: e8 should later read close to it, which proves both valve leads went back on.",
   "r": [
@@ -2776,12 +2776,12 @@
   "k": "checks",
   "q": "With the power switch off, inlet L to PCB J11 (e9) still reads under 1 Ω. What's the likely fault?",
   "a": [
-   "Inlet and load wires on the wrong switch spades",
+   "Line getting around the switch, e.g. two wires on one spade",
    "A shorted SSR between its two load terminals",
    "The safety thermostat stuck in its closed state",
    "The line wire pinched against the frame"
   ],
-  "why": "The switch must break line, and e10 checks it breaks neutral too. The inlet goes to the switch's outer spades and the loads to its center spades.",
+  "why": "With the switch off, inlet L can only still reach J11 by a path around the switch's contacts: AC1 and AC3 on one spade, or the inlet lead going straight to the SSR. Each pole takes the inlet on its outer spade and the load on its center spade, and e10 checks the neutral pole the same way.",
   "r": [
    [
     "ck",
@@ -2853,7 +2853,7 @@
    "The pump thermal fuse opens after long use",
    "The SSR overheats and cuts out the element"
   ],
-  "why": "The E's push button comes with a 30-minute auto-off. The custom harness leaves that module out entirely: inlet to the switch's outer spades, loads from its center spades, nothing to the module.",
+  "why": "The E's energy-saver module gives it a 30-minute auto-off. The custom harness leaves that module out entirely: inlet to the switch's outer spades, loads from its center spades, nothing to the module.",
   "r": [
    [
     "tr",
@@ -2871,18 +2871,18 @@
  {
   "id": "trouble-03",
   "k": "trouble",
-  "q": "The screen stays black. What's the most likely cause?",
+  "q": "The screen lights up but \"Initialization in progress\" never clears. Which wiring slip is the likely cause?",
   "a": [
-   "The J1 cable wired by color, not by pin",
+   "J1's TX and RX crossed, wired by color",
    "The thermocouple reversed at J4",
    "Hot water wired to J5 A12 instead of B15",
    "The SSR control wires swapped at J9"
   ],
-  "why": "Blue and yellow vary between cable revisions, so check J1 pin by pin: GND, TX, RX, 5V. Don't take a pre-made cable apart; reseat it.",
+  "why": "Blue and yellow are the TX and RX wires, and they vary between cable revisions, so check J1 pin by pin: GND, TX, RX, 5V. Don't take a pre-made cable apart. Mismatched core and screen firmware can cause this too.",
   "r": [
    [
     "tr",
-    "The screen stays black"
+    "\"Initialization in progress\" never clears"
    ],
    [
     "map",
@@ -2939,14 +2939,14 @@
  {
   "id": "trouble-06",
   "k": "trouble",
-  "q": "The temperature reading is jumpy, stuck or far off. Which cause does the site list first?",
+  "q": "The temperature reading is jumpy, stuck or far off. Which of these is a likely cause?",
   "a": [
    "Insulation clamped in J4 instead of bare wire",
    "The SSR control wires reversed at J9",
    "The OPV set too close to shot pressure",
    "A missing strain relief on the wiring at the SSR"
   ],
-  "why": "J4 must clamp bare wire folded over, with no insulation in the clamp. Next come a grounded thermocouple or earth touching the 5 V ground, a broken lead, and a lead routed beside mains.",
+  "why": "J4 must clamp bare wire folded over, with no insulation in the clamp. Other causes are a grounded thermocouple or earth touching the 5 V ground, a broken lead, and a lead routed beside mains.",
   "r": [
    [
     "tr",
@@ -2962,18 +2962,18 @@
  {
   "id": "trouble-07",
   "k": "trouble",
-  "q": "The SSR light comes on but the boiler doesn't heat. What do you suspect first?",
+  "q": "The screen shows the temperature below target, but the boiler doesn't heat and the front heating light stays dark. What do you suspect first?",
   "a": [
    "The safety thermostat has tripped",
    "The thermocouple is reversed",
-   "The SSR control wires are swapped",
+   "The OPV is set too high",
    "The pump thermal fuse is open"
   ],
   "why": "Unplugged, take the top off and press the reset button. If it clicks, it had tripped, so find out why before using it. A failed SSR is the last suspect, once every check passes.",
   "r": [
    [
     "tr",
-    "The SSR light comes on but the boiler doesn't heat"
+    "The screen is below target but the boiler doesn't heat"
    ],
    [
     "map",
@@ -3064,7 +3064,7 @@
    "Remove any added washers",
    "Fit a stiffer OPV spring"
   ],
-  "why": "The V1 OPV has a single nut, not the two-nut adjuster of V2 and later. Adding washers can only lower its pressure. Then rerun Test OPV.",
+  "why": "The V1 OPV has a single nut, not the two-nut adjuster of V2 and later. Its washers act as shims that ease the spring, so adding them lowers the pressure, the opposite of the Gaggia washer mod in the official docs. Do it unplugged and cooled, then rerun Test OPV.",
   "r": [
    [
     "tr",

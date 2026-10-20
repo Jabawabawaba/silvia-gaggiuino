@@ -91,7 +91,7 @@ a.btn{display:inline-flex;align-items:center;text-decoration:none;color:var(--in
 /* review list */
 .rv-h{font:600 12px var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:20px 0 6px}
 .rv{list-style:none;margin:0;padding:0;display:grid;gap:0}
-.rv li{border-top:1px solid var(--line);padding:12px 0;display:grid;gap:6px}
+.rv>li{border-top:1px solid var(--line);padding:12px 0;display:grid;gap:6px}
 .rv-q{margin:0;font-weight:600}
 .rv-a,.rv-y{margin:0;font-size:15.5px}
 .rv-a .k,.rv-y .k{margin-right:6px}

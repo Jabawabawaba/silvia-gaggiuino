@@ -54,11 +54,11 @@
       el.classList.toggle('unset',!TY.M.ready());
     }
     function pathHTML(){
-      var n=nCleared(),pass=S.exam.passed,ok=allCleared();
-      var s1=n===TOP.length?'done':'now',s2=pass?'done':ok&&TY.M.ready()?'now':'locked',s3=pass?'done':'locked';
+      var n=nCleared(),pass=S.exam.passed,ok=allCleared(),m=all().filter(missed).length;
+      var s1=n===TOP.length||pass?'done':'now',s2=pass?'done':ok&&TY.M.ready()?'now':'locked',s3=pass?'done':'locked';
       function li(cls,i,t,d,href){return '<li class="'+cls+'"><span class="n" aria-hidden="true">'+(cls==='done'?'<svg viewBox="0 0 16 16" width="16" height="16"><path d="M3 8.5l3.2 3L13 4.8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>':i)+'</span><span class="t">'+(href?'<a href="'+href+'">'+t+'</a>':t)+'</span><span class="d">'+d+'</span></li>'}
       return '<ol class="ty-path">'+
-        li(s1,1,'Clear every topic',n+' of '+TOP.length+' cleared','#ty-topics')+
+        li(s1,1,'Clear every topic',pass&&n<TOP.length?'Done; '+m+' to review below':n+' of '+TOP.length+' cleared','#ty-topics')+
         li(s2,2,'Pass the final exam',pass?'Passed, '+pass.score+' of '+pass.of:s2==='now'?'Open: '+TY.exam.n+' questions':'Opens when every topic is cleared','#ty-exam')+
         li(s3,3,'Graduate',pass?'Your certificate is below':'Ready to start the modifications',pass?'#ty-cert':null)+
       '</ol>';

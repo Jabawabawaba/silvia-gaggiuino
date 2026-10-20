@@ -66,7 +66,8 @@
       var s=S,full=K.full,q={intake:0,pumpout:0,opvret:0,boilout:0,exhaust:0,spout:0,group:0,mS:0,qW:0,c:0,flash:0,pour:0,Tout:s.Tw,fill:0};
       s.t+=dt;
       /* the E's energy saver switches it off after 30 minutes with no switch touched */
-      if(K.e&&s.pwr){s.idle+=dt;if(s.idle>=1800){s.pwr=0;s.idle=0}}
+      /* the E's timer runs from the last coffee or hot water (Rancilio's manual); steaming doesn't restart it */
+      if(K.e&&s.pwr){if(s.brew||s.water)s.idle=0;else s.idle+=dt;if(s.idle>=1800){s.pwr=0;s.idle=0}}
       var fed=!!s.pwr;
       if(s.Tb>=BREW_OPEN)s.brewC=0;else if(s.Tb<=BREW_CLOSE)s.brewC=1;
       if(s.Tb>=STEAM_OPEN)s.steamC=0;else if(s.Tb<=STEAM_CLOSE)s.steamC=1;
@@ -333,10 +334,10 @@
       e.addEventListener('keydown',function(ev){if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();fn(e);root.classList.remove('fresh');render(0);emit('act',id)}});
     }
     function wiggle(e){e.classList.remove('wiggle');void e.getBoundingClientRect();e.classList.add('wiggle')}
-    ['brew','water','steam'].forEach(function(k){act('f-sw-'+k,function(){S[k]=S[k]?0:1;S.idle=0})});
+    ['brew','water','steam'].forEach(function(k){act('f-sw-'+k,function(){S[k]=S[k]?0:1;if(k!=='steam')S.idle=0})});
     act('f-sw-pwr',function(){S.pwr=S.pwr?0:1;S.idle=0});
     act('f-pb-pwr',function(e){S.pwr=S.pwr?0:1;S.idle=0;e.classList.add('on');setTimeout(function(){e.classList.remove('on')},180)});
-    act('f-knob',function(){S.knob=S.knob?0:1;S.idle=0});
+    act('f-knob',function(){S.knob=S.knob?0:1});
     act('f-pf',function(e){if(S.sol||S.P>0.5||S.vent>0){wiggle(e);emit('blocked','f-pf');return}S.pf.in=0;if(S.pf.b==='dosed'&&S.pf.wet>8)S.pf.b='spent'});
     act('f-pfhandle',function(){S.pf.in=1});
     act('f-pfbasket',function(){var p=S.pf;if(p.b==='spent'||p.b==='dosed'){p.b='empty';p.Sr=0}else{p.b='dosed';p.Sr=p.S0;p.E=0}p.wet=0});

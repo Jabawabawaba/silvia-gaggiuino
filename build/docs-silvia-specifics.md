@@ -43,7 +43,7 @@ There is no official Silvia schematic. realNiche's "Rancillio Silvia Wiring" (PC
 - **Earth:** inlet earth to the boiler ground spade, solenoid ground to the boiler ground spade. Earth never connects to the PCB's 5 V ground, which floats so the thermocouple reads correctly. **[Official]** [On the wiring map](wiring.html#map?layer=E).
 - **Switches:** brew, steam and hot water each use one pole. Signal on the center spade, ground on the outer spade: steam to J7 S, brew to J7 B, hot water to **J5 B15**, with the ground chain to J7 GND. [On the wiring map](wiring.html#map?runs=LV1,LV2,LV3,LV4,LV5,LV6&label=Switch%20signal%20and%20ground%20wires).
 - **Hot water on B15, not A12:** realNiche's schematic puts the switch on J5 B15, and Talon confirmed on Discord in October 2026 that Gen 3 reads it there. In the public STM32 firmware, `pindef.h` reads `waterPin` as PB15 when built with `SINGLE_BOARD`, which every `all-pcb-*` target defines; A12 is the component (Lego) build pin. Brew plus steam together also triggers hot water mode. Keep the switch low voltage; switching the pump in mains around the PCB's output shorts its triac. **[Firmware + Discord]**
-- **Thermostats:** the brew thermostat comes out. The thermostats are clamped to the boiler top with M3 screws, and the M3 thermocouple screws into one of those holes; GaggiMate's Silvia guide suggests the middle or left-most hole for better readings. The safety thermostat stays in the heater line. The steam thermostat isn't wired in realNiche's harness, so it no longer limits anything whether it stays in the boiler or comes out; set max steam to 150 °C either way. **[Discord]**
+- **Thermostats:** the brew thermostat comes out. The brew and steam thermostats are clamped to the boiler top with M3 screws, and the M3 thermocouple screws into one of those holes; GaggiMate's Silvia guide suggests the middle or left-most hole for better readings. The safety thermostat stays in the heater line. The steam thermostat isn't wired in realNiche's harness, so it no longer limits anything whether it stays in the boiler or comes out; set Steam Temperature to 150 °C either way. **[Discord]**
 - **Lengths** (Talon's harness and an older untested diagram): N chain 120, 350, 400, 100, 300 mm; L to SSR 200 mm, SSR to switch 350 mm, thermostat to SSR 350 mm; doubled leads 250 mm at the element or 250 + 100 mm at the thermostat; switch LV 320, 320, 470 mm; hot water 400 mm; screen 650 mm front mount, more for funnel. Cut long. **[Discord]**
 
 ## Settings
@@ -56,11 +56,11 @@ Starting values from the thread, not official defaults (the manual recommends it
 | Brew Delta | Off |
 | Temperature Offset | 5, then tune against a group-head measurement |
 | HPWR / Main Divider / Brew Divider | 100 / 5 / 3 |
-| Max steam | 150 °C (the steam thermostat is off the heater line) |
+| Steam Temperature (max steam) | 150 °C (the steam thermostat is off the heater line) |
 
 ## First power-on and calibration
 
-Fill the boiler **before anything else**: open the steam knob and run Flush until water comes steadily from the wand (Rancilio's way of filling a Silvia), then close the knob and run water through the group for 5 seconds or more, as the official Gen 3 manual asks. Then run [UT] Tube Fill (T-fitting installs), then [UT] Test OPV with a blank basket: 10.5 to 13 bar, water moving through the OPV tubing, no leaks. Then [UT] PZ Cal for the pump. Watch that the temperature rises while the SSR light is on; if it falls, the thermocouple is reversed at J4. **[Official]**
+Fill the boiler **before anything else**: open the steam knob and run Flush until water comes steadily from the wand (Rancilio's way of filling a Silvia), then close the knob and run water through the group for 5 seconds or more, as the official Gen 3 manual asks. Then run [UT] Tube Fill (T-fitting installs), then [UT] Test OPV with a blank basket: 10.5 to 13 bar, water moving through the OPV tubing, no leaks. Then [UT] PZ Cal for the pump. **[Official]** Watch that the temperature rises while the heating light is on; if it falls, the thermocouple is reversed at J4 (how thermocouples behave; not in the official docs).
 
 ## Extras
 

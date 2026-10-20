@@ -16,7 +16,7 @@
     /* ---- what each control does, for the Silvia on show ---- */
     function CTL(){
       return {
-        pwr:['Power',K.e?'The push button. Switches the machine on and the boiler starts heating. The E switches itself off after 30 minutes with no switch touched.':'The power rocker. Switches the machine on and the boiler starts heating.'],
+        pwr:['Power',K.e?'The push button. Switches the machine on and the boiler starts heating. The E switches itself off 30 minutes after the last coffee or hot water; steaming doesn\'t restart the timer.':'The power rocker. Switches the machine on and the boiler starts heating.'],
         brew:['Brew','Runs the pump and opens the 3-way valve, so water goes through the group and the coffee. Switched off, the valve drops shut and vents the pressure over the puck into the drip tray. It lights while it\'s on.'],
         water:['Hot water','Runs the pump with the 3-way valve shut, so water goes into the boiler and, with the knob open, out of the wand. It\'s how you prime and refill the boiler. It lights while it\'s on.'],
         steam:['Steam','Raises the boiler to steam temperature, about 140 °C. It lights while it\'s on.'],
@@ -156,7 +156,7 @@
       if(ev==='reset'||ev==='setup'){B=null;M=null;st={purge:0,idle:0,pwrAt:null,lastPwr:0,acted:false,steamed:false};if(ev==='reset'){seen={};n={shot:0,milk:0};feed.innerHTML='<p class="ck-empty">'+e(EMPTY)+'</p>'}renderGuide();return}
       if(ev==='blocked'){
         if(a==='f-pf')slip('pf-stuck','Don\'t force the portafilter','There was still pressure in the group. Forced out, a real one sprays scalding water and grounds.',['pf','brew'],'Switch brew off and give it a couple of seconds for the 3-way valve to vent the pressure into the drip tray, then take it out.');
-        if(a==='x-safety')slip('reset-hot','The safety won\'t reset yet','The element is still too hot; the button only resets once it has cooled.',['safety','water','knob'],'Wait a few minutes with the machine on, then press it again. Then refill the boiler before heating: knob open, hot water on until water flows from the wand.');
+        if(a==='x-safety')slip('reset-hot','The safety won\'t reset yet','The element is still too hot; the button only resets once it has cooled.',['safety','water','knob'],'On a real machine, unplug it before you reach in, wait a few minutes, then press it again. Then plug in, switch on and refill the boiler before it heats: knob open, hot water on until water flows from the wand.');
         return;
       }
       if(ev==='act'){
@@ -175,7 +175,7 @@
       /* the knob open for a while with nothing coming out: not the first moments of a prime or refill */
       if(s.knob&&!s.pumpOn&&!s.steam&&s.Tw<100.3&&!(q.qW>0)&&!(q.mS>0)){st.kc=(st.kc||0)+dt;if(st.kc>6)slip('knob-cold','Nothing came out of the wand','The knob only lets out what the boiler has: below boiling there\'s no steam to give.',['steam','knob','lamps','water'],'Switch steam on and wait for '+OUT+'. For hot water, open the knob and switch hot water on.');}else st.kc=0;
       /* the E switching itself off */
-      if(st.lastPwr&&!s.pwr&&!st.acted)slip('auto-off','The machine switched itself off','The E\'s energy saver turns it off after 30 minutes with no switch touched.',['pwr'],'Press the power button again; any switch you touch restarts the 30 minutes.');
+      if(st.lastPwr&&!s.pwr&&!st.acted)slip('auto-off','The machine switched itself off','The E\'s energy saver turns it off 30 minutes after the last coffee or hot water. Steaming doesn\'t restart the timer.',['pwr'],'Press the power button again. Rancilio\'s manual says to run brew for a few seconds before you steam, so the timer starts over.');
       st.lastPwr=s.pwr;st.acted=false;
       /* not primed: heating with the boiler short of full */
       if(s.pwr&&!st.steamed&&st.pwrAt!=null&&s.t-st.pwrAt>45&&s.t-st.pwrAt<600&&s.vol<K.full*0.97&&!s.water)slip('prime','The boiler wasn\'t primed','A Silvia often sits short of full; heating it that way risks the element, and the first steam comes out wet.',['water','knob','lamps'],'Right after switching on, open the knob and switch hot water on until water flows from the wand, then both off.');
@@ -192,7 +192,7 @@
         if(!s.knob&&s.jug.pos==='wand'&&!s.steam)endMilk(s);
       }
       if(s.steam&&!s.knob&&!M){st.idle+=dt;if(st.idle>240)slip('steam-idle','Steam still on','The boiler sits at steam temperature, too hot for the next shot.',['steam','water','knob'],'When the milk\'s done, switch steam off and refill the boiler: knob open, hot water on until water flows from the wand, then both off.')}else st.idle=0;
-      if(s.trip)slip('trip','The safety thermostat tripped','Steaming ran the boiler low and the element overheated, so the safety cut it. The heating light stays on, but nothing heats.',['safety','water','knob'],'Let it cool, press the red button on the boiler in the inside view, and refill the boiler through the wand. After every steaming: knob open, hot water on until water flows from the wand.');
+      if(s.trip)slip('trip','The safety thermostat tripped','Steaming ran the boiler low and the element overheated, so the safety cut it. The heating light stays on, but nothing heats.',['safety','water','knob'],'Unplug it and let it cool (the button is on the boiler under the top cover; here it\'s in the inside view), press the red button, then plug in, switch on and refill the boiler through the wand. After every steaming: knob open, hot water on until water flows from the wand.');
       if(s.pumpOn&&(s.air||s.tank<=0.5))slip('dry','The tank ran dry','With no water the pump rattles and takes in air, and it won\'t push against the coffee until that air is out.',['tank','knob','water'],'Refill the tank, then prime: open the knob and switch hot water on until water flows from the wand.');
       if(s.puddle>0)slip('tray','The drip tray overflowed','Every flush, vent and purge ends up in the tray.',['tank'],'Tap the drip tray to empty it now and then.');
     });

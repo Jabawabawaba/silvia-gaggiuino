@@ -262,7 +262,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
       {id:'e6',t:'PCB J12 ↔ pump coil terminal',how:'AC14.',type:'low',fix:'Check AC14.'},
       {id:'e7',t:'PCB J12 ↔ PCB J10, through the pump',how:'AC14, the pump coil and its thermal fuse, then AC11 and AC12. Probes one way, then swapped, as in c5; enter the lower reading, which should be close to c5\'s. It proves both pump leads are back on.',type:'coil',tags:['Both ways'],fix:'A pump lead from c5 isn\'t back on, or the thermal fuse is open. Check AC14 and the doubled AC10 and AC11 spade on the fuse.'},
       {id:'e8',t:'PCB J13 ↔ PCB J10, through the solenoid',how:'AC13, the solenoid coil, then AC12. It should read close to c6, and proves both solenoid leads are back on.',type:'coil',fix:'A solenoid lead from c6 isn\'t back on. Check AC13 and the doubled AC11 and AC12 spade on the solenoid.'},
-      {id:'e9',t:'Inlet L ↔ PCB J11 spade, switch off',how:'Same probes as e1, power switch off. Should now be open.',type:'open',tags:['Power OFF'],fix:'The switch isn\'t breaking line. Check that the inlet goes to the outer spades and the loads to the center spades.'},
+      {id:'e9',t:'Inlet L ↔ PCB J11 spade, switch off',how:'Same probes as e1, power switch off. Should now be open.',type:'open',tags:['Power OFF'],fix:'Line is getting around the switch: look for two runs on one spade (AC1 and AC3 together) or the inlet lead going straight to the SSR. Each pole takes the inlet on its outer spade and the load on its center spade.'},
       {id:'e10',t:'Inlet N ↔ PCB J10 spade, switch off',how:'Same probes as e2, power switch off. Should now be open.',type:'open',tags:['Power OFF'],fix:'The switch isn\'t breaking neutral.'}
     ]},
     {id:'f',name:'Low-voltage inputs',intro:'Unplug the J7, J5 and J9 plugs from the PCB and probe the plug pins, so the board itself isn\'t in the reading.',items:[
@@ -292,7 +292,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
       {id:'g12',t:'Someone else traced the harness against the wiring reference',how:'A second set of eyes, run by run.',type:'check'},
       {id:'g13',t:'Everything plugged back in',how:'J4 thermocouple reclamped with the same + and − as on the bench, then J5, J7 and J9. Recheck J9 R1 to SSR + and GND to SSR − with the plug in.',type:'check'},
       {id:'g15',t:'The power switch latches on and off by itself',how:'The harness relies on it breaking both line and neutral. The E model\'s push-button switch doesn\'t latch; it needs a double-pole rocker like the M model\'s.',type:'check'},
-      {id:'g14',t:'Stop immediately if the temperature falls while heating',how:'At first power-on, the reading must rise while the SSR light is on. If it falls, the thermocouple is reversed and the controller may keep heating. Switch off, unplug, swap the J4 wires.',type:'check'}
+      {id:'g14',t:'Stop immediately if the temperature falls while heating',how:'At first power-on, the reading must rise while the heating light is on. If it falls, the thermocouple is reversed and the controller may keep heating. Switch off, unplug, swap the J4 wires.',type:'check'}
     ]},
     {id:'h',name:'Covers on',intro:'After the top cover and panels are back on (runbook Phase 5), still unplugged. Closing up is where a wire gets pinched against the case, and the screen cable at the vent is the usual one.',items:[
       {id:'h1',t:'Top cover and every panel back on, screws tight',how:'Watch the screen cable at the vent and any wire near a panel edge as each one goes on.',type:'check'},
