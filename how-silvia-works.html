@@ -468,19 +468,6 @@ td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:ta
 #mini-pump .wflow.in{animation:fl16 .71s linear infinite}
 #mini-pump .wflow.out{animation:fl16 .71s linear infinite}
 /* thermostat */
-#mini-tstat .housing{fill:var(--surface-2);stroke:var(--muted);stroke-width:1.4}
-#mini-tstat .boilertop{fill:url(#cut-brass);stroke:#6E5420}
-#mini-tstat .term{stroke:var(--muted);stroke-width:3;stroke-linecap:round}
-#mini-tstat .contact{fill:#C99A4A;stroke:#6E5420}
-#mini-tstat .armline{stroke:var(--ink);stroke-width:3;stroke-linecap:round}
-#mini-tstat .pin{stroke:var(--muted);stroke-width:3}
-#mini-tstat .disc{fill:none;stroke:var(--accent);stroke-width:4;stroke-linecap:round}
-#mini-tstat .graph{fill:none;stroke:var(--line)}
-#mini-tstat .limit{stroke:var(--accent);stroke-dasharray:4 4;stroke-width:1.2;opacity:.8}
-#mini-tstat .trace{fill:none;stroke:var(--w-l);stroke-width:2.4;stroke-linejoin:round}
-#mini-tstat .now{fill:var(--w-l)}
-#mini-tstat .arm{transition:transform .12s}
-#mini-tstat .pin{transition:transform .12s}
 /* solenoid: a cutaway, so the seal that closes each port is in view */
 #mini-sol{--sol-w:#D3E7F6;--sol-p:#8DBFE6;--sol-dot:#1A63A6;--sol-shut:#C62828;--sol-open:#2E7D4F;--sol-spr:#59616A}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) #mini-sol{--sol-w:#1C3B55;--sol-p:#2C679C;--sol-dot:#C4E5FF;--sol-shut:#E5534B;--sol-open:#3E9B66;--sol-spr:#A3ABB3}}
@@ -768,6 +755,58 @@ td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:ta
 #mini-panel .f-sil .sw-fr.glow .rk-a,#mini-panel .f-sil .sw-fr.glow .rk-b{fill:#F08A2A}
 #mini-panel .f-sil .sw-fr.glow{filter:drop-shadow(0 0 4px #FF8A2A)}
 #mini-panel .f-sil .sw-lp:not(.grn).glow .lp{fill:#FF9A2E;filter:drop-shadow(0 0 4px #FF8A2A)}
+
+/* thermostats and fuse: graph, then each part in section */
+#mini-tstat .tg-frame{fill:none;stroke:var(--line)}
+#mini-tstat .tg-tick{stroke:var(--line)}
+#mini-tstat .tg-lim{stroke-width:1.4;stroke-dasharray:6 4}
+#mini-tstat .tg-lim.bo,#mini-tstat [data-k="tg-bc"]{stroke:var(--blue)}
+#mini-tstat .tg-lim.so,#mini-tstat [data-k="tg-sc"]{stroke:var(--accent-ink)}
+#mini-tstat .tg-lim.cut{stroke:var(--bad);stroke-dasharray:3 3}
+#mini-tstat .tg-lim.close{stroke-dasharray:2 5;opacity:.5}
+#mini-tstat .tg-lab.bo{fill:var(--blue)}#mini-tstat .tg-lab.so{fill:var(--accent-ink)}#mini-tstat .tg-lab.cut{fill:var(--bad)}
+#mini-tstat .tg-trace{fill:none;stroke:var(--w-l);stroke-width:2.4;stroke-linejoin:round}
+#mini-tstat .tg-now{fill:var(--w-l)}
+#mini-tstat .tg-heat,#mini-tstat .tg-heatkey{fill:var(--w-h)}
+#mini-tstat .tb-t{font-weight:600;fill:var(--ink)}
+#mini-tstat .tb-wall{fill:url(#cut-alu);stroke:#5E656C}
+#mini-tstat.brass .tb-wall{fill:url(#cut-brass);stroke:#6E5420}
+#mini-tstat .tb-stud{fill:url(#cut-chrome);stroke:#4A5057}
+#mini-tstat .tb-thread{stroke:#4A5057;stroke-width:1}
+#mini-tstat .tb-clamp{fill:url(#cut-chrome);stroke:#4A5057}
+#mini-tstat .tb-screw{fill:#6B737A;stroke:#3A3F44}
+#mini-tstat .tb-spade{fill:#C99A4A;stroke:#6E5420}
+#mini-tstat .tb-house{fill:#E6E1D6;stroke:#8C8577;stroke-width:1.2}
+#mini-tstat .tb-cav{fill:#30353B}
+#mini-tstat .tb-cup{fill:none;stroke:#A7AFB6;stroke-width:4;stroke-linejoin:round}
+#mini-tstat .tb-cond{fill:none;stroke:#C99A4A;stroke-width:3;stroke-linejoin:round}
+#mini-tstat .tb-ct{fill:#E3E7EA;stroke:#6B737A}
+#mini-tstat .tb-blade{fill:none;stroke:#D9B26A;stroke-width:3;stroke-linecap:round}
+#mini-tstat .tb-weld{fill:none;stroke:#FF5A4A;stroke-width:2;stroke-linejoin:round;display:none}
+#mini-tstat .tb-weld.on{display:inline}
+#mini-tstat .tb-pin{fill:#F2EFE8;stroke:#9A9488}
+#mini-tstat .tb-disc{fill:none;stroke:#E39A3A;stroke-width:4;stroke-linecap:round}
+#mini-tstat .tb-btn{fill:#C62828;stroke:#7A1414}
+#mini-tstat .fz-clip{fill:none;stroke:#8C949B;stroke-width:3;stroke-linecap:round}
+#mini-tstat .fz-lead{stroke:#8C949B;stroke-width:2.5}
+#mini-tstat .fz-case{fill:url(#cut-chrome);stroke:#5E656C}
+#mini-tstat .fz-bush{fill:#F2EFE8;stroke:#9A9488}
+#mini-tstat .fz-pin{fill:#C99A4A}
+#mini-tstat .fz-pellet{fill:#D9A441;stroke:#8A6420}
+#mini-tstat .fz-spring{fill:none;stroke:#C3CAD0;stroke-width:1.6;stroke-linejoin:round}
+#mini-tstat .fz-trip{fill:none;stroke:#C3CAD0;stroke-width:1.2;stroke-linejoin:round}
+#mini-tstat .fz-star{fill:#E3E7EA;stroke:#6B737A}
+#mini-tstat .tb-badge rect{fill:#3A4048}
+#mini-tstat .tb-badge.open rect{fill:#A35F00}
+#mini-tstat .tb-badge.bad rect{fill:#C62828}
+#mini-tstat .tb-badge text{font:700 9px var(--f-mono);letter-spacing:.06em;fill:#fff}
+#mini-tstat .mini-seg{flex-wrap:wrap}
+#mini-tstat .mini-ctl+.mini-ctl{padding-top:8px}
+#mini-tstat .cap.sm{font-size:10.5px}
+#mini-tstat .mini-ctl .btn[disabled]{opacity:.45;cursor:not-allowed}
+#mini-tstat .tb-mk circle{fill:var(--ink)}
+#mini-tstat .tb-mk text{font:700 7px var(--f-mono);fill:var(--bg)}
+#mini-tstat svg > .tb-mk text{font-size:7.5px}
 
 /* stock circuit ladder */
 .lad{border:1px solid var(--line);border-radius:14px;background:var(--surface);overflow:hidden}
@@ -1830,30 +1869,62 @@ td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:ta
           <p>The brew thermostat opens at 100 °C (110 °C on machines made before mid-2007) and runs the machine for shots. The steam thermostat opens at 140 °C; the steam switch bridges the brew thermostat so the element carries on up to it. The safety thermostat only opens if something has gone wrong, like the boiler running dry, and stays open until you press its red reset button. If the heating light is on but the boiler stays cold, a tripped safety is the usual suspect.</p>
           <p class="gg"><b>In a Gaggiuino build:</b> the brew thermostat comes out and the thermocouple takes one of the clamp holes. The steam thermostat is left in place unwired, or removed; either way it no longer limits anything, so Steam Temperature is set to 150 °C in the firmware. The safety thermostat stays, wired in series with the element. After the conversion the heating light sits across the element, after the safety, so a tripped safety turns it off.</p>
         </div>
-        <!-- THERMOSTAT: bimetal and the swing it causes -->
+        <!-- THERMOSTATS AND SAFETY: a boiler you can run, each part in section -->
 <figure class="mini" id="mini-tstat">
-  <svg viewBox="0 0 360 200" role="img" aria-label="Left, a bimetal thermostat: a bimetal disc under a pin and a pair of contacts. When the disc gets hot it bends upward, the pin lifts the contacts apart and the heater stops. Right, the boiler temperature rising and falling between where the thermostat opens and where it closes again.">
-    <g class="tsx">
-      <rect x="30" y="34" width="150" height="118" rx="10" class="housing"/>
-      <rect x="24" y="152" width="162" height="12" rx="3" class="boilertop"/>
-      <text x="105" y="184" class="cap" text-anchor="middle">boiler</text>
-      <line x1="60" y1="58" x2="150" y2="58" class="term"/>
-      <circle cx="132" cy="66" r="6" class="contact fixed"/>
-      <g class="arm"><line x1="58" y1="80" x2="132" y2="80" class="armline"/><circle cx="132" cy="74" r="6" class="contact"/></g>
-      <line x1="105" y1="84" x2="105" y2="128" class="pin"/>
-      <path class="disc" d="M58,140 Q105,124 152,140"/>
-      <text x="40" y="52" class="cap">contacts</text><text x="40" y="118" class="cap">bimetal</text>
-    </g>
-    <g transform="translate(196 0)">
-      <rect x="0" y="22" width="160" height="140" rx="8" class="graph"/>
-      <line x1="0" y1="58" x2="160" y2="58" class="limit"/><text x="156" y="52" class="cap" text-anchor="end">opens</text>
-      <line x1="0" y1="96" x2="160" y2="96" class="limit"/><text x="156" y="112" class="cap" text-anchor="end">closes</text>
-      <path class="trace" d=""/>
-      <circle class="now" r="5" cx="0" cy="0"/>
-      <text x="0" y="184" class="cap">temperature</text>
-    </g>
+  <div class="mini-ctl"><button type="button" class="btn" data-ts="steam" aria-pressed="false">Steam switch off</button><button type="button" class="btn" data-ts="restart">Start over</button><button type="button" class="btn" data-ts="fix" disabled>Press reset</button></div>
+  <div class="mini-ctl"><span class="mini-note" id="ts-fl">Fault:</span><span class="mini-seg" role="group" aria-labelledby="ts-fl"><button type="button" class="chip" data-fault="none" aria-pressed="true">Nothing stuck</button><button type="button" class="chip" data-fault="b" aria-pressed="false">Brew thermostat stuck shut</button><button type="button" class="chip" data-fault="s" aria-pressed="false">Steam thermostat stuck shut</button></span></div>
+  <div class="mini-ctl"><span class="mini-note" data-ts-note>Heating from cold: both thermostats are closed.</span></div>
+  <svg viewBox="0 0 360 600" role="img" aria-label="Top, a graph of the boiler temperature over the last five minutes, with the points where the brew thermostat opens, the steam thermostat opens and the safety thermostat trips, and a band showing when the element is heating. Below, each part in section. A thermostat is a bimetal disc in a cup that touches the boiler: at its set point the disc snaps from one shape to the other and pushes a ceramic pin up, which lifts a spring blade and parts the contacts; it snaps back, closing them, once it has cooled several degrees. The safety thermostat works the same way, but its disc stays snapped open until its reset button is pressed.">
+    <rect x="30" y="8" width="320" height="142" class="tg-frame"/>
+    <line x1="26" x2="30" y1="127.6" y2="127.6" class="tg-tick"/><text x="23" y="131.4" class="cap sm" text-anchor="end">50</text><line x1="26" x2="30" y1="90.2" y2="90.2" class="tg-tick"/><text x="23" y="94.0" class="cap sm" text-anchor="end">100</text><line x1="26" x2="30" y1="52.8" y2="52.8" class="tg-tick"/><text x="23" y="56.6" class="cap sm" text-anchor="end">150</text><text x="23" y="17" class="cap sm" text-anchor="end">°C</text>
+    <line x1="30" x2="350" class="tg-lim bo" data-k="tg-bo"/><text x="346" class="cap sm tg-lab bo" text-anchor="end" data-k="tg-bo-t">brew opens</text><line x1="30" x2="350" class="tg-lim so" data-k="tg-so"/><text x="346" class="cap sm tg-lab so" text-anchor="end" data-k="tg-so-t">steam opens</text><line x1="30" x2="350" class="tg-lim cut" data-k="tg-cut"/><text x="346" class="cap sm tg-lab cut" text-anchor="end" data-k="tg-cut-t">safety trips</text><line x1="30" x2="350" class="tg-lim close" data-k="tg-bc"/><line x1="30" x2="350" class="tg-lim close" data-k="tg-sc"/>
+    <path class="tg-heat" data-k="tg-heat" d=""/>
+    <path class="tg-trace" data-k="tg-trace" d=""/>
+    <circle class="tg-now" data-k="tg-now" r="4.5" cx="-10" cy="-10"/>
+    <rect x="30" y="162" width="10" height="5" class="tg-heatkey"/><text x="44" y="167" class="cap sm">element heating</text><text x="350" y="167" class="cap sm" text-anchor="end">last 5 minutes</text>
+    
+    <g class="tb-box"><text x="93.8" y="186" class="cap sm tb-t" text-anchor="middle">brew thermostat</text><text x="93.8" y="198" class="cap sm" text-anchor="middle"><tspan data-k="b-sub">opens at 100 °C</tspan></text><g transform="translate(14 206) scale(1.45)"><rect x="0" y="76" width="110" height="24" class="tb-wall"/>
+        <rect x="2" y="68" width="16" height="8" rx="1.5" class="tb-clamp"/><rect x="92" y="68" width="16" height="8" rx="1.5" class="tb-clamp"/><circle cx="8" cy="72" r="2.5" class="tb-screw"/><circle cx="102" cy="72" r="2.5" class="tb-screw"/>
+        <rect x="24" y="0" width="8" height="20" rx="1" class="tb-spade"/><rect x="78" y="0" width="8" height="20" rx="1" class="tb-spade"/>
+        
+        <rect x="10" y="14" width="90" height="48" rx="6" class="tb-house"/>
+        <rect x="16" y="20" width="78" height="40" rx="3" class="tb-cav"/>
+        <path d="M14,56 V76 H96 V56" class="tb-cup"/>
+        <path d="M28,20 V55 H58" class="tb-cond"/><circle cx="54" cy="52" r="3" class="tb-ct"/>
+        <path d="M82,20 V34" class="tb-cond"/>
+        <g data-k="b-arm"><path d="M82,34 L54,44" class="tb-blade" data-k="b-blade"/><circle cx="54" cy="47" r="3" class="tb-ct"/></g>
+        <path d="M51,47 l2,2.5 l1.5,-1.5 l1.5,2 l1.5,-2 l1,2" class="tb-weld" data-k="b-weld"/>
+        <rect x="62" y="41" width="6" height="27" rx="1.5" class="tb-pin" data-k="b-pin"/>
+        <path d="M20,64 Q55,72 90,64" class="tb-disc" data-k="b-disc"/><g class="tb-mk"><circle cx="90" cy="44" r="5"/><text x="90" y="46.6" text-anchor="middle">1</text></g><g class="tb-mk"><circle cx="43" cy="47" r="5"/><text x="43" y="49.6" text-anchor="middle">2</text></g><g class="tb-mk"><circle cx="76" cy="55" r="5"/><text x="76" y="57.6" text-anchor="middle">3</text></g><g class="tb-mk"><circle cx="32" cy="70" r="5"/><text x="32" y="72.6" text-anchor="middle">4</text></g><g class="tb-mk"><circle cx="104" cy="62" r="5"/><text x="104" y="64.6" text-anchor="middle">5</text></g></g></g><g class="badge tb-badge" data-k="b-badge" transform="translate(93.8 357.0)"><rect x="-40" y="0" width="80" height="15" rx="4"/><text x="0" y="10.8" text-anchor="middle" data-k="b-btext">CLOSED</text></g>
+    <g class="tb-box"><text x="266.2" y="186" class="cap sm tb-t" text-anchor="middle">steam thermostat</text><text x="266.2" y="198" class="cap sm" text-anchor="middle">opens at 140 °C</text><g transform="translate(186.5 206) scale(1.45)"><rect x="0" y="76" width="110" height="24" class="tb-wall"/>
+        <rect x="2" y="68" width="16" height="8" rx="1.5" class="tb-clamp"/><rect x="92" y="68" width="16" height="8" rx="1.5" class="tb-clamp"/><circle cx="8" cy="72" r="2.5" class="tb-screw"/><circle cx="102" cy="72" r="2.5" class="tb-screw"/>
+        <rect x="24" y="0" width="8" height="20" rx="1" class="tb-spade"/><rect x="78" y="0" width="8" height="20" rx="1" class="tb-spade"/>
+        
+        <rect x="10" y="14" width="90" height="48" rx="6" class="tb-house"/>
+        <rect x="16" y="20" width="78" height="40" rx="3" class="tb-cav"/>
+        <path d="M14,56 V76 H96 V56" class="tb-cup"/>
+        <path d="M28,20 V55 H58" class="tb-cond"/><circle cx="54" cy="52" r="3" class="tb-ct"/>
+        <path d="M82,20 V34" class="tb-cond"/>
+        <g data-k="s-arm"><path d="M82,34 L54,44" class="tb-blade" data-k="s-blade"/><circle cx="54" cy="47" r="3" class="tb-ct"/></g>
+        <path d="M51,47 l2,2.5 l1.5,-1.5 l1.5,2 l1.5,-2 l1,2" class="tb-weld" data-k="s-weld"/>
+        <rect x="62" y="41" width="6" height="27" rx="1.5" class="tb-pin" data-k="s-pin"/>
+        <path d="M20,64 Q55,72 90,64" class="tb-disc" data-k="s-disc"/></g></g><g class="badge tb-badge" data-k="s-badge" transform="translate(266.2 357.0)"><rect x="-40" y="0" width="80" height="15" rx="4"/><text x="0" y="10.8" text-anchor="middle" data-k="s-btext">CLOSED</text></g>
+    <g class="tb-box"><text x="93.8" y="396" class="cap sm tb-t" text-anchor="middle">safety thermostat</text><text x="93.8" y="408" class="cap sm" text-anchor="middle">trips at 165 °C</text><g transform="translate(14 416) scale(1.45)"><rect x="0" y="76" width="110" height="24" class="tb-wall"/>
+        <rect x="49" y="74" width="12" height="16" class="tb-stud"/><path d="M49,79 h12 M49,83 h12 M49,87 h12" class="tb-thread"/>
+        <rect x="24" y="0" width="8" height="20" rx="1" class="tb-spade"/><rect x="78" y="0" width="8" height="20" rx="1" class="tb-spade"/>
+        <g class="tb-reset" data-k="cut-btn"><rect x="47" y="6" width="16" height="9" rx="2.5" class="tb-btn"/></g>
+        <rect x="10" y="14" width="90" height="48" rx="6" class="tb-house"/>
+        <rect x="16" y="20" width="78" height="40" rx="3" class="tb-cav"/>
+        <path d="M14,56 V76 H96 V56" class="tb-cup"/>
+        <path d="M28,20 V55 H58" class="tb-cond"/><circle cx="54" cy="52" r="3" class="tb-ct"/>
+        <path d="M82,20 V34" class="tb-cond"/>
+        <g data-k="cut-arm"><path d="M82,34 L54,44" class="tb-blade" data-k="cut-blade"/><circle cx="54" cy="47" r="3" class="tb-ct"/></g>
+        <path d="M51,47 l2,2.5 l1.5,-1.5 l1.5,2 l1.5,-2 l1,2" class="tb-weld" data-k="cut-weld"/>
+        <rect x="62" y="41" width="6" height="27" rx="1.5" class="tb-pin" data-k="cut-pin"/>
+        <path d="M20,64 Q55,72 90,64" class="tb-disc" data-k="cut-disc"/><g class="tb-mk"><circle cx="40" cy="10" r="5"/><text x="40" y="12.6" text-anchor="middle">6</text></g></g></g><g class="badge tb-badge" data-k="cut-badge" transform="translate(93.8 567.0)"><rect x="-40" y="0" width="80" height="15" rx="4"/><text x="0" y="10.8" text-anchor="middle" data-k="cut-btext">CLOSED</text></g>
+    <text x="196" y="404" class="cap sm tb-t">In each thermostat</text><g class="tb-mk"><circle cx="201" cy="415.5" r="5"/><text x="201" y="418.1" text-anchor="middle">1</text></g><text x="211" y="419" class="cap sm">spring blade</text><g class="tb-mk"><circle cx="201" cy="430.5" r="5"/><text x="201" y="433.1" text-anchor="middle">2</text></g><text x="211" y="434" class="cap sm">contacts</text><g class="tb-mk"><circle cx="201" cy="445.5" r="5"/><text x="201" y="448.1" text-anchor="middle">3</text></g><text x="211" y="449" class="cap sm">ceramic pin</text><g class="tb-mk"><circle cx="201" cy="460.5" r="5"/><text x="201" y="463.1" text-anchor="middle">4</text></g><text x="211" y="464" class="cap sm">bimetal disc</text><g class="tb-mk"><circle cx="201" cy="475.5" r="5"/><text x="201" y="478.1" text-anchor="middle">5</text></g><text x="211" y="479" class="cap sm">cup on the boiler</text><text x="196" y="500" class="cap sm tb-t">On the safety</text><g class="tb-mk"><circle cx="201" cy="511.5" r="5"/><text x="201" y="514.1" text-anchor="middle">6</text></g><text x="211" y="515" class="cap sm">reset button</text>
   </svg>
-  <figcaption>Simplified. The bimetal opens the contacts at one temperature and lets them close again several degrees cooler, which is why the temperature swings.</figcaption>
+  <figcaption>Simplified; the closing points and timings are illustrative. The thermostats are in series, so one stuck shut is still caught by the other: a stuck brew thermostat leaves the steam one in charge at 140 °C, and the coffee comes out far too hot. Only the steam thermostat stuck shut with steam on, or both stuck, lets the boiler run away, and then the safety thermostat is the last line. It stays open until it has cooled and you press its red button. In the usual stock wiring, from community drawings of the harness, the heating light stays on while it's tripped; trace yours. Unplug before resetting it, and find the cause first.<span data-when="ver:V1,V2"> Machines made before mid-2007 have a 110 °C brew thermostat: it's drawn at 110 °C for a V1 and at 100 °C otherwise.</span></figcaption>
 </figure>
       </article>
 
@@ -2485,33 +2556,6 @@ td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:ta
   zoomed=NARROW.matches;CUR=VIEW[frameFor('heat')].slice();putVB(CUR);
   setMode('heat');pick(null);if(!RM)frame(0);
 
-  /* ---------- thermostat figure: a simple boiler that heats while the contacts are closed ---------- */
-  (function(){
-    var fig=$('mini-tstat');if(!fig)return;
-    var trace=fig.querySelector('.trace'),dot=fig.querySelector('.now'),arm=fig.querySelector('.arm'),pin=fig.querySelector('.pin'),disc=fig.querySelector('.disc');
-    var T=86,closed=true,hist=[],OPEN=106,CLOSE=94,STEP=90,W=159;   /* graph units, not degrees; one sample every 90 ms */
-    function y(t){return 162-(t-70)*(140/50)}
-    function step(){
-      T+=closed?0.9:-0.45;
-      if(closed&&T>=OPEN)closed=false;else if(!closed&&T<=CLOSE)closed=true;
-      hist.push(T);if(hist.length>161)hist.shift();
-      arm.style.transform=closed?'':'translateY(-10px)';pin.style.transform=closed?'':'translateY(-8px)';
-      disc.setAttribute('d',closed?'M58,140 Q105,124 152,140':'M58,128 Q105,144 152,128');
-      fig.classList.toggle('closed',closed);
-    }
-    /* f is how far we are into the next sample: the trace slides left by that much and the dot rides the live value */
-    function draw(f){
-      var n=hist.length,pts=[],Th=T+(closed?0.9:-0.45)*f;
-      for(var i=0;i<n;i++){var x=W-f-(n-1-i);if(x>=0)pts.push(x.toFixed(2)+','+y(hist[i]).toFixed(1))}
-      pts.push(W+','+y(Th).toFixed(1));
-      trace.setAttribute('d','M'+pts.join(' L'));dot.setAttribute('cx',String(W));dot.setAttribute('cy',y(Th).toFixed(1));
-    }
-    for(var i=0;i<161;i++)step();
-    draw(0);
-    var acc=0,last=0;
-    onScreen(fig,function(ms){acc+=last?Math.min(250,ms-last):0;last=ms;while(acc>=STEP){acc-=STEP;step()}draw(acc/STEP)},function(){last=0});
-  })();
-
   /* ---------- solenoid figure ---------- */
   (function(){
     var fig=$('mini-sol'),b=fig&&fig.querySelector('[data-sol]');if(!b)return;
@@ -2544,13 +2588,132 @@ td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:ta
 
   /* ---------- the circuit ---------- */
   /* what the part figures need to know about your Silvia */
-  var PFM={ev:'silvia-machine',get:function(){var m=window.SilviaMachine,p=(m&&m.get())||{},v=p.ver||null;return {site:'s',ver:v,e:(v==='V5'||v==='V6')&&p.model==='E',volts:p.volts||null}}};
+  var PFM={ev:'silvia-machine',get:function(){var m=window.SilviaMachine,p=(m&&m.get())||{},v=p.ver||null;return {site:'s',ver:v,e:(v==='V5'||v==='V6')&&p.model==='E',volts:p.volts||null,th:{bo:v==='V1'?110:100,bc:v==='V1'?98:88,so:140,sc:128,cut:165}}}};
   /* ---------- part figures: portafilter, steam wand, drip tray, switches and lamps, inlet ----------
      Shared by the Gaggia and Silvia sites. Each site defines PFM before including this file:
        PFM.ev    the event its machine picker fires
        PFM.get() {site:'g'|'s', ...}: on the Gaggia site model, fam ('GC' or 'GCP'), volts, ground (a US
                  original Classic, two-pin as sold); on the Silvia site ver, e (a V5 or V6 E), volts.
      A field nobody has picked is null, and every figure then shows its default drawing. */
+
+  /* thermostats and fuse (the Silvia: thermostats and safety): a boiler that heats and cools, the thermostats switching
+     it, and each part drawn in section. Each disc snaps open at its set point and closes again a few degrees cooler; a
+     stuck thermostat's contacts stay shut whatever its disc does. Machine time runs 8x real time while the figure is on
+     screen; with reduced motion each change jumps the boiler two minutes ahead instead. The figures are illustrative. */
+  (function(){
+    var fig=$('mini-tstat');if(!fig)return;
+    function K(k){return fig.querySelector('[data-k="'+k+'"]')}
+    var note=fig.querySelector('[data-ts-note]'),bSteam=fig.querySelector('[data-ts="steam"]'),bRe=fig.querySelector('[data-ts="restart"]'),bFix=fig.querySelector('[data-ts="fix"]'),fb=qa('[data-fault]',fig);
+    var SPEED=8,TAU=4,W=300,X1=350,SX=320/300,site='g',TH,P=1.35,KL=0.0022,gc=false;
+    var T,q,bD,sD,cut,steam=false,fault='none',hist,heatH,hold=0,held='',cycled=false;   /* cycled: the brew disc has snapped at least once since the start */
+    function Y(t){return 150-(t-20)*142/190}
+    function zig(x0,x1,y,n,amp){var w=(x1-x0)/n,p=[x0+','+y];for(var i=1;i<n;i++)p.push((x0+w*i).toFixed(1)+','+(i%2?y-amp:y+amp));p.push(x1+','+y);return p.join(' ')}
+    function conf(){
+      var m=PFM.get();site=m.site;TH=m.th;
+      if(site==='g'){P=m.model==='E24'?1.0:1.35;KL=0.0022;gc=m.fam==='GC';fig.classList.toggle('brass',m.model==='E24');fig.classList.toggle('gc',gc)}
+      else{P=m.volts===230?0.58:0.5;KL=0.0016;gc=false;fig.classList.add('brass','sil')}
+      var bs=K('b-sub');if(bs)bs.textContent='opens at '+TH.bo+' °C';
+      [['bo',TH.bo],['bc',TH.bc],['so',TH.so],['sc',TH.sc],['cut',TH.cut]].forEach(function(r){
+        var l=K('tg-'+r[0]),y=Y(r[1]).toFixed(1);l.setAttribute('y1',y);l.setAttribute('y2',y);
+        var t=K('tg-'+r[0]+'-t');if(t){t.setAttribute('y',(Y(r[1])-3).toFixed(1));t.textContent=t.textContent.replace(/ [\d.]+ °C$/,'')+' '+r[1]+' °C'}
+      });
+    }
+    function reset(){T=20;q=0;bD=false;sD=false;cut=false;hist=[];heatH=[];cycled=false}
+    /* contacts: a disc that hasn't snapped, or welded contacts, conduct. The steam switch is around the brew thermostat. */
+    function bCond(){return !bD||fault==='b'}
+    function sCond(){return !sD||fault==='s'}
+    function heating(){return !cut&&sCond()&&(bCond()||steam)}
+    function step(dt){
+      var on=heating();
+      q+=((on?P:0)-q)*Math.min(1,dt/TAU);      /* the elements stay hot for a moment after they switch off, so the boiler overshoots */
+      T+=(q-KL*(T-20))*dt;
+      if(!bD&&T>=TH.bo){bD=true;cycled=true}else if(bD&&T<=TH.bc)bD=false;
+      if(!sD&&T>=TH.so)sD=true;else if(sD&&T<=TH.sc)sD=false;
+      if(!cut&&T>=TH.cut)cut=true;
+    }
+    function sec(){step(0.5);step(0.5);hist.push(T);heatH.push(heating());if(hist.length>W+1){hist.shift();heatH.shift()}}
+    function advance(n){for(var i=0;i<n;i++)sec()}
+    function draw(f){
+      var n=hist.length,pts=[],hp='';f=f||0;
+      for(var i=0;i<n;i++){
+        var x=X1-(n-1-i+f)*SX;if(x<30)continue;
+        pts.push(x.toFixed(1)+','+Y(hist[i]).toFixed(1));
+        if(heatH[i]&&i<n-1)hp+='M'+x.toFixed(1)+',153h'+SX.toFixed(2)+'v4h-'+SX.toFixed(2)+'Z';
+      }
+      K('tg-trace').setAttribute('d',pts.length?'M'+pts.join(' L'):'');K('tg-heat').setAttribute('d',hp);
+      var dot=K('tg-now');if(n){dot.setAttribute('cx',(X1-f*SX).toFixed(1));dot.setAttribute('cy',Y(hist[n-1]).toFixed(1))}else{dot.setAttribute('cx','-10')}
+    }
+    function badge(k,txt,st){var b=K(k+'-badge');b.setAttribute('class','badge tb-badge '+st);K(k+'-btext').textContent=txt}
+    /* a thermostat: snapped discs push the pin up and the blade with it; a welded blade bows instead and the contacts stay shut */
+    function tstat(k,snap,stuck){
+      var bowed=snap&&stuck;
+      K(k+'-arm').setAttribute('transform',snap&&!stuck?'rotate(22 82 34)':'');
+      K(k+'-blade').setAttribute('d',bowed?'M82,34 Q66,26 54,44':'M82,34 L54,44');
+      K(k+'-pin').setAttribute('transform',snap?'translate(0 -7)':'');
+      K(k+'-disc').setAttribute('d',snap?'M20,66 Q55,56 90,66':'M20,64 Q55,72 90,64');
+      K(k+'-weld').classList.toggle('on',stuck);
+      badge(k,stuck?'STUCK SHUT':snap?'OPEN':'CLOSED',stuck?'bad':snap?'open':'closed');
+    }
+    function parts(){
+      tstat('b',bD,fault==='b');tstat('s',sD,fault==='s');
+      if(site==='g'){
+        /* melted: the pellet slumps to a puddle, the main spring relaxes into its space with nothing to push on, and the
+           small trip spring pushes the sliding contact back off the lead */
+        var pel=K('fz-pellet');pel.setAttribute('y',cut?'51':'34');pel.setAttribute('height',cut?'3':'20');pel.setAttribute('width',cut?'12':'11');
+        K('fz-star').setAttribute('transform',cut?'translate(-9 0)':'');
+        K('fz-spring').setAttribute('points',cut?zig(21,49,44,8,5):zig(32,58,44,8,7));
+        K('fz-trip').setAttribute('points',cut?zig(55,79,51,6,2.5):zig(64,79,51,6,2.5));
+        badge('cut',cut?'MELTED':'INTACT',cut?'bad':'closed');
+      }else{
+        tstat('cut',cut,false);K('cut-btn').setAttribute('transform',cut?'translate(0 -4)':'');
+        badge('cut',cut?'TRIPPED':'CLOSED',cut?'bad':'closed');
+      }
+      bFix.disabled=!cut;
+      fig.classList.toggle('cut',cut);
+    }
+    function noteFor(){
+      var g=site==='g',EL=g?'elements':'element',last=g?'fuse':'safety thermostat',on=heating(),sw=TH.so-TH.sc,bw=TH.bo-TH.bc;
+      if(cut)return g?'The fuse has melted at '+TH.cut+' °C and stays open for good. '+(gc?'It\'s in the neutral feed, so nothing works, power lamp included, but everything past the power switch is still at line voltage while it\'s plugged in.':'Nothing but the power lamp works.')+' Unplug it, replace what failed, then fit a new '+TH.cut+' °C fuse.'
+        :'The safety thermostat has tripped at '+TH.cut+' °C and stays open, so the element is off. Unplug it, let it cool and find the cause before pressing reset.';
+      if(fault==='s'&&steam)return 'The steam thermostat\'s contacts are welded shut, and the steam switch bypasses the brew thermostat, so nothing stops the '+EL+'. The '+last+' is the last line, at '+TH.cut+' °C.';
+      if(fault==='s'&&!on&&bD)return 'At brew temperature: the brew thermostat has snapped open. The stuck steam thermostat makes no difference until steam goes on.';
+      if(fault==='s')return 'Heating. The steam thermostat is stuck shut, but with steam off the brew thermostat still switches the '+EL+'. Switch steam on to see why the '+last+' is there.';
+      if(fault==='b'&&!steam&&sD&&!on)return 'Stuck at steam temperature: the steam thermostat is doing the brew thermostat\'s job. Shots come out far too hot, but nothing overheats.';
+      if(fault==='b'&&!steam&&T>TH.bo)return 'The brew thermostat\'s disc has snapped, but its contacts are welded shut, so heating runs on until the steam thermostat, in series with it, opens at '+TH.so+' °C.';
+      if(steam&&!on)return 'At steam temperature: the steam thermostat has snapped open. It closes again about '+sw+' °C cooler, so the boiler swings around it.';
+      if(steam&&T>=TH.bc)return 'Heating to steam temperature: the steam switch bypasses the brew thermostat, so it\'s the steam thermostat that switches the '+EL+' now.';
+      if(!on&&T>TH.bo+4)return 'Cooling back to brew temperature: the brew thermostat stays open until the boiler drops to '+TH.bc+' °C.';
+      if(!on)return 'At brew temperature: the brew thermostat has snapped open. It closes again about '+bw+' °C cooler, so the boiler swings up and down.';
+      if(cycled)return 'Heating again: the brew thermostat closed at '+TH.bc+' °C, so the '+EL+' '+(g?'are':'is')+' back on until it opens at '+TH.bo+' °C.';
+      return 'Heating: both thermostats are closed, so the '+EL+' '+(g?'are':'is')+' on.';
+    }
+    function say(force){if(hold>0&&!force){hold--;return}var t=held||noteFor();held='';if(t!==note.textContent)note.textContent=t}
+    function tell(t){held=t;hold=RM?0:40;say(true);held=''}
+    function refresh(){parts();say()}
+    function changed(){if(RM){advance(site==='g'?120:240);draw(0)}refresh()}
+    bSteam.addEventListener('click',function(){steam=!steam;bSteam.setAttribute('aria-pressed',String(steam));bSteam.textContent=steam?'Steam switch on':'Steam switch off';changed()});
+    bRe.addEventListener('click',function(){reset();if(RM)advance(300);draw(0);hold=0;refresh()});
+    fb.forEach(function(b){b.addEventListener('click',function(){fault=b.getAttribute('data-fault');fb.forEach(function(x){x.setAttribute('aria-pressed',String(x===b))});changed()})});
+    bFix.addEventListener('click',function(){
+      if(!cut)return;
+      /* it has to cool first: the Silvia's disc won't snap back while hot, and nobody should work on a hot Gaggia. With reduced
+         motion the wait is skipped ahead to; otherwise it's a few seconds of watching it cool. */
+      var pre='';
+      if(T>TH.cut-25){
+        if(!RM){tell(site==='g'?'Leave it unplugged to cool before working on it.':'It won\'t reset yet: the disc only snaps back once it has cooled. Leave it unplugged a while.');return}
+        var w=0;while(T>TH.cut-25&&w<900){sec();w++}pre='After it cooled: ';
+      }
+      cut=false;parts();
+      var name=fault==='b'?'brew':'steam',again=fault==='s'&&steam;
+      tell(pre+(site==='g'?'New fuse fitted.':'Reset.')+(again?' The steam thermostat is still stuck and steam is on, so it will '+(site==='g'?'melt':'trip')+' again: replace the stuck thermostat first.'
+        :fault!=='none'?' The '+name+' thermostat is still stuck shut and needs replacing: '+(fault==='b'?'shots will come out far too hot.':'with steam on, the boiler would run away again.'):''));
+      if(RM){advance(site==='g'?120:240);draw(0);parts()}
+    });
+    window.addEventListener(PFM.ev,function(){conf();draw(0);refresh()});
+    conf();reset();if(RM)advance(300);draw(0);refresh();
+    var acc=0,last=0;
+    onScreen(fig,function(ms){acc+=last?Math.min(250,ms-last)*SPEED/1000:0;last=ms;var n=0;while(acc>=1&&n<20){acc-=1;sec();n++}if(n){parts();say()}draw(acc)},function(){last=0});
+  })();
 
   /* portafilter: the handle angle drives the top view; the same turn slides the ear along the lug's ramp,
      which lifts the basket rim into the gasket (all in drawing units) */
