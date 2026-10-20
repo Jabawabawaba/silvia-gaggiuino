@@ -303,6 +303,10 @@
   })();
 
   /* ---------- the circuit ---------- */
+  /* what the part figures need to know about your Silvia */
+  var PFM={ev:'silvia-machine',get:function(){var m=window.SilviaMachine,p=(m&&m.get())||{},v=p.ver||null;return {site:'s',ver:v,e:(v==='V5'||v==='V6')&&p.model==='E',volts:p.volts||null}}};
+%%INCLUDE:learn-partfigs.js%%
+
 %%INCLUDE:learn-sim.js%%
 %%INCLUDE:learn-coach.js%%
 
