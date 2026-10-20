@@ -24,7 +24,7 @@
       {id:'p1g',t:'Warm the thermocouple',d:'Hold it in your hand. The temperature should rise; if it falls, swap the two thermocouple wires.',src:'Official',map:'run:LV10'},
       {id:'p1h',t:'Check the SSR light and pressure',d:'The SSR light is on below the setpoint and flashes near it. Pressure reads 0.0 bar and holds steady. The target is brew temperature, not steam.',src:'Official'},
       {id:'p1j',t:'Join it to your Wi-Fi',d:'Connect to the Gaggiuino AP (its password is the network name with a zero for the "o" and no space), open gaggiuino.local, then Settings, System, Connect, and pick a 2.4 GHz network.',src:'Official'},
-      {id:'p1i',t:'Match the firmware versions',d:'Settings, About: the core and screen build numbers match each other and the latest release. If not, update over the air from gaggiuino.local in this order: core, then ui-embedded, then ui-web. A PCB v4 core can also be flashed with the ST-Link, with the PCB\'s USB-C unplugged.',src:'Official'}
+      {id:'p1i',t:'Match the firmware versions',d:'Settings, About: the core and screen build numbers match each other and the latest release. If not, update over the air from gaggiuino.local in this order: core, then ui-embedded, then ui-web. A PCB v4 core can also be flashed with the ST-Link, with the PCB\'s USB-C unplugged.',link:['Part guide: firmware updates','gfw'],src:'Official'}
     ]},
     {id:'p2',n:'Phase 2',name:'Prep and harness',goal:'Strip the old wiring with a record of where it went, then build the new harness on the bench.',steps:[
       {id:'p2a',t:'Unplug and open the machine',d:'Cord out of the wall and the inlet. Remove the cup tray, top cover and whatever panels you need.',src:'Plan'},
@@ -46,7 +46,7 @@
       {id:'p3b',t:'Fit the pressure sensor',d:'On the tee and elbow you chose in Phase 0. Loctite 55 on the tee and elbow threads rather than PTFE tape, so they can be turned back to line up. The transducer seals on an O-ring, not its thread: press the flat white O-ring (about 11 mm across) flush into the elbow\'s 1/4" socket first, because the sensor\'s own base O-ring often can\'t reach the seat, then hand tight plus at most a quarter turn, never more. Keep the sensor off metal; a wrap of foam helps if readings are noisy.',src:'Discord',link:['Part guide: pressure sensor','gps'],map:[['Its cable on the wiring map','run:LV9']]},
       {id:'p3c',t:'Mount the SSR on the left wall',d:'One screw, washers and a nut through a drilled hole, or a small bracket, clear of the pump.',src:'Discord',link:['Part guide: SSR','gssr'],map:'part:ssr'},
       {id:'p3d',t:'Mount the PCB',d:'In its housing, to the right of the 3-way valve or beside the pump. Thin velcro strips hold it.',src:'Discord',map:'part:pcb'},
-      {id:'p3e',t:'Fit the screen housing and mount',d:'Pass the cable through the vent inside an unshrunk heat-shrink sleeve so the sharp edge can\'t cut it.',src:'Official',map:'run:LV11'}
+      {id:'p3e',t:'Fit the screen housing and mount',d:'Pass the cable through the vent inside an unshrunk heat-shrink sleeve so the sharp edge can\'t cut it.',link:['Part guide: screen housing','gscr'],src:'Official',map:'run:LV11'}
     ]},
     {id:'p4',n:'Phase 4',name:'Wire and check',goal:'Fit the harness run by run, then prove it with the meter before the cord goes anywhere near the wall.',steps:[
       {id:'p4a',t:'Fit the mains harness',d:'Run by run, against the wiring reference and realNiche\'s diagram. Inlet to the power switch\'s outer spades, loads from its center spades.',src:'Discord',link:['Wiring reference','wiring'],map:[['Every run on the wiring map','']]},
@@ -70,8 +70,8 @@
     ]},
     {id:'p6',n:'Phase 6',name:'Calibrate',goal:'Tune Gaggiuino to this pump and boiler.',steps:[
       {id:'p6a',t:'Run [UT] PZ Cal',d:'Calibrates Pump Zero, the water moved per pump pulse at 0 bar. Follow the profile\'s own instructions.',src:'Official'},
-      {id:'p6b',t:'Calibrate hardware scales, if fitted',d:'In the web UI, with a 200 to 400 g object.',src:'Official'},
-      {id:'p6c',t:'Set the ToF ranges, if fitted',d:'For the Silvia\'s deeper tank, about 200 mm, then check at known fill levels.',src:'Discord'},
+      {id:'p6b',t:'Calibrate hardware scales, if fitted',d:'In the web UI, with a 200 to 400 g object.',link:['Part guide: hardware scales','gscl'],src:'Official'},
+      {id:'p6c',t:'Set the ToF ranges, if fitted',d:'For the Silvia\'s deeper tank, about 200 mm, then check at known fill levels.',link:['Part guide: ToFnLED','gtof'],src:'Discord'},
       {id:'p6d',t:'Temperature offset, only against a real measurement',d:'Change it only if you can measure at the group head, for example with a Scace-type device.',src:'Official'},
       {id:'p6e',t:'Set Steam Temperature (max steam) to 150 °C',d:'The steam thermostat is off the heater line now, even if it\'s still on the boiler, so this setting and the 165 °C safety thermostat are the only limits.',src:'Discord'}
     ]},

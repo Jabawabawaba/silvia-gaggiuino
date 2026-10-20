@@ -18,6 +18,15 @@
 
 %%INCLUDE:part-guides-data.js%%
 
+  /* official photo links: one URL, or a list of URLs (or [url, when]) shown as numbered links */
+  function phHtml(ph,lab){
+    if(!ph)return '';
+    if(!Array.isArray(ph))return '<a href="'+ph+'" target="_blank" rel="noopener">'+lab+'</a>';
+    var L=ph.filter(function(x){return typeof x==='string'||m(x[1])}).map(function(x){return typeof x==='string'?x:x[0]});
+    if(!L.length)return '';
+    if(L.length===1)return '<a href="'+L[0]+'" target="_blank" rel="noopener">Official photo</a>';
+    return 'Official photos: '+L.map(function(u,i){return '<a href="'+u+'" target="_blank" rel="noopener">'+(i+1)+'</a>'}).join(', ');
+  }
   /* ---------------- engine ---------------- */
   function num(v,d){return v==null?d:v}
   function tf(s){return 'translate('+num(s.x,0)+'px,'+num(s.y,0)+'px) rotate('+num(s.r,0)+'deg) scale('+num(s.sx,num(s.s,1))+','+num(s.sy,num(s.s,1))+')'}
@@ -54,9 +63,11 @@
     Array.prototype.forEach.call((this.root.closest('section')||this.root).querySelectorAll('[data-pv]'),function(e){e.hidden=e.getAttribute('data-pv').split(',').indexOf(v)<0});
     /* drawing pieces for some Silvias only (the E's push button, the V5 and V6 insulation) */
     Array.prototype.forEach.call(this.svg.querySelectorAll('[data-when]'),function(e){e.style.display=m(e.getAttribute('data-when'))?'':'none'});
+    /* drawing pieces for one variant of a guide */
+    Array.prototype.forEach.call(this.svg.querySelectorAll('[data-v]'),function(e){e.style.display=(d.vars&&e.getAttribute('data-v')===v)?'':'none'});
     /* pieces */
     this.el={};
-    function hiddenV(e){for(var p=e;p&&p!==self.svg;p=p.parentNode){if(p.getAttribute&&p.hasAttribute('data-when')&&p.style.display==='none')return true}return false}
+    function hiddenV(e){for(var p=e;p&&p!==self.svg;p=p.parentNode){if(p.getAttribute&&(p.hasAttribute('data-when')||p.hasAttribute('data-v'))&&p.style.display==='none')return true}return false}
     Array.prototype.forEach.call(this.svg.querySelectorAll('[data-k]'),function(e){
       var k=e.getAttribute('data-k');
       if(hiddenV(e)&&self.el[k])return;
@@ -133,7 +144,7 @@
   Guide.prototype.renderList=function(){
     var self=this,n=this.steps.length;
     this.list.innerHTML=this.steps.map(function(s,i){
-      var ph=s.ph,phl='Photo';
+      var pht=phHtml(s.ph,'Official photo');
       var chk=(s.chk||[]).map(function(c){return '<a href="power-on-checks.html#'+c[0]+'">'+c[0]+' '+esc(c[1])+'</a>'}).join(' · ');
       var lk=(s.links||[]).map(function(l){return '<a href="'+l[1]+'">'+esc(l[0])+'</a>'}).join(' · ');
       if(lk)chk=chk?chk+' · '+lk:lk;
@@ -141,7 +152,7 @@
       var ml=(s.map==null?[]:typeof s.map==='string'?[['On the wiring map',s.map]]:s.map).filter(function(x){return m(x[2])}).map(function(x){var o={};if(x[3])o.label=x[3];return '<a class="pg-map" href="'+mapHref(x[1],o)+'">'+esc(x[0])+'</a>'}).join(' · ');
       if(ml)chk=chk?chk+' · '+ml:ml;
       return '<li data-n="'+(i+1)+'"><button type="button" class="pg-sb" data-i="'+i+'"><span class="pg-n">'+(i+1)+'</span><span class="pg-t">'+esc(s.t)+'</span></button>'
-        +'<p>'+esc(T(s.d))+'</p>'+((ph||chk)?'<p class="pg-links">'+(ph?'<a href="'+ph+'" target="_blank" rel="noopener">'+phl+'</a>':'')+(ph&&chk?' · ':'')+(chk?((s.chk&&s.chk.length)?'Check: ':'')+chk:'')+'</p>':'')+'</li>';
+        +'<p>'+esc(T(s.d))+'</p>'+((pht||chk)?'<p class="pg-links">'+pht+(pht&&chk?' · ':'')+(chk?((s.chk&&s.chk.length)?'Check: ':'')+chk:'')+'</p>':'')+'</li>';
     }).join('');
     this.n=n;
   };
@@ -160,14 +171,18 @@
       ps:['On a 1/8" tee at the OPV, through an elbow that keeps it clear of the steam pipes. Some builds use the 3-way valve\'s bottom port instead (Talon\'s does); both work, and the OPV tee has an exact parts list.'],
       wire:['Every run of realNiche\'s harness, mains and low voltage. Ends at the boiler, the safety thermostat and the solenoid get bare spades under silicone tape.'],
       ssr:['On the left wall inside the machine, clear of the pump. It switches the element; the PCB drives it from J9.'],
-      sw:['Brew, steam and hot water become low-voltage inputs to the PCB; the power switch stays on mains. The same on every Silvia.',['The E needs a latching rocker first.','model:E']]};
+      sw:['Brew, steam and hot water become low-voltage inputs to the PCB; the power switch stays on mains. The same on every Silvia.',['The E needs a latching rocker first.','model:E']],
+      scr:['On top of or in front of the machine, on the mount you print or order; its cable runs inside to J1.'],
+      tof:['Above the water tank, under the lid, on its cable from J2 on the back of the PCB.'],
+      fw:['Over Wi-Fi from a phone or computer, with the machine closed up; by wire only as a fallback.'],
+      scl:['Under the drip tray, on a load cell mount made for the Silvia, with the boards and the cable to J8 inside.']};
     for(var k in w){var e=$('pg-'+k+'-where');if(e)e.textContent=T(w[k])}
   }
 
   var guides={};
   function init(){
     where();
-    ['tc','ps','wire','ssr','sw'].forEach(function(k){guides[k]=new Guide(k,G[k])});
+    ['tc','ps','wire','ssr','sw','scr','tof','fw','scl'].forEach(function(k){guides[k]=new Guide(k,G[k])});
     window.addEventListener('silvia-machine',function(){where();for(var k in guides)if(guides[k].root)guides[k].setup(false)});
     window.addEventListener('hashchange',fromHash);fromHash();
   }

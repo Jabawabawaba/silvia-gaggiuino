@@ -67,6 +67,7 @@ DEFS = """<svg class="pg-defs" width="0" height="0" aria-hidden="true" focusable
 <linearGradient id="pg-copper" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#EDB081"/><stop offset=".5" stop-color="#C77A45"/><stop offset="1" stop-color="#94532A"/></linearGradient>
 <linearGradient id="pg-steel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#EEF1F3"/><stop offset=".5" stop-color="#C3CAD0"/><stop offset="1" stop-color="#959EA6"/></linearGradient>
 <linearGradient id="pg-steelh" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#9AA3AB"/><stop offset=".35" stop-color="#EEF1F3"/><stop offset="1" stop-color="#A3ACB4"/></linearGradient>
+<linearGradient id="pg-hue" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF3B30"/><stop offset=".2" stop-color="#FFCC00"/><stop offset=".4" stop-color="#34C759"/><stop offset=".6" stop-color="#32ADE6"/><stop offset=".8" stop-color="#5856D6"/><stop offset="1" stop-color="#FF2D55"/></linearGradient>
 <pattern id="pg-hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="7" stroke="#8D959C" stroke-width="1.2" opacity=".55"/></pattern>
 <pattern id="pg-keep" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)"><line x1="0" y1="0" x2="0" y2="8" stroke="#B13A2F" stroke-width="1.4" opacity=".35"/></pattern>
 </defs></svg>"""

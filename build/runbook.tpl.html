@@ -184,7 +184,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
 
 <script>
 (function(){
-  var L={wiring:'%%LINK_WIRING%%',labels:'%%LINK_LABELS%%',checks:'%%LINK_CHECKS%%',led:'%%LINK_LED%%',which:'%%LINK_WHICH%%',cut:'%%LINK_CUTLIST%%',trouble:'%%LINK_TROUBLE%%',gtc:'%%LINK_GUIDES%%#tc',gps:'%%LINK_GUIDES%%#ps',gwire:'%%LINK_GUIDES%%#wire',gssr:'%%LINK_GUIDES%%#ssr',gsw:'%%LINK_GUIDES%%#sw'};
+  var L={wiring:'%%LINK_WIRING%%',labels:'%%LINK_LABELS%%',checks:'%%LINK_CHECKS%%',led:'%%LINK_LED%%',which:'%%LINK_WHICH%%',cut:'%%LINK_CUTLIST%%',trouble:'%%LINK_TROUBLE%%',gtc:'%%LINK_GUIDES%%#tc',gps:'%%LINK_GUIDES%%#ps',gwire:'%%LINK_GUIDES%%#wire',gssr:'%%LINK_GUIDES%%#ssr',gsw:'%%LINK_GUIDES%%#sw',gscr:'%%LINK_GUIDES%%#scr',gtof:'%%LINK_GUIDES%%#tof',gfw:'%%LINK_GUIDES%%#fw',gscl:'%%LINK_GUIDES%%#scl'};
 %%INCLUDE:runbook-phases.js%%
   var SETTINGS=[['DreamSteam','Off','Settings, Boiler'],['Brew Delta','Off','Settings, Boiler'],['Temperature Offset','5','Settings, Boiler'],['HPWR','100','Boiler, Advanced'],['Main Divider','5','Boiler, Advanced'],['Brew Divider','3','Boiler, Advanced']];
   var ALL=[];PHASES.forEach(function(p,i){p.steps.forEach(function(s){s.phase=i;ALL.push(s)})});

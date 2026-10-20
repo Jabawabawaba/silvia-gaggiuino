@@ -223,6 +223,14 @@ IMGS = {
     "schGCP": (OFF + "schematics/custom-3pln/GCP_wiring_PCBv3_1_120v.png", "the official Gaggia Classic Pro 120 V custom wiring schematic", "Custom wiring"),
     "pumpStGC": ("https://user-images.githubusercontent.com/117388662/239372268-1605be4b-5a0c-414d-bdc2-3524ef26b11e.png", "a Gaggia Classic's pump with its stock connections", "Stock wiring integration"),
     "pumpStGCP": ("https://user-images.githubusercontent.com/117388662/243792655-6a186fde-062c-4f2d-b3ed-cba5d3b0c6c8.png", "a Gaggia Classic Pro's pump with its stock connections", "Stock wiring integration"),
+    "lvsch": (OFF + "schematics/stm32-lv/GCP_wiring_PCBv3_1_LV.png", "the official Gaggia Classic Pro low-voltage-only wiring diagram", "Headless interface"),
+    "sisch": (OFF + "schematics/install-stock-3pln/GCP_SI_wiring_PCBv3_1_120v.png", "the official Gaggia Classic Pro 120 V stock integration diagram", "Stock wiring integration"),
+    "headless": (OFF + "media/headless.png", "the headless module, with its ESP32-S3-WROOM-1 board visible", "Headless interface"),
+    "ledset": (OFF + "manual/gen3/mbed/003_005_settings_led.png", "LED settings on the screen", "Gen 3 user manual"),
+    "ssrGC": ("https://user-images.githubusercontent.com/117388662/239403962-c0ef2429-ec12-4d81-b56b-02c91cd702d3.png", "an SSR mounted in a Gaggia Classic, with its connections", "Stock wiring integration"),
+    "ssrGCP": ("https://user-images.githubusercontent.com/117388662/246569790-dfc78317-caef-4bba-a528-466affb516b1.png", "an SSR in a Gaggia Classic Pro, wired up", "Stock wiring integration"),
+    "bench": ("https://github.com/user-attachments/assets/5ea67541-0cf4-4064-9f87-19ad900bef8b", "the PCB on the bench, wired to the screen, SSR and sensors", "PCB guide"),
+    "foam": ("https://user-images.githubusercontent.com/117388662/239457402-b58dfe55-6572-45b7-8960-2a4d1f9d5753.png", "the pressure sensor wrapped in foam", "Custom wiring"),
 }
 
 # glossary term -> official images, most useful first
@@ -230,7 +238,7 @@ IMG_MAP = {
     'AP': ['ap'],
     'CLK': ['labels'],
     'D1, D2': ['labels'],
-    'ESP32, ESP32-S3': ['screen'],
+    'ESP32, ESP32-S3': ['screen', 'headless'],
     'G1/4': ['xdGC', 'xdGCP'],
     'GC, GCP': ['openGC', 'openGCP'],
     'GND': ['labels'],
@@ -243,11 +251,11 @@ IMG_MAP = {
     'JST': ['labels', 'connectors'],
     'K-type': ['tcinst'],
     'OTA': ['ota'],
-    'PCB': ['pcbcase', 'labels'],
+    'PCB': ['pcbcase', 'labels', 'bench'],
     'PZ': ['system'],
     'Qwiic, I2C': ['qwiic', 'labels'],
     'RX, TX': ['labels'],
-    'SSR': ['ssrinst'],
+    'SSR': ['ssrinst', 'ssrGCP'],
     'ST-Link': ['debugger'],
     'SWD': ['labels', 'debugger'],
     'ToF': ['tofcone', 'tofnled'],
@@ -270,13 +278,14 @@ IMG_MAP = {
     'Thermal fuse': ['pumpfuse'],
     'Thermocouple': ['tcinst', 'j4fold'],
     'Thermostat': ['boilertop'],
-    'Transducer': ['xdGC', 'xdGCP'],
+    'Transducer': ['xdGC', 'xdGCP', 'foam'],
     'Vibratory pump': ['pumpStGCP', 'pumpStGC'],
     'Butt splice': ['connectors', 'openbarrel'],
     'BN1.25': ['connectors', 'openbarrel'],
     'PSU': ['pcbcase'],
     'MPa': ['schGCP'],
     'Ungrounded thermocouple': ['schGCP'],
+    'HV, LV': ['schGCP', 'lvsch'],
 }
 
 

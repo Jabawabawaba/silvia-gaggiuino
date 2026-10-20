@@ -209,3 +209,73 @@
 .pg-fig .tapel{fill:none;stroke:#B13A2F;stroke-width:1.2;opacity:.6}
 .pg-fig .mkt{font:700 10px var(--f-mono);fill:#FFFFFF}
 .pg-fig .pbtn{fill:#2B3036;stroke:#0E1012;stroke-width:1.2}
+/* screen, ToFnLED, firmware and scales drawings */
+.pg-fig .pla{fill:#3A3F45;stroke:#15181B;stroke-width:1.2}
+.pg-fig .pla2{fill:#5A6068;stroke:#23272C;stroke-width:1.1}
+.pg-fig .glass{fill:#1B2836;stroke:#0E1012;stroke-width:1}
+.pg-fig .uiln{fill:none;stroke:#F2A33A;stroke-width:2;stroke-linecap:round}
+.pg-fig .post{fill:#7E878E;stroke:#23272C;stroke-width:1}
+.pg-fig .nail{fill:#23272C}
+.pg-fig .pocket{fill:#23272C;stroke:#7E878E;stroke-width:1}
+.pg-fig .clip{fill:#7E878E;stroke:#23272C;stroke-width:1}
+.pg-fig .magnet{fill:#C3CAD0;stroke:#3E454C;stroke-width:1.2}
+.pg-fig .latch{fill:#D98400;stroke:#7A4A00;stroke-width:1}
+.pg-fig .kapton{fill:#E8A33A;opacity:.75;stroke:#A86C12;stroke-width:1}
+.pg-fig .divider{fill:none;stroke:var(--line);stroke-width:1.2;stroke-dasharray:4 4}
+.pg-fig .tankw{fill:#EAF3F9;opacity:.6;stroke:#7FA6C2;stroke-width:1.6}
+.pg-fig .wfill2{fill:#7FBDEB;opacity:.55}
+.pg-fig .sheet{fill:none;stroke:#8D959C;stroke-width:3;stroke-linecap:round}
+.pg-fig .glowc{fill:#7A5CFF;opacity:.16}
+.pg-fig .cone{fill:var(--accent);opacity:.18;stroke:var(--accent);stroke-width:1.2;stroke-dasharray:5 4}
+.pg-fig .vcut{fill:none;stroke:#C8392C;stroke-width:1.8;stroke-linejoin:round}
+.pg-fig .matte{fill:#2B3036;stroke:#0E1012;stroke-width:1}
+.pg-fig .sens{fill:#14181D;stroke:#000;stroke-width:1}
+.pg-fig .film{fill:#FFFFFF;opacity:.7;stroke:#8E969E;stroke-width:1}
+.pg-fig .qwiic{fill:none;stroke:#5A6BD8;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.pg-fig .pcbback{fill:url(#pg-hatch);opacity:.5}
+.pg-fig .lcdt2{font:600 19px var(--f-mono);fill:#F2A33A}
+.pg-fig .hue{fill:none;stroke:url(#pg-hue);stroke-width:12}
+.pg-fig .wallbgc{fill:var(--surface)}
+.pg-fig .uit{font:500 11px var(--f-mono);fill:#DDE6EE}
+.pg-fig .uit2{font:500 10px var(--f-mono);fill:#2B3036}
+.pg-fig .uit2b{font:700 10.5px var(--f-mono);fill:#2B3036}
+.pg-fig .uit3{font:700 8.5px var(--f-mono);fill:#FFFFFF}
+.pg-fig .blank{fill:#000}
+.pg-fig .blank+text{fill:#8E969E}
+.pg-fig .lapb{fill:#3E454C;stroke:#14181D;stroke-width:1.2}
+.pg-fig .scrn{fill:#F7F8F9}
+.pg-fig .lapk{fill:#8E969E;stroke:#3E454C;stroke-width:1}
+.pg-fig .urlb{fill:#E6EAED;stroke:#B9C0C6;stroke-width:1}
+.pg-fig .radio{fill:#FFFFFF;stroke:#59616A;stroke-width:1.2}
+.pg-fig .radioon{fill:#E2531F}
+.pg-fig .btnu{fill:#E2531F}
+.pg-fig .barbg{fill:#DDE1E4}
+.pg-fig .barf{fill:#2D7A4C}
+.pg-fig .relb{fill:var(--surface);stroke:var(--line);stroke-width:1.2}
+.pg-fig .file{fill:#FFF6C9;stroke:#9A7B1C;stroke-width:1}
+.pg-fig .chk{fill:#FFFFFF;stroke:#59616A;stroke-width:1.1}
+.pg-fig .tickp{fill:none;stroke:#2D7A4C;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.pg-fig .dbgb{fill:#6B3FA0;stroke:#3F2470;stroke-width:1.2}
+.pg-fig .usbp{fill:#C3CAD0;stroke:#59616A;stroke-width:1}
+.pg-fig .hdr{fill:#14181D}
+.pg-fig .dupont{fill:none;stroke-width:2.6;stroke-linecap:round}
+.pg-fig .dupont.w3v{stroke:#D64534}.pg-fig .dupont.wio{stroke:#2F6FC0}.pg-fig .dupont.wck{stroke:#E0B020}.pg-fig .dupont.wgd{stroke:#2B3036}
+.pg-fig .usbc{fill:#C3CAD0;stroke:#59616A;stroke-width:1}
+.pg-fig .plugb{fill:#2B3036;stroke:#0E1012;stroke-width:1}
+.pg-fig .screwm{fill:#7E878E;stroke:#23272C;stroke-width:1.1}
+.pg-fig .hxb{fill:#7046B8;stroke:#3F2470;stroke-width:1.1}
+.pg-fig .stripb{fill:url(#pg-copper);stroke:#6B3A18;stroke-width:1}
+.pg-fig .pinrow{fill:none;stroke:#C9A43A;stroke-width:2}
+.pg-fig .resb{fill:#C9B28A;stroke:#6E5420;stroke-width:1}
+.pg-fig .lcwL,.pg-fig .lcwR{fill:none;stroke:#C8392C;stroke-width:2.4;stroke-linecap:round}
+.pg-fig .trayb{fill:#2B3036;opacity:.55;stroke:#0E1012;stroke-width:1.5}
+.pg-fig .trayb+text{fill:#F2F5F3}
+.pg-fig text.halo{paint-order:stroke;stroke:var(--surface);stroke-width:3.5px;stroke-linejoin:round}
+.pg-fig .tamper{fill:url(#pg-steel);stroke:#3E454C;stroke-width:1.2}
+.pg-fig .wifi path{fill:none;stroke:var(--accent);stroke-width:2.4;stroke-linecap:round;animation:pgwifi 1.4s ease-in-out infinite}
+.pg-fig .wifi .w2{animation-delay:.2s}
+.pg-fig .wifi .w3{animation-delay:.4s}
+@keyframes pgwifi{0%,100%{opacity:.2}50%{opacity:1}}
+@media (prefers-reduced-motion: reduce){.pg-fig .wifi path{animation:none;opacity:.8}}
+.pg-group{font:700 clamp(24px,3.4vw,32px)/1.1 var(--f-display);text-transform:uppercase;letter-spacing:.02em;margin:36px 0 4px;padding-top:18px;border-top:3px solid var(--ink)}
+.pg-gnote{margin:0 0 8px;color:var(--muted);font-size:15.5px;max-width:75ch}

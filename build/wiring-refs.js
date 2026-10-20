@@ -24,7 +24,7 @@
     })();
     var CKT=%%CHECK_INDEX%%;
     var LINK={runbook:'%%LINK_RUNBOOK%%',checks:'%%LINK_CHECKS%%',trouble:'%%LINK_TROUBLE%%',led:'%%LINK_LED%%',guides:'%%LINK_GUIDES%%'};
-    var GNAME={tc:'Thermocouple',ps:'Pressure sensor',wire:'Making the wires',ssr:'SSR',sw:'Switches'};
+    var GNAME={tc:'Thermocouple',ps:'Pressure sensor',wire:'Making the wires',ssr:'SSR',sw:'Switches',scr:'Screen housing',tof:'ToFnLED',fw:'Firmware updates',scl:'Hardware scales'};
     /* cables that come with their parts: nothing to make */
     var MADE=['LV9','LV10','LV11','OP1','OP2'];
     /* the LED switch mod's own wiring step: the switch signal and ground runs, and the LED runs */
@@ -66,7 +66,7 @@
       var pg=[],wired=false;
       Object.keys(GNAME).forEach(function(k){
         var d=PGD[k];if(!d)return;
-        var shown=(d.steps.all||[]).filter(function(s){return ok(s.when)}),at=-1;
+        var shown=(d.steps.all||(d.vars?d.steps[d.def()]:[])||[]).filter(function(s){return ok(s.when)}),at=-1;
         /* a step that names the pick itself beats one that only covers it through a part */
         for(var i=0;i<shown.length&&at<0;i++)if(hitDirect(shown[i].map,sel,c))at=i;
         /* otherwise the first step that covers it; for a part, the one that covers most of the runs landing on it */
