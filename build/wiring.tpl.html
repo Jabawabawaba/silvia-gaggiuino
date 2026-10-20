@@ -140,6 +140,13 @@ figcaption{font-size:14px;color:var(--muted);margin-top:8px;max-width:90ch}
 
 .detail{margin-top:14px;border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:10px;background:var(--surface);padding:14px 16px;display:grid;gap:10px}
 .detail.empty{border-left-color:var(--line)}
+/* back-links under the detail card */
+.detail .d-refs{border-top:1px solid var(--line);padding-top:10px;display:grid;gap:6px}
+.detail .d-refs ul{margin:0;padding:0;list-style:none;display:grid;gap:6px}
+.detail .d-refs li{font-size:15px;line-height:1.45}
+.detail .d-refs .rg{font:600 11px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-right:10px}
+.detail .d-refs .sep{color:var(--muted)}
+.detail .d-refs a{color:var(--accent-ink)}
 .d-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px}
 .d-id{font:700 22px/1 var(--f-mono)}
 .d-route{font-size:17px;font-weight:600}
@@ -291,6 +298,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
 
 <script>
 (function(){
+%%INCLUDE:wiring-refs.js%%
   var RUNS=%%RUNS%%;
   var SYS=%%SYS%%;
   var CONN=%%CONN%%;
@@ -362,7 +370,16 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     else ms.textContent='';
     renderDetail();
   }
+  /* the card, then the back-links: where else the site covers what's picked (wiring-refs.js) */
+  /* the sensor and screen cables come with their parts: a link to the boiler or another part isn't about them */
+  var SENSOR=['LV9','LV10','LV11'];
   function renderDetail(){
+    renderDetail0();
+    var pickd=sel?{t:'run',id:sel}:selSet?{t:'set',ids:selSet}:selPart?{t:'part',id:selPart}:null;if(!pickd)return;
+    var c={runs:RUNS,hasRun:function(id){return !!byId[id]},hasPart:function(id){return !!PARTN[id]},landing:function(p){return Object.keys(ENDS).filter(function(id){return ENDS[id].indexOf(p)>=0&&SENSOR.indexOf(id)<0})}};
+    var h=REFS.html(pickd,c);if(h)$('detail').insertAdjacentHTML('beforeend',h);
+  }
+  function renderDetail0(){
     var d=$('detail');
     if(selSet&&!sel){
       d.className='detail';d.style.borderLeftColor='var(--accent)';

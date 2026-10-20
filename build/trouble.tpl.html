@@ -17,7 +17,8 @@
 .count{font:500 13px var(--f-mono);color:var(--muted)}
 .linkbtn{appearance:none;border:0;background:none;padding:4px 0;font:500 14px var(--f-body);color:var(--accent-ink);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
 .cat-h{font:600 12px var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:26px 0 6px;padding-bottom:6px;border-bottom:2px solid var(--ink)}
-details.tb{border-bottom:1px solid var(--line);padding:0}
+details.tb{border-bottom:1px solid var(--line);padding:0;scroll-margin-top:12px}
+details.tb.hit>summary{background:var(--accent-soft)}
 details.tb>summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 14px;padding:14px 4px 14px 14px;border-left:3px solid var(--line)}
 details.tb>summary::-webkit-details-marker{display:none}
 details.tb.danger>summary{border-left-color:var(--bad)}
@@ -70,98 +71,9 @@ details.tb.danger .tb-body{border-left-color:var(--bad)}
 <script>
 (function(){
   var CATS=[['power','Power and trips'],['screen','Screen and Wi-Fi'],['heat','Temperature and heating'],['pressure','Pressure, pump and water'],['switch','Switches and lights'],['fw','Firmware'],['extras','Scales and tank']];
-  var T=[
-    {c:'power',d:1,s:'The breaker or {gfci} trips when you plug in or switch on',
-     causes:['Line or neutral touching earth: a bare spade, or a wire pinched against the frame.','The element leaking to its sheath.','Water on the wiring, often from a leak above.'],
-     check:['Leave it unplugged; don\'t keep resetting the breaker.','With the covers on, rerun [h3] and [h4]. Then open it up and rerun [d1], [d2], [d5], [d6] and [c2].','Look for wet or crushed insulation near the boiler, the valve and under the drip tray.'],src:'Official grounding guide · meter checks'},
-    {c:'power',s:'Nothing happens when you switch on',map:[['The power path on the wiring map','runs:AC1,AC3,AC4,AC2,AC8,AC10,AC11,AC12',null,'Line and neutral to the PCB']],
-     causes:['No supply getting through the power switch: inlet leads loose or on the wrong spades.','E model: the push-button power switch doesn\'t latch without its energy-saver module.','The cord or the outlet.'],
-     check:['Unplugged, switch on and rerun [e1] and [e2]; switch off and rerun [e9] and [e10].','On an E, fit a latching double-pole switch; see the runbook\'s Phase 2.','Try the cord on another appliance.'],src:'Meter checks · Auber Silvia E note'},
-    {c:'power',w:'model:E',s:'It turns itself off after about 30 minutes',
-     causes:['The E\'s energy-saver module is still in the circuit.'],
-     check:['The custom harness leaves the module out entirely. Trace the power switch: inlet to its outer spades, loads from its center spades, nothing to the module.'],src:'Wikipedia · Auber Silvia E note'},
-    {c:'screen',s:'The screen stays black',map:'run:LV11',
-     causes:['The J1 cable wired by color rather than by pin; blue and yellow vary between cable revisions.','The cable not fully seated at either end.','No power to the PCB: USB-C on the bench, mains in the machine.'],
-     check:['Check J1 pin by pin: GND, TX, RX, 5V.','Don\'t take a pre-made cable apart; reseat it.','On the bench, power from the PCB\'s USB-C and try again.'],src:'Official PCB guide'},
-    {c:'screen',s:'"Initialization in progress" never clears',map:'run:LV11',
-     causes:['The screen and PCB aren\'t talking: TX and RX crossed wrong on J1.','The core and screen firmware are from different releases.'],
-     check:['Check J1 by pin against the PCB order.','Bring both to the same release: core first, then ui-embedded, then ui-web. The core can also be flashed with the ST-Link.'],src:'Official PCB guide · MCU flashing'},
-    {c:'screen',s:'You can\'t find the Gaggiuino network or gaggiuino.local',
-     causes:['The access point can show up as ESP_xxxxxx at first instead of Gaggiuino AP.','Your Wi-Fi is 5 GHz only; Gaggiuino joins 2.4 GHz networks.','Some phones and browsers don\'t open .local addresses.'],
-     check:['Join the access point; its password is the network name with a zero for the "o" and no space.','In Settings, System, Connect, pick a 2.4 GHz network.','Find the machine\'s address in your router\'s device list and open that instead.'],src:'Official Gen 3 manual'},
-    {c:'heat',d:1,s:'The temperature falls while the element heats',map:'run:LV10',
-     causes:['The thermocouple is reversed at J4. The controller sees a falling temperature and may keep heating. The public Gen 2 firmware cuts the heater once the reading reaches 0 °C; Gen 3\'s behavior isn\'t published, and the 165 °C safety thermostat is the last line.'],
-     check:['Switch off and unplug now.','Swap the two thermocouple wires at J4, folding the bare ends over again.','Retest on the bench: warm the thermocouple in your hand and the reading must rise.'],src:'Official PCB guide · review of these pages'},
-    {c:'heat',s:'The temperature reading is jumpy, stuck or far off',map:'run:LV10',
-     causes:['Insulation clamped in J4 instead of bare wire.','A grounded thermocouple, or earth touching the 5 V ground. The DC side has to float.','A broken thermocouple or lead.','The lead routed alongside mains wires.'],
-     check:['Refit J4 with the bare wire folded over and no insulation in the clamp.','Rerun [b5], [b6] and [c7].','Route the lead around the front of the boiler, away from mains runs.'],src:'Official PCB and grounding guides'},
-    {c:'heat',s:'The SSR light comes on but the boiler doesn\'t heat',map:[['The heater path on the wiring map','runs:AC3,AC5,AC6,AC9',null,'The heater path']],
-     causes:['The safety thermostat has tripped. It has a reset button on top.','A break in the heater line: [AC5], the safety thermostat, [AC6].','The element\'s neutral open: [AC9].','An open element.','The SSR failed open: its light comes on but it never switches the load.'],
-     check:['Unplugged, take the top off and press the reset button. If it clicks, it had tripped; find out why before using it.','Rerun [c1], [c3], [e3] and [e4].','If every check passes, replace the SSR.'],src:'Clive Coffee · meter checks'},
-    {c:'heat',s:'The SSR light never comes on',map:[['On the wiring map','runs:LV7,LV8',null,'SSR control wires']],
-     causes:['SSR control reversed or open: J9 R1 to SSR +, J9 GND to SSR −.','The temperature is already above the target.'],
-     check:['Rerun [f7] and [f8]; check [LV7] and [LV8].','Read the temperature on the screen before chasing wiring.'],src:'realNiche diagram · official LV schematic'},
-    {c:'heat',d:1,s:'It keeps heating past the target',map:'part:ssr',
-     causes:['A reversed thermocouple (see above), or one loose and out of contact so the reading lags.','The SSR failed closed.','The element wired around the SSR.'],
-     check:['Switch off and unplug.','Rerun [d7]: with the switch on, L to N must not read near the element\'s resistance.','Check [AC3], [AC4] and [AC5] at the SSR against the wiring reference.'],src:'Meter checks'},
-    {c:'heat',d:1,s:'The safety thermostat keeps tripping',map:[['On the wiring map','runs:AC5,AC6',null,'The safety thermostat\'s runs']],
-     causes:['The boiler heated dry or half empty. After it\'s been drained, fill it through the wand before it heats: steam knob open, Flush until water runs steadily from the wand.','Overshoot from a reversed or loose thermocouple.','A steam target set too high. The steam thermostat is off the heater line after the conversion, so only the firmware setting keeps steam below the 165 °C safety.'],
-     check:['Don\'t bridge it. Fix the cause, then reset it.','Keep max steam at 150 °C.','Check the thermocouple is finger tight with paste under it.'],src:'Official Gen 3 manual · Discord'},
-    {c:'heat',s:'The temperature swings or overshoots in normal use',
-     causes:['Gaggia defaults rather than Silvia starting values.','Poor contact at the thermocouple: no paste, or not finger tight.'],
-     check:['Start from HPWR 100, Main Divider 5, Brew Divider 3, Brew Delta off.','Refit the thermocouple with fresh paste.','Change Temperature Offset only against a real group-head measurement.'],src:'Discord · official Gen 3 manual'},
-    {c:'pressure',s:'Pressure reads 0.0 bar during a shot',map:'run:LV9',
-     causes:['J6 wired out of order: 5V, GND, P.','The transducer screwed in too far. Overtightening can damage its O-ring and stop it reading.','Air in the sensor line.'],
-     check:['Check [LV9] pin by pin.','Back the transducer off to hand tight plus at most a quarter turn.','Run [UT] Tube Fill from the community profiles.'],src:'Official custom wiring guide'},
-    {c:'pressure',s:'The pressure reading is noisy',map:'run:LV9',
-     causes:['Pump vibration through the sensor: the Discord thread found a tee at the pump noisier than one at the OPV.','The sensor touching the frame.','Sensor wires bundled with mains.'],
-     check:['Keep the sensor off the frame and other metal; a wrap of foam helps.','Keep [LV9] away from mains runs.'],src:'Official custom wiring guide · Discord'},
-    {c:'pressure',s:'Test OPV peaks outside 10.5 to 13 bar',
-     causes:['The OPV setting. Gaggiuino needs it at least 1 bar above your highest shot pressure.','The blank basket or portafilter not sealing.'],
-     check:['Adjust the OPV. V2 and later have a two-nut adjuster.','Reseat the basket and gasket and rerun the test.'],src:'Official machine-specific guide · Wikipedia'},
-    {c:'pressure',w:'ver:V1',s:'The OPV won\'t adjust the way the guides show',
-     causes:['The V1 OPV has a single nut, not a two-nut adjuster. Adding washers can only lower its pressure.'],
-     check:['Too high: add washers, then rerun [UT] Test OPV.','Too low: take out any washers a previous owner added. If it still reads low, replace the spring or the OPV.'],src:'Wikipedia'},
-    {c:'pressure',s:'The pump doesn\'t run',map:[['The pump on the wiring map','part:pump'],['The brew switch wires','runs:LV2,LV4,LV5']],
-     causes:['The brew input isn\'t reaching J7 B.','An open pump thermal fuse.','J12 or [AC14] not connected.'],
-     check:['Rerun [f1], [f2], [c4], [c5], [e6] and [e7]. Measure the pump coil both ways; its diode reads OL one way.'],src:'Meter checks'},
-    {c:'pressure',s:'The pump runs but no water reaches the group',
-     causes:['Tank empty, or its intake out of the water.','An air lock.','The 3-way valve not opening: J13, [AC13] or the coil.'],
-     check:['Prime it: open the steam knob and run Flush until water flows steadily from the wand.','Rerun [c6], [e5] and [e8].'],src:'Meter checks'},
-    {c:'pressure',s:'Leaks at the tee, elbow or sensor',
-     causes:['The transducer sealing on its threads: the flat O-ring has to sit flush inside the fitting.','Tapered fittings without Loctite 55, or loosened while lining them up.','Mixed thread types: a 1/4" NPT part won\'t seal to the G1/4 (BSPP) transducer.'],
-     check:['Unplug and let it cool before touching fittings.','Transducer hand tight plus at most a quarter turn; Loctite 55 on the tee and elbow only.'],src:'Official custom wiring guide · Discord'},
-    {c:'switch',s:'A switch does nothing',map:[['On the wiring map','runs:LV1,LV2,LV3,LV4,LV5,LV6',null,'Switch signal and ground wires']],
-     causes:['Signal and ground on the wrong spades.','Hot water on J5 A12 instead of B15. The firmware reads the hot water switch on B15, as realNiche\'s schematic shows.','A break in the ground chain between switches.'],
-     check:['Rerun [f1] to [f6] with the plugs off the PCB.','Check [LV3] lands on B15.','Check [LV4], [LV5] and [LV6].'],src:'Firmware pin definitions · Discord'},
-    {c:'switch',s:'A switch acts as if it\'s always on',map:[['On the wiring map','runs:LV1,LV2,LV3,LV4,LV5,LV6',null,'Switch signal and ground wires']],
-     causes:['Signal and ground on two spades that are always connected.'],
-     check:['Put the signal on the ground pole\'s center spade and ground on its outer spade, then rerun the OFF checks [f2], [f4] and [f6].'],src:'realNiche diagram'},
-    {c:'switch',s:'The switch lights went dark',
-     causes:['Expected. The lamps ran on mains; on low voltage they stay dark.'],
-     check:['The LED switch mod brings them back.'],src:'Discord LED guide'},
-    {c:'switch',s:'LED mod: an LED won\'t light, or its switch does nothing',
-     causes:['The LED in backwards.','5 V and ground swapped without moving the PCB input, so the input sees 5 V when the switch is on and reads it as off.'],
-     check:['Use the LED guide\'s charger test to find the 5 V side.','The PCB input always goes on the ground pole\'s center spade.'],src:'Discord LED guide'},
-    {c:'switch',s:'The heating light never lights, or never goes out',map:[['The heating light on the wiring map','part:lamp']],
-     causes:['[AC7] and [AC8] not across the element: the lamp must take the heater line after the safety thermostat, not the line before the SSR.','From V5 on, the heating light is a round LED that may be wired differently from the old lamp.'],
-     check:['Check [AC7] and [AC8] against the wiring reference.'],src:'realNiche diagram · Wikipedia'},
-    {c:'fw',s:'An over-the-air update fails',
-     causes:['A release that needs an earlier breaking update first: builds before February 16, 2025 need 616ea70 before the latest.','The network dropping during upload.','Files flashed out of order.'],
-     check:['Don\'t power down during an update; a failed or canceled one reverts by itself.','Connect your device straight to the Gaggiuino access point and retry.','Order: core, then ui-embedded, then ui-web.'],src:'Official MCU flashing guide'},
-    {c:'fw',s:'The ST-Link won\'t connect',
-     causes:['The PCB\'s USB-C is plugged in.','A wiring slip on 3.3V, SWDIO, SWCLK and GND.','STM32CubeProgrammer not working with your ST-Link.'],
-     check:['Unplug the USB-C, check the four wires, and try the older ST-Link utility if CubeProgrammer won\'t see it.'],src:'Official MCU flashing guide'},
-    {c:'extras',s:'The tank level reads wrong',
-     causes:['Ranges set for a Gaggia tank. The Silvia\'s is deeper, about 200 mm.'],
-     check:['Set the ranges in the ToFnLED settings, then check at known fill levels.'],src:'Discord'},
-    {c:'extras',s:'The scales stay at 0',
-     causes:['Hardware scales not turned on in the settings.','No 5 V at the HX711 board.','5 V and CLK swapped on the scales cable. A 2025 Silvia V6 build had exactly this.'],
-     check:['Turn on hardware scales in the settings, then measure 5 V at the HX711 board.','Check the cable pin by pin against J8: D2, 5V, GND, CLK, D1. Then calibrate.'],src:'Discord'},
-    {c:'extras',s:'The scales drift or read wrong',
-     causes:['Not calibrated.','Load cells or mount wrong for the Silvia: the Joscha mount takes 1 kg cells.','The mount moves on the frame.'],
-     check:['Calibrate in the web UI with a 200 to 400 g object.','If the mount wobbles, wrap self-fusing silicone tape around the frame where it clips on, then push the mount back over it.'],src:'Official HW scales guide · Discord'}
-  ];
+%%INCLUDE:trouble-data.js%%
+  /* a stable id per symptom for links from other pages: t- and the symptom's words (wiring-refs.js makes the same) */
+  function tslug(i){var s='t-'+T[i].s.toLowerCase().replace(/\{[a-z]+\}/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,60),n=0;for(var j=0;j<i;j++)if(T[j].s===T[i].s)n++;return n?s+'-'+(n+1):s}
   var CHECKREF=/^[a-h][0-9]{1,2}$/;
   function $(id){return document.getElementById(id)}
   function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
@@ -201,7 +113,7 @@ details.tb.danger .tb-body{border-left-color:var(--bad)}
       var items=shown.filter(function(t){return t.c===c[0]});if(!items.length)return;
       html+='<h2 class="cat-h">'+esc(c[1])+'</h2>';
       items.forEach(function(t){
-        html+='<details class="tb'+(t.d?' danger':'')+'"'+(q?' open':'')+'><summary><span class="sym">'+esc(fill(t.s))+(t.w&&!(m&&m.decided&&m.decided(t.w))?'<span class="vtag">'+esc(wlabel(t.w))+'</span>':'')+'</span><span class="first">Most likely: '+refs(t.causes[0])+'</span><span class="flag">'+(t.d?'<span class="unplug">Unplug now</span>':'')+'<span class="chev" aria-hidden="true"></span></span></summary>'+
+        html+='<details class="tb'+(t.d?' danger':'')+'" id="'+tslug(T.indexOf(t))+'"'+(q?' open':'')+'><summary><span class="sym">'+esc(fill(t.s))+(t.w&&!(m&&m.decided&&m.decided(t.w))?'<span class="vtag">'+esc(wlabel(t.w))+'</span>':'')+'</span><span class="first">Most likely: '+refs(t.causes[0])+'</span><span class="flag">'+(t.d?'<span class="unplug">Unplug now</span>':'')+'<span class="chev" aria-hidden="true"></span></span></summary>'+
           '<div class="tb-body"><div><h3>Likely causes, in order</h3><ol>'+t.causes.map(function(x){return '<li>'+refs(x)+'</li>'}).join('')+'</ol></div><div><h3>What to do</h3><ul>'+t.check.map(function(x){return '<li>'+refs(x)+'</li>'}).join('')+'</ul>'+tmap(t)+'</div><div class="src">Source: '+esc(t.src)+'</div></div></details>';
       });
     });
@@ -214,5 +126,12 @@ details.tb.danger .tb-body{border-left-color:var(--bad)}
   window.addEventListener('silvia-machine',render);
   window.addEventListener('beforeprint',function(){Array.prototype.forEach.call(document.querySelectorAll('details.tb'),function(d){d.open=true})});
   render();
+  function fromHash(){
+    var id=(location.hash||'').slice(1);if(id.indexOf('t-')!==0)return;
+    var el=document.getElementById(id);
+    if(!el&&(cat!=='all'||q)){cat='all';q='';var qi=document.getElementById('q');if(qi)qi.value='';render();el=document.getElementById(id)}
+    if(!el)return;el.open=true;el.scrollIntoView({block:'start'});el.classList.add('hit');setTimeout(function(){el.classList.remove('hit')},2600);
+  }
+  fromHash();window.addEventListener('hashchange',fromHash);
 })();
 </script>

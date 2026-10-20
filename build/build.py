@@ -38,17 +38,24 @@ def runs_json():
     return json.dumps(out, ensure_ascii=False)
 
 
+def check_index():
+    """Every power-on check's id and title, for the wiring map's back-links (wiring-refs.js)."""
+    src = open(os.path.join(HERE, "checks.tpl.html")).read()
+    return json.dumps([[m.group(1), m.group(2).replace("\\'", "'")] for m in re.finditer(r"\{id:'([a-h]\d+)',t:'((?:[^'\\]|\\.)*)'", src)], ensure_ascii=False)
+
+
 def render(name, mode="artifact"):
     tpl, _ = FILES[name]
     s = open(os.path.join(HERE, tpl)).read()
-    s = re.sub(r"%%INCLUDE:([A-Za-z0-9_.-]+)%%", lambda m: open(os.path.join(HERE, m.group(1))).read(), s)
+    for _ in range(4):  # %%INCLUDE:file%% pulls in a file from build/, which may include others
+        s = re.sub(r"%%INCLUDE:([A-Za-z0-9_.-]+)%%", lambda m: open(os.path.join(HERE, m.group(1))).read(), s)
     links = SITE if mode == "site" else dict(ART_EXTRA, **ART)
     for k in SITE:
         s = s.replace("%%LINK_" + k + "%%", links.get(k, "#"))
     s = s.replace("%%MODE%%", mode)
     extra = {}
     if name == "wiring":
-        extra = {"SVG": build_svg(), "RUNS": runs_json(), "SYS": json.dumps(SYS), "CONN": json.dumps(CONNECTORS, ensure_ascii=False)}
+        extra = {"CHECK_INDEX": check_index(), "SVG": build_svg(), "RUNS": runs_json(), "SYS": json.dumps(SYS), "CONN": json.dumps(CONNECTORS, ensure_ascii=False)}
     elif name == "labels":
         extra = {"RUNS": runs_json(), "CORE": open(os.path.join(HERE, "labels-core.js")).read()}
     for k, v in extra.items():
