@@ -25,30 +25,62 @@
   <figcaption>Slowed down about a hundred times. The real pump strokes once per mains cycle, 60 times a second in North America and 50 in most other places.</figcaption>
 </figure>
 
-<!-- THERMOSTAT: bimetal and the swing it causes -->
+<!-- THERMOSTATS AND SAFETY: a boiler you can run, each part in section -->
 <figure class="mini" id="mini-tstat">
-  <svg viewBox="0 0 360 200" role="img" aria-label="Left, a bimetal thermostat: a bimetal disc under a pin and a pair of contacts. When the disc gets hot it bends upward, the pin lifts the contacts apart and the heater stops. Right, the boiler temperature rising and falling between where the thermostat opens and where it closes again.">
-    <g class="tsx">
-      <rect x="30" y="34" width="150" height="118" rx="10" class="housing"/>
-      <rect x="24" y="152" width="162" height="12" rx="3" class="boilertop"/>
-      <text x="105" y="184" class="cap" text-anchor="middle">boiler</text>
-      <line x1="60" y1="58" x2="150" y2="58" class="term"/>
-      <circle cx="132" cy="66" r="6" class="contact fixed"/>
-      <g class="arm"><line x1="58" y1="80" x2="132" y2="80" class="armline"/><circle cx="132" cy="74" r="6" class="contact"/></g>
-      <line x1="105" y1="84" x2="105" y2="128" class="pin"/>
-      <path class="disc" d="M58,140 Q105,124 152,140"/>
-      <text x="40" y="52" class="cap">contacts</text><text x="40" y="118" class="cap">bimetal</text>
-    </g>
-    <g transform="translate(196 0)">
-      <rect x="0" y="22" width="160" height="140" rx="8" class="graph"/>
-      <line x1="0" y1="58" x2="160" y2="58" class="limit"/><text x="156" y="52" class="cap" text-anchor="end">opens</text>
-      <line x1="0" y1="96" x2="160" y2="96" class="limit"/><text x="156" y="112" class="cap" text-anchor="end">closes</text>
-      <path class="trace" d=""/>
-      <circle class="now" r="5" cx="0" cy="0"/>
-      <text x="0" y="184" class="cap">temperature</text>
-    </g>
+  <div class="mini-ctl"><button type="button" class="btn" data-ts="steam" aria-pressed="false">Steam switch off</button><button type="button" class="btn" data-ts="restart">Start over</button><button type="button" class="btn" data-ts="fix" disabled>Press reset</button></div>
+  <div class="mini-ctl"><span class="mini-note" id="ts-fl">Fault:</span><span class="mini-seg" role="group" aria-labelledby="ts-fl"><button type="button" class="chip" data-fault="none" aria-pressed="true">Nothing stuck</button><button type="button" class="chip" data-fault="b" aria-pressed="false">Brew thermostat stuck shut</button><button type="button" class="chip" data-fault="s" aria-pressed="false">Steam thermostat stuck shut</button></span></div>
+  <div class="mini-ctl"><span class="mini-note" data-ts-note>Heating from cold: both thermostats are closed.</span></div>
+  <svg viewBox="0 0 360 600" role="img" aria-label="Top, a graph of the boiler temperature over the last five minutes, with the points where the brew thermostat opens, the steam thermostat opens and the safety thermostat trips, and a band showing when the element is heating. Below, each part in section. A thermostat is a bimetal disc in a cup that touches the boiler: at its set point the disc snaps from one shape to the other and pushes a ceramic pin up, which lifts a spring blade and parts the contacts; it snaps back, closing them, once it has cooled several degrees. The safety thermostat works the same way, but its disc stays snapped open until its reset button is pressed.">
+    <rect x="30" y="8" width="320" height="142" class="tg-frame"/>
+    <line x1="26" x2="30" y1="127.6" y2="127.6" class="tg-tick"/><text x="23" y="131.4" class="cap sm" text-anchor="end">50</text><line x1="26" x2="30" y1="90.2" y2="90.2" class="tg-tick"/><text x="23" y="94.0" class="cap sm" text-anchor="end">100</text><line x1="26" x2="30" y1="52.8" y2="52.8" class="tg-tick"/><text x="23" y="56.6" class="cap sm" text-anchor="end">150</text><text x="23" y="17" class="cap sm" text-anchor="end">°C</text>
+    <line x1="30" x2="350" class="tg-lim bo" data-k="tg-bo"/><text x="346" class="cap sm tg-lab bo" text-anchor="end" data-k="tg-bo-t">brew opens</text><line x1="30" x2="350" class="tg-lim so" data-k="tg-so"/><text x="346" class="cap sm tg-lab so" text-anchor="end" data-k="tg-so-t">steam opens</text><line x1="30" x2="350" class="tg-lim cut" data-k="tg-cut"/><text x="346" class="cap sm tg-lab cut" text-anchor="end" data-k="tg-cut-t">safety trips</text><line x1="30" x2="350" class="tg-lim close" data-k="tg-bc"/><line x1="30" x2="350" class="tg-lim close" data-k="tg-sc"/>
+    <path class="tg-heat" data-k="tg-heat" d=""/>
+    <path class="tg-trace" data-k="tg-trace" d=""/>
+    <circle class="tg-now" data-k="tg-now" r="4.5" cx="-10" cy="-10"/>
+    <rect x="30" y="162" width="10" height="5" class="tg-heatkey"/><text x="44" y="167" class="cap sm">element heating</text><text x="350" y="167" class="cap sm" text-anchor="end">last 5 minutes</text>
+    
+    <g class="tb-box"><text x="93.8" y="186" class="cap sm tb-t" text-anchor="middle">brew thermostat</text><text x="93.8" y="198" class="cap sm" text-anchor="middle">opens at %%BREW_OPEN%% °C</text><g transform="translate(14 206) scale(1.45)"><rect x="0" y="88" width="110" height="12" class="tb-wall"/>
+        <rect x="49" y="74" width="12" height="16" class="tb-stud"/><path d="M49,78 h12 M49,82 h12 M49,86 h12" class="tb-thread"/>
+        <rect x="24" y="0" width="8" height="20" rx="1" class="tb-spade"/><rect x="78" y="0" width="8" height="20" rx="1" class="tb-spade"/>
+        
+        <rect x="10" y="14" width="90" height="48" rx="6" class="tb-house"/>
+        <rect x="16" y="20" width="78" height="40" rx="3" class="tb-cav"/>
+        <path d="M14,56 V76 H96 V56" class="tb-cup"/>
+        <path d="M28,20 V55 H58" class="tb-cond"/><circle cx="54" cy="52" r="3" class="tb-ct"/>
+        <path d="M82,20 V34" class="tb-cond"/>
+        <g data-k="b-arm"><path d="M82,34 L54,44" class="tb-blade" data-k="b-blade"/><circle cx="54" cy="47" r="3" class="tb-ct"/></g>
+        <path d="M51,47 l2,2.5 l1.5,-1.5 l1.5,2 l1.5,-2 l1,2" class="tb-weld" data-k="b-weld"/>
+        <rect x="62" y="41" width="6" height="27" rx="1.5" class="tb-pin" data-k="b-pin"/>
+        <path d="M20,64 Q55,72 90,64" class="tb-disc" data-k="b-disc"/><g class="tb-mk"><circle cx="90" cy="44" r="5"/><text x="90" y="46.6" text-anchor="middle">1</text></g><g class="tb-mk"><circle cx="43" cy="47" r="5"/><text x="43" y="49.6" text-anchor="middle">2</text></g><g class="tb-mk"><circle cx="76" cy="55" r="5"/><text x="76" y="57.6" text-anchor="middle">3</text></g><g class="tb-mk"><circle cx="29" cy="56" r="5"/><text x="29" y="58.6" text-anchor="middle">4</text></g><g class="tb-mk"><circle cx="104" cy="66" r="5"/><text x="104" y="68.6" text-anchor="middle">5</text></g></g></g><g class="badge tb-badge" data-k="b-badge" transform="translate(93.8 357.0)"><rect x="-40" y="0" width="80" height="15" rx="4"/><text x="0" y="10.8" text-anchor="middle" data-k="b-btext">CLOSED</text></g>
+    <g class="tb-box"><text x="266.2" y="186" class="cap sm tb-t" text-anchor="middle">steam thermostat</text><text x="266.2" y="198" class="cap sm" text-anchor="middle">opens at %%STEAM_OPEN%% °C</text><g transform="translate(186.5 206) scale(1.45)"><rect x="0" y="88" width="110" height="12" class="tb-wall"/>
+        <rect x="49" y="74" width="12" height="16" class="tb-stud"/><path d="M49,78 h12 M49,82 h12 M49,86 h12" class="tb-thread"/>
+        <rect x="24" y="0" width="8" height="20" rx="1" class="tb-spade"/><rect x="78" y="0" width="8" height="20" rx="1" class="tb-spade"/>
+        
+        <rect x="10" y="14" width="90" height="48" rx="6" class="tb-house"/>
+        <rect x="16" y="20" width="78" height="40" rx="3" class="tb-cav"/>
+        <path d="M14,56 V76 H96 V56" class="tb-cup"/>
+        <path d="M28,20 V55 H58" class="tb-cond"/><circle cx="54" cy="52" r="3" class="tb-ct"/>
+        <path d="M82,20 V34" class="tb-cond"/>
+        <g data-k="s-arm"><path d="M82,34 L54,44" class="tb-blade" data-k="s-blade"/><circle cx="54" cy="47" r="3" class="tb-ct"/></g>
+        <path d="M51,47 l2,2.5 l1.5,-1.5 l1.5,2 l1.5,-2 l1,2" class="tb-weld" data-k="s-weld"/>
+        <rect x="62" y="41" width="6" height="27" rx="1.5" class="tb-pin" data-k="s-pin"/>
+        <path d="M20,64 Q55,72 90,64" class="tb-disc" data-k="s-disc"/></g></g><g class="badge tb-badge" data-k="s-badge" transform="translate(266.2 357.0)"><rect x="-40" y="0" width="80" height="15" rx="4"/><text x="0" y="10.8" text-anchor="middle" data-k="s-btext">CLOSED</text></g>
+    <g class="tb-box"><text x="93.8" y="396" class="cap sm tb-t" text-anchor="middle">safety thermostat</text><text x="93.8" y="408" class="cap sm" text-anchor="middle">trips at 165 °C</text><g transform="translate(14 416) scale(1.45)"><rect x="0" y="88" width="110" height="12" class="tb-wall"/>
+        <rect x="49" y="74" width="12" height="16" class="tb-stud"/><path d="M49,78 h12 M49,82 h12 M49,86 h12" class="tb-thread"/>
+        <rect x="24" y="0" width="8" height="20" rx="1" class="tb-spade"/><rect x="78" y="0" width="8" height="20" rx="1" class="tb-spade"/>
+        <g class="tb-reset" data-k="cut-btn"><rect x="47" y="6" width="16" height="9" rx="2.5" class="tb-btn"/></g>
+        <rect x="10" y="14" width="90" height="48" rx="6" class="tb-house"/>
+        <rect x="16" y="20" width="78" height="40" rx="3" class="tb-cav"/>
+        <path d="M14,56 V76 H96 V56" class="tb-cup"/>
+        <path d="M28,20 V55 H58" class="tb-cond"/><circle cx="54" cy="52" r="3" class="tb-ct"/>
+        <path d="M82,20 V34" class="tb-cond"/>
+        <g data-k="cut-arm"><path d="M82,34 L54,44" class="tb-blade" data-k="cut-blade"/><circle cx="54" cy="47" r="3" class="tb-ct"/></g>
+        <path d="M51,47 l2,2.5 l1.5,-1.5 l1.5,2 l1.5,-2 l1,2" class="tb-weld" data-k="cut-weld"/>
+        <rect x="62" y="41" width="6" height="27" rx="1.5" class="tb-pin" data-k="cut-pin"/>
+        <path d="M20,64 Q55,72 90,64" class="tb-disc" data-k="cut-disc"/><g class="tb-mk"><circle cx="40" cy="10" r="5"/><text x="40" y="12.6" text-anchor="middle">6</text></g></g></g><g class="badge tb-badge" data-k="cut-badge" transform="translate(93.8 567.0)"><rect x="-40" y="0" width="80" height="15" rx="4"/><text x="0" y="10.8" text-anchor="middle" data-k="cut-btext">CLOSED</text></g>
+    <text x="196" y="404" class="cap sm tb-t">In each thermostat</text><g class="tb-mk"><circle cx="201" cy="415.5" r="5"/><text x="201" y="418.1" text-anchor="middle">1</text></g><text x="211" y="419" class="cap sm">spring blade</text><g class="tb-mk"><circle cx="201" cy="430.5" r="5"/><text x="201" y="433.1" text-anchor="middle">2</text></g><text x="211" y="434" class="cap sm">contacts</text><g class="tb-mk"><circle cx="201" cy="445.5" r="5"/><text x="201" y="448.1" text-anchor="middle">3</text></g><text x="211" y="449" class="cap sm">ceramic pin</text><g class="tb-mk"><circle cx="201" cy="460.5" r="5"/><text x="201" y="463.1" text-anchor="middle">4</text></g><text x="211" y="464" class="cap sm">bimetal disc</text><g class="tb-mk"><circle cx="201" cy="475.5" r="5"/><text x="201" y="478.1" text-anchor="middle">5</text></g><text x="211" y="479" class="cap sm">cup on the boiler</text><text x="196" y="500" class="cap sm tb-t">On the safety</text><g class="tb-mk"><circle cx="201" cy="511.5" r="5"/><text x="201" y="514.1" text-anchor="middle">6</text></g><text x="211" y="515" class="cap sm">reset button</text>
   </svg>
-  <figcaption>Simplified. The bimetal opens the contacts at one temperature and lets them close again several degrees cooler, which is why the temperature swings.</figcaption>
+  <figcaption>Simplified; the closing points and timings are illustrative. The thermostats are in series, so one stuck shut is still caught by the other: a stuck brew thermostat leaves the steam one in charge at %%STEAM_OPEN%% °C, and the coffee comes out far too hot. Only the steam thermostat stuck shut with steam on, or both stuck, lets the boiler run away, and then the safety thermostat is the last line. It stays open until it has cooled and you press its red button. In the usual stock wiring the heating light stays on while it's tripped. Unplug before resetting it, and find the cause first.<span data-when="ver:V1,V2"> Machines made before mid-2007 have a 110 °C brew thermostat.</span></figcaption>
 </figure>
 
 <!-- SOLENOID VALVE: a cutaway, so you can see which seat each seal closes -->

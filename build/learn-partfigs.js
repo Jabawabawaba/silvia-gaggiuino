@@ -5,6 +5,115 @@
                  original Classic, two-pin as sold); on the Silvia site ver, e (a V5 or V6 E), volts.
      A field nobody has picked is null, and every figure then shows its default drawing. */
 
+  /* thermostats and fuse (the Silvia: thermostats and safety): a boiler that heats and cools, the thermostats switching
+     it, and each part drawn in section. Each disc snaps open at its set point and closes again a few degrees cooler; a
+     stuck thermostat's contacts stay shut whatever its disc does. Machine time runs 8x real time while the figure is on
+     screen; with reduced motion each change jumps the boiler two minutes ahead instead. The figures are illustrative. */
+  (function(){
+    var fig=$('mini-tstat');if(!fig)return;
+    function K(k){return fig.querySelector('[data-k="'+k+'"]')}
+    var note=fig.querySelector('[data-ts-note]'),bSteam=fig.querySelector('[data-ts="steam"]'),bRe=fig.querySelector('[data-ts="restart"]'),bFix=fig.querySelector('[data-ts="fix"]'),fb=qa('[data-fault]',fig);
+    var SPEED=8,TAU=4,W=300,X1=350,SX=320/300,site='g',TH,P=1.35,KL=0.0022,gc=false;
+    var T,q,bD,sD,cut,steam=false,fault='none',hist,heatH,hold=0,held='';
+    function Y(t){return 150-(t-20)*142/190}
+    function zig(x0,x1,y,n,amp){var w=(x1-x0)/n,p=[x0+','+y];for(var i=1;i<n;i++)p.push((x0+w*i).toFixed(1)+','+(i%2?y-amp:y+amp));p.push(x1+','+y);return p.join(' ')}
+    function conf(){
+      var m=PFM.get();site=m.site;TH=m.th;
+      if(site==='g'){P=m.model==='E24'?1.0:1.35;KL=0.0022;gc=m.fam==='GC';fig.classList.toggle('brass',m.model==='E24');fig.classList.toggle('gc',gc)}
+      else{P=m.volts===230?0.58:0.5;KL=0.0016;gc=false;fig.classList.add('brass','sil')}
+      [['bo',TH.bo],['bc',TH.bc],['so',TH.so],['sc',TH.sc],['cut',TH.cut]].forEach(function(r){
+        var l=K('tg-'+r[0]),y=Y(r[1]).toFixed(1);l.setAttribute('y1',y);l.setAttribute('y2',y);
+        var t=K('tg-'+r[0]+'-t');if(t){t.setAttribute('y',(Y(r[1])-3).toFixed(1));t.textContent=t.textContent.replace(/ [\d.]+ °C$/,'')+' '+r[1]+' °C'}
+      });
+    }
+    function reset(){T=20;q=0;bD=false;sD=false;cut=false;hist=[];heatH=[]}
+    /* contacts: a disc that hasn't snapped, or welded contacts, conduct. The steam switch is around the brew thermostat. */
+    function bCond(){return !bD||fault==='b'}
+    function sCond(){return !sD||fault==='s'}
+    function heating(){return !cut&&sCond()&&(bCond()||steam)}
+    function step(dt){
+      var on=heating();
+      q+=((on?P:0)-q)*Math.min(1,dt/TAU);      /* the elements stay hot for a moment after they switch off, so the boiler overshoots */
+      T+=(q-KL*(T-20))*dt;
+      if(!bD&&T>=TH.bo)bD=true;else if(bD&&T<=TH.bc)bD=false;
+      if(!sD&&T>=TH.so)sD=true;else if(sD&&T<=TH.sc)sD=false;
+      if(!cut&&T>=TH.cut)cut=true;
+    }
+    function sec(){step(0.5);step(0.5);hist.push(T);heatH.push(heating());if(hist.length>W+1){hist.shift();heatH.shift()}}
+    function advance(n){for(var i=0;i<n;i++)sec()}
+    function draw(f){
+      var n=hist.length,pts=[],hp='';f=f||0;
+      for(var i=0;i<n;i++){
+        var x=X1-(n-1-i+f)*SX;if(x<30)continue;
+        pts.push(x.toFixed(1)+','+Y(hist[i]).toFixed(1));
+        if(heatH[i]&&i<n-1)hp+='M'+x.toFixed(1)+',153h'+SX.toFixed(2)+'v4h-'+SX.toFixed(2)+'Z';
+      }
+      K('tg-trace').setAttribute('d',pts.length?'M'+pts.join(' L'):'');K('tg-heat').setAttribute('d',hp);
+      var dot=K('tg-now');if(n){dot.setAttribute('cx',(X1-f*SX).toFixed(1));dot.setAttribute('cy',Y(hist[n-1]).toFixed(1))}else{dot.setAttribute('cx','-10')}
+    }
+    function badge(k,txt,st){var b=K(k+'-badge');b.setAttribute('class','badge tb-badge '+st);K(k+'-btext').textContent=txt}
+    /* a thermostat: snapped discs push the pin up and the blade with it; a welded blade bows instead and the contacts stay shut */
+    function tstat(k,snap,stuck){
+      var bowed=snap&&stuck;
+      K(k+'-arm').setAttribute('transform',snap&&!stuck?'rotate(22 82 34)':'');
+      K(k+'-blade').setAttribute('d',bowed?'M82,34 Q66,26 54,44':'M82,34 L54,44');
+      K(k+'-pin').setAttribute('transform',snap?'translate(0 -7)':'');
+      K(k+'-disc').setAttribute('d',snap?'M20,66 Q55,56 90,66':'M20,64 Q55,72 90,64');
+      K(k+'-weld').classList.toggle('on',stuck);
+      badge(k,stuck?'STUCK SHUT':snap?'OPEN':'CLOSED',stuck?'bad':snap?'open':'closed');
+    }
+    function parts(){
+      tstat('b',bD,fault==='b');tstat('s',sD,fault==='s');
+      if(site==='g'){
+        /* melted: the pellet slumps to a puddle, the main spring relaxes into its space with nothing to push on, and the
+           small trip spring pushes the sliding contact back off the lead */
+        var pel=K('fz-pellet');pel.setAttribute('y',cut?'51':'34');pel.setAttribute('height',cut?'3':'20');pel.setAttribute('width',cut?'12':'11');
+        K('fz-star').setAttribute('transform',cut?'translate(-9 0)':'');
+        K('fz-spring').setAttribute('points',cut?zig(21,49,44,8,5):zig(32,58,44,8,7));
+        K('fz-trip').setAttribute('points',cut?zig(55,79,51,6,2.5):zig(64,79,51,6,2.5));
+        badge('cut',cut?'MELTED':'INTACT',cut?'bad':'closed');
+      }else{
+        tstat('cut',cut,false);K('cut-btn').setAttribute('transform',cut?'translate(0 -4)':'');
+        badge('cut',cut?'TRIPPED':'CLOSED',cut?'bad':'closed');
+      }
+      bFix.disabled=!cut;
+      fig.classList.toggle('cut',cut);
+    }
+    function noteFor(){
+      var g=site==='g',EL=g?'elements':'element',last=g?'fuse':'safety thermostat',on=heating(),sw=TH.so-TH.sc,bw=TH.bo-TH.bc;
+      if(cut)return g?'The fuse has melted at '+TH.cut+' °C and stays open for good: '+(gc?'it\'s in the neutral feed, so the whole machine is dead, power lamp included.':'nothing but the power lamp works.')+' Unplug it, replace what failed, then fit a new fuse.'
+        :'The safety thermostat has tripped at '+TH.cut+' °C and stays open, so the element is off. Unplug it, let it cool and find the cause before pressing reset.';
+      if(fault==='s'&&steam)return 'The steam thermostat\'s contacts are welded shut, and the steam switch bypasses the brew thermostat, so nothing stops the '+EL+'. The '+last+' is the last line, at '+TH.cut+' °C.';
+      if(fault==='s'&&!on&&bD)return 'At brew temperature: the brew thermostat has snapped open. The stuck steam thermostat makes no difference until steam goes on.';
+      if(fault==='s')return 'Heating. The steam thermostat is stuck shut, but with steam off the brew thermostat still switches the '+EL+'. Switch steam on to see why the '+last+' is there.';
+      if(fault==='b'&&!steam&&sD&&!on)return 'Stuck at steam temperature: the steam thermostat is doing the brew thermostat\'s job. Shots come out far too hot, but nothing overheats.';
+      if(fault==='b'&&!steam&&T>TH.bo)return 'The brew thermostat\'s disc has snapped, but its contacts are welded shut, so heating runs on until the steam thermostat, in series with it, opens at '+TH.so+' °C.';
+      if(steam&&!on)return 'At steam temperature: the steam thermostat has snapped open. It closes again about '+sw+' °C cooler, so the boiler swings around it.';
+      if(steam&&T>=TH.bc)return 'Heating to steam temperature: the steam switch bypasses the brew thermostat, so it\'s the steam thermostat that switches the '+EL+' now.';
+      if(!on&&T>TH.bo+4)return 'Cooling back to brew temperature: the brew thermostat stays open until the boiler drops to '+TH.bc+' °C.';
+      if(!on)return 'At brew temperature: the brew thermostat has snapped open. It closes again about '+bw+' °C cooler, so the boiler swings up and down.';
+      return 'Heating: both thermostats are closed, so the '+EL+' '+(g?'are':'is')+' on.';
+    }
+    function say(force){if(hold>0&&!force){hold--;return}var t=held||noteFor();held='';if(t!==note.textContent)note.textContent=t}
+    function tell(t){held=t;hold=RM?0:40;say(true);held=''}
+    function refresh(){parts();say()}
+    function changed(){if(RM){advance(site==='g'?120:240);draw(0)}refresh()}
+    bSteam.addEventListener('click',function(){steam=!steam;bSteam.setAttribute('aria-pressed',String(steam));bSteam.textContent=steam?'Steam switch on':'Steam switch off';changed()});
+    bRe.addEventListener('click',function(){reset();if(RM)advance(300);draw(0);hold=0;refresh()});
+    fb.forEach(function(b){b.addEventListener('click',function(){fault=b.getAttribute('data-fault');fb.forEach(function(x){x.setAttribute('aria-pressed',String(x===b))});changed()})});
+    bFix.addEventListener('click',function(){
+      if(!cut)return;
+      if(site==='s'&&T>TH.cut-25){tell('It won\'t reset yet: the disc only snaps back once it has cooled. Leave it unplugged a while.');return}
+      cut=false;parts();
+      tell(fault!=='none'?(site==='g'?'New fuse fitted. The thermostat is still stuck, so it will melt again: the stuck part has to be replaced first.':'Reset. The thermostat is still stuck, so it will trip again: the stuck part has to be replaced first.'):(site==='g'?'New fuse fitted.':'Reset.'));
+      if(RM){advance(site==='g'?120:240);draw(0);parts()}
+    });
+    window.addEventListener(PFM.ev,function(){conf();draw(0);refresh()});
+    conf();reset();if(RM)advance(300);draw(0);refresh();
+    var acc=0,last=0;
+    onScreen(fig,function(ms){acc+=last?Math.min(250,ms-last)*SPEED/1000:0;last=ms;var n=0;while(acc>=1&&n<20){acc-=1;sec();n++}if(n){parts();say()}draw(acc)},function(){last=0});
+  })();
+
   /* portafilter: the handle angle drives the top view; the same turn slides the ear along the lug's ramp,
      which lifts the basket rim into the gasket (all in drawing units) */
   (function(){

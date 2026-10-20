@@ -150,19 +150,6 @@
 #mini-pump .wflow.in{animation:fl16 .71s linear infinite}
 #mini-pump .wflow.out{animation:fl16 .71s linear infinite}
 /* thermostat */
-#mini-tstat .housing{fill:var(--surface-2);stroke:var(--muted);stroke-width:1.4}
-#mini-tstat .boilertop{fill:url(#cut-brass);stroke:#6E5420}
-#mini-tstat .term{stroke:var(--muted);stroke-width:3;stroke-linecap:round}
-#mini-tstat .contact{fill:#C99A4A;stroke:#6E5420}
-#mini-tstat .armline{stroke:var(--ink);stroke-width:3;stroke-linecap:round}
-#mini-tstat .pin{stroke:var(--muted);stroke-width:3}
-#mini-tstat .disc{fill:none;stroke:var(--accent);stroke-width:4;stroke-linecap:round}
-#mini-tstat .graph{fill:none;stroke:var(--line)}
-#mini-tstat .limit{stroke:var(--accent);stroke-dasharray:4 4;stroke-width:1.2;opacity:.8}
-#mini-tstat .trace{fill:none;stroke:var(--w-l);stroke-width:2.4;stroke-linejoin:round}
-#mini-tstat .now{fill:var(--w-l)}
-#mini-tstat .arm{transition:transform .12s}
-#mini-tstat .pin{transition:transform .12s}
 /* solenoid: a cutaway, so the seal that closes each port is in view */
 #mini-sol{--sol-w:#D3E7F6;--sol-p:#8DBFE6;--sol-dot:#1A63A6;--sol-shut:#C62828;--sol-open:#2E7D4F;--sol-spr:#59616A}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) #mini-sol{--sol-w:#1C3B55;--sol-p:#2C679C;--sol-dot:#C4E5FF;--sol-shut:#E5534B;--sol-open:#3E9B66;--sol-spr:#A3ABB3}}

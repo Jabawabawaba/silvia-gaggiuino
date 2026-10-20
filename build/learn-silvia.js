@@ -245,33 +245,6 @@
   zoomed=NARROW.matches;CUR=VIEW[frameFor('heat')].slice();putVB(CUR);
   setMode('heat');pick(null);if(!RM)frame(0);
 
-  /* ---------- thermostat figure: a simple boiler that heats while the contacts are closed ---------- */
-  (function(){
-    var fig=$('mini-tstat');if(!fig)return;
-    var trace=fig.querySelector('.trace'),dot=fig.querySelector('.now'),arm=fig.querySelector('.arm'),pin=fig.querySelector('.pin'),disc=fig.querySelector('.disc');
-    var T=86,closed=true,hist=[],OPEN=106,CLOSE=94,STEP=90,W=159;   /* graph units, not degrees; one sample every 90 ms */
-    function y(t){return 162-(t-70)*(140/50)}
-    function step(){
-      T+=closed?0.9:-0.45;
-      if(closed&&T>=OPEN)closed=false;else if(!closed&&T<=CLOSE)closed=true;
-      hist.push(T);if(hist.length>161)hist.shift();
-      arm.style.transform=closed?'':'translateY(-10px)';pin.style.transform=closed?'':'translateY(-8px)';
-      disc.setAttribute('d',closed?'M58,140 Q105,124 152,140':'M58,128 Q105,144 152,128');
-      fig.classList.toggle('closed',closed);
-    }
-    /* f is how far we are into the next sample: the trace slides left by that much and the dot rides the live value */
-    function draw(f){
-      var n=hist.length,pts=[],Th=T+(closed?0.9:-0.45)*f;
-      for(var i=0;i<n;i++){var x=W-f-(n-1-i);if(x>=0)pts.push(x.toFixed(2)+','+y(hist[i]).toFixed(1))}
-      pts.push(W+','+y(Th).toFixed(1));
-      trace.setAttribute('d','M'+pts.join(' L'));dot.setAttribute('cx',String(W));dot.setAttribute('cy',y(Th).toFixed(1));
-    }
-    for(var i=0;i<161;i++)step();
-    draw(0);
-    var acc=0,last=0;
-    onScreen(fig,function(ms){acc+=last?Math.min(250,ms-last):0;last=ms;while(acc>=STEP){acc-=STEP;step()}draw(acc/STEP)},function(){last=0});
-  })();
-
   /* ---------- solenoid figure ---------- */
   (function(){
     var fig=$('mini-sol'),b=fig&&fig.querySelector('[data-sol]');if(!b)return;
@@ -304,7 +277,7 @@
 
   /* ---------- the circuit ---------- */
   /* what the part figures need to know about your Silvia */
-  var PFM={ev:'silvia-machine',get:function(){var m=window.SilviaMachine,p=(m&&m.get())||{},v=p.ver||null;return {site:'s',ver:v,e:(v==='V5'||v==='V6')&&p.model==='E',volts:p.volts||null}}};
+  var PFM={ev:'silvia-machine',get:function(){var m=window.SilviaMachine,p=(m&&m.get())||{},v=p.ver||null;return {site:'s',ver:v,e:(v==='V5'||v==='V6')&&p.model==='E',volts:p.volts||null,th:{bo:%%BREW_OPEN%%,bc:%%BREW_CLOSE%%,so:%%STEAM_OPEN%%,sc:%%STEAM_CLOSE%%,cut:165}}}};
 %%INCLUDE:learn-partfigs.js%%
 
 %%INCLUDE:learn-sim.js%%

@@ -212,3 +212,54 @@
 #mini-panel .f-sil .sw-fr.glow .rk-a,#mini-panel .f-sil .sw-fr.glow .rk-b{fill:#F08A2A}
 #mini-panel .f-sil .sw-fr.glow{filter:drop-shadow(0 0 4px #FF8A2A)}
 #mini-panel .f-sil .sw-lp:not(.grn).glow .lp{fill:#FF9A2E;filter:drop-shadow(0 0 4px #FF8A2A)}
+
+/* thermostats and fuse: graph, then each part in section */
+#mini-tstat .tg-frame{fill:none;stroke:var(--line)}
+#mini-tstat .tg-tick{stroke:var(--line)}
+#mini-tstat .tg-lim{stroke-width:1.4;stroke-dasharray:6 4}
+#mini-tstat .tg-lim.bo,#mini-tstat [data-k="tg-bc"]{stroke:var(--blue)}
+#mini-tstat .tg-lim.so,#mini-tstat [data-k="tg-sc"]{stroke:var(--accent-ink)}
+#mini-tstat .tg-lim.cut{stroke:var(--bad);stroke-dasharray:3 3}
+#mini-tstat .tg-lim.close{stroke-dasharray:2 5;opacity:.5}
+#mini-tstat .tg-lab.bo{fill:var(--blue)}#mini-tstat .tg-lab.so{fill:var(--accent-ink)}#mini-tstat .tg-lab.cut{fill:var(--bad)}
+#mini-tstat .tg-trace{fill:none;stroke:var(--w-l);stroke-width:2.4;stroke-linejoin:round}
+#mini-tstat .tg-now{fill:var(--w-l)}
+#mini-tstat .tg-heat,#mini-tstat .tg-heatkey{fill:var(--w-h)}
+#mini-tstat .tb-t{font-weight:600;fill:var(--ink)}
+#mini-tstat .tb-wall{fill:url(#cut-alu);stroke:#5E656C}
+#mini-tstat.brass .tb-wall{fill:url(#cut-brass);stroke:#6E5420}
+#mini-tstat .tb-stud{fill:url(#cut-chrome);stroke:#4A5057}
+#mini-tstat .tb-thread{stroke:#4A5057;stroke-width:1}
+#mini-tstat.sil .tb-stud,#mini-tstat.sil .tb-thread{display:none}
+#mini-tstat .tb-spade{fill:#C99A4A;stroke:#6E5420}
+#mini-tstat .tb-house{fill:#E6E1D6;stroke:#8C8577;stroke-width:1.2}
+#mini-tstat .tb-cav{fill:#30353B}
+#mini-tstat .tb-cup{fill:none;stroke:#A7AFB6;stroke-width:4;stroke-linejoin:round}
+#mini-tstat .tb-cond{fill:none;stroke:#C99A4A;stroke-width:3;stroke-linejoin:round}
+#mini-tstat .tb-ct{fill:#E3E7EA;stroke:#6B737A}
+#mini-tstat .tb-blade{fill:none;stroke:#D9B26A;stroke-width:3;stroke-linecap:round}
+#mini-tstat .tb-weld{fill:none;stroke:#FF5A4A;stroke-width:2;stroke-linejoin:round;display:none}
+#mini-tstat .tb-weld.on{display:inline}
+#mini-tstat .tb-pin{fill:#F2EFE8;stroke:#9A9488}
+#mini-tstat .tb-disc{fill:none;stroke:#E39A3A;stroke-width:4;stroke-linecap:round}
+#mini-tstat .tb-btn{fill:#C62828;stroke:#7A1414}
+#mini-tstat .fz-clip{fill:none;stroke:#8C949B;stroke-width:3;stroke-linecap:round}
+#mini-tstat .fz-lead{stroke:#8C949B;stroke-width:2.5}
+#mini-tstat .fz-case{fill:url(#cut-chrome);stroke:#5E656C}
+#mini-tstat .fz-bush{fill:#F2EFE8;stroke:#9A9488}
+#mini-tstat .fz-pin{fill:#C99A4A}
+#mini-tstat .fz-pellet{fill:#D9A441;stroke:#8A6420}
+#mini-tstat .fz-spring{fill:none;stroke:#C3CAD0;stroke-width:1.6;stroke-linejoin:round}
+#mini-tstat .fz-trip{fill:none;stroke:#C3CAD0;stroke-width:1.2;stroke-linejoin:round}
+#mini-tstat .fz-star{fill:#E3E7EA;stroke:#6B737A}
+#mini-tstat .tb-badge rect{fill:#3A4048}
+#mini-tstat .tb-badge.open rect{fill:#A35F00}
+#mini-tstat .tb-badge.bad rect{fill:#C62828}
+#mini-tstat .tb-badge text{font:700 9px var(--f-mono);letter-spacing:.06em;fill:#fff}
+#mini-tstat .mini-seg{flex-wrap:wrap}
+#mini-tstat .mini-ctl+.mini-ctl{padding-top:8px}
+#mini-tstat .cap.sm{font-size:10.5px}
+#mini-tstat .mini-ctl .btn[disabled]{opacity:.45;cursor:not-allowed}
+#mini-tstat .tb-mk circle{fill:var(--ink)}
+#mini-tstat .tb-mk text{font:700 7px var(--f-mono);fill:var(--bg)}
+#mini-tstat svg > .tb-mk text{font-size:7.5px}
