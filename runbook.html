@@ -331,6 +331,7 @@ h2{font:700 clamp(28px,4.4vw,38px)/1 var(--f-display);letter-spacing:.02em;text-
 .when{font:500 12.5px var(--f-mono);color:var(--good)}
 .step.done .st-t{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--line)}
 .step.next{background:linear-gradient(90deg,var(--accent-soft),transparent 70%);border-radius:8px}
+.step.hit{background:var(--accent-soft);border-radius:8px;transition:background .6s}
 
 .notes{margin-top:22px;display:grid;gap:6px}
 .notes .k{font:600 11px var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
@@ -422,6 +423,9 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
 <script>
 (function(){
   var L={wiring:'wiring.html',labels:'wire-labels.html',checks:'power-on-checks.html',led:'led-mod.html',which:'which-silvia.html',cut:'cut-list.html',trouble:'troubleshooting.html'};
+  /* The install, phase by phase. Shared by runbook.tpl.html and the wiring page's back-links (wiring-refs.js).
+     Each step: id, t, d, src, link [label, key], map (a wiring-map target, or [[label, target, when, set label], ...];
+     see maplink.js), w (which machines; see machine.js). */
   var PHASES=[
     {id:'p0',n:'Phase 0',name:'Before you start',goal:'Decide what is still open, record the stock machine, and get the bench ready.',steps:[
       {id:'p0v',t:'Identify your Silvia',d:'Version, E or M model, and mains voltage change a few of the steps below. The rating plate gives the voltage; the Which Silvia page helps with the version.',src:'Plan',link:['Which Silvia','which']},
@@ -503,6 +507,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
       {id:'p7d',t:'Hardware scales or ToF (optional)',d:'Each one is independent of the core install.',src:'Plan'}
     ]}
   ];
+
   var SETTINGS=[['DreamSteam','Off','Settings, Boiler'],['Brew Delta','Off','Settings, Boiler'],['Temperature Offset','5','Settings, Boiler'],['HPWR','100','Boiler, Advanced'],['Main Divider','5','Boiler, Advanced'],['Brew Divider','3','Boiler, Advanced']];
   var ALL=[];PHASES.forEach(function(p,i){p.steps.forEach(function(s){s.phase=i;ALL.push(s)})});
   var KEY='silvia-install-runbook-v1';
@@ -663,8 +668,16 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     state.done={};touch();renderAll();
   });
 
+  /* links from other pages (the wiring map's back-links): #p3a opens its phase and points at the step */
+  function fromHash(){
+    var id=(location.hash||'').slice(1),s=ALL.filter(function(x){return x.id===id})[0];if(!s||!vis(s))return;
+    if(state.phase!==s.phase){state.phase=s.phase;renderNav();renderPhase()}
+    var el=document.querySelector('[data-step="'+id+'"]');if(!el)return;
+    el.scrollIntoView({block:'center'});el.classList.add('hit');setTimeout(function(){el.classList.remove('hit')},2600);
+  }
   state=loadLocal()||defaults();
   renderAll();setStatus('loading');
+  fromHash();window.addEventListener('hashchange',fromHash);
   connect();
 })();
 </script>

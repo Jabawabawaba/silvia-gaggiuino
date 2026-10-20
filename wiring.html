@@ -378,6 +378,13 @@ figcaption{font-size:14px;color:var(--muted);margin-top:8px;max-width:90ch}
 
 .detail{margin-top:14px;border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:10px;background:var(--surface);padding:14px 16px;display:grid;gap:10px}
 .detail.empty{border-left-color:var(--line)}
+/* back-links under the detail card */
+.detail .d-refs{border-top:1px solid var(--line);padding-top:10px;display:grid;gap:6px}
+.detail .d-refs ul{margin:0;padding:0;list-style:none;display:grid;gap:6px}
+.detail .d-refs li{font-size:15px;line-height:1.45}
+.detail .d-refs .rg{font:600 11px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-right:10px}
+.detail .d-refs .sep{color:var(--muted)}
+.detail .d-refs a{color:var(--accent-ink)}
 .d-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px}
 .d-id{font:700 22px/1 var(--f-mono)}
 .d-route{font-size:17px;font-weight:600}
@@ -529,6 +536,275 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
 
 <script>
 (function(){
+  /* ---------- back-links from the wiring drawing ----------
+     For whatever is picked (a run, a part or a set of runs), every place on the site whose instructions link to it.
+     Found from those pages' own link data, so the two directions can't drift apart: the runbook steps' map fields
+     (runbook-phases.js), the troubleshooting symptoms' (trouble-data.js) and the power-on checks' MAPS
+     (checks-map.js, titles pulled from checks.tpl.html at build), plus the LED switch mod's wiring step.
+     Whole-harness and layer links are left out: they point at everything. */
+  var REFS=(function(){
+    var RB=(function(){
+  /* The install, phase by phase. Shared by runbook.tpl.html and the wiring page's back-links (wiring-refs.js).
+     Each step: id, t, d, src, link [label, key], map (a wiring-map target, or [[label, target, when, set label], ...];
+     see maplink.js), w (which machines; see machine.js). */
+  var PHASES=[
+    {id:'p0',n:'Phase 0',name:'Before you start',goal:'Decide what is still open, record the stock machine, and get the bench ready.',steps:[
+      {id:'p0v',t:'Identify your Silvia',d:'Version, E or M model, and mains voltage change a few of the steps below. The rating plate gives the voltage; the Which Silvia page helps with the version.',src:'Plan',link:['Which Silvia','which']},
+      {id:'p0a',t:'Photograph the stock machine',d:'Every side, the backs of the switches, the boiler top and each wire end, before anything is unplugged. These photos are your fallback reference.',src:'Plan'},
+      {id:'p0b',t:'Confirm the voltage and note the element power',d:'Read the rating plate, not the listing. The power-on checks use the element wattage to work out its expected resistance.',src:'Plan'},
+      {id:'p0c',t:'Settle the open Discord questions',d:'Where the pressure sensor goes (the OPV tee or the 3-way valve\'s bottom port), how long the screen cable needs to be for your mount, and which screen housing fits. They are listed in section 9 of the plan.',src:'Plan'},
+      {id:'p0d',t:'Check the cord and outlet',d:'A grounded three-prong cord, and a {outlet} for first power-on.',src:'Official'},
+      {id:'p0e',t:'Know where the OPV is set',d:'Gaggiuino wants the OPV at least 1 bar above the highest shot pressure you plan to use. The Test OPV utility in Phase 5 should peak at 10.5 to 13 bar.',src:'Official'},
+      {id:'p0e1',t:'The V1 OPV is set with washers',d:'The original Silvia\'s OPV has a single nut, and adding washers can only lower its pressure. If Test OPV reads low, take out any washers a previous owner added; if it still reads low, the spring or the whole OPV needs replacing. V2 and later have a two-nut adjuster.',src:'Wikipedia',w:'ver:V1'},
+      {id:'p3a1',t:'Check how the thermocouple mounts on your boiler',d:'Silvia boilers changed design in May 2000. Before you buy a thermocouple, confirm on Discord how one mounts on an earlier boiler.',src:'Wikipedia',w:'early'},
+      {id:'p0f',t:'Get the tools on the bench',d:'Multimeter, open-barrel crimper for the boiler spades, insulated crimper for butt splices and forks, strippers, heat gun, self-fusing silicone tape, oil-based marker, Kapton tape and zip ties.',src:'Plan'},
+      {id:'p0g',t:'Print the wire labels',d:'About two sheets of Letter or A4. The boiler ends get marker instead of paper.',src:'Plan',link:['Wire labels','labels']}
+    ]},
+    {id:'p1',n:'Phase 1',name:'Bench test',goal:'Prove the PCB, screen and sensors work on the bench, before anything goes into the machine. Faults are far easier to find here.',steps:[
+      {id:'p1a',t:'Lay the electronics out safely',d:'In their housings, or on a non-conductive surface, before any power is connected.',src:'Official'},
+      {id:'p1b',t:'Connect the bench set',d:'Thermocouple to J4, pressure sensor to J6, screen to J1, SSR control to J9 (R1 to +, GND to −), and the ToF to J2 if you have one.',src:'Official',map:[['On the wiring map','runs:LV7,LV8,LV9,LV10,LV11',null,'The bench set: SSR control, sensors and screen']]},
+      {id:'p1c',t:'Fold the thermocouple wires',d:'Fold each bare wire over before clamping it in J4, and keep the insulation out of the clamp.',src:'Official',map:'run:LV10'},
+      {id:'p1d',t:'Check the screen cable by pin, not color',d:'Blue and yellow can be swapped between cable revisions. Don\'t take a pre-made cable apart.',src:'Official',map:'run:LV11'},
+      {id:'p1e',t:'Power it from the PCB\'s USB-C',d:'No mains anywhere near it yet.',src:'Official'},
+      {id:'p1f',t:'Watch it boot',d:'"Initialization in progress" clears in a few seconds, then "Filling boiler" shows and a red LED under the PCB lights.',src:'Official'},
+      {id:'p1g',t:'Warm the thermocouple',d:'Hold it in your hand. The temperature should rise; if it falls, swap the two thermocouple wires.',src:'Official',map:'run:LV10'},
+      {id:'p1h',t:'Check the SSR light and pressure',d:'The SSR light is on below the setpoint and flashes near it. Pressure reads 0.0 bar and holds steady. The target is brew temperature, not steam.',src:'Official'},
+      {id:'p1j',t:'Join it to your Wi-Fi',d:'Connect to the Gaggiuino AP (its password is the network name with a zero for the "o" and no space), open gaggiuino.local, then Settings, System, Connect, and pick a 2.4 GHz network.',src:'Official'},
+      {id:'p1i',t:'Match the firmware versions',d:'Settings, About: the core and screen build numbers match each other and the latest release. If not, update over the air from gaggiuino.local in this order: core, then ui-embedded, then ui-web. A PCB v4 core can also be flashed with the ST-Link, with the PCB\'s USB-C unplugged.',src:'Official'}
+    ]},
+    {id:'p2',n:'Phase 2',name:'Prep and harness',goal:'Strip the old wiring with a record of where it went, then build the new harness on the bench.',steps:[
+      {id:'p2a',t:'Unplug and open the machine',d:'Cord out of the wall and the inlet. Remove the cup tray, top cover and whatever panels you need.',src:'Plan'},
+      {id:'p2b',t:'Label each stock wire before you pull it',d:'And note which inlet pin is line and which is neutral; some machines have them swapped.',src:'Official',map:[['Every run on the wiring map','']]},
+      {id:'p2b1',t:'E model: take out the energy-saver module',d:'The E\'s power switch is a push button that works with its GICAR energy-saver module, which gives the 30-minute auto-off. The custom harness leaves the module out and needs a power switch that latches on and off by itself, so fit a double-pole rocker like the M model\'s. Confirm the part on Discord before buying.',src:'Auber / Wikipedia',w:'model:E'},
+      {id:'p2b2',t:'Find the heating LED\'s wires',d:'From V5 on, the heating light is a round LED beside the power switch instead of the older vertical bar lamp. Trace where its wires go now. In the stock harness it usually runs from the switched line to the element terminal it shares with the steam thermostat. In the new harness it goes across the element instead, AC7 to the heater line after the safety thermostat and AC8 to neutral, so it shows when the SSR is on. If your lamp has more than two wires, or the E\'s energy-saver module drives it, ask on Discord before rewiring it.',src:'Wikipedia / Plan',w:'ver:V5,V6',map:[['The heating light on the wiring map','part:lamp']]},
+      {id:'p3a0',t:'Lift the boiler insulation',d:'From V5 on the boiler is insulated. Fold it back to reach the thermostats before you take any off. It goes back on in Phase 3, after the thermocouple.',src:'Wikipedia',w:'ver:V5,V6'},
+      {id:'p2c',t:'Remove the brew thermostat',d:'Undo its clamp screws. The thermocouple goes into one of those boiler-top holes later. The 165 °C safety thermostat stays; it has a reset button on top.',src:'Discord / GaggiMate',map:[['The thermocouple on the wiring map','run:LV10']]},
+      {id:'p2d',t:'Decide on the steam thermostat',d:'realNiche\'s harness doesn\'t wire it, so it no longer limits anything whether it stays in the boiler or comes out. Either way, set max steam to 150 °C in Phase 6.',src:'Discord'},
+      {id:'p2e',t:'Cut and label each run',d:'Start from the cut list, cut a little long, and put both labels on before crimping.',src:'Discord',link:['Cut list','cut'],map:[['Every run on the wiring map','']]},
+      {id:'p2f',t:'Crimp the boiler ends with the open-barrel crimper',d:'Uninsulated spades. Each gets self-fusing silicone tape once it\'s fitted and the power-on checks have probed it; check g1 is the reminder.',src:'Official',map:'part:boiler'},
+      {id:'p2g',t:'Use two-wire spades where runs share a terminal',d:'Blue, never red, for two 18 AWG wires: SSR terminal 1, the safety thermostat, the power switch neutral spade, the lamp, the pump, the solenoid and the boiler ground.',src:'Discord',map:[['On the wiring map','runs:AC3,AC4,AC6,AC7,AC8,AC9,AC10,AC11,AC12,G1,G2',null,'Runs that share a terminal']]},
+      {id:'p2h',t:'Fork spades on all four SSR terminals',d:'Two load, two control.',src:'Discord',map:'part:ssr'},
+      {id:'p2i',t:'Pull-test every crimp',d:'A firm tug. Redo any that move.',src:'Official'}
+    ]},
+    {id:'p3',n:'Phase 3',name:'Mechanical',goal:'Fit the sensors, SSR, PCB and screen. Easier with the boiler lifted.',steps:[
+      {id:'p3a',t:'Fit the thermocouple',d:'M3, screwed into one of the boiler-top holes the brew or steam thermostat\'s clamp used. The safety thermostat on the front of the boiler stays where it is. GaggiMate\'s Silvia guide suggests the middle or left-most hole for better readings. Thermal paste rated to 180 °C or more, finger tight only, with the wire free to rotate. Route the lead around the front of the boiler.',src:'Discord / GaggiMate',map:'run:LV10'},
+      {id:'p3a2',t:'Refit the boiler insulation',d:'Fold it back over the boiler with the thermocouple lead routed out cleanly, clear of the element terminals.',src:'Plan',w:'ver:V5,V6'},
+      {id:'p3b',t:'Fit the pressure sensor',d:'On the tee and elbow you chose in Phase 0. Loctite 55 on the tee and elbow threads rather than PTFE tape, so they can be turned back to line up. The transducer seals on an O-ring, not its thread: press the flat 11 × 6 mm O-ring flush into the elbow\'s 1/4" socket first, because the sensor\'s own base O-ring often can\'t reach the seat, then hand tight plus at most a quarter turn, never more. Keep the sensor off metal; a wrap of foam helps if readings are noisy.',src:'Discord',map:[['Its cable on the wiring map','run:LV9']]},
+      {id:'p3c',t:'Mount the SSR on the left wall',d:'One screw, washers and a nut through a drilled hole, or a small bracket, clear of the pump.',src:'Discord',map:'part:ssr'},
+      {id:'p3d',t:'Mount the PCB',d:'In its housing, to the right of the 3-way valve or beside the pump. Thin velcro strips hold it.',src:'Discord',map:'part:pcb'},
+      {id:'p3e',t:'Fit the screen housing and mount',d:'Pass the cable through the vent inside an unshrunk heat-shrink sleeve so the sharp edge can\'t cut it.',src:'Official',map:'run:LV11'}
+    ]},
+    {id:'p4',n:'Phase 4',name:'Wire and check',goal:'Fit the harness run by run, then prove it with the meter before the cord goes anywhere near the wall.',steps:[
+      {id:'p4a',t:'Fit the mains harness',d:'Run by run, against the wiring reference and realNiche\'s diagram. Inlet to the power switch\'s outer spades, loads from its center spades.',src:'Discord',link:['Wiring reference','wiring'],map:[['Every run on the wiring map','']]},
+      {id:'p4b',t:'Fit the low-voltage runs',d:'Brew, steam and hot water each use one pole: signal on its center spade, ground on its outer spade. Hot water goes to J5 B15. The ground chain ends at J7 GND.',src:'Discord',map:[['On the wiring map','runs:LV1,LV2,LV3,LV4,LV5,LV6',null,'Switch signal and ground wires']]},
+      {id:'p4c',t:'Route and tie',d:'Mains high, low voltage low and to the right. Nothing but 200 °C silicone wire touches the boiler or steam wand. Talon ran mains, the pump hose and the pump wires through the center slot at the back.',src:'Discord',map:[['Low-voltage wires on the wiring map','layer:lv']]},
+      {id:'p4d',t:'Add strain relief',d:'At the SSR and where the screen cable leaves the machine.',src:'Plan',map:'part:ssr'},
+      {id:'p4z',t:'Pass the power-on checks',d:'Every section up to Covers on, all unplugged. Have someone else trace the harness against the wiring reference too. The last section waits until the covers are back on in Phase 5.',src:'Plan',link:['Power-on checks','checks'],stop:true}
+    ]},
+    {id:'p5',n:'Phase 5',name:'First power-on',goal:'Close up and run the last checks, then mains for the first time: fill, prime and pressure-test.',stop:'Don\'t plug in until every check on the power-on checklist passes.',settings:true,steps:[
+      {id:'p5a0',t:'Close it up, then the last checks',d:'Top cover and every panel back on, with the screen cable clear of the vent edge. Then run Covers on, the last section of the power-on checks, before anything gets plugged in.',src:'Plan',link:['Power-on checks','checks']},
+      {id:'p5a',t:'Tank full, cup under the wand',d:'Portafilter out, drip tray in, and a cup or jug under the steam wand for the first fill. Steam knob closed for now.',src:'Plan'},
+      {id:'p5b',t:'Plug in and switch on',d:'Use a {outlet}. Stay by the plug. At any smell, smoke, trip or odd noise, unplug first and investigate after.',src:'Plan'},
+      {id:'p5d',t:'Fill the boiler first',d:'Straight after switch-on, before anything else: open the steam knob and turn on Flush. Run it until water comes steadily out of the steam wand, not just the group; that means the boiler is full and the air is out. Close the knob, then flush the group for 5 seconds or more. This is how Rancilio fills a new Silvia, and it keeps the element from heating a dry or half-empty boiler.',src:'Rancilio manual'},
+      {id:'p5d2',t:'Watch the temperature rise',d:'Once the boiler is full, the temperature must climb while the SSR light is on. If it falls instead, switch off and unplug: the thermocouple wires are reversed at J4.',src:'Plan',map:'run:LV10'},
+      {id:'p5c',t:'Enter the Silvia starting settings',d:'Settings, Boiler: the values in the table above. Tap save once when they are all in.',src:'Discord'},
+      {id:'p5e',t:'Run [UT] Tube Fill',d:'From Community Profiles in the web UI. It fills the sensor line so there is no air in it.',src:'Official'},
+      {id:'p5f',t:'Run [UT] Test OPV with a blank basket',d:'Peak pressure 10.5 to 13 bar, water moving through the OPV tubing, no leaks.',src:'Official'},
+      {id:'p5g',t:'Check for leaks, unplugged',d:'Switch off and unplug first. Lift the top cover and touch a dry paper towel to the tee, elbow, sensor and thermocouple. Close it up and rerun h1 to h4 of the power-on checks before you plug back in, and h5 and h6 as well if the screen cable moved.',src:'Plan',link:['Power-on checks','checks']},
+      {id:'p5h',t:'Try each switch',d:'Brew runs the pump, steam switches the target to steam temperature, and hot water starts hot water mode. If only hot water does nothing, recheck f5 and f6: its switch has to land on J5 B15, not A12.',src:'Plan',map:[['On the wiring map','runs:LV1,LV2,LV3,LV4,LV5,LV6',null,'Switch signal and ground wires']]},
+      {id:'p5i',t:'Let it heat and settle',d:'Watch the temperature reach the target and hold there. Anything odd: the troubleshooting page goes symptom by symptom.',src:'Plan',link:['Troubleshooting','trouble']}
+    ]},
+    {id:'p6',n:'Phase 6',name:'Calibrate',goal:'Tune Gaggiuino to this pump and boiler.',steps:[
+      {id:'p6a',t:'Run [UT] PZ Cal',d:'Calibrates Pump Zero, the water moved per pump pulse at 0 bar. Follow the profile\'s own instructions.',src:'Official'},
+      {id:'p6b',t:'Calibrate hardware scales, if fitted',d:'In the web UI, with a 200 to 400 g object.',src:'Official'},
+      {id:'p6c',t:'Set the ToF ranges, if fitted',d:'For the Silvia\'s deeper tank, about 200 mm, then check at known fill levels.',src:'Discord'},
+      {id:'p6d',t:'Temperature offset, only against a real measurement',d:'Change it only if you can measure at the group head, for example with a Scace-type device.',src:'Official'},
+      {id:'p6e',t:'Set max steam to 150 °C',d:'The steam thermostat is off the heater line now, even if it\'s still on the boiler, so this setting and the 165 °C safety thermostat are the only limits.',src:'Discord'}
+    ]},
+    {id:'p7',n:'Phase 7',name:'Finish',goal:'Tidy up, write down what you ended with, and add the extras when you want them.',steps:[
+      {id:'p7a',t:'Final tidy, unplugged',d:'Zip ties where they\'re needed and Kapton tape on the screen cable. Close it up again and rerun the whole Covers on section, h1 to h6, before you plug back in.',src:'Official',link:['Power-on checks','checks']},
+      {id:'p7b',t:'Write down your final settings',d:'In the notes below, along with anything you would do differently.',src:'Plan'},
+      {id:'p7c',t:'LED switch mod (optional)',d:'Brings back the brew, steam and hot water switch lights.',src:'Discord',link:['LED switch mod','led']},
+      {id:'p7d',t:'Hardware scales or ToF (optional)',d:'Each one is independent of the core install.',src:'Plan'}
+    ]}
+  ];
+
+      return PHASES;
+    })();
+    var TR=(function(){
+  /* Troubleshooting symptoms, shared by trouble.tpl.html and the wiring page's back-links (wiring-refs.js).
+     Each: c, s, causes, check, src; d marks unplug-now; w limits it to some machines; map links its wiring. */
+  var T=[
+    {c:'power',d:1,s:'The breaker or {gfci} trips when you plug in or switch on',
+     causes:['Line or neutral touching earth: a bare spade, or a wire pinched against the frame.','The element leaking to its sheath.','Water on the wiring, often from a leak above.'],
+     check:['Leave it unplugged; don\'t keep resetting the breaker.','With the covers on, rerun [h3] and [h4]. Then open it up and rerun [d1], [d2], [d5], [d6] and [c2].','Look for wet or crushed insulation near the boiler, the valve and under the drip tray.'],src:'Official grounding guide · meter checks'},
+    {c:'power',s:'Nothing happens when you switch on',map:[['The power path on the wiring map','runs:AC1,AC3,AC4,AC2,AC8,AC10,AC11,AC12',null,'Line and neutral to the PCB']],
+     causes:['No supply getting through the power switch: inlet leads loose or on the wrong spades.','E model: the push-button power switch doesn\'t latch without its energy-saver module.','The cord or the outlet.'],
+     check:['Unplugged, switch on and rerun [e1] and [e2]; switch off and rerun [e9] and [e10].','On an E, fit a latching double-pole switch; see the runbook\'s Phase 2.','Try the cord on another appliance.'],src:'Meter checks · Auber Silvia E note'},
+    {c:'power',w:'model:E',s:'It turns itself off after about 30 minutes',
+     causes:['The E\'s energy-saver module is still in the circuit.'],
+     check:['The custom harness leaves the module out entirely. Trace the power switch: inlet to its outer spades, loads from its center spades, nothing to the module.'],src:'Wikipedia · Auber Silvia E note'},
+    {c:'screen',s:'The screen stays black',map:'run:LV11',
+     causes:['The J1 cable wired by color rather than by pin; blue and yellow vary between cable revisions.','The cable not fully seated at either end.','No power to the PCB: USB-C on the bench, mains in the machine.'],
+     check:['Check J1 pin by pin: GND, TX, RX, 5V.','Don\'t take a pre-made cable apart; reseat it.','On the bench, power from the PCB\'s USB-C and try again.'],src:'Official PCB guide'},
+    {c:'screen',s:'"Initialization in progress" never clears',map:'run:LV11',
+     causes:['The screen and PCB aren\'t talking: TX and RX crossed wrong on J1.','The core and screen firmware are from different releases.'],
+     check:['Check J1 by pin against the PCB order.','Bring both to the same release: core first, then ui-embedded, then ui-web. The core can also be flashed with the ST-Link.'],src:'Official PCB guide · MCU flashing'},
+    {c:'screen',s:'You can\'t find the Gaggiuino network or gaggiuino.local',
+     causes:['The access point can show up as ESP_xxxxxx at first instead of Gaggiuino AP.','Your Wi-Fi is 5 GHz only; Gaggiuino joins 2.4 GHz networks.','Some phones and browsers don\'t open .local addresses.'],
+     check:['Join the access point; its password is the network name with a zero for the "o" and no space.','In Settings, System, Connect, pick a 2.4 GHz network.','Find the machine\'s address in your router\'s device list and open that instead.'],src:'Official Gen 3 manual'},
+    {c:'heat',d:1,s:'The temperature falls while the element heats',map:'run:LV10',
+     causes:['The thermocouple is reversed at J4. The controller sees a falling temperature and may keep heating. The public Gen 2 firmware cuts the heater once the reading reaches 0 °C; Gen 3\'s behavior isn\'t published, and the 165 °C safety thermostat is the last line.'],
+     check:['Switch off and unplug now.','Swap the two thermocouple wires at J4, folding the bare ends over again.','Retest on the bench: warm the thermocouple in your hand and the reading must rise.'],src:'Official PCB guide · review of these pages'},
+    {c:'heat',s:'The temperature reading is jumpy, stuck or far off',map:'run:LV10',
+     causes:['Insulation clamped in J4 instead of bare wire.','A grounded thermocouple, or earth touching the 5 V ground. The DC side has to float.','A broken thermocouple or lead.','The lead routed alongside mains wires.'],
+     check:['Refit J4 with the bare wire folded over and no insulation in the clamp.','Rerun [b5], [b6] and [c7].','Route the lead around the front of the boiler, away from mains runs.'],src:'Official PCB and grounding guides'},
+    {c:'heat',s:'The SSR light comes on but the boiler doesn\'t heat',map:[['The heater path on the wiring map','runs:AC3,AC5,AC6,AC9',null,'The heater path']],
+     causes:['The safety thermostat has tripped. It has a reset button on top.','A break in the heater line: [AC5], the safety thermostat, [AC6].','The element\'s neutral open: [AC9].','An open element.','The SSR failed open: its light comes on but it never switches the load.'],
+     check:['Unplugged, take the top off and press the reset button. If it clicks, it had tripped; find out why before using it.','Rerun [c1], [c3], [e3] and [e4].','If every check passes, replace the SSR.'],src:'Clive Coffee · meter checks'},
+    {c:'heat',s:'The SSR light never comes on',map:[['On the wiring map','runs:LV7,LV8',null,'SSR control wires']],
+     causes:['SSR control reversed or open: J9 R1 to SSR +, J9 GND to SSR −.','The temperature is already above the target.'],
+     check:['Rerun [f7] and [f8]; check [LV7] and [LV8].','Read the temperature on the screen before chasing wiring.'],src:'realNiche diagram · official LV schematic'},
+    {c:'heat',d:1,s:'It keeps heating past the target',map:'part:ssr',
+     causes:['A reversed thermocouple (see above), or one loose and out of contact so the reading lags.','The SSR failed closed.','The element wired around the SSR.'],
+     check:['Switch off and unplug.','Rerun [d7]: with the switch on, L to N must not read near the element\'s resistance.','Check [AC3], [AC4] and [AC5] at the SSR against the wiring reference.'],src:'Meter checks'},
+    {c:'heat',d:1,s:'The safety thermostat keeps tripping',map:[['On the wiring map','runs:AC5,AC6',null,'The safety thermostat\'s runs']],
+     causes:['The boiler heated dry or half empty. After it\'s been drained, fill it through the wand before it heats: steam knob open, Flush until water runs steadily from the wand.','Overshoot from a reversed or loose thermocouple.','A steam target set too high. The steam thermostat is off the heater line after the conversion, so only the firmware setting keeps steam below the 165 °C safety.'],
+     check:['Don\'t bridge it. Fix the cause, then reset it.','Keep max steam at 150 °C.','Check the thermocouple is finger tight with paste under it.'],src:'Official Gen 3 manual · Discord'},
+    {c:'heat',s:'The temperature swings or overshoots in normal use',
+     causes:['Gaggia defaults rather than Silvia starting values.','Poor contact at the thermocouple: no paste, or not finger tight.'],
+     check:['Start from HPWR 100, Main Divider 5, Brew Divider 3, Brew Delta off.','Refit the thermocouple with fresh paste.','Change Temperature Offset only against a real group-head measurement.'],src:'Discord · official Gen 3 manual'},
+    {c:'pressure',s:'Pressure reads 0.0 bar during a shot',map:'run:LV9',
+     causes:['J6 wired out of order: 5V, GND, P.','The transducer screwed in too far. Overtightening can damage its O-ring and stop it reading.','Air in the sensor line.'],
+     check:['Check [LV9] pin by pin.','Back the transducer off to hand tight plus at most a quarter turn.','Run [UT] Tube Fill from the community profiles.'],src:'Official custom wiring guide'},
+    {c:'pressure',s:'The pressure reading is noisy',map:'run:LV9',
+     causes:['Pump vibration through the sensor: the Discord thread found a tee at the pump noisier than one at the OPV.','The sensor touching the frame.','Sensor wires bundled with mains.'],
+     check:['Keep the sensor off the frame and other metal; a wrap of foam helps.','Keep [LV9] away from mains runs.'],src:'Official custom wiring guide · Discord'},
+    {c:'pressure',s:'Test OPV peaks outside 10.5 to 13 bar',
+     causes:['The OPV setting. Gaggiuino needs it at least 1 bar above your highest shot pressure.','The blank basket or portafilter not sealing.'],
+     check:['Adjust the OPV. V2 and later have a two-nut adjuster.','Reseat the basket and gasket and rerun the test.'],src:'Official machine-specific guide · Wikipedia'},
+    {c:'pressure',w:'ver:V1',s:'The OPV won\'t adjust the way the guides show',
+     causes:['The V1 OPV has a single nut, not a two-nut adjuster. Adding washers can only lower its pressure.'],
+     check:['Too high: add washers, then rerun [UT] Test OPV.','Too low: take out any washers a previous owner added. If it still reads low, replace the spring or the OPV.'],src:'Wikipedia'},
+    {c:'pressure',s:'The pump doesn\'t run',map:[['The pump on the wiring map','part:pump'],['The brew switch wires','runs:LV2,LV4,LV5']],
+     causes:['The brew input isn\'t reaching J7 B.','An open pump thermal fuse.','J12 or [AC14] not connected.'],
+     check:['Rerun [f1], [f2], [c4], [c5], [e6] and [e7]. Measure the pump coil both ways; its diode reads OL one way.'],src:'Meter checks'},
+    {c:'pressure',s:'The pump runs but no water reaches the group',
+     causes:['Tank empty, or its intake out of the water.','An air lock.','The 3-way valve not opening: J13, [AC13] or the coil.'],
+     check:['Prime it: open the steam knob and run Flush until water flows steadily from the wand.','Rerun [c6], [e5] and [e8].'],src:'Meter checks'},
+    {c:'pressure',s:'Leaks at the tee, elbow or sensor',
+     causes:['The transducer sealing on its threads: the flat O-ring has to sit flush inside the fitting.','Tapered fittings without Loctite 55, or loosened while lining them up.','Mixed thread types: a 1/4" NPT part won\'t seal to the G1/4 (BSPP) transducer.'],
+     check:['Unplug and let it cool before touching fittings.','Transducer hand tight plus at most a quarter turn; Loctite 55 on the tee and elbow only.'],src:'Official custom wiring guide · Discord'},
+    {c:'switch',s:'A switch does nothing',map:[['On the wiring map','runs:LV1,LV2,LV3,LV4,LV5,LV6',null,'Switch signal and ground wires']],
+     causes:['Signal and ground on the wrong spades.','Hot water on J5 A12 instead of B15. The firmware reads the hot water switch on B15, as realNiche\'s schematic shows.','A break in the ground chain between switches.'],
+     check:['Rerun [f1] to [f6] with the plugs off the PCB.','Check [LV3] lands on B15.','Check [LV4], [LV5] and [LV6].'],src:'Firmware pin definitions · Discord'},
+    {c:'switch',s:'A switch acts as if it\'s always on',map:[['On the wiring map','runs:LV1,LV2,LV3,LV4,LV5,LV6',null,'Switch signal and ground wires']],
+     causes:['Signal and ground on two spades that are always connected.'],
+     check:['Put the signal on the ground pole\'s center spade and ground on its outer spade, then rerun the OFF checks [f2], [f4] and [f6].'],src:'realNiche diagram'},
+    {c:'switch',s:'The switch lights went dark',
+     causes:['Expected. The lamps ran on mains; on low voltage they stay dark.'],
+     check:['The LED switch mod brings them back.'],src:'Discord LED guide'},
+    {c:'switch',s:'LED mod: an LED won\'t light, or its switch does nothing',
+     causes:['The LED in backwards.','5 V and ground swapped without moving the PCB input, so the input sees 5 V when the switch is on and reads it as off.'],
+     check:['Use the LED guide\'s charger test to find the 5 V side.','The PCB input always goes on the ground pole\'s center spade.'],src:'Discord LED guide'},
+    {c:'switch',s:'The heating light never lights, or never goes out',map:[['The heating light on the wiring map','part:lamp']],
+     causes:['[AC7] and [AC8] not across the element: the lamp must take the heater line after the safety thermostat, not the line before the SSR.','From V5 on, the heating light is a round LED that may be wired differently from the old lamp.'],
+     check:['Check [AC7] and [AC8] against the wiring reference.'],src:'realNiche diagram · Wikipedia'},
+    {c:'fw',s:'An over-the-air update fails',
+     causes:['A release that needs an earlier breaking update first: builds before February 16, 2025 need 616ea70 before the latest.','The network dropping during upload.','Files flashed out of order.'],
+     check:['Don\'t power down during an update; a failed or canceled one reverts by itself.','Connect your device straight to the Gaggiuino access point and retry.','Order: core, then ui-embedded, then ui-web.'],src:'Official MCU flashing guide'},
+    {c:'fw',s:'The ST-Link won\'t connect',
+     causes:['The PCB\'s USB-C is plugged in.','A wiring slip on 3.3V, SWDIO, SWCLK and GND.','STM32CubeProgrammer not working with your ST-Link.'],
+     check:['Unplug the USB-C, check the four wires, and try the older ST-Link utility if CubeProgrammer won\'t see it.'],src:'Official MCU flashing guide'},
+    {c:'extras',s:'The tank level reads wrong',
+     causes:['Ranges set for a Gaggia tank. The Silvia\'s is deeper, about 200 mm.'],
+     check:['Set the ranges in the ToFnLED settings, then check at known fill levels.'],src:'Discord'},
+    {c:'extras',s:'The scales stay at 0',
+     causes:['Hardware scales not turned on in the settings.','No 5 V at the HX711 board.','5 V and CLK swapped on the scales cable. A 2025 Silvia V6 build had exactly this.'],
+     check:['Turn on hardware scales in the settings, then measure 5 V at the HX711 board.','Check the cable pin by pin against J8: D2, 5V, GND, CLK, D1. Then calibrate.'],src:'Discord'},
+    {c:'extras',s:'The scales drift or read wrong',
+     causes:['Not calibrated.','Load cells or mount wrong for the Silvia: the Joscha mount takes 1 kg cells.','The mount moves on the frame.'],
+     check:['Calibrate in the web UI with a 200 to 400 g object.','If the mount wobbles, wrap self-fusing silicone tape around the frame where it clips on, then push the mount back over it.'],src:'Official HW scales guide · Discord'}
+  ];
+
+      return T;
+    })();
+    var CK=(function(){
+  /* Shared by checks.tpl.html and the wiring page's back-links (wiring-refs.js). */
+  /* where each check sits on the wiring reference's drawing (see maplink.js); path checks light the runs their text names */
+  var SWL='runs:LV1,LV2,LV3,LV4,LV5,LV6';
+  var MAPS={a3:'',b1:'layer:E',b2:'run:G1',b3:'runs:G1,G2',b5:'short:J7',b6:'run:LV10',
+    c1:'part:boiler',c2:'part:boiler',c3:'runs:AC5,AC6',c4:'part:pump',c5:'part:pump',c6:'part:sol',c7:'run:LV10',c8:'runs:AC6,AC9,AC14,AC10,AC13,AC11',
+    d3:'short:J7',d4:'short:J7',d5:'run:AC14',d6:'run:AC13',
+    e1:'runs:AC1,AC3,AC4',e2:'runs:AC2,AC8,AC10,AC11,AC12',e3:'runs:AC2,AC9',e4:'runs:AC5,AC6',e5:'run:AC13',e6:'run:AC14',e7:'runs:AC14,AC11,AC12',e8:'runs:AC13,AC12',e9:'runs:AC1,AC3,AC4',e10:'runs:AC2,AC8,AC10,AC11,AC12',
+    f1:'runs:LV2,LV4,LV5',f2:'runs:LV2,LV4,LV5',f3:'runs:LV1,LV4',f4:'runs:LV1,LV4',f5:'runs:LV3,LV4,LV5,LV6',f6:'runs:LV3,LV4,LV5,LV6',f7:'run:LV7',f8:'run:LV8',f9:SWL,f10:SWL,
+    g1:'part:boiler',g4:'part:ssr',g5:'runs:AC5,AC6',g6:'part:pcb',g7:'part:boiler',g8:'run:LV10',g9:'run:LV11',g12:'',g13:'part:pcb',g14:'run:LV10',g15:'part:pwr',h2:'layer:E'};
+
+      return MAPS;
+    })();
+    var CKT=[["a1", "Cord out of the wall and out of the machine"], ["a2", "Meter set to resistance or continuity"], ["a3", "Harness complete and every spade seated"], ["b1", "Inlet earth pin ↔ bare chassis metal"], ["b2", "Inlet earth pin ↔ boiler ground spade"], ["b3", "Inlet earth pin ↔ solenoid ground spade"], ["b4", "Inlet earth pin ↔ group head"], ["b5", "Inlet earth pin ↔ PCB 5 V ground (J7 GND pin)"], ["b6", "Thermocouple lead ↔ boiler body"], ["c1", "Boiler element, across its two terminals"], ["c2", "Element terminal ↔ boiler body"], ["c3", "Safety thermostat (165 °C), across it, cold"], ["c4", "Pump thermal fuse, across it"], ["c5", "Pump coil"], ["c6", "Solenoid coil"], ["c7", "Thermocouple loop"], ["c8", "Element, pump and solenoid leads back on"], ["d1", "Inlet L ↔ inlet earth"], ["d2", "Inlet N ↔ inlet earth"], ["d3", "Inlet L ↔ J7 GND (5 V side)"], ["d4", "Inlet N ↔ J7 GND (5 V side)"], ["d5", "PCB J12 spade ↔ inlet earth"], ["d6", "PCB J13 spade ↔ inlet earth"], ["d7", "Inlet L ↔ inlet N"], ["e1", "Inlet L ↔ PCB J11 spade"], ["e2", "Inlet N ↔ PCB J10 spade"], ["e3", "Inlet N ↔ element terminal 2"], ["e4", "SSR load terminal 2 ↔ element terminal 1"], ["e5", "PCB J13 ↔ solenoid coil spade"], ["e6", "PCB J12 ↔ pump coil terminal"], ["e7", "PCB J12 ↔ PCB J10, through the pump"], ["e8", "PCB J13 ↔ PCB J10, through the solenoid"], ["e9", "Inlet L ↔ PCB J11 spade, switch off"], ["e10", "Inlet N ↔ PCB J10 spade, switch off"], ["f1", "Brew ON: J7 B ↔ J7 GND"], ["f2", "Brew OFF: J7 B ↔ J7 GND"], ["f3", "Steam ON: J7 S ↔ J7 GND"], ["f4", "Steam OFF: J7 S ↔ J7 GND"], ["f5", "Hot water ON: J5 B15 ↔ J7 GND"], ["f6", "Hot water OFF: J5 B15 ↔ J7 GND"], ["f7", "J9 R1 pin ↔ SSR + terminal"], ["f8", "J9 GND pin ↔ SSR − terminal"], ["f9", "Each switch signal pin ↔ chassis"], ["f10", "J7 GND pin ↔ inlet L, then inlet N"], ["g1", "Every boiler and valve spade is uninsulated and wrapped in silicone tape"], ["g2", "Doubled terminals use spades sized for two 18 AWG wires"], ["g3", "Every crimp survives a firm tug"], ["g4", "SSR: fork spades on all four terminals, screws tight"], ["g5", "Safety thermostat sits between the SSR and the element"], ["g6", "J10 neutral, J11 line, J12 pump, J13 solenoid"], ["g7", "Nothing but 200 °C silicone wire touches the boiler or steam wand"], ["g8", "Thermocouple finger tight, lead free to rotate"], ["g9", "Screen cable protected at the vent; strain relief at the SSR"], ["g10", "No stray strands or bare metal anywhere"], ["g11", "Plumbing snug and dry"], ["g12", "Someone else traced the harness against the wiring reference"], ["g13", "Everything plugged back in"], ["g15", "The power switch latches on and off by itself"], ["g14", "Stop immediately if the temperature falls while heating"], ["h1", "Top cover and every panel back on, screws tight"], ["h2", "Inlet earth pin ↔ the top cover and each panel"], ["h3", "Inlet L ↔ inlet earth"], ["h4", "Inlet N ↔ inlet earth"], ["h5", "Inlet earth pin ↔ the screen cable's GND pin"], ["h6", "Inlet L, then inlet N ↔ the same GND pin"]];
+    var LINK={runbook:'runbook.html',checks:'power-on-checks.html',trouble:'troubleshooting.html',led:'led-mod.html'};
+    /* the LED switch mod's own wiring step: the switch signal and ground runs, and the LED runs */
+    var LED=[['LED switch mod, step 8: Wire it in','#s8','runs:LV1,LV2,LV3,LV4,LV5,LV6,OP3,OP4,OP5']];
+    function M(){return window.SilviaMachine||null}
+    function ok(w){var m=M();return !w||!m||m.matches(w)}
+    function e(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+    function base(u){return String(u).split('#')[0]}
+    function targets(map){if(map==null)return [];return typeof map==='string'?[[null,map]]:map}
+    function resolve(t,c){
+      var out={runs:[],part:null};
+      String(t||'').split(';').forEach(function(x){
+        var i=x.indexOf(':');if(i<0)return;var k=x.slice(0,i),val=x.slice(i+1);
+        if(k==='run')val.split('|').some(function(id){if(c.hasRun(id)){out.runs.push(id);return true}return false});
+        else if(k==='part')val.split('|').some(function(id){if(c.hasPart(id)){out.part=id;return true}return false});
+        else if(k==='runs')val.split(',').forEach(function(id){if(c.hasRun(id))out.runs.push(id)});
+        else if(k==='short')val.split(',').forEach(function(p){c.runs.forEach(function(r){if(r.short&&r.short.indexOf(p)===0)out.runs.push(r.id)})});
+      });
+      return out;
+    }
+    /* a part covers the runs that land on it, except the PCB, where everything lands */
+    function covers(res,sel,c){
+      var runs=res.runs.slice();
+      if(res.part&&res.part!=='pcb')runs=runs.concat(c.landing(res.part));
+      if(sel.t==='run')return runs.indexOf(sel.id)>=0;
+      if(sel.t==='part'){if(res.part===sel.id)return true;if(sel.id==='pcb')return false;var l=c.landing(sel.id);return res.runs.some(function(r){return l.indexOf(r)>=0})}
+      if(sel.t==='set')return runs.some(function(r){return sel.ids.indexOf(r)>=0});
+      return false;
+    }
+    function hit(map,sel,c){return targets(map).some(function(x){return ok(x[2])&&covers(resolve(x[1],c),sel,c)})}
+    function tslug(i){var s='t-'+TR[i].s.toLowerCase().replace(/\{[a-z]+\}/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,60),n=0;for(var j=0;j<i;j++)if(TR[j].s===TR[i].s)n++;return n?s+'-'+(n+1):s}
+    function fillT(s){var m=M();return String(s).replace(/\{gfci\}/g,m?m.text('gfci'):'GFCI or RCD').replace(/\{outlet\}/g,m?m.text('outlet'):'GFCI- or RCD-protected outlet').replace(/\{volts\}/g,m?m.text('volts'):'your mains voltage')}
+    function html(sel,c){
+      if(!sel)return '';
+      var groups=[];
+      var rb=[];
+      RB.forEach(function(p,pi){p.steps.forEach(function(s){
+        if(s.map==null||!ok(s.w))return;
+        if(hit(s.map,sel,c))rb.push('<a href="'+base(LINK.runbook)+'#'+s.id+'">'+e('Phase '+pi+': '+fillT(s.t))+'</a>');
+      })});
+      if(rb.length)groups.push(['Runbook',rb]);
+      var ck=[];
+      CKT.forEach(function(x){
+        var t=CK[x[0]];if(!t)return;
+        if(covers(resolve(t,c),sel,c))ck.push('<a href="'+base(LINK.checks)+'#'+x[0]+'" title="'+e(x[1])+'">'+x[0]+'</a>');
+      });
+      if(ck.length)groups.push(['Power-on checks',ck]);
+      var tr=[];
+      TR.forEach(function(t,i){
+        if(t.map==null||!ok(t.w))return;
+        if(hit(t.map,sel,c))tr.push('<a href="'+base(LINK.trouble)+'#'+tslug(i)+'">'+e(fillT(t.s))+'</a>');
+      });
+      if(tr.length)groups.push(['Troubleshooting',tr]);
+      var led=LED.filter(function(x){return covers(resolve(x[2],c),sel,c)}).map(function(x){return '<a href="'+base(LINK.led)+x[1]+'">'+e(x[0])+'</a>'});
+      if(led.length)groups.push(['Mods',led]);
+      if(!groups.length)return '';
+      return '<div class="d-refs"><span class="k">Elsewhere on the site</span><ul>'+groups.map(function(g){
+        return '<li><span class="rg">'+g[0]+'</span>'+g[1].join(g[0]==='Power-on checks'?' ':'<span class="sep"> · </span>')+'</li>';
+      }).join('')+'</ul></div>';
+    }
+    return {html:html};
+  })();
+
   var RUNS=[{"id": "AC1", "sys": "L", "short": "Inlet L → Power sw L", "frm": "Power inlet, L pin", "to": "Power switch, L pole outer spade", "gauge": "18 AWG", "mm": null, "lenNote": "Reuse the stock lead if it is sound, or measure", "ends": ["6.3 mm female spade", "6.3 mm female spade"], "src": "realNiche", "note": "Supply goes on the outer spades of the power switch; the loads come off the center spades.", "k": ["f", "f"], "color": "red", "hot": ""}, {"id": "AC3", "sys": "L", "short": "Power sw L → SSR 1", "frm": "Power switch, L pole center spade", "to": "SSR load terminal 1", "gauge": "18 AWG", "mm": 350, "ends": ["6.3 mm female spade", "Fork spade sized for two 18 AWG wires, shared with AC4"], "src": "Talon / RS lengths", "note": "Switched line into the SSR. The same SSR terminal also feeds the PCB through AC4.", "k": ["f", "fk2:SSR1"], "color": "red", "lenNote": "", "hot": ""}, {"id": "AC4", "sys": "L", "short": "SSR 1 → J11 Line", "frm": "SSR load terminal 1", "to": "PCB J11 (AC Line)", "gauge": "18 AWG", "mm": 200, "ends": ["Shared fork with AC3", "6.3 mm female spade"], "src": "Talon / RS lengths", "note": "Powers the PCB and feeds its pump and solenoid outputs.", "k": ["fk2:SSR1", "f"], "color": "red", "lenNote": "", "hot": ""}, {"id": "AC13", "sys": "L", "short": "J13 → Solenoid coil", "frm": "PCB J13 (Solenoid)", "to": "Solenoid, coil spade", "gauge": "18 AWG", "mm": 120, "ends": ["6.3 mm female spade", "Uninsulated 6.3 mm spade (open-barrel crimp) + self-fusing silicone tape"], "src": "RS lengths", "note": "PCB-switched line to the 3-way valve coil. The valve sits on the hot group, so bare spades and silicone tape are the safer choice there.", "k": ["f", "b"], "color": "red", "lenNote": "", "hot": ""}, {"id": "AC14", "sys": "L", "short": "J12 → Pump coil", "frm": "PCB J12 (Pump)", "to": "Pump, coil terminal", "gauge": "18 AWG", "mm": null, "lenNote": "Not in the reference lengths; measure", "ends": ["6.3 mm female spade", "6.3 mm female spade"], "src": "realNiche", "note": "PCB-switched line to the pump. Neutral reaches the pump's other terminal through its thermal fuse.", "k": ["f", "f"], "color": "red", "hot": ""}, {"id": "AC5", "sys": "H", "short": "SSR 2 → Safety tstat", "frm": "SSR load terminal 2", "to": "Safety thermostat (165 C), terminal 1", "gauge": "18 AWG", "mm": 350, "ends": ["Fork spade", "Uninsulated 6.3 mm spade (open-barrel crimp) + self-fusing silicone tape"], "hot": "b", "src": "RS lengths (thermostat to SSR)", "note": "The 165 C safety thermostat stays in the heater line. Never bypass it.", "k": ["fk", "b"], "color": "orange", "lenNote": ""}, {"id": "AC6", "sys": "H", "short": "Safety tstat → Element", "frm": "Safety thermostat, terminal 2", "to": "Boiler element, terminal 1", "gauge": "18 AWG", "mm": 250, "ends": ["Uninsulated 6.3 mm spade sized for two 18 AWG wires + self-fusing silicone tape, shared with AC7", "Uninsulated 6.3 mm spade (open-barrel crimp) + self-fusing silicone tape"], "hot": "both", "src": "Talon", "note": "Talon doubled the spade at the safety thermostat. The alternative is doubling at the element terminal, with both leads 250 mm.", "k": ["b2:TST2", "b"], "color": "orange", "lenNote": ""}, {"id": "AC7", "sys": "H", "short": "Safety tstat → Lamp L", "frm": "Safety thermostat, terminal 2", "to": "Heating lamp, L spade", "gauge": "18 AWG", "mm": 100, "lenNote": "100 mm doubled at the thermostat (Talon); 250 mm if doubled at the element", "ends": ["Shared with AC6", "6.3 mm female spade"], "hot": "a", "src": "Talon", "note": "The heating lamp sits across the element, so it lights whenever the SSR is heating.", "k": ["b2:TST2", "f"], "color": "orange"}, {"id": "AC2", "sys": "N", "short": "Inlet N → Power sw N", "frm": "Power inlet, N pin", "to": "Power switch, N pole outer spade", "gauge": "18 AWG", "mm": null, "lenNote": "Reuse the stock lead if it is sound, or measure", "ends": ["6.3 mm female spade", "6.3 mm female spade"], "src": "realNiche", "note": "The power switch breaks both line and neutral, one per pole.", "k": ["f", "f"], "color": "blue", "hot": ""}, {"id": "AC8", "sys": "N", "short": "Power sw N → Lamp N", "frm": "Power switch, N pole center spade", "to": "Heating lamp, N spade", "gauge": "18 AWG", "mm": 100, "ends": ["6.3 mm female spade sized for two 18 AWG wires (blue), shared with AC9", "6.3 mm female spade sized for two 18 AWG wires (blue), shared with AC10"], "src": "Talon", "note": "Start of the neutral daisy chain.", "k": ["f2:SWN", "f2:LAMPN"], "color": "blue", "lenNote": "", "hot": ""}, {"id": "AC9", "sys": "N", "short": "Power sw N → Element", "frm": "Power switch, N pole center spade", "to": "Boiler element, terminal 2", "gauge": "18 AWG", "mm": 300, "ends": ["Shared with AC8", "Uninsulated 6.3 mm spade (open-barrel crimp) + self-fusing silicone tape"], "hot": "b", "src": "Talon", "note": "Talon left this one long for cable management.", "k": ["f2:SWN", "b"], "color": "blue", "lenNote": ""}, {"id": "AC10", "sys": "N", "short": "Lamp N → Pump N", "frm": "Heating lamp, N spade", "to": "Pump, thermal-fuse terminal", "gauge": "18 AWG", "mm": 400, "ends": ["Shared with AC8", "6.3 mm female spade sized for two 18 AWG wires (blue), shared with AC11"], "src": "Talon / RS lengths", "note": "The pump's thermal fuse (110 C on realNiche's diagram) stays in circuit. If your pump has none, this run goes to the pump terminal.", "k": ["f2:LAMPN", "f2:PUMPN"], "color": "blue", "lenNote": "", "hot": ""}, {"id": "AC11", "sys": "N", "short": "Pump N → Solenoid N", "frm": "Pump, thermal-fuse terminal", "to": "Solenoid, N spade", "gauge": "18 AWG", "mm": 350, "ends": ["Shared with AC10", "Uninsulated 6.3 mm spade sized for two 18 AWG wires + self-fusing silicone tape, shared with AC12"], "src": "Talon / RS lengths", "note": "", "k": ["f2:PUMPN", "b2:SOLN"], "color": "blue", "lenNote": "", "hot": ""}, {"id": "AC12", "sys": "N", "short": "Solenoid N → J10 Neutral", "frm": "Solenoid, N spade", "to": "PCB J10 (AC Neutral)", "gauge": "18 AWG", "mm": 120, "ends": ["Shared with AC11", "6.3 mm female spade"], "src": "Talon / RS lengths", "note": "End of the neutral chain.", "k": ["b2:SOLN", "f"], "color": "blue", "lenNote": "", "hot": ""}, {"id": "G1", "sys": "E", "short": "Inlet earth → Boiler gnd", "frm": "Power inlet, earth pin", "to": "Boiler ground spade", "gauge": "18 AWG green", "mm": null, "lenNote": "Reuse the stock earth lead if it is sound, or measure", "ends": ["6.3 mm female spade", "Uninsulated 6.3 mm spade sized for two 18 AWG wires + self-fusing silicone tape, shared with G2"], "hot": "b", "src": "realNiche", "note": "Earth never connects to the PCB's 5 V ground (official warning).", "k": ["f", "b2:BGND"], "color": "green"}, {"id": "G2", "sys": "E", "short": "Solenoid gnd → Boiler gnd", "frm": "Solenoid ground spade", "to": "Boiler ground spade", "gauge": "18 AWG green", "mm": 200, "ends": ["Uninsulated 6.3 mm spade (open-barrel crimp) + self-fusing silicone tape", "Shared with G1"], "hot": "b", "src": "RS lengths", "note": "", "k": ["b", "b2:BGND"], "color": "green", "lenNote": ""}, {"id": "LV1", "sys": "LV", "short": "J7 S → Steam sw", "frm": "PCB J7 S", "to": "Steam switch, ground pole center spade", "gauge": "22 AWG", "mm": 320, "ends": ["JST-PH 2 mm crimp in the connector housing", "6.3 mm female spade (red)"], "src": "realNiche / RS lengths", "note": "Signal on the center spade, ground on the outer spade of the same pole.", "k": ["jst", "lv"], "color": "white", "hdr": "J7", "lenNote": "", "hot": ""}, {"id": "LV2", "sys": "LV", "short": "J7 B → Brew sw", "frm": "PCB J7 B", "to": "Brew switch, ground pole center spade", "gauge": "22 AWG", "mm": 320, "ends": ["JST-PH 2 mm crimp in the connector housing", "6.3 mm female spade (red)"], "src": "realNiche / RS lengths", "note": "", "k": ["jst", "lv"], "color": "white", "hdr": "J7", "lenNote": "", "hot": ""}, {"id": "LV3", "sys": "LV", "short": "J5 B15 → Hot water sw", "frm": "PCB J5 B15", "to": "Hot water switch, ground pole center spade", "gauge": "22 AWG", "mm": 400, "ends": ["JST-PH 2 mm crimp in the connector housing", "6.3 mm female spade (red)"], "src": "realNiche / RS lengths", "note": "B15, not A12: PCB firmware reads the hot water switch on B15. Keep hot water on low voltage.", "k": ["jst", "lv"], "color": "white", "hdr": "J5", "lenNote": "", "hot": ""}, {"id": "LV4", "sys": "LVG", "short": "J7 GND → Steam sw gnd", "frm": "PCB J7 GND", "to": "Steam switch, ground pole outer spade", "gauge": "22 AWG", "mm": 470, "ends": ["JST-PH 2 mm crimp in the connector housing", "6.3 mm female spade (red)"], "src": "RS lengths / Talon", "note": "Start of the switch ground chain. Talon brings it into the lowest switch first and chains up; start at whichever switch is nearest.", "k": ["jst", "lv2:STG"], "color": "black", "hdr": "J7", "lenNote": "", "hot": ""}, {"id": "LV5", "sys": "LVG", "short": "Steam sw gnd → Brew sw gnd", "frm": "Steam switch, ground pole outer spade", "to": "Brew switch, ground pole outer spade", "gauge": "22 AWG", "mm": null, "lenNote": "Short jumper; measure (about 100 mm)", "ends": ["Shared spade or red butt splice", "6.3 mm female spade (red)"], "src": "Talon / LED notes", "note": "", "k": ["lv2:STG", "lv2:BRG"], "color": "black", "hot": ""}, {"id": "LV6", "sys": "LVG", "short": "Brew sw gnd → Hot water gnd", "frm": "Brew switch, ground pole outer spade", "to": "Hot water switch, ground pole outer spade", "gauge": "22 AWG", "mm": null, "lenNote": "Short jumper; measure (about 100 mm)", "ends": ["Shared spade or red butt splice", "6.3 mm female spade (red)"], "src": "Talon / LED notes", "note": "", "k": ["lv2:BRG", "lv"], "color": "black", "hot": ""}, {"id": "LV7", "sys": "S", "short": "J9 R1 → SSR +", "frm": "PCB J9 R1", "to": "SSR control +", "gauge": "22 AWG", "mm": null, "lenNote": "Measure", "ends": ["JST-PH 2 mm crimp in the connector housing", "Fork spade"], "src": "realNiche / official LV schematic", "note": "Polarity matters: R1 to +, GND to −.", "k": ["jst", "fks"], "color": "red", "hdr": "J9", "hot": ""}, {"id": "LV8", "sys": "S", "short": "J9 GND → SSR −", "frm": "PCB J9 GND", "to": "SSR control −", "gauge": "22 AWG", "mm": null, "lenNote": "Measure", "ends": ["JST-PH 2 mm crimp in the connector housing", "Fork spade"], "src": "realNiche / official LV schematic", "note": "", "k": ["jst", "fks"], "color": "black", "hdr": "J9", "hot": ""}, {"id": "LV9", "sys": "S", "short": "J6 → Pressure sensor", "frm": "PCB J6 (5V, GND, P)", "to": "Pressure transducer", "gauge": "Sensor lead", "mm": null, "lenNote": "Sensor's own lead; extend with 22 AWG if short", "ends": ["JST-PH 3-pin", "Transducer pigtail"], "src": "realNiche", "note": "Three wires: 5V, GND and P (signal).", "k": ["jst3", "pig"], "color": "", "hdr": "J6", "hot": ""}, {"id": "LV10", "sys": "S", "short": "J4 → Thermocouple", "frm": "PCB J4 (+, −)", "to": "Thermocouple, brew thermostat position", "gauge": "TC lead", "mm": null, "lenNote": "Thermocouple's own lead", "ends": ["Screw terminal; fold the bare wire over, don't clamp insulation", "M3 thermocouple"], "src": "Official PCB guide / Discord", "note": "Ungrounded K-type. Route it around the front of the boiler. If the bench test shows temperature falling when you warm it, swap the two leads.", "k": ["tc", "pig"], "color": "", "hot": ""}, {"id": "LV11", "sys": "S", "short": "J1 → Screen", "frm": "PCB J1 (GND, TX, RX, 5V)", "to": "4.3 in Gen 3.5 screen", "gauge": "Screen cable", "mm": 600, "lenNote": "DIY-EFI cable is 60 cm and Peak Coffee's 45 cm. The older diagram used 650 mm for a front mount; a funnel mount needs more (open question)", "ends": ["JST-PH 4-pin", "Screen connector"], "src": "DIY-EFI / RS lengths / Talon", "note": "Check connection points, not colors: blue and yellow can be swapped between cable revisions. Don't take pre-made cables apart.", "k": ["pre", "pre"], "color": "", "hot": ""}, {"id": "OP1", "sys": "OPT", "short": "J8 → Scales board", "frm": "PCB J8 (D2, 5V, GND, CLK, D1)", "to": "Scales board (optional)", "gauge": "5-pin cable", "mm": null, "lenNote": "5P JST XH to PH cable", "ends": ["JST-PH 5-pin", "JST-XH 5-pin"], "src": "Official BOM / Discord", "note": "Only if you fit hardware scales.", "k": ["pre", "pre"], "color": "", "hot": ""}, {"id": "OP2", "sys": "OPT", "short": "J2 → ToF sensor", "frm": "PCB J2, backside (JST-SH)", "to": "ToF sensor (optional)", "gauge": "Qwiic cable", "mm": 250, "lenNote": "250 mm or longer, JST SH 1.0 opposite direction", "ends": ["JST-SH 4-pin", "JST-SH 4-pin"], "src": "Official BOM / Discord", "note": "Only if you fit the ToF tank sensor.", "k": ["pre", "pre"], "color": "", "hot": ""}, {"id": "OP3", "sys": "OPT", "short": "5V splice → 1st sw LED", "frm": "Screen 5V line (BN1.25 butt splice)", "to": "First switch, LED pole outer spade", "gauge": "22 AWG", "mm": 320, "ends": ["BN1.25 butt splice", "6.3 mm female spade (red)"], "src": "Discord LED notes", "note": "LED switch mod only. See the LED guide for which pole gets 5 V.", "k": ["bn", "lv2:LED1"], "color": "yellow", "lenNote": "", "hot": ""}, {"id": "OP4", "sys": "OPT", "short": "1st sw LED → 2nd sw LED", "frm": "First switch, LED pole outer spade", "to": "Second switch, LED pole outer spade", "gauge": "22 AWG", "mm": 100, "ends": ["Shared spade", "6.3 mm female spade (red)"], "src": "Discord LED notes", "note": "LED switch mod only.", "k": ["lv2:LED1", "lv2:LED2"], "color": "yellow", "lenNote": "", "hot": ""}, {"id": "OP5", "sys": "OPT", "short": "2nd sw LED → 3rd sw LED", "frm": "Second switch, LED pole outer spade", "to": "Third switch, LED pole outer spade", "gauge": "22 AWG", "mm": 100, "ends": ["Shared spade", "6.3 mm female spade (red)"], "src": "Discord LED notes", "note": "LED switch mod only.", "k": ["lv2:LED2", "lv"], "color": "yellow", "lenNote": "", "hot": ""}];
   var SYS={"L": "Line", "H": "Heater line (after the SSR)", "N": "Neutral", "E": "Earth", "LV": "Switch signal", "LVG": "Switch ground", "S": "SSR control and sensors", "OPT": "Optional"};
   var CONN=[["J1", "Screen", "GND, TX, RX, 5V", "JST-PH 2 mm"], ["J2", "ToF / ToFnLED (backside)", "CLK, DATA, 3V3, GND", "JST-SH 1 mm"], ["J4", "Thermocouple", "−, +", "Screw terminal"], ["J5", "Extra IO", "GND, B15, A12", "JST-PH 2 mm"], ["J6", "Pressure transducer", "5V, GND, P", "JST-PH 2 mm"], ["J7", "Switches", "GND, S (steam), B (brew)", "JST-PH 2 mm"], ["J8", "Scales", "D2, 5V, GND, CLK, D1", "JST-PH 2 mm"], ["J9", "SSR", "GND, R1, R2 (R2 unused)", "JST-PH 2 mm"], ["J10", "AC Neutral", "N", "6.3 mm male spade"], ["J11", "AC Line", "L", "6.3 mm male spade"], ["J12", "Pump", "P", "6.3 mm male spade"], ["J13", "Solenoid (3-way valve)", "3", "6.3 mm male spade"]];
@@ -600,7 +876,16 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     else ms.textContent='';
     renderDetail();
   }
+  /* the card, then the back-links: where else the site covers what's picked (wiring-refs.js) */
+  /* the sensor and screen cables come with their parts: a link to the boiler or another part isn't about them */
+  var SENSOR=['LV9','LV10','LV11'];
   function renderDetail(){
+    renderDetail0();
+    var pickd=sel?{t:'run',id:sel}:selSet?{t:'set',ids:selSet}:selPart?{t:'part',id:selPart}:null;if(!pickd)return;
+    var c={runs:RUNS,hasRun:function(id){return !!byId[id]},hasPart:function(id){return !!PARTN[id]},landing:function(p){return Object.keys(ENDS).filter(function(id){return ENDS[id].indexOf(p)>=0&&SENSOR.indexOf(id)<0})}};
+    var h=REFS.html(pickd,c);if(h)$('detail').insertAdjacentHTML('beforeend',h);
+  }
+  function renderDetail0(){
     var d=$('detail');
     if(selSet&&!sel){
       d.className='detail';d.style.borderLeftColor='var(--accent)';

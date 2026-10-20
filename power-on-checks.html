@@ -553,6 +553,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     return 'wiring.html#map'+(q.length?'?'+q.join('&'):'');
   }
 
+  /* Shared by checks.tpl.html and the wiring page's back-links (wiring-refs.js). */
   /* where each check sits on the wiring reference's drawing (see maplink.js); path checks light the runs their text names */
   var SWL='runs:LV1,LV2,LV3,LV4,LV5,LV6';
   var MAPS={a3:'',b1:'layer:E',b2:'run:G1',b3:'runs:G1,G2',b5:'short:J7',b6:'run:LV10',
@@ -561,6 +562,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     e1:'runs:AC1,AC3,AC4',e2:'runs:AC2,AC8,AC10,AC11,AC12',e3:'runs:AC2,AC9',e4:'runs:AC5,AC6',e5:'run:AC13',e6:'run:AC14',e7:'runs:AC14,AC11,AC12',e8:'runs:AC13,AC12',e9:'runs:AC1,AC3,AC4',e10:'runs:AC2,AC8,AC10,AC11,AC12',
     f1:'runs:LV2,LV4,LV5',f2:'runs:LV2,LV4,LV5',f3:'runs:LV1,LV4',f4:'runs:LV1,LV4',f5:'runs:LV3,LV4,LV5,LV6',f6:'runs:LV3,LV4,LV5,LV6',f7:'run:LV7',f8:'run:LV8',f9:SWL,f10:SWL,
     g1:'part:boiler',g4:'part:ssr',g5:'runs:AC5,AC6',g6:'part:pcb',g7:'part:boiler',g8:'run:LV10',g9:'run:LV11',g12:'',g13:'part:pcb',g14:'run:LV10',g15:'part:pwr',h2:'layer:E'};
+
   function mapLink(it){
     if(!(it.id in MAPS))return '';
     var u=mapHref(MAPS[it.id],{label:it.id+': '+it.t}).replace(/^wiring\.html/,'wiring.html'.split('#')[0]);

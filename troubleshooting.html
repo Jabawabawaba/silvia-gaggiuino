@@ -329,7 +329,8 @@ td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:ta
 .count{font:500 13px var(--f-mono);color:var(--muted)}
 .linkbtn{appearance:none;border:0;background:none;padding:4px 0;font:500 14px var(--f-body);color:var(--accent-ink);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
 .cat-h{font:600 12px var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:26px 0 6px;padding-bottom:6px;border-bottom:2px solid var(--ink)}
-details.tb{border-bottom:1px solid var(--line);padding:0}
+details.tb{border-bottom:1px solid var(--line);padding:0;scroll-margin-top:12px}
+details.tb.hit>summary{background:var(--accent-soft)}
 details.tb>summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 14px;padding:14px 4px 14px 14px;border-left:3px solid var(--line)}
 details.tb>summary::-webkit-details-marker{display:none}
 details.tb.danger>summary{border-left-color:var(--bad)}
@@ -382,6 +383,8 @@ details.tb.danger .tb-body{border-left-color:var(--bad)}
 <script>
 (function(){
   var CATS=[['power','Power and trips'],['screen','Screen and Wi-Fi'],['heat','Temperature and heating'],['pressure','Pressure, pump and water'],['switch','Switches and lights'],['fw','Firmware'],['extras','Scales and tank']];
+  /* Troubleshooting symptoms, shared by trouble.tpl.html and the wiring page's back-links (wiring-refs.js).
+     Each: c, s, causes, check, src; d marks unplug-now; w limits it to some machines; map links its wiring. */
   var T=[
     {c:'power',d:1,s:'The breaker or {gfci} trips when you plug in or switch on',
      causes:['Line or neutral touching earth: a bare spade, or a wire pinched against the frame.','The element leaking to its sheath.','Water on the wiring, often from a leak above.'],
@@ -474,6 +477,9 @@ details.tb.danger .tb-body{border-left-color:var(--bad)}
      causes:['Not calibrated.','Load cells or mount wrong for the Silvia: the Joscha mount takes 1 kg cells.','The mount moves on the frame.'],
      check:['Calibrate in the web UI with a 200 to 400 g object.','If the mount wobbles, wrap self-fusing silicone tape around the frame where it clips on, then push the mount back over it.'],src:'Official HW scales guide · Discord'}
   ];
+
+  /* a stable id per symptom for links from other pages: t- and the symptom's words (wiring-refs.js makes the same) */
+  function tslug(i){var s='t-'+T[i].s.toLowerCase().replace(/\{[a-z]+\}/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,60),n=0;for(var j=0;j<i;j++)if(T[j].s===T[i].s)n++;return n?s+'-'+(n+1):s}
   var CHECKREF=/^[a-h][0-9]{1,2}$/;
   function $(id){return document.getElementById(id)}
   function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
@@ -523,7 +529,7 @@ details.tb.danger .tb-body{border-left-color:var(--bad)}
       var items=shown.filter(function(t){return t.c===c[0]});if(!items.length)return;
       html+='<h2 class="cat-h">'+esc(c[1])+'</h2>';
       items.forEach(function(t){
-        html+='<details class="tb'+(t.d?' danger':'')+'"'+(q?' open':'')+'><summary><span class="sym">'+esc(fill(t.s))+(t.w&&!(m&&m.decided&&m.decided(t.w))?'<span class="vtag">'+esc(wlabel(t.w))+'</span>':'')+'</span><span class="first">Most likely: '+refs(t.causes[0])+'</span><span class="flag">'+(t.d?'<span class="unplug">Unplug now</span>':'')+'<span class="chev" aria-hidden="true"></span></span></summary>'+
+        html+='<details class="tb'+(t.d?' danger':'')+'" id="'+tslug(T.indexOf(t))+'"'+(q?' open':'')+'><summary><span class="sym">'+esc(fill(t.s))+(t.w&&!(m&&m.decided&&m.decided(t.w))?'<span class="vtag">'+esc(wlabel(t.w))+'</span>':'')+'</span><span class="first">Most likely: '+refs(t.causes[0])+'</span><span class="flag">'+(t.d?'<span class="unplug">Unplug now</span>':'')+'<span class="chev" aria-hidden="true"></span></span></summary>'+
           '<div class="tb-body"><div><h3>Likely causes, in order</h3><ol>'+t.causes.map(function(x){return '<li>'+refs(x)+'</li>'}).join('')+'</ol></div><div><h3>What to do</h3><ul>'+t.check.map(function(x){return '<li>'+refs(x)+'</li>'}).join('')+'</ul>'+tmap(t)+'</div><div class="src">Source: '+esc(t.src)+'</div></div></details>';
       });
     });
@@ -536,6 +542,13 @@ details.tb.danger .tb-body{border-left-color:var(--bad)}
   window.addEventListener('silvia-machine',render);
   window.addEventListener('beforeprint',function(){Array.prototype.forEach.call(document.querySelectorAll('details.tb'),function(d){d.open=true})});
   render();
+  function fromHash(){
+    var id=(location.hash||'').slice(1);if(id.indexOf('t-')!==0)return;
+    var el=document.getElementById(id);
+    if(!el&&(cat!=='all'||q)){cat='all';q='';var qi=document.getElementById('q');if(qi)qi.value='';render();el=document.getElementById(id)}
+    if(!el)return;el.open=true;el.scrollIntoView({block:'start'});el.classList.add('hit');setTimeout(function(){el.classList.remove('hit')},2600);
+  }
+  fromHash();window.addEventListener('hashchange',fromHash);
 })();
 </script>
 <footer class="site-foot"><div class="in"><nav class="foot-nav" aria-label="All pages"><a class="fn-home" href="index.html">Silvia × Gaggiuino home</a><div class="fn-g"><span class="gl">Learn</span><a href="conversion.html">The conversion</a><a href="how-silvia-works.html">How the Silvia works</a><a href="how-gaggiuino-works.html">How Gaggiuino works</a><a href="glossary.html">Glossary</a></div><div class="fn-g"><span class="gl">Plan</span><a href="budget.html">Budget</a><a href="used-checklist.html">Used Silvia check</a><a href="which-silvia.html">Which Silvia</a><a href="parts-tracker.html">Parts tracker</a></div><div class="fn-g"><span class="gl">Install</span><a href="runbook.html">Runbook</a><a href="wiring.html">Wiring</a><a href="cut-list.html">Cut list</a><a href="wire-labels.html">Wire labels</a><a href="power-on-checks.html">Power-on checks</a></div><div class="fn-g"><span class="gl">After</span><a href="troubleshooting.html" aria-current="page">Troubleshooting</a><a href="led-mod.html">LED switch mod</a></div></nav><p><strong>Mains voltage.</strong> This conversion puts your hands near 120/230 V wiring. Work only with the cord out, check everything with a meter before first power-on, and stop if anything here disagrees with the official Gaggiuino docs or your own reading of the machine. Nothing on this site has been reviewed by the Gaggiuino project. You are responsible for your own build.</p><p>Unofficial community material for the Rancilio Silvia, built on the work of realNiche, Talon, Juun, mjr and others on the Gaggiuino Discord, and the official docs at <a href="https://gaggiuino.github.io/">gaggiuino.github.io</a>. Content is <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>, the same terms as realNiche's diagrams. · <a href="https://github.com/Jabawabawaba/silvia-gaggiuino">Source and issues on GitHub</a></p></div></footer></body></html>
