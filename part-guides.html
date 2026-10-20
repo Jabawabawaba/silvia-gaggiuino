@@ -1,0 +1,967 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui}img{max-width:100%}[hidden]{display:none!important}</style><title>Part Guides</title>
+<style>
+.site-nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;font:500 14px/1.35 "Barlow",system-ui,sans-serif;background:var(--surface,#F9FAFA);color:var(--ink,#16191C);border-bottom:1px solid var(--line,#CBD0D5);transition:transform .22s ease,box-shadow .22s ease}
+/* it slides away while you read down the page and comes back as soon as you scroll up a little (NAV_JS) */
+.site-nav.nav-hide{transform:translateY(calc(-100% - env(safe-area-inset-top,0px)))}
+.site-nav.nav-float{box-shadow:0 6px 18px rgba(0,0,0,.16)}
+@media (prefers-reduced-motion:reduce){.site-nav{transition:none}}
+.site-nav .in{max-width:1300px;margin:0 auto;padding:8px max(16px,env(safe-area-inset-right,0px)) 8px max(16px,env(safe-area-inset-left,0px));display:flex;align-items:center;gap:6px 16px;flex-wrap:wrap}
+.site-nav a{color:var(--ink,#16191C);text-decoration:none;padding:4px 0;white-space:nowrap}
+.site-nav a:hover,.site-nav a[aria-current]{text-decoration:underline;text-underline-offset:3px}
+.site-nav .brand{font-weight:700;letter-spacing:.01em;padding:8px 0}
+.site-nav .brand small{font-weight:500;color:var(--muted,#59616A);margin-left:6px;font-size:12px}
+.site-nav .nav-links{display:flex;flex-wrap:wrap;align-items:center;gap:2px 16px;flex:1 1 auto;min-width:0}
+.site-nav .grp{display:inline-flex;flex-wrap:wrap;align-items:center;gap:2px 12px}
+.site-nav .gl{font:600 10.5px var(--f-mono,ui-monospace,monospace);letter-spacing:.1em;text-transform:uppercase;color:var(--muted,#59616A)}
+.site-nav button{font:inherit;color:inherit}
+.nav-toggle{display:none;appearance:none;border:1px solid var(--line,#CBD0D5);background:var(--surface,#F9FAFA);border-radius:8px;padding:6px 12px;cursor:pointer;margin-left:auto}
+.nav-toggle[aria-expanded="true"]{background:var(--ink,#16191C);color:var(--bg,#ECEEF0);border-color:var(--ink,#16191C)}
+.mchip{appearance:none;border:1px solid var(--accent,#D98400);background:var(--accent-soft,#F4E1C0);color:var(--accent-ink,#965300);border-radius:999px;padding:6px 12px;min-height:36px;cursor:pointer;font-weight:600;white-space:nowrap}
+.mchip b{color:var(--ink,#16191C);font-weight:600;margin-left:4px}
+/* desktop: brand and Your Silvia on the first row, every page on the second */
+@media (min-width:1061px){
+  .site-nav .nav-links{order:3;flex-basis:100%}
+  .mchip{margin-left:auto}
+}
+/* tablets and phones: brand, Your Silvia and the Pages button on one row; the page list opens below */
+@media (max-width:1060px){
+  .site-nav .brand{order:1}
+  .mchip{order:2;margin-left:auto;min-height:40px}
+  .nav-toggle{display:inline-block;order:3;margin-left:0;min-height:40px}
+  .site-nav .nav-links{display:none;order:5;flex-basis:100%;flex-direction:column;align-items:flex-start;gap:6px;padding:6px 0 6px}
+  .site-nav .nav-links.open{display:flex;position:absolute;left:0;right:0;top:100%;background:var(--surface,#F9FAFA);border-top:1px solid var(--line,#CBD0D5);border-bottom:1px solid var(--line,#CBD0D5);box-shadow:0 12px 24px rgba(0,0,0,.18);padding:4px max(16px,env(safe-area-inset-right,0px)) 12px max(16px,env(safe-area-inset-left,0px));max-height:calc(100vh - 120px);max-height:calc(100svh - 120px);overflow-y:auto;overscroll-behavior:contain}
+  .site-nav .grp{gap:0 18px}
+  .site-nav .nav-links a{display:inline-flex;align-items:center;min-height:40px}
+}
+@media (max-width:480px){
+  .site-nav .in{gap:6px 10px}
+  .site-nav .brand small{display:none}
+  .mchip:not(.set) #mchip-l{display:none}
+  .mchip.set .mchip-k{display:none}
+  .mchip.set b{margin-left:0}
+}
+/* the page list (phones) and the Your Silvia panel open over the page, so nothing below them jumps */
+.mpanel{position:absolute;left:0;right:0;top:100%;border-top:1px solid var(--line,#CBD0D5);border-bottom:1px solid var(--line,#CBD0D5);background:var(--surface,#F9FAFA);box-shadow:0 12px 24px rgba(0,0,0,.18);max-height:calc(100vh - 120px);max-height:calc(100svh - 120px);overflow-y:auto;overscroll-behavior:contain}
+.mpanel .in{display:grid;gap:12px;padding-block:14px 16px}
+/* behind an open page list or panel: dims the page, and a tap on it closes them instead of following whatever link was under it */
+.nav-scrim{position:fixed;inset:0;z-index:49;background:rgba(10,14,18,.3);-webkit-tap-highlight-color:transparent}
+.mrow{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}
+.mk{font:600 11px var(--f-mono,ui-monospace,monospace);letter-spacing:.1em;text-transform:uppercase;color:var(--muted,#59616A);min-width:7ch}
+.mseg{display:inline-flex;flex-wrap:wrap;border:1px solid var(--line,#CBD0D5);border-radius:999px;overflow:hidden}
+.mseg button{appearance:none;border:0;border-right:1px solid var(--line,#CBD0D5);background:var(--surface,#F9FAFA);padding:7px 13px;cursor:pointer;font-weight:600;min-height:36px}
+.mseg button:last-child{border-right:0}
+.mseg button[aria-pressed="true"]{background:var(--ink,#16191C);color:var(--bg,#ECEEF0)}
+.mseg button[disabled]{opacity:.4;cursor:default}
+.mh{font-size:13px;color:var(--muted,#59616A)}
+#m-summary{margin:0;font-size:14px;color:var(--muted,#59616A);max-width:80ch}
+.mact{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px}
+.mact a{color:var(--accent-ink,#965300);text-decoration:underline}
+.mact button{appearance:none;border:1px solid var(--line,#CBD0D5);background:var(--surface,#F9FAFA);border-radius:8px;padding:6px 12px;cursor:pointer}
+.mact button#m-done{background:var(--ink,#16191C);color:var(--bg,#ECEEF0);border-color:var(--ink,#16191C)}
+.vtag{display:inline-block;font:600 10.5px/1 var(--f-mono,ui-monospace,monospace);letter-spacing:.06em;text-transform:uppercase;padding:4px 6px;border-radius:4px;background:var(--accent-soft,#F4E1C0);color:var(--accent-ink,#965300);vertical-align:2px;margin-left:6px;white-space:nowrap}
+.site-foot{font:400 13.5px/1.5 "Barlow",system-ui,sans-serif;color:var(--muted,#59616A);border-top:1px solid var(--line,#CBD0D5);background:var(--bg,#ECEEF0)}
+.site-foot .in{max-width:1300px;margin:0 auto;padding:16px max(16px,env(safe-area-inset-right,0px)) 28px max(16px,env(safe-area-inset-left,0px));display:grid;gap:6px}
+.site-foot a{color:var(--accent-ink,#965300)}
+.site-foot p{margin:0;max-width:95ch}
+/* every page ends with the full page list, so the next page is one tap away at the bottom too */
+.foot-nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 24px;min-width:0;padding-bottom:14px;margin-bottom:8px;border-bottom:1px solid var(--line,#CBD0D5)}
+@media (min-width:640px){.foot-nav{grid-template-columns:repeat(4,minmax(0,180px))}}
+.foot-nav .fn-home{grid-column:1/-1;justify-self:start;font-weight:700;color:var(--ink,#16191C);text-decoration:none;padding:4px 0}
+.foot-nav .fn-g{display:flex;flex-direction:column;align-items:flex-start;gap:0;min-width:0}
+.foot-nav .gl{font:600 11.5px var(--f-mono,ui-monospace,monospace);letter-spacing:.1em;text-transform:uppercase;color:var(--muted,#59616A);margin-bottom:2px}
+.foot-nav .fn-g a{color:var(--ink,#16191C);text-decoration:none;padding:3px 0}
+.foot-nav a:hover,.foot-nav a[aria-current]{text-decoration:underline;text-underline-offset:3px}
+@media (pointer:coarse){.foot-nav .fn-g a,.foot-nav .fn-home{padding:8px 0}}
+@media print{.site-nav,.site-foot,.swipe-hint,.nav-scrim{display:none!important}}
+/* phones: inputs fill their boxes, small text buttons get a bigger tap area, wide drawings say they scroll */
+.read input,.money input,.unitbox input{align-self:stretch}
+@media (pointer:coarse){
+  .linkbtn{min-height:40px}
+  summary{min-height:40px}
+  .mact a,.foot .links a{display:inline-block;padding:10px 0}
+  input.mm{min-height:36px}
+  input[type=range]{height:32px}
+}
+@media (max-width:600px){
+  .plate{font-size:12px}
+  .vtag{font-size:11px}
+}
+.swipe-hint{margin:6px 0 0;font:500 12.5px "Barlow",system-ui,sans-serif;color:var(--muted,#59616A);display:flex;align-items:center;gap:6px}
+.swipe-hint::before{content:"";width:18px;height:10px;background:linear-gradient(90deg,transparent 0 3px,currentColor 3px 15px,transparent 15px) center/100% 2px no-repeat;opacity:.7}
+</style></head><body><nav class="site-nav" aria-label="Site"><div class="in"><a class="brand" href="index.html">Silvia × Gaggiuino<small>unofficial</small></a><button type="button" class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="nav-links">Pages</button><div class="nav-links" id="nav-links"><span class="grp"><span class="gl">Learn</span><a href="conversion.html">The conversion</a><a href="how-silvia-works.html">How the Silvia works</a><a href="how-gaggiuino-works.html">How Gaggiuino works</a><a href="glossary.html">Glossary</a></span><span class="grp"><span class="gl">Plan</span><a href="budget.html">Budget</a><a href="used-checklist.html">Used Silvia check</a><a href="which-silvia.html">Which Silvia</a><a href="parts-tracker.html">Parts tracker</a><a href="test-yourself.html">Test yourself</a></span><span class="grp"><span class="gl">Install</span><a href="runbook.html">Runbook</a><a href="part-guides.html" aria-current="page">Part guides</a><a href="wiring.html">Wiring</a><a href="cut-list.html">Cut list</a><a href="wire-labels.html">Wire labels</a><a href="power-on-checks.html">Power-on checks</a></span><span class="grp"><span class="gl">After</span><a href="troubleshooting.html">Troubleshooting</a><a href="led-mod.html">LED switch mod</a></span></div><button type="button" class="mchip" id="mchip" aria-expanded="false" aria-controls="mpanel" aria-label="Your Silvia: not set"><span class="mchip-k">Your Silvia</span><b id="mchip-l">Set it</b></button></div><div class="mpanel" id="mpanel" hidden><div class="in"><div class="mrow"><span class="mk">Version</span><div class="mseg" role="group" aria-label="Version"><button type="button" data-mv="V1" aria-pressed="false">V1</button><button type="button" data-mv="V2" aria-pressed="false">V2</button><button type="button" data-mv="V3" aria-pressed="false">V3</button><button type="button" data-mv="V4" aria-pressed="false">V4</button><button type="button" data-mv="V5" aria-pressed="false">V5</button><button type="button" data-mv="V6" aria-pressed="false">V6</button></div><label class="mh" id="m-early-w" hidden><input type="checkbox" id="m-early"> Boiler made before May 2000</label></div><div class="mrow"><span class="mk">Model</span><div class="mseg" role="group" aria-label="Model"><button type="button" data-mm="M" aria-pressed="false">M, manual off</button><button type="button" data-mm="E" aria-pressed="false">E, auto-off</button></div><span class="mh" id="m-model-hint">E and M only exist from V5 on.</span></div><div class="mrow"><span class="mk">Mains</span><div class="mseg" role="group" aria-label="Mains voltage"><button type="button" data-mvolt="120" aria-pressed="false">120 V</button><button type="button" data-mvolt="230" aria-pressed="false">230 V</button></div></div><p id="m-summary"></p><div class="mact"><a href="which-silvia.html">Not sure which you have? Identify your Silvia</a><button type="button" id="m-clear">Clear</button><button type="button" id="m-done">Done</button></div></div></div></nav><div class="nav-scrim" id="nav-scrim" hidden></div><script>(function(){var n=(performance.getEntriesByType&&performance.getEntriesByType('navigation')[0])||{};if(n.type==='back_forward')return;var moved=false;['wheel','touchstart','keydown'].forEach(function(t){addEventListener(t,function(){moved=true},{once:true,passive:true})});function go(){if(moved)return;try{var h=location.hash;if(h){var t=document.getElementById(decodeURIComponent(h.slice(1)));if(t&&t.scrollIntoView)t.scrollIntoView({block:'start'});return}window.scrollTo(0,0);var e=document.body&&document.body.firstElementChild;if(e&&e.scrollIntoView)e.scrollIntoView({block:'start'})}catch(x){}}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',go);else go();addEventListener('load',go)})();</script><script>(function(){var nav=document.querySelector('.site-nav');if(!nav)return;var root=document.documentElement,last=0,acc=0,ticking=false,hidden=false,hold=0,touched=false;function h(){return nav.offsetHeight}function fv(a){try{return a.matches(':focus-visible')}catch(e){return true}}function busy(){var t=document.getElementById('nav-toggle'),p=document.getElementById('mpanel'),a=document.activeElement;return (t&&t.getAttribute('aria-expanded')==='true')||(p&&!p.hidden)||(a&&a!==document.body&&nav.contains(a)&&fv(a))}function cover(){root.style.setProperty('--nav-cover',hidden?'0px':h()+'px')}function set(hide){hidden=hide;nav.classList.toggle('nav-hide',hide);cover()}function Y(){var y=window.pageYOffset||0,m=Math.max(0,root.scrollHeight-innerHeight);return y<0?0:y>m?m:y}function update(){ticking=false;var y=Y(),d=y-last;last=y;nav.classList.toggle('nav-float',y>2);if(y<=h()||busy()){acc=0;if(hidden)set(false);return}if(Date.now()<hold||Math.abs(d)>innerHeight*0.8){acc=0;if(!hidden)set(true);return}if((d>0)!==(acc>0))acc=0;acc+=d;if(acc>10&&!hidden)set(true);else if(acc<-24&&hidden)set(false)}function jump(){last=Y();acc=0;if(last>h()&&!busy())set(true)}addEventListener('scroll',function(){if(!ticking){ticking=true;requestAnimationFrame(update)}},{passive:true});addEventListener('hashchange',function(){hold=Date.now()+600;jump()});document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[href*="#"]');if(a&&a.hash&&a.pathname===location.pathname&&a.host===location.host){hold=Date.now()+600;setTimeout(jump,0)}},true);nav.addEventListener('focusin',function(e){if(hidden&&fv(e.target))set(false)});['wheel','touchstart','keydown'].forEach(function(t){addEventListener(t,function(){touched=true},{once:true,passive:true})});if(window.ResizeObserver)new ResizeObserver(function(){if(!hidden)cover()}).observe(nav);set(false);function init(){last=Y();if(location.hash&&last>h()&&!touched)set(true)}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();addEventListener('load',init)})();</script><script>/* Site-wide "your Silvia" profile: version, E/M model, mains voltage. Every field is optional.
+   Elements with data-when="ver:V5,V6;model:E;volts:230;early" show only when every condition matches.
+   A field the user hasn't set never hides anything: with no version, every version's notes show; with no
+   voltage, both voltages' notes show and the wording stays generic. Nothing is ever filled in for them.
+   Elements with data-mtext="gfci|outlet|volts" get voltage-specific wording. */
+(function(){
+  var KEY='silvia-machine-v1',VERS=['V1','V2','V3','V4','V5','V6'];
+  var TEXT={
+    gfci:{'120':'GFCI','230':'RCD','':'GFCI (RCD outside North America)'},
+    outlet:{'120':'GFCI-protected outlet','230':'socket with RCD protection','':'GFCI- or RCD-protected outlet'},
+    volts:{'120':'120 V','230':'230 V','':'your mains voltage'}
+  };
+  function newer(v){return v==='V5'||v==='V6'}
+  function clean(s){
+    if(!s||typeof s!=='object')return null;
+    var ver=VERS.indexOf(s.ver)>=0?s.ver:null;
+    var model=newer(ver)&&(s.model==='E'||s.model==='M')?s.model:null;
+    var v=Number(s.volts),volts=v===230?230:v===120?120:null;
+    if(!ver&&!volts)return null;
+    return {ver:ver,model:model,volts:volts,early:ver==='V1'&&s.early===true};
+  }
+  function read(){try{return clean(JSON.parse(localStorage.getItem(KEY)||'null'))}catch(e){return null}}
+  var prof=read();
+  function conds(when){
+    return String(when||'').split(';').map(function(c){
+      c=c.trim();var i=c.indexOf(':');return {k:i<0?c:c.slice(0,i),vals:i<0?[]:c.slice(i+1).split(',')};
+    }).filter(function(c){return c.k});
+  }
+  /* true unless the profile rules the element out; unknown fields never rule anything out */
+  function matches(when){
+    if(!when||!prof)return true;
+    return conds(when).every(function(c){
+      if(c.k==='ver')return !prof.ver||c.vals.indexOf(prof.ver)>=0;
+      if(c.k==='model'){
+        if(!prof.ver)return true;
+        if(!newer(prof.ver))return c.vals.indexOf('M')>=0;   /* no E before V5 */
+        return !prof.model||c.vals.indexOf(prof.model)>=0;
+      }
+      if(c.k==='volts')return !prof.volts||c.vals.indexOf(String(prof.volts))>=0;
+      if(c.k==='early')return !prof.ver||prof.early;
+      return true;
+    });
+  }
+  /* true when the profile pins down every field the condition depends on (so a "which machines" tag adds nothing) */
+  function decided(when){
+    if(!prof)return false;
+    return conds(when).every(function(c){
+      if(c.k==='ver'||c.k==='early')return !!prof.ver;
+      if(c.k==='model')return !!prof.ver&&(!newer(prof.ver)||!!prof.model);
+      if(c.k==='volts')return !!prof.volts;
+      return true;
+    });
+  }
+  function text(key){var t=TEXT[key];if(!t)return '';return prof&&prof.volts?t[String(prof.volts)]:t['']}
+  function label(p){
+    p=p||prof;if(!p)return 'Set it';
+    var a=[];if(p.ver)a.push(p.ver+(newer(p.ver)&&p.model?' '+p.model:''));if(p.volts)a.push(p.volts+' V');
+    return a.join(', ');
+  }
+  function missing(p){
+    p=p||prof;if(!p)return [];var m=[];
+    if(!p.ver)m.push('version');else if(newer(p.ver)&&!p.model)m.push('model');
+    if(!p.volts)m.push('mains voltage');
+    return m;
+  }
+  function summary(p){
+    p=p||prof;
+    if(!p)return 'Pick your version and voltage. Until you do, every page shows all the version notes, each tagged with the machines it applies to.';
+    var m=missing(p);
+    return 'Pages now show the steps and notes for a '+label(p)+' Silvia.'+(m.length?' Add your '+m.join(' and ')+' to narrow them down; until then those notes all show.':'');
+  }
+  function apply(root){
+    root=root||document;
+    Array.prototype.forEach.call(root.querySelectorAll('[data-when]'),function(el){el.hidden=!matches(el.getAttribute('data-when'))});
+    Array.prototype.forEach.call(root.querySelectorAll('[data-mtext]'),function(el){var t=text(el.getAttribute('data-mtext'));if(t)el.textContent=t});
+    var l=document.getElementById('mchip-l');if(l)l.textContent=label();
+    var ch=document.getElementById('mchip');if(ch){ch.classList.toggle('set',!!prof);ch.setAttribute('aria-label','Your Silvia: '+(prof?label():'not set'))}
+    syncPanel();
+  }
+  function set(p){
+    prof=p?clean(p):null;
+    try{if(prof)localStorage.setItem(KEY,JSON.stringify(prof));else localStorage.removeItem(KEY)}catch(e){}
+    apply();
+    try{window.dispatchEvent(new CustomEvent('silvia-machine',{detail:prof}))}catch(e){}
+  }
+  /* start from what's saved, never from guesses */
+  function current(){return Object.assign({ver:null,model:null,volts:null,early:false},prof||{})}
+  /* ---- nav panel ---- */
+  function syncPanel(){
+    var pan=document.getElementById('mpanel');if(!pan)return;
+    var p=prof||{},nw=newer(p.ver);
+    Array.prototype.forEach.call(pan.querySelectorAll('[data-mv]'),function(b){b.setAttribute('aria-pressed',String(b.getAttribute('data-mv')===p.ver))});
+    Array.prototype.forEach.call(pan.querySelectorAll('[data-mm]'),function(b){b.disabled=!nw;b.setAttribute('aria-pressed',String(nw&&b.getAttribute('data-mm')===p.model))});
+    Array.prototype.forEach.call(pan.querySelectorAll('[data-mvolt]'),function(b){b.setAttribute('aria-pressed',String(Number(b.getAttribute('data-mvolt'))===p.volts))});
+    var ew=document.getElementById('m-early-w');if(ew)ew.hidden=p.ver!=='V1';
+    var ec=document.getElementById('m-early');if(ec)ec.checked=!!p.early;
+    var mh=document.getElementById('m-model-hint');if(mh)mh.hidden=nw;
+    var s=document.getElementById('m-summary');if(s)s.textContent=summary();
+  }
+  function wire(){
+    var chip=document.getElementById('mchip'),pan=document.getElementById('mpanel');
+    var nt=document.getElementById('nav-toggle'),nl=document.getElementById('nav-links');
+    /* the page list and the Your Silvia panel open over the page, one at a time; a tap outside or Escape closes them */
+    var scrim=document.getElementById('nav-scrim');
+    function sync(){if(scrim)scrim.hidden=!((nl&&nl.classList.contains('open'))||(pan&&!pan.hidden))}
+    function closeMenu(){if(nt&&nl&&nl.classList.contains('open')){nt.setAttribute('aria-expanded','false');nl.classList.remove('open');sync();return true}}
+    function closePanel(){if(chip&&pan&&!pan.hidden){pan.hidden=true;chip.setAttribute('aria-expanded','false');sync();return true}}
+    if(scrim)scrim.addEventListener('click',function(){closeMenu();closePanel()});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape'&&closeMenu())nt.focus()});
+    if(chip&&pan){
+      chip.addEventListener('click',function(){var open=pan.hidden;pan.hidden=!open;chip.setAttribute('aria-expanded',String(open));if(open)closeMenu();sync()});
+      pan.addEventListener('click',function(e){
+        var b=e.target.closest('button');if(!b||b.disabled)return;
+        var p=current();
+        if(b.hasAttribute('data-mv'))p.ver=b.getAttribute('data-mv');
+        else if(b.hasAttribute('data-mm'))p.model=b.getAttribute('data-mm');
+        else if(b.hasAttribute('data-mvolt'))p.volts=Number(b.getAttribute('data-mvolt'));
+        else if(b.id==='m-clear'){set(null);return}
+        else if(b.id==='m-done'){pan.hidden=true;chip.setAttribute('aria-expanded','false');sync();chip.focus();return}
+        else return;
+        set(p);
+      });
+      var ec=document.getElementById('m-early');
+      if(ec)ec.addEventListener('change',function(){var p=current();p.early=ec.checked;set(p)});
+      document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!pan.hidden){pan.hidden=true;chip.setAttribute('aria-expanded','false');sync()}});
+    }
+    if(nt&&nl)nt.addEventListener('click',function(){var open=nt.getAttribute('aria-expanded')!=='true';nt.setAttribute('aria-expanded',String(open));nl.classList.toggle('open',open);if(open)closePanel();sync()});
+    Array.prototype.forEach.call(document.querySelectorAll('[data-setmachine]'),function(b){
+      b.addEventListener('click',function(){
+        var p=current();p.ver=b.getAttribute('data-setmachine');set(p);
+      });
+    });
+    var inViewer=typeof window.claude!=='undefined';
+    var pb=document.querySelectorAll('[data-print]');
+    if(!inViewer)Array.prototype.forEach.call(pb,function(b){b.hidden=false;b.addEventListener('click',function(){window.print()})});
+    apply();
+    hints();window.addEventListener('resize',hints);
+  }
+  /* "swipe sideways" under drawings and tables that are wider than the screen */
+  function hints(){
+    Array.prototype.forEach.call(document.querySelectorAll('.scroll,.tablewrap,.table-wrap'),function(el){
+      var over=el.scrollWidth>el.clientWidth+8,h=el.nextElementSibling&&el.nextElementSibling.classList.contains('swipe-hint')?el.nextElementSibling:null;
+      if(over&&!h){h=document.createElement('p');h.className='swipe-hint';h.textContent=el.querySelector('svg')?'Swipe sideways to see the whole drawing':'Swipe sideways to see every column';el.parentNode.insertBefore(h,el.nextSibling)}
+      else if(!over&&h)h.remove();
+    });
+  }
+  window.SilviaMachine={get:function(){return prof},set:set,current:current,matches:matches,decided:decided,text:text,label:label,missing:missing,summary:summary,apply:apply};
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',wire);else wire();
+})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Shared tokens and components for the site-only pages (home, which Silvia, cut list, troubleshooting). */
+:root{
+  --bg:#ECEEF0; --surface:#F9FAFA; --surface-2:#E2E5E8; --ink:#16191C; --muted:#59616A; --line:#CBD0D5;
+  --accent:#D98400; --accent-ink:#965300; --accent-soft:#F4E1C0; --on-accent:#1A1206;
+  --good:#2D7A4C; --good-soft:#DCEFE3; --bad:#B13A2F; --bad-soft:#F6DEDB; --blue:#2F6F98; --blue-soft:#DCE9F2;
+  --w-l:#B03A2E; --w-h:#C77800; --w-n:#2F5FB3; --w-e:#2D7A4C; --w-lv:#7046B8; --w-lvg:#59616A; --w-s:#1F7F86;
+  --f-display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  --f-body:"Barlow",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#111316; --surface:#1A1D21; --surface-2:#252A30; --ink:#E7E9EB; --muted:#9BA2AA; --line:#30363D;
+    --accent:#F2A33A; --accent-ink:#F5B566; --accent-soft:#3B2B13; --on-accent:#1A1206;
+    --good:#63C08A; --good-soft:#17301F; --bad:#EC7064; --bad-soft:#3A1D1A; --blue:#6AAED6; --blue-soft:#16293A;
+    --w-l:#F0735F; --w-h:#F2A33A; --w-n:#79A6F2; --w-e:#63C08A; --w-lv:#B595F2; --w-lvg:#9BA2AA; --w-s:#5CC3C9;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#111316; --surface:#1A1D21; --surface-2:#252A30; --ink:#E7E9EB; --muted:#9BA2AA; --line:#30363D;
+  --accent:#F2A33A; --accent-ink:#F5B566; --accent-soft:#3B2B13; --on-accent:#1A1206;
+  --good:#63C08A; --good-soft:#17301F; --bad:#EC7064; --bad-soft:#3A1D1A; --blue:#6AAED6; --blue-soft:#16293A;
+  --w-l:#F0735F; --w-h:#F2A33A; --w-n:#79A6F2; --w-e:#63C08A; --w-lv:#B595F2; --w-lvg:#9BA2AA; --w-s:#5CC3C9;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16.5px;line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:var(--accent-ink);text-underline-offset:3px}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.wrap{max-width:980px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:30px 64px}
+.top{display:grid;gap:14px;margin-bottom:24px}
+.plate{display:inline-flex;align-items:center;flex-wrap:wrap;gap:6px 12px;justify-self:start;max-width:100%;border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:7px 12px;font:500 11.5px/1.3 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.plate .rivet{width:6px;height:6px;border-radius:50%;background:var(--line);box-shadow:inset 0 0 0 1px var(--muted);opacity:.7}
+.plate b{color:var(--ink);font-weight:600}
+/* rivets pinned to the plate's ends so a wrapped plate never leaves one on a line of its own */
+.plate{position:relative;padding:7px 26px}.plate .rivet{position:absolute;top:calc(50% - 3px);left:10px}.plate .rivet:last-child{left:auto;right:10px}
+h1{font:700 clamp(38px,6.6vw,60px)/.95 var(--f-display);letter-spacing:.01em;margin:0;text-transform:uppercase;text-wrap:balance}
+h2{font:600 24px/1.1 var(--f-display);letter-spacing:.05em;text-transform:uppercase;margin:0;text-wrap:balance}
+h3{margin:0;font-size:18px;font-weight:600;line-height:1.3}
+.lede{margin:0;color:var(--muted);max-width:66ch;font-size:17.5px}
+.warn{border:1px solid var(--bad);background:var(--bad-soft);border-radius:10px;padding:12px 16px;display:grid;gap:4px;max-width:880px}
+.warn strong{font:600 13px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--bad)}
+.warn p{margin:0;font-size:15.5px}
+section.block{margin-top:38px}
+.sec-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;border-bottom:2px solid var(--ink);padding-bottom:6px;margin-bottom:14px}
+.sec-h .sum{font:500 13px var(--f-mono);color:var(--muted);white-space:nowrap}
+/* on phones a long heading takes its own line and the note drops below it, instead of the heading squeezing into a column */
+@media (max-width:520px){.sec-h{flex-wrap:wrap;row-gap:2px}.sec-h .sum{white-space:normal}}
+.k{font:600 11px var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.fine{margin:0;font-size:14.5px;color:var(--muted);max-width:90ch}
+.chip{appearance:none;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 13px;font:600 14px var(--f-body);cursor:pointer;min-height:38px;display:inline-flex;align-items:center;gap:7px}
+.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.chip .n{font:500 12px var(--f-mono);color:var(--muted)}
+.chip[aria-pressed="true"] .n{color:var(--bg);opacity:.75}
+.btn{appearance:none;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 16px;font:600 15px var(--f-body);cursor:pointer;min-height:44px}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th{font:600 11px var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-align:left;padding:10px 10px 6px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.print-only{display:none}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@media print{
+  :root,:root[data-theme="dark"],:root:not([data-theme="light"]){--bg:#fff;--surface:#fff;--surface-2:#eee;--ink:#000;--muted:#333;--line:#999;--accent:#000;--accent-ink:#000;--accent-soft:#fff;color-scheme:light}
+  body{background:#fff;color:#000;font-size:10.5pt}
+  .wrap{max-width:none;padding:0}
+  .print-only{display:block}
+  .no-print,[data-print]{display:none!important}
+}
+
+/* Part guides: per part, a drawing that steps through the install (sticky beside the written steps on wide screens,
+   above them on phones, where the current step's text sits right under it). */
+.pg-jump{display:flex;flex-wrap:wrap;gap:8px}
+.pg-jump a{text-decoration:none;color:inherit}
+.pg-where{margin:0 0 12px;font-size:15.5px;max-width:75ch}
+.pg-meta{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px 28px;margin:0 0 16px}
+.pg-meta ul{margin:6px 0 0;padding-left:20px;display:grid;gap:4px;font-size:15px}
+.pg-meta p{margin:6px 0 0;font-size:15px}
+.pg-note{border:1px solid var(--accent);background:var(--accent-soft);border-radius:10px;padding:10px 14px;margin:0 0 14px;font-size:15px;max-width:880px}
+.pg-note p{margin:0}
+.pg-note p+p{margin-top:6px}
+@media (max-width:760px){.pg-meta{grid-template-columns:minmax(0,1fr)}}
+.pg-vars{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
+.pg{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,1fr);gap:18px 26px;align-items:start}
+.pg-figcol{position:sticky;top:calc(14px + var(--nav-cover,0px));transition:top .22s ease}
+.pg-fig{margin:0;border:1px solid var(--line);border-radius:14px;background:var(--surface);overflow:hidden}
+.pg-fig>svg{display:block;width:100%;height:auto;padding:8px 8px 2px}
+.pg-defs{position:absolute;width:0;height:0;overflow:hidden}
+.pg-ctl{display:flex;align-items:center;gap:6px;padding:6px 8px;border-top:1px solid var(--line)}
+.pg-ctl button{appearance:none;border:1px solid var(--line);background:var(--bg);border-radius:10px;min-width:44px;min-height:40px;display:inline-grid;place-items:center;cursor:pointer;color:var(--ink)}
+.pg-ctl button:disabled{opacity:.35;cursor:default}
+.pg-ctl button svg{display:block;width:18px;height:18px;padding:0;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.pg-ctl .pg-pos{flex:1;text-align:center;font:500 13px var(--f-mono);color:var(--muted)}
+.pg-drawn{margin:0;padding:0 12px 8px;font-size:13px;color:var(--muted)}
+.pg-now{display:none;margin:10px 2px 0;font-size:15px}
+.pg-now b{display:block;font-weight:600}
+.pg-steps{list-style:none;margin:0;padding:0;display:grid;gap:6px;counter-reset:none}
+.pg-steps li{border:1px solid transparent;border-radius:12px;padding:8px 12px 10px;transition:background .2s,border-color .2s}
+.pg-steps li.cur{background:var(--surface);border-color:var(--accent)}
+.pg-sb{appearance:none;border:0;background:none;padding:2px 0;display:flex;gap:10px;align-items:baseline;text-align:left;cursor:pointer;width:100%;color:inherit;min-height:32px}
+.pg-sb .pg-n{flex:none;width:26px;height:26px;border-radius:50%;display:inline-grid;place-items:center;font:600 13px var(--f-mono);border:1.5px solid var(--line);background:var(--bg);transform:translateY(-2px)}
+.pg-steps li.cur .pg-n{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.pg-sb .pg-t{font-weight:600;font-size:16.5px;line-height:1.3}
+.pg-steps p{margin:4px 0 0 36px;font-size:15px;color:var(--ink)}
+.pg-steps li:not(.cur) p{color:var(--muted)}
+.pg-steps .pg-links{font-size:14px}
+@media (max-width:860px){
+  .pg{grid-template-columns:minmax(0,1fr)}
+  .pg-figcol{position:static}
+  .pg-now{display:block}
+}
+.pg-src{display:grid;gap:4px;font-size:14.5px;color:var(--muted);padding-left:18px;margin:0}
+
+/* ---- drawings ---- */
+.pg-fig .cap{font:500 11px var(--f-mono);fill:var(--muted)}
+.pg-fig .lbl{font:600 12.5px var(--f-mono);fill:var(--ink)}
+.pg-fig .tiny{font:600 9px var(--f-mono);fill:#4A4136}
+.pg-fig .onmetal{fill:#2B3036}
+.pg-fig .alu{fill:url(#pg-alu);stroke:#5E656C;stroke-width:1.2}
+.pg-fig .hatch{fill:url(#pg-hatch)}
+.pg-fig .water{fill:#7FBDEB;opacity:.35}
+.pg-fig .hole{fill:#2B3036}
+.pg-fig .thr{fill:none;stroke:#5E656C;stroke-width:1.1}
+.pg-fig .thrc{fill:none;stroke:#8D959C;stroke-width:1;stroke-dasharray:2 2}
+.pg-fig .thrl{fill:none;stroke:rgba(0,0,0,.35);stroke-width:1}
+.pg-fig .facet{fill:none;stroke:rgba(0,0,0,.28);stroke-width:1}
+.pg-fig .brass{fill:url(#pg-brass);stroke:#6E5420;stroke-width:1.1}
+.pg-fig .copper{fill:url(#pg-copper);stroke:#6B3A18;stroke-width:1.1}
+.pg-fig .steel{fill:url(#pg-steel);stroke:#59616A;stroke-width:1.1}
+.pg-fig .steel2{fill:url(#pg-steelh);stroke:#59616A;stroke-width:1.1}
+.pg-fig .steelc{fill:#C3CAD0;stroke:#59616A;stroke-width:1.1}
+.pg-fig .tbody{fill:#8C949B;stroke:#3E454C;stroke-width:1.2}
+.pg-fig .tcap{fill:#B9C0C6;stroke:#3E454C;stroke-width:1}
+.pg-fig .ceramic{fill:#F1E9DA;stroke:#8C7F68;stroke-width:1.2}
+.pg-fig .ceramic2{fill:#E8DCC2;stroke:#8C7F68;stroke-width:1.1}
+.pg-fig .tab,.pg-fig .spade{fill:#DDE1E4;stroke:#59616A;stroke-width:1}
+.pg-fig .conn{fill:#E9ECEE;stroke:#59616A;stroke-width:1.1}
+.pg-fig .sleeve{fill:#D7DBDE;stroke:#59616A;stroke-width:1}
+.pg-fig .sleeveS{fill:#E05A47;opacity:.45;stroke:#B13A2F;stroke-width:1}
+.pg-fig .lead2{fill:none;stroke:#8D959C;stroke-width:2}
+.pg-fig .wire-m{fill:none;stroke:#A0521F;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+.pg-fig .jumper{fill:none;stroke:#D98400;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+.pg-fig .jl{fill:#965300}
+.pg-fig .braid{fill:none;stroke:#79828A;stroke-width:6;stroke-linecap:round}
+.pg-fig .braid2{fill:none;stroke:#C2C8CD;stroke-width:2;stroke-dasharray:2 3;stroke-linecap:round}
+.pg-fig .tcwire{fill:none;stroke:#A2AAB1;stroke-width:3.5;stroke-linecap:round}
+.pg-fig .paste{fill:#C9CDD1;stroke:#8E969E;stroke-width:.8}
+.pg-fig .pasteon{opacity:.92}
+.pg-fig .syr{fill:#F3F5F6;stroke:#59616A;stroke-width:1.1}
+.pg-fig .syrp{fill:#8E969E;stroke:#59616A}
+.pg-fig .spn{fill:#9AA3AB;stroke:#3E454C;stroke-width:1.2}
+.pg-fig .nono{fill:none;stroke:#C8392C;stroke-width:3.5;stroke-linecap:round}
+.pg-fig .chassis{fill:none;stroke:var(--muted);stroke-width:1.4;stroke-dasharray:6 5}
+.pg-fig .keep{fill:url(#pg-keep);stroke:#B13A2F;stroke-width:1.2;stroke-dasharray:4 3}
+.pg-fig .pcb{fill:#2F6B4F;stroke:#1C4532;stroke-width:1.2}
+.pg-fig .pcb+text.lbl,.pg-fig text.onpcb{fill:#F2F5F3}
+.pg-fig .term{fill:#2D63A8;stroke:#1D3F6E;stroke-width:1.1}
+.pg-fig .screw{fill:url(#pg-steel);stroke:#3E454C;stroke-width:1.1}
+.pg-fig .slot{stroke:#3E454C;stroke-width:2;stroke-linecap:round}
+.pg-fig .tclead{fill:none;stroke:#D98400;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1}
+.pg-fig .draw{stroke-dasharray:1}
+.pg-fig .meter{fill:#F2C230;stroke:#6E5420;stroke-width:1.2}
+.pg-fig .lcd{fill:#C9D6B8;stroke:#4E5A44;stroke-width:1}
+.pg-fig .lcdt{font:600 17px var(--f-mono);fill:#1E2618}
+.pg-fig .jack{fill:#1E2226}
+.pg-fig .jack.r{fill:#C8392C}
+.pg-fig .collet{fill:#3E454C;stroke:#1E2226;stroke-width:1}
+.pg-fig .oring-w{fill:#FFFFFF;stroke:#59616A;stroke-width:1}
+.pg-fig .oring-g{fill:#3FA35B;stroke:#226B37;stroke-width:1}
+.pg-fig .oring-d{fill:#2E3236;stroke:#0E1012;stroke-width:1}
+.pg-fig .cable{fill:none;stroke:#3E454C;stroke-width:5;stroke-linecap:round}
+.pg-fig .mark{fill:none;stroke:#C8392C;stroke-width:2;stroke-linecap:round}
+.pg-fig .lead{fill:none;stroke:var(--muted);stroke-width:1}
+.pg-fig .ptfe{fill:#FBFBF8;stroke:#8E969E;stroke-width:1.1}
+.pg-fig .hose{fill:none;stroke:#7E878E;stroke-width:12;stroke-linecap:round}
+.pg-fig .hose2{fill:none;stroke:#B6BCC1;stroke-width:3;stroke-dasharray:3 3}
+.pg-fig .hoseB{fill:none;stroke:#8B9399;stroke-width:10;stroke-linecap:round}
+.pg-fig .ptfeL{fill:none;stroke:#F4F4F0;stroke-width:8;stroke-linecap:round;filter:drop-shadow(0 0 .6px #59616A)}
+.pg-fig .pushT{fill:#E9ECEE;stroke:#59616A;stroke-width:1.1}
+.pg-fig .clamp{fill:#C3CAD0;stroke:#3E454C;stroke-width:1.1}
+.pg-fig .pumpb{fill:#2E3440;stroke:#14181D;stroke-width:1.2}
+.pg-fig .pumpb+text.lbl{fill:#E7E9EB}
+.pg-fig .cap-screw{fill:#3E454C;stroke:#14181D;stroke-width:1}
+.pg-fig .dimln{fill:none;stroke:var(--ink);stroke-width:1.2}
+.pg-fig .dimln.acc{stroke:var(--accent);stroke-width:2}
+.pg-fig .magring{fill:none;stroke:var(--accent);stroke-width:2.5}
+.pg-fig .wfill{fill:#5AA7E0;opacity:.85}
+.pg-fig .waterln{fill:none;stroke:#5AA7E0;stroke-width:4;stroke-linecap:round}
+.pg-fig .foam{fill:#F2D28A;opacity:.45;stroke:#B58B2E;stroke-width:1.2;stroke-dasharray:4 3}
+.pg-fig .ring{fill:none;stroke:rgba(0,0,0,.18);stroke-width:1.2}
+.pg-fig .pin{fill:#DDE1E4;stroke:#59616A;stroke-width:1.1}
+.pg-fig .pinc{fill:#59616A}
+.pg-fig .rbtn{fill:#D9473A;stroke:#7E1F17;stroke-width:1}
+.pg-fig .cutln{fill:none;stroke:#C8392C;stroke-width:2.2;stroke-dasharray:4 3}
+.pg-fig .drop{fill:#5AA7E0}
+/* wires, SSR and switches */
+.pg-fig .ins-r{fill:#C8392C;stroke:#7E1F17;stroke-width:1}
+.pg-fig .ins-k{fill:#2B3036;stroke:#0E1012;stroke-width:1}
+.pg-fig .ins-p{fill:#7046B8;stroke:#3F2470;stroke-width:1}
+.pg-fig .cu{fill:url(#pg-copper);stroke:#94532A;stroke-width:.6}
+.pg-fig .strand{fill:none;stroke:#7A4220;stroke-width:.6;opacity:.7}
+.pg-fig .blade{fill:#8E969E;stroke:#3E454C;stroke-width:1.2}
+.pg-fig .flagw{fill:#FFFFFF;stroke:#59616A;stroke-width:1}
+.pg-fig .jaw{fill:#3E454C;stroke:#14181D;stroke-width:1}
+.pg-fig .die-r{fill:#D9473A}
+.pg-fig .metal{fill:url(#pg-steel);stroke:#59616A;stroke-width:1}
+.pg-fig .isl{fill:#D64534;stroke:#7E1F17;stroke-width:1}
+.pg-fig .isl-b{fill:#2F6FC0;stroke:#1D3F6E;stroke-width:1}
+.pg-fig .dimple{fill:rgba(0,0,0,.28)}
+.pg-fig .slv{fill:#E05A47;opacity:.5;stroke:#B13A2F;stroke-width:1}
+.pg-fig .wing{fill:none;stroke:#8E969E;stroke-width:4;stroke-linecap:round}
+.pg-fig .gun{fill:#3E454C;stroke:#14181D;stroke-width:1}
+.pg-fig .heatw path{fill:none;stroke:#F2A33A;stroke-width:2.4;stroke-linecap:round;opacity:.9}
+.pg-fig .wire-w{fill:none;stroke:#F4F4F0;stroke-width:4;stroke-linecap:round;filter:drop-shadow(0 0 .7px #59616A)}
+.pg-fig .wire-g{fill:none;stroke:#8E969E;stroke-width:4;stroke-linecap:round}
+.pg-fig .lvw{fill:none;stroke:var(--w-lv);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.pg-fig .lvg{fill:none;stroke:var(--w-lvg);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.pg-fig .lvc{fill:#DDE1E4}
+.pg-fig .okc{fill:#2D7A4C}
+.pg-fig .okt{fill:none;stroke:#FFFFFF;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+.pg-fig .tug path{fill:none;stroke:var(--accent);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.pg-fig .ssrb{fill:#23272C;stroke:#0E1012;stroke-width:1.2}
+.pg-fig .ssrt{font:700 15px var(--f-mono);fill:#E7E9EB}
+.pg-fig .ssrs{font:500 11px var(--f-mono);fill:#AEB5BC}
+.pg-fig .onssr{fill:#E7E9EB}
+.pg-fig .plate{fill:#C3CAD0;stroke:#59616A;stroke-width:1}
+.pg-fig .led{fill:#5A2A26;stroke:#14181D;stroke-width:1}
+.pg-fig .led.on{animation:pgblink 1.4s ease-in-out infinite}
+.pg-fig .cover{fill:#CFE6F5;opacity:.28;stroke:#7FA6C2;stroke-width:1.5}
+.pg-fig .wallp{fill:#D3D8DC;stroke:#8D959C;stroke-width:1.2}
+.pg-fig .vent{fill:#2B3036}
+.pg-fig .funnel{fill:#3E454C;stroke:#14181D;stroke-width:1}
+.pg-fig .funnel+text{fill:#E7E9EB}
+.pg-fig .swbody{fill:#B9C0C6;stroke:#3E454C;stroke-width:1.2}
+.pg-fig .fadedtab{opacity:.4}
+.pg-fig .tagb{fill:#FFF6C9;stroke:#9A7B1C;stroke-width:1}
+.pg-fig .tagt{font:600 10.5px var(--f-mono);fill:#3B2F07}
+.pg-fig .tie{fill:none;stroke:#2B3036;stroke-width:3;stroke-linecap:round}
+.pg-fig .blkh{fill:#2B3036;stroke:#0E1012;stroke-width:1.2}
+.pg-fig .wallbg{fill:var(--surface)}
+.pg-fig .jig{animation:pgjig .9s ease-in-out infinite}
+.pg-fig .tug path{animation:pgtug .9s ease-in-out infinite}
+@keyframes pgblink{0%,100%{fill:#5A2A26}50%{fill:#FF4A3D}}
+@keyframes pgjig{0%,100%{transform:translateX(0)}50%{transform:translateX(3px)}}
+@keyframes pgtug{0%,100%{opacity:.35}50%{opacity:1}}
+@media (prefers-reduced-motion: reduce){.pg-fig .jig,.pg-fig .tug path,.pg-fig .led.on{animation:none}.pg-fig .led.on{fill:#FF4A3D}}
+/* pieces that only run during their steps */
+.pg-fig [data-loop]{display:none}
+.pg-fig [data-loop].run{display:inline}
+.pg-fig .turnarc{fill:none;stroke:var(--accent);stroke-width:2.6;stroke-dasharray:6 5;stroke-linecap:round;animation:pgflow .9s linear infinite}
+.pg-fig .turnhd{fill:none;stroke:var(--accent);stroke-width:2.6;stroke-linecap:round}
+.pg-fig .pulse circle{fill:none;stroke:var(--accent);stroke-width:2.5;transform-box:fill-box;transform-origin:center;animation:pgpulse 1.4s ease-out infinite}
+.pg-fig .drips .drop{animation:pgdrip 1s ease-in infinite}
+.pg-fig .drips .d2{animation-delay:.5s}
+.pg-fig .bubs circle{fill:#FFFFFF;stroke:#5AA7E0;stroke-width:1;offset-path:path("M366,226 V206 C366,176 356,150 322,150 H276");animation:pgbub 2.2s linear infinite}
+.pg-fig .bubs .b2{animation-delay:.7s}
+.pg-fig .bubs .b3{animation-delay:1.4s}
+.pg-fig [data-run].on>*{animation:pgpress 1.6s ease-in-out infinite}
+@keyframes pgflow{to{stroke-dashoffset:-11}}
+@keyframes pgpulse{0%{transform:scale(.6);opacity:.9}100%{transform:scale(1.25);opacity:0}}
+@keyframes pgdrip{0%{transform:translateY(0);opacity:0}15%{opacity:1}100%{transform:translateY(46px);opacity:0}}
+@keyframes pgbub{0%{offset-distance:0%;opacity:0}10%{opacity:1}90%{opacity:1}100%{offset-distance:100%;opacity:0}}
+@keyframes pgpress{0%,60%,100%{transform:translateY(0)}75%{transform:translateY(4px)}}
+@media (prefers-reduced-motion: reduce){
+  .pg-fig .turnarc,.pg-fig .pulse circle,.pg-fig .drips .drop,.pg-fig .bubs circle,.pg-fig [data-run].on>*{animation:none}
+  .pg-fig .pulse circle{opacity:.8}
+  .pg-fig .bubs circle{offset-distance:50%}
+  .pg-figcol{transition:none}
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .pg-fig .hole{fill:#0D0F11}:root:not([data-theme="light"]) .pg-fig .ins-k,:root:not([data-theme="light"]) .pg-fig .ssrb{stroke:#6B727B}}
+:root[data-theme="dark"] .pg-fig .hole{fill:#0D0F11}
+:root[data-theme="dark"] .pg-fig .ins-k,:root[data-theme="dark"] .pg-fig .ssrb{stroke:#6B727B}
+/* Silvia drawings */
+.pg-fig .clampb{fill:none;stroke:#8D959C;stroke-width:6;stroke-linejoin:round}
+.pg-fig .insul{fill:#E8DFC9;stroke:#9C8F70;stroke-width:1.2;opacity:.96}
+.pg-fig .quilt{fill:none;stroke:#B8AB8A;stroke-width:1;stroke-dasharray:3 4}
+.pg-fig .cord{fill:none;stroke:#FFFFFF;stroke-width:2;stroke-linecap:round;filter:drop-shadow(0 0 .6px #59616A)}
+.pg-fig .tapeb{fill:#E05A47;opacity:.38;stroke:#B13A2F;stroke-width:1}
+.pg-fig .tapel{fill:none;stroke:#B13A2F;stroke-width:1.2;opacity:.6}
+.pg-fig .mkt{font:700 10px var(--f-mono);fill:#FFFFFF}
+.pg-fig .pbtn{fill:#2B3036;stroke:#0E1012;stroke-width:1.2}
+
+</style>
+<svg class="pg-defs" width="0" height="0" aria-hidden="true" focusable="false"><defs>
+<linearGradient id="pg-alu" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E3E7EA"/><stop offset=".55" stop-color="#C6CCD1"/><stop offset="1" stop-color="#A9B1B8"/></linearGradient>
+<linearGradient id="pg-brass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F0CF7A"/><stop offset=".5" stop-color="#D2A443"/><stop offset="1" stop-color="#A97A22"/></linearGradient>
+<linearGradient id="pg-copper" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#EDB081"/><stop offset=".5" stop-color="#C77A45"/><stop offset="1" stop-color="#94532A"/></linearGradient>
+<linearGradient id="pg-steel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#EEF1F3"/><stop offset=".5" stop-color="#C3CAD0"/><stop offset="1" stop-color="#959EA6"/></linearGradient>
+<linearGradient id="pg-steelh" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#9AA3AB"/><stop offset=".35" stop-color="#EEF1F3"/><stop offset="1" stop-color="#A3ACB4"/></linearGradient>
+<pattern id="pg-hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="7" stroke="#8D959C" stroke-width="1.2" opacity=".55"/></pattern>
+<pattern id="pg-keep" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)"><line x1="0" y1="0" x2="0" y2="8" stroke="#B13A2F" stroke-width="1.4" opacity=".35"/></pattern>
+</defs></svg>
+
+<div class="wrap">
+  <header class="top">
+    <div class="plate"><span class="rivet" aria-hidden="true"></span><span><b>Install</b></span><span>Part guides</span><span>five guides, drawn step by step</span><span class="rivet" aria-hidden="true"></span></div>
+    <h1>Part Guides</h1>
+    <p class="lede">The thermocouple, the pressure sensor, the wires themselves, the SSR and the switches, each drawn step by step for a Silvia. Tap a step to watch it, or step through with the arrows. The <a href="runbook.html">runbook</a> has the same work in order with everything else, and the <a href="wiring.html">wiring reference</a> has every run.</p>
+    <nav class="pg-jump" aria-label="Guides on this page"><a class="chip" href="#tc">Thermocouple</a><a class="chip" href="#ps">Pressure sensor</a><a class="chip" href="#wire">Making the wires</a><a class="chip" href="#ssr">SSR</a><a class="chip" href="#sw">Switches</a></nav>
+  </header>
+
+  <div class="warn"><strong>Cord out, boiler cold</strong><p>Unplug the machine and let the boiler cool before you open it. The drawings show what your hands do, not to scale. There's no official Silvia guide: these steps follow realNiche's harness and the Silvia builds on the Gaggiuino Discord, as the rest of this site does.</p></div>
+
+  <section class="block" id="tc" aria-labelledby="h-tc">
+    <div class="sec-h"><h2 id="h-tc">Thermocouple</h2><span class="sum">K type · M3 · ungrounded</span></div>
+    <p class="pg-where" id="pg-tc-where"></p>
+    <div class="pg-meta">
+      <div><span class="k">You need</span><ul><li>The thermocouple: K type, ungrounded, M3 thread (not the official parts list's M4)</li><li>Thermal paste rated for 180 °C or more</li><li>A screwdriver for the thermostat's clamp screws, and a small flat one for J4</li><li>A multimeter</li></ul></div>
+      <div><span class="k">What it does</span><p>It reports the boiler's temperature to the PCB on J4, in place of the brew thermostat. It must be ungrounded (its junction insulated from the probe body) because the PCB's low-voltage side floats; <a href="how-gaggiuino-works.html#ground">How Gaggiuino works</a> explains why.</p></div>
+    </div>
+    <div class="pg" id="pg-tc-g">
+      <div class="pg-figcol">
+        <figure class="pg-fig"><svg id="pg-tc" viewBox="0 0 480 300" role="img" aria-labelledby="pg-tc-t"><title id="pg-tc-t">Thermocouple install on a Silvia, drawn step by step: the brew thermostat's leads come off, its clamp screws come out and it lifts off the boiler top, the M3 thermocouple goes into one of the clamp holes with thermal paste, finger tight, its lead runs around the front of the boiler to the PCB, and it clamps into J4.</title><g data-k="close"><rect class="water" x="20" y="206" width="440" height="74"/><text class="cap" x="40" y="272">water</text><rect class="brass" x="20" y="176" width="440" height="30"/><rect class="hatch" x="20" y="176" width="440" height="30"/><text class="cap" x="452" y="226" text-anchor="end">boiler top, in section</text><rect class="hole" x="141" y="176" width="10" height="20"/><path class="thr" d="M141,176L143,177.5L141,179L143,180.5L141,182L143,183.5L141,185L143,186.5L141,188L143,189.5L141,191L143,192.5L141,194L143,195.5M151,176L149,177.5L151,179L149,180.5L151,182L149,183.5L151,185L149,186.5L151,188L149,189.5L151,191L149,192.5L151,194L149,195.5"/><rect class="hole" x="289" y="176" width="10" height="20"/><path class="thr" d="M289,176L291,177.5L289,179L291,180.5L289,182L291,183.5L289,185L291,186.5L289,188L291,189.5L289,191L291,192.5L289,194L291,195.5M299,176L297,177.5L299,179L297,180.5L299,182L297,183.5L299,185L297,186.5L299,188L297,189.5L299,191L297,192.5L299,194L297,195.5"/><g data-k="bt"><rect class="tbody" x="176" y="134" width="88" height="42" rx="6"/><rect class="tcap" x="184" y="127" width="72" height="9" rx="3"/><rect class="tab" x="196" y="100" width="8" height="28" rx="1"/><rect class="tab" x="236" y="100" width="8" height="28" rx="1"/><text class="cap onmetal" x="220" y="160" text-anchor="middle">brew</text><text class="cap onmetal" x="220" y="172" text-anchor="middle">thermostat</text></g><g data-k="clp"><path class="clampb" d="M132,176 H160 V124 H280 V176 H308"/></g><g data-k="sc1"><rect class="steel" x="143.5" y="172" width="5" height="24"/><rect class="screw" x="138" y="162" width="16" height="10" rx="2"/><path class="slot" d="M141,166H151"/></g><g data-k="sc2"><rect class="steel" x="291.5" y="172" width="5" height="24"/><rect class="screw" x="286" y="162" width="16" height="10" rx="2"/><path class="slot" d="M289,166H299"/></g><g data-loop="spinU" class="turn"><path class="turnarc" d="M162,166 A16,5 0 1,0 146,171"/><path class="turnhd" d="M146,171 l-7,-4 M146,171 l-7,5"/></g><g data-loop="spinU" class="turn"><path class="turnarc" d="M310,166 A16,5 0 1,0 294,171"/><path class="turnhd" d="M294,171 l-7,-4 M294,171 l-7,5"/></g><g data-k="l1"><path class="wire-m" d="M200,86 C200,58 260,46 330,40 S430,30 486,30"/><rect class="conn" x="191" y="84" width="18" height="18" rx="2"/></g><g data-k="l2"><path class="wire-m" d="M240,86 C240,66 290,62 350,62 S440,58 486,58"/><rect class="conn" x="231" y="84" width="18" height="18" rx="2"/></g><g data-k="lcap"><text class="cap" x="330" y="86">its two leads</text></g><g data-k="safe"><text class="cap" x="452" y="130" text-anchor="end">the 165 °C safety thermostat,</text><text class="cap" x="452" y="144" text-anchor="end">on the front, stays</text></g><g data-k="tc"><path class="braid" d="M146,118 C146,78 110,64 60,58 H-6"/><path class="braid2" d="M146,118 C146,78 110,64 60,58 H-6"/><rect class="copper" x="142" y="168" width="8" height="28"/><path class="thrl" d="M142,170L150,172M142,173L150,175M142,176L150,178M142,179L150,181M142,182L150,184M142,185L150,187M142,188L150,190M142,191L150,193M142,194L150,196"/><rect data-k="paste" data-origin="center top" class="paste pasteon" x="141" y="168" width="10" height="28" rx="2"/><rect class="copper" x="134" y="150" width="24" height="18" rx="2"/><path class="facet" d="M142,150V168M150,150V168"/><rect class="steel" x="139" y="118" width="14" height="32" rx="3"/><g data-k="syr"><rect class="syr" x="82" y="174" width="44" height="18" rx="3"/><rect class="syrp" x="70" y="178" width="14" height="10" rx="2"/><path class="syr" d="M126,178 L126,188 L139,184.5 L139,181.5 Z"/><circle class="paste" cx="141" cy="183" r="3"/></g><g data-loop="spinF" class="turn"><path class="turnarc" d="M126,159 A20,6 0 1,1 146,165"/><path class="turnhd" d="M146,165 l7,-4 M146,165 l7,5"/></g><text class="cap" x="164" y="132">M3</text></g><g data-k="nosp"><g transform="translate(236 66) scale(0.95)"><path class="spn" d="M-22,6 L10,-6 A9,9 0 1,1 16,4 L10,0 L6,4 L10,9 A9,9 0 0,1 2,6 L-20,14 Z"/><circle class="nono" cx="-2" cy="4" r="24"/><path class="nono" d="M-19,-13 L15,21"/></g><text class="cap" x="236" y="106" text-anchor="middle">finger tight, no spanner</text></g><g data-k="ins" data-when="ver:V5,V6"><rect class="insul" x="12" y="88" width="456" height="122" rx="18"/><path class="quilt" d="M12,128 H468 M12,170 H468 M88,88 V210 M164,88 V210 M240,88 V210 M316,88 V210 M392,88 V210"/><text class="lbl" x="240" y="153" text-anchor="middle">boiler insulation (V5, V6)</text></g></g><g data-k="route"><rect class="chassis" x="60" y="34" width="360" height="236" rx="14"/><text class="cap" x="240" y="290" text-anchor="middle">front of the machine</text><text class="cap" x="240" y="26" text-anchor="middle">back</text><rect class="ssrb" x="70" y="116" width="24" height="54" rx="3"/><text class="cap" x="102" y="146">SSR</text><rect class="brass" x="174" y="92" width="132" height="118" rx="18"/><text class="lbl onmetal" x="240" y="158" text-anchor="middle">boiler</text><rect class="steelc" x="226" y="214" width="28" height="22" rx="3"/><text class="cap" x="240" y="252" text-anchor="middle">3-way valve</text><rect class="pcb" x="330" y="168" width="78" height="80" rx="6"/><text class="lbl" x="369" y="204" text-anchor="middle">PCB</text><text class="cap onpcb" x="369" y="222" text-anchor="middle">J4</text><path data-k="rlead" class="tclead draw" pathLength="1" d="M200,114 H162 V258 H318 V212 H330"/><rect class="copper" x="194" y="108" width="12" height="12" rx="2"/><text class="cap" x="412" y="58" text-anchor="end">low voltage low,</text><text class="cap" x="412" y="72" text-anchor="end">to the right</text></g><g data-k="j4v"><rect class="pcb" x="40" y="56" width="170" height="92" rx="8"/><text class="lbl" x="56" y="78">J4</text><rect class="term" x="70" y="88" width="50" height="48" rx="4"/><rect class="term" x="130" y="88" width="50" height="48" rx="4"/><g data-k="t1" data-origin="center"><circle class="screw" cx="95" cy="104" r="10"/><path class="slot" d="M88,104H102"/></g><g data-k="t2" data-origin="center"><circle class="screw" cx="155" cy="104" r="10"/><path class="slot" d="M148,104H162"/></g><text class="lbl onpcb" x="95" y="130" text-anchor="middle">−</text><text class="lbl onpcb" x="155" y="130" text-anchor="middle">+</text><g data-k="tcw"><path class="tcwire" d="M95,138 V214 C95,236 120,244 125,262 V300"/><path class="tcwire" d="M155,138 V214 C155,236 130,244 125,262 V300"/><path class="braid" d="M125,262 V300"/></g><g data-k="ma"><rect class="meter" x="240" y="40" width="104" height="128" rx="12"/><rect class="lcd" x="252" y="54" width="80" height="34" rx="4"/><text class="lcdt" x="292" y="79" text-anchor="middle">OL</text><circle class="jack" cx="272" cy="146" r="6"/><circle class="jack r" cx="312" cy="146" r="6"/><text class="cap" x="292" y="188" text-anchor="middle">either wire</text><text class="cap" x="292" y="202" text-anchor="middle">to the boiler</text></g><g data-k="mb"><rect class="meter" x="360" y="40" width="104" height="128" rx="12"/><rect class="lcd" x="372" y="54" width="80" height="34" rx="4"/><text class="lcdt" x="412" y="79" text-anchor="middle">3.1 Ω</text><circle class="jack" cx="392" cy="146" r="6"/><circle class="jack r" cx="432" cy="146" r="6"/><text class="cap" x="412" y="188" text-anchor="middle">wire to wire</text><text class="cap" x="412" y="202" text-anchor="middle">a few ohms</text></g></g></svg>
+
+          <div class="pg-ctl"><button type="button" class="pg-prev" aria-label="Previous step"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button><span class="pg-pos" aria-live="polite"></span><button type="button" class="pg-next" aria-label="Next step"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button><button type="button" class="pg-again" aria-label="Play this step again"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg></button></div>
+        </figure>
+        <p class="pg-now" aria-hidden="true"></p>
+      </div>
+      <ol class="pg-steps"></ol>
+    </div>
+  </section>
+
+  <section class="block" id="ps" aria-labelledby="h-ps">
+    <div class="sec-h"><h2 id="h-ps">Pressure sensor</h2><span class="sum">1.2 MPa · OPV tee</span></div>
+    <p class="pg-where" id="pg-ps-where"></p>
+    <div class="pg-meta">
+      <div><span class="k">You need</span><ul><li>The sensor (0 to 1.2 MPa, G1/4) and its flat white O-ring, about 11 mm across</li><li>Juun's parts: a 1/8" FFM tee and a 1/4"F to 1/8"M elbow</li><li>Loctite 55 thread cord</li><li>Two spanners</li><li>A little foam, if its readings turn out noisy</li></ul></div>
+      <div><span class="k">What it does</span><p>It tells the PCB the brew pressure, 0 to 12 bar, on J6, so Gaggiuino can profile pressure. It seals on its O-ring, not on its thread. No tap block fits a Silvia, so it goes on a tee.</p></div>
+    </div>
+    <div class="pg" id="pg-ps-g">
+      <div class="pg-figcol">
+        <figure class="pg-fig"><svg id="pg-ps" viewBox="0 0 480 330" role="img" aria-labelledby="pg-ps-t"><title id="pg-ps-t">Pressure sensor on a Silvia, drawn step by step: the flat O-ring goes into the elbow's socket and the sensor screws in, thread cord goes on the tapered threads, the tee goes in at the OPV with the elbow in it so the sensor hangs below, its cable plugs into J6, and the line is filled and pressure-tested.</title><rect class="brass" x="240" y="20" width="110" height="56" rx="4"/><text class="lbl onmetal" x="268" y="52">OPV</text><rect class="hole" x="288" y="62" width="14" height="14"/><text class="cap" x="356" y="38">drawn as an</text><text class="cap" x="356" y="52">illustration</text><g data-k="tee"><rect class="brass" x="288" y="62" width="14" height="22"/><path class="thrl" d="M288,64L302,66M288,67L302,69M288,70L302,72M288,73L302,75M288,76L302,78M288,79L302,81M288,82L302,84"/><g data-k="cord2"><path class="cord" d="M287,66 L303,70 M287,71 L303,75 M287,76 L303,80"/></g><rect class="brass" x="278" y="84" width="34" height="40" rx="3"/><path class="facet" d="M278,94H312M278,114H312"/><rect class="brass" x="258" y="94" width="20" height="20" rx="2"/><rect class="brass" x="312" y="94" width="20" height="20" rx="2"/><path class="hoseB" d="M332,104 H404 C440,104 450,86 452,62"/><text class="cap" x="400" y="128">the line</text><text class="cap" x="400" y="142">carries on</text><text class="cap" x="296" y="140" text-anchor="middle">1/8" FFM tee</text></g><g data-k="asm"><rect class="brass" x="238" y="98" width="20" height="12"/><path class="thrl" d="M240,98L242,110M243,98L245,110M246,98L248,110M249,98L251,110M252,98L254,110M255,98L257,110"/><g data-k="cord1"><path class="cord" d="M242,97 L246,111 M247,97 L251,111 M252,97 L256,111"/></g><rect class="brass" x="212" y="92" width="28" height="26" rx="3"/><rect class="brass" x="208" y="118" width="36" height="32" rx="2"/><rect class="hole" x="216" y="118" width="20" height="32"/><path class="thr" d="M216,124L218.5,125.5L216,127L218.5,128.5L216,130L218.5,131.5L216,133L218.5,134.5L216,136L218.5,137.5L216,139L218.5,140.5L216,142L218.5,143.5L216,145L218.5,146.5L216,148L218.5,149.5M236,124L233.5,125.5L236,127L233.5,128.5L236,130L233.5,131.5L236,133L233.5,134.5L236,136L233.5,137.5L236,139L233.5,140.5L236,142L233.5,143.5L236,145L233.5,146.5L236,148L233.5,149.5"/><rect class="hole" x="221" y="100" width="10" height="20"/><g data-k="or1"><rect class="oring-w" x="216.5" y="118" width="6" height="5" rx="1.2"/><rect class="oring-w" x="229.5" y="118" width="6" height="5" rx="1.2"/></g><g data-loop="pulseR" class="pulse"><circle cx="226" cy="121" r="20"/></g><g data-k="sen"><rect class="steel" x="219" y="122" width="14" height="28"/><path class="thrl" d="M219,124L233,126M219,127L233,129M219,130L233,132M219,133L233,135M219,136L233,138M219,139L233,141M219,142L233,144M219,145L233,147M219,148L233,150"/><rect class="oring-g" x="212" y="150" width="28" height="4" rx="2"/><rect class="steel" x="206" y="154" width="40" height="16" rx="2"/><path class="facet" d="M218,154V170M234,154V170"/><rect class="steel2" x="210" y="170" width="32" height="68" rx="6"/><path class="cable" d="M226,238 V252"/><g data-loop="spinS" class="turn"><path class="turnarc" d="M198,162 A28,8 0 1,1 226,170"/><path class="turnhd" d="M226,170 l7,-4 M226,170 l7,5"/></g></g><g data-k="qt"><g transform="translate(286 168) scale(0.7)"><path class="spn" d="M-22,6 L10,-6 A9,9 0 1,1 16,4 L10,0 L6,4 L10,9 A9,9 0 0,1 2,6 L-20,14 Z"/></g><text class="lbl" x="286" y="202" text-anchor="middle">¼ max</text></g><g data-k="foam"><rect class="foam" x="200" y="160" width="52" height="86" rx="12"/><text class="cap" x="194" y="204" text-anchor="end">foam if it</text><text class="cap" x="194" y="218" text-anchor="end">reads noisy</text></g><g data-k="wat"><rect class="wfill" x="222" y="101" width="8" height="18"/><rect class="wfill" x="232" y="101" width="26" height="6"/><rect class="wfill" x="221" y="118" width="10" height="4"/></g><g data-k="lcaps"><text class="cap" x="266" y="100">elbow</text><text class="cap" x="266" y="114">1/4"F to 1/8"M</text><text class="cap" x="266" y="142">flat O-ring</text><path class="lead" d="M262,139 L238,122"/><text class="cap" x="256" y="214">sensor</text><text class="cap" x="256" y="228">1.2 MPa</text></g></g><g data-k="wat2"><rect class="wfill" x="280" y="96" width="30" height="16"/><rect class="wfill" x="290" y="66" width="10" height="30"/></g><g data-k="chs"><path class="chassis" d="M20,300 H200"/><text class="cap" x="24" y="316">chassis: the sensor hangs clear of it</text></g><g data-k="j6"><rect class="pcb" x="330" y="200" width="134" height="74" rx="6"/><text class="lbl" x="344" y="222">J6</text><rect class="term" x="352" y="234" width="20" height="18" rx="2"/><rect class="term" x="378" y="234" width="20" height="18" rx="2"/><rect class="term" x="404" y="234" width="20" height="18" rx="2"/><text class="cap onpcb" x="362" y="266" text-anchor="middle">5V</text><text class="cap onpcb" x="388" y="266" text-anchor="middle">GND</text><text class="cap onpcb" x="414" y="266" text-anchor="middle">P</text></g><path data-k="cab" class="cable draw" pathLength="1" d="M226,252 V284 C226,300 250,302 290,302 H388 V252"/><g data-k="gauge"><rect class="meter" x="40" y="24" width="104" height="58" rx="10"/><rect class="lcd" x="48" y="32" width="88" height="30" rx="4"/><text class="lcdt" data-k="pval" x="92" y="53" text-anchor="middle">0 bar</text><text class="cap" x="92" y="98" text-anchor="middle">[UT] Test OPV</text></g></svg>
+
+          <div class="pg-ctl"><button type="button" class="pg-prev" aria-label="Previous step"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button><span class="pg-pos" aria-live="polite"></span><button type="button" class="pg-next" aria-label="Next step"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button><button type="button" class="pg-again" aria-label="Play this step again"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg></button></div>
+        </figure>
+        <p class="pg-now" aria-hidden="true"></p>
+      </div>
+      <ol class="pg-steps"></ol>
+    </div>
+  </section>
+
+  <section class="block" id="wire" aria-labelledby="h-wire">
+    <div class="sec-h"><h2 id="h-wire">Making the wires</h2><span class="sum">cut · strip · crimp · tape · pull-test</span></div>
+    <p class="pg-where" id="pg-wire-where"></p>
+    <div class="pg-meta">
+      <div><span class="k">You need</span><ul><li>18 AWG 200 °C silicone wire for mains and 22 AWG for low voltage, cut from the <a href="cut-list.html">cut list</a> (a Silvia harness runs longer than a Gaggia one)</li><li>A wire stripper</li><li>An insulated crimper (red and blue dies) for spades, forks and butt splices</li><li>An open-barrel crimper for the bare boiler spades</li><li>Red and blue 6.3 mm spades, forks for the SSR (a blue one for the two wires on load terminal 1), uninsulated 6.3 mm spades, some sized for two wires (16 to 14 AWG), and red butt splices</li><li>Self-fusing silicone tape, an oil-based marker and your printed <a href="wire-labels.html">wire labels</a></li></ul></div>
+      <div><span class="k">Which crimper is which</span><p>An insulated crimper has colored, rounded dies and squashes a nylon sleeve. An open-barrel crimper has small B-shaped dies that roll a bare terminal's tabs over the wire. Most hardware-store crimpers are the insulated kind; the bare spades at the boiler need the open-barrel one.</p></div>
+    </div>
+    <div class="pg" id="pg-wire-g">
+      <div class="pg-figcol">
+        <figure class="pg-fig"><svg id="pg-wire" viewBox="0 30 480 220" role="img" aria-labelledby="pg-wire-t"><title id="pg-wire-t">Making the wires for a Silvia harness, drawn step by step: cut and label, strip about 6 mm, crimp insulated spades and forks, crimp bare spades for the boiler and tape them after the checks, one spade or fork for two wires, a red butt splice in the switch ground chain, and the pull test.</title><g data-k="wv1"><rect class="ins-r" x="20" y="134" width="282" height="12" rx="5"/><g data-k="waste"><rect class="ins-r" x="300" y="134" width="70" height="12" rx="5"/></g><g data-k="cutT"><path class="blade" d="M286,40 L314,40 L304,138 L298,138 Z"/></g><g data-k="cutB"><path class="blade" d="M286,240 L314,240 L304,142 L298,142 Z"/></g><g data-k="flag"><rect class="flagw" x="62" y="96" width="46" height="30" rx="3"/><text class="lbl onmetal" x="85" y="117" text-anchor="middle">AC5</text><rect class="flagw" x="78" y="126" width="14" height="26" rx="2"/></g><g data-k="mkr"><text class="mkt" x="236" y="143.5" text-anchor="middle">AC5</text><text class="cap" x="236" y="124" text-anchor="middle">boiler end: marker</text></g><g data-k="wd1"><path class="dimln" d="M20,176 V188 M300,176 V188 M20,182 H300"/><text class="cap" x="160" y="204" text-anchor="middle">a little longer than the cut list</text></g></g><g data-k="wv2"><rect class="cu" x="262" y="136.0" width="38" height="8" rx="2"/><path class="strand" d="M262,138H300M262,140H300M262,142H300"/><rect class="ins-r" x="20" y="134" width="244" height="12" rx="3"/><g data-k="slug"><rect class="ins-r" x="262" y="134" width="38" height="12" rx="3"/></g><g data-k="sjT"><path class="jaw" d="M255,50 H269 V128 L264,133 H260 L255,128 Z"/></g><g data-k="sjB"><path class="jaw" d="M255,230 H269 V152 L264,147 H260 L255,152 Z"/></g><g data-k="wd2"><path class="dimln" d="M262,108 V118 M300,108 V118 M262,113 H300"/><text class="lbl" x="281" y="102" text-anchor="middle">≈ 6 mm</text></g></g><g data-k="wv3"><rect class="ins-r" x="20" y="134" width="216" height="12" rx="3"/><rect class="cu" x="234" y="136.0" width="30" height="8" rx="2"/><path class="strand" d="M234,138H264M234,140H264M234,142H264"/><g data-k="isp"><rect class="metal" x="266" y="132" width="46" height="16" rx="2"/><path class="facet" d="M266,136 H312 M266,144 H312"/><path class="isl" d="M228,130.5 H262 L268,134 V146 L262,149.5 H228 Z"/><rect data-k="dimp" class="dimple" x="240" y="130.5" width="14" height="19" rx="3"/></g><g data-k="cjT"><path class="jaw" d="M234,60 H260 V128 Q247.0,135 234,128 Z"/><circle class="die-r" cx="247.0" cy="76" r="5"/><text class="cap" x="247.0" y="52" text-anchor="middle">red die</text></g><g data-k="cjB"><path class="jaw" d="M234,220 H260 V152 Q247.0,145 234,152 Z"/></g><text class="cap" x="380" y="120">nylon spade:</text><text class="cap" x="380" y="134">105 °C max</text><text class="cap" x="380" y="162">forks on all</text><text class="cap" x="380" y="176">four SSR screws</text></g><g data-k="wv4"><rect class="ins-r" x="20" y="134" width="218" height="12" rx="3"/><rect class="cu" x="236" y="136.0" width="28" height="8" rx="2"/><path class="strand" d="M236,138H264M236,140H264M236,142H264"/><g data-k="bsp"><rect class="metal" x="266" y="133" width="42" height="14" rx="2"/><rect class="metal" x="222" y="146" width="46" height="4"/><g data-k="wo"><path class="wing" d="M246,148 V122 M262,148 V122 M226,148 V116 M240,148 V116"/></g><g data-k="wc"><rect class="metal" x="244" y="133" width="22" height="14" rx="5"/><rect class="metal" x="222" y="131" width="20" height="18" rx="6"/></g><g data-k="wcap"><text class="cap" x="254" y="198" text-anchor="middle">copper</text><text class="cap" x="230" y="212" text-anchor="middle">insulation</text></g></g><g data-k="ojT"><path class="jaw" d="M220,60 H268 V127 Q256.0,135 244.0,127 Q232.0,135 220,127 Z"/><text class="cap" x="244.0" y="52" text-anchor="middle">open-barrel die</text></g><g data-k="ojB"><path class="jaw" d="M220,220 H268 V153 Q244.0,146 220,153 Z"/></g><g data-k="tape" data-origin="left center"><rect class="tapeb" x="204" y="126" width="80" height="28" rx="8"/><path class="tapel" d="M212,126 L222,154 M226,126 L236,154 M240,126 L250,154 M254,126 L264,154 M268,126 L278,154"/></g><g data-k="tcap"><text class="cap" x="244" y="196" text-anchor="middle">self-fusing silicone tape,</text><text class="cap" x="244" y="210" text-anchor="middle">once the checks have probed it</text></g></g><g data-k="wv5"><rect class="ins-r" x="20" y="92" width="120" height="11" rx="3"/><rect class="ins-r" x="20" y="108" width="120" height="11" rx="3"/><rect class="cu" x="138" y="98.5" width="22" height="14" rx="2"/><path class="strand" d="M138,102H160M138,105.5H160M138,109H160"/><g data-k="tsp"><rect class="metal" x="186" y="96" width="46" height="19" rx="2"/><path class="isl-b" d="M132,93 H180 L188,97 V114 L180,118 H132 Z"/></g><text class="cap" x="160" y="76" text-anchor="middle">two 18 AWG wires: blue, never red</text><rect class="ins-r" x="250" y="176" width="112" height="11" rx="3"/><rect class="ins-r" x="250" y="192" width="112" height="11" rx="3"/><rect class="cu" x="360" y="182.5" width="20" height="14" rx="2"/><path class="strand" d="M360,186H380M360,189.5H380M360,193H380"/><g data-k="fk2"><rect class="metal" x="392" y="180" width="44" height="19" rx="2"/><rect class="hole" x="416" y="186" width="22" height="7" rx="3"/><path class="isl-b" d="M352,177 H386 L394,181 V198 L386,202 H352 Z"/></g><text class="cap" x="330" y="232" text-anchor="middle">SSR terminal 1: one fork for AC3 and AC4</text></g><g data-k="wv6"><g data-k="bl"><rect class="ins-k" x="10" y="135" width="188" height="10" rx="3"/><rect class="cu" x="196" y="137.0" width="40" height="6" rx="2"/><path class="strand" d="M196,138.5H236M196,140H236M196,141.5H236"/></g><g data-k="br"><rect class="ins-k" x="282" y="135" width="188" height="10" rx="3"/><rect class="cu" x="244" y="137.0" width="40" height="6" rx="2"/><path class="strand" d="M244,138.5H284M244,140H284M244,141.5H284"/></g><path class="isl" d="M188,129 H292 V151 H188 Z"/><path class="facet" d="M240,129 V151"/><rect data-k="bd1" class="dimple" x="206" y="129" width="16" height="22" rx="3"/><rect data-k="bd2" class="dimple" x="258" y="129" width="16" height="22" rx="3"/><text class="cap" x="240" y="196" text-anchor="middle">red butt splice, 22 AWG ground chain</text><g data-k="bjT"><path class="jaw" d="M204,60 H228 V127 Q216.0,134 204,127 Z"/><circle class="die-r" cx="216.0" cy="76" r="5"/></g><g data-k="bjB"><path class="jaw" d="M204,220 H228 V153 Q216.0,146 204,153 Z"/></g></g><g data-k="wv7"><g data-loop="jig" class="jig"><rect class="ins-r" x="40" y="134" width="196" height="12" rx="3"/><rect class="metal" x="266" y="132" width="46" height="16" rx="2"/><path class="isl" d="M228,130.5 H262 L268,134 V146 L262,149.5 H228 Z"/><rect class="dimple" x="240" y="130.5" width="14" height="19" rx="3"/></g><g data-loop="tug" class="tug"><path d="M30,140 H-2 M8,130 L-2,140 L8,150"/><path d="M322,140 H360 M350,130 L360,140 L350,150"/></g><g data-k="okm"><circle class="okc" cx="420" cy="80" r="22"/><path class="okt" d="M409,80 l8,8 l14,-16"/></g><text class="cap" x="176" y="196" text-anchor="middle">a firm tug: nothing moves</text></g></svg>
+
+          <div class="pg-ctl"><button type="button" class="pg-prev" aria-label="Previous step"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button><span class="pg-pos" aria-live="polite"></span><button type="button" class="pg-next" aria-label="Next step"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button><button type="button" class="pg-again" aria-label="Play this step again"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg></button></div>
+        </figure>
+        <p class="pg-now" aria-hidden="true"></p>
+      </div>
+      <ol class="pg-steps"></ol>
+    </div>
+  </section>
+
+  <section class="block" id="ssr" aria-labelledby="h-ssr">
+    <div class="sec-h"><h2 id="h-ssr">Solid-state relay</h2><span class="sum">40 A · left wall</span></div>
+    <p class="pg-where" id="pg-ssr-where"></p>
+    <div class="pg-meta">
+      <div><span class="k">You need</span><ul><li>The SSR: 3 to 32 V DC control, 24 to 480 V AC load, 40 A</li><li>One screw, washers and a nut, and a drill, or a small bracket</li><li>Forks for all four screws: one sized for two wires on load terminal 1</li><li>A screwdriver</li></ul></div>
+      <div><span class="k">What it does</span><p>It switches the element on the board's command, with the board's 5 V side isolated from mains. <a href="how-gaggiuino-works.html#ssr">How Gaggiuino works</a> explains it.</p></div>
+    </div>
+    <div class="pg" id="pg-ssr-g">
+      <div class="pg-figcol">
+        <figure class="pg-fig"><svg id="pg-ssr" viewBox="0 0 480 300" role="img" aria-labelledby="pg-ssr-t"><title id="pg-ssr-t">SSR install on a Silvia, drawn step by step: its place on the left wall clear of the pump, one screw with washers and a nut through a drilled hole, AC3 and AC4 in one fork on load terminal 1, AC5 on load terminal 2, the J9 control wires on + and −, and the cover closed.</title><g data-k="sv1"><rect class="wallp" x="30" y="16" width="420" height="268" rx="6"/><text class="cap onmetal" x="44" y="274">left wall, from inside</text><rect class="pumpb" x="60" y="196" width="112" height="70" rx="8"/><text class="lbl" x="116" y="236" text-anchor="middle" fill="#E7E9EB">pump</text><g data-k="ssr1"><rect class="ssrb" x="236" y="100" width="88" height="74" rx="5"/><text class="ssrs" x="280" y="142" text-anchor="middle">SSR</text></g><g data-k="clr"><path class="dimln acc" d="M172,214 H232 M172,208 V220 M232,208 V220"/><text class="cap onmetal" x="202" y="234" text-anchor="middle">clear of</text><text class="cap onmetal" x="202" y="248" text-anchor="middle">the pump</text></g></g><g data-k="sv2"><text class="cap" x="150" y="34" text-anchor="middle">inside</text><text class="cap" x="350" y="34" text-anchor="middle">outside</text><rect class="wallp" x="250" y="44" width="12" height="110"/><rect class="wallp" x="250" y="166" width="12" height="110"/><rect class="hatch" x="250" y="44" width="12" height="110"/><rect class="hatch" x="250" y="166" width="12" height="110"/><rect class="ssrb" x="130" y="96" width="108" height="128" rx="6"/><rect class="metal" x="238" y="92" width="12" height="136" rx="2"/><text class="ssrs" x="184" y="166" text-anchor="middle">SSR</text><g data-k="scw"><rect class="steel" x="226" y="155" width="70" height="10"/><rect class="cap-screw" x="214" y="148" width="12" height="24" rx="3"/></g><g data-k="wsh"><rect class="steel" x="262" y="146" width="5" height="28" rx="1"/></g><g data-k="nut"><rect class="steel" x="267" y="149" width="14" height="22" rx="2"/><path class="facet" d="M267,156 H281 M267,164 H281"/></g><g data-loop="nutspin" class="turn"><path class="turnarc" d="M262,160 A12,22 0 1,1 274,182"/><path class="turnhd" d="M274,182 l7,-4 M274,182 l7,5"/></g><text class="lbl" x="150" y="250" text-anchor="middle">screw, washers, nut</text><text class="cap" x="150" y="266" text-anchor="middle">through a drilled hole, or a small bracket</text><text class="cap" x="356" y="236" text-anchor="middle">base flat on the metal</text></g><g data-k="sv3"><rect class="ssrb" x="140" y="50" width="200" height="200" rx="8"/><text class="ssrt" x="240" y="154" text-anchor="middle">SSR-40DA</text><text class="ssrs" x="240" y="120" text-anchor="middle">DC control</text><text class="ssrs" x="240" y="188" text-anchor="middle">AC load</text><circle data-k="led" data-run="blink" class="led" cx="240" cy="98" r="5"/><rect class="plate" x="175" y="75" width="30" height="30" rx="3"/><g data-k="sc1" data-origin="center"><circle class="screw" cx="190" cy="90" r="10"/><path class="slot" d="M183,90H197M190,83V97"/></g><rect class="plate" x="275" y="75" width="30" height="30" rx="3"/><g data-k="sc2" data-origin="center"><circle class="screw" cx="290" cy="90" r="10"/><path class="slot" d="M283,90H297M290,83V97"/></g><rect class="plate" x="172" y="192" width="36" height="36" rx="3"/><g data-k="sl1" data-origin="center"><circle class="screw" cx="190" cy="210" r="13"/><path class="slot" d="M180,210H200M190,200V220"/></g><rect class="plate" x="272" y="192" width="36" height="36" rx="3"/><g data-k="sl2" data-origin="center"><circle class="screw" cx="290" cy="210" r="13"/><path class="slot" d="M280,210H300M290,200V220"/></g><text class="lbl onssr" x="168" y="94" text-anchor="end">+</text><text class="lbl onssr" x="312" y="94">−</text><text class="lbl onssr" x="168" y="214" text-anchor="end">1</text><text class="lbl onssr" x="312" y="214">2</text><g data-k="lw1"><path class="metal" d="M179,206 V228 H201 V206 H195 V216 H185 V206 Z"/><rect class="isl-b" x="182" y="228" width="16" height="24" rx="4"/><path class="wire-m" d="M186,252 V300 M194,252 V300"/><text class="lbl" x="172" y="290" text-anchor="end">AC3 + AC4</text></g><g data-k="lw2"><path class="metal" d="M279,206 V228 H301 V206 H295 V216 H285 V206 Z"/><rect class="isl" x="282" y="228" width="16" height="24" rx="4"/><path class="wire-m" d="M290,252 V300"/><text class="lbl" x="308" y="290">AC5</text></g><g data-k="cwp"><path class="metal" d="M179,94 V72 H201 V94 H195 V84 H185 V94 Z"/><rect class="isl" x="182" y="48" width="16" height="24" rx="4"/><path class="lvw" d="M190,48 V0"/><text class="lbl" x="172" y="18" text-anchor="end">J9 R1</text></g><g data-k="cwm"><path class="metal" d="M279,94 V72 H301 V94 H295 V84 H285 V94 Z"/><rect class="isl" x="282" y="48" width="16" height="24" rx="4"/><path class="lvg" d="M290,48 V0"/><text class="lbl" x="308" y="18">J9 GND</text></g><g data-k="cov"><rect class="cover" x="134" y="44" width="212" height="212" rx="10"/></g></g></svg>
+
+          <div class="pg-ctl"><button type="button" class="pg-prev" aria-label="Previous step"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button><span class="pg-pos" aria-live="polite"></span><button type="button" class="pg-next" aria-label="Next step"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button><button type="button" class="pg-again" aria-label="Play this step again"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg></button></div>
+        </figure>
+        <p class="pg-now" aria-hidden="true"></p>
+      </div>
+      <ol class="pg-steps"></ol>
+    </div>
+  </section>
+
+  <section class="block" id="sw" aria-labelledby="h-sw">
+    <div class="sec-h"><h2 id="h-sw">Switches</h2><span class="sum">brew · steam · hot water · power</span></div>
+    <p class="pg-where" id="pg-sw-where"></p>
+    <div class="pg-meta">
+      <div><span class="k">You need</span><ul><li>The low-voltage switch wires (22 AWG) with red spades, and red butt splices if you join the ground chain that way</li><li>The power switch's runs: AC1, AC2, AC3, AC8 and AC9, with one blue spade for AC8 and AC9</li><li data-when="model:E">A latching double-pole rocker, in place of the E's push button</li></ul></div>
+      <div><span class="k">What changes</span><p>Each switch is two switches side by side (two poles) that flip together, each with a center and an outer spade. Brew, steam and hot water stop switching mains: one pole of each, when on, joins a PCB input to the 5 V ground. The power switch keeps mains and breaks both line and neutral.</p></div>
+    </div>
+    <div class="pg" id="pg-sw-g">
+      <div class="pg-figcol">
+        <figure class="pg-fig"><svg id="pg-sw" viewBox="0 0 480 300" role="img" aria-labelledby="pg-sw-t"><title id="pg-sw-t">Silvia switches seen from the back, drawn side by side, step by step: the power switch keeps mains, with the inlet on its outer spades and the loads on its center spades; brew, steam and hot water each use one pole, with the PCB signal on its center spade and the ground chain on its outer spade.</title><g data-k="swv"><text class="cap" x="474" y="294" text-anchor="end">seen from the back, drawn side by side</text><rect class="swbody" x="64" y="66" width="88" height="140" rx="10"/><text class="lbl" x="108" y="240" text-anchor="middle">Power</text><rect class="tab" x="79" y="107" width="22" height="10" rx="1"/><text class="cap onmetal" x="72" y="116" text-anchor="end"></text><rect class="tab" x="115" y="107" width="22" height="10" rx="1"/><text class="cap onmetal" x="108" y="116" text-anchor="end"></text><rect class="tab" x="79" y="171" width="22" height="10" rx="1"/><text class="cap onmetal" x="72" y="180" text-anchor="end"></text><rect class="tab" x="115" y="171" width="22" height="10" rx="1"/><text class="cap onmetal" x="108" y="180" text-anchor="end"></text><rect class="swbody" x="166" y="66" width="88" height="140" rx="10"/><text class="lbl" x="210" y="240" text-anchor="middle">Steam</text><rect class="tab fadedtab" x="181" y="107" width="22" height="10" rx="1"/><text class="cap onmetal" x="174" y="116" text-anchor="end"></text><rect class="tab" x="217" y="107" width="22" height="10" rx="1"/><text class="cap onmetal" x="210" y="116" text-anchor="end"></text><rect class="tab fadedtab" x="181" y="171" width="22" height="10" rx="1"/><text class="cap onmetal" x="174" y="180" text-anchor="end"></text><rect class="tab" x="217" y="171" width="22" height="10" rx="1"/><text class="cap onmetal" x="210" y="180" text-anchor="end"></text><text class="tiny" x="192" y="146" text-anchor="middle">free</text><rect class="swbody" x="268" y="66" width="88" height="140" rx="10"/><text class="lbl" x="312" y="240" text-anchor="middle">Brew</text><rect class="tab fadedtab" x="283" y="107" width="22" height="10" rx="1"/><text class="cap onmetal" x="276" y="116" text-anchor="end"></text><rect class="tab" x="319" y="107" width="22" height="10" rx="1"/><text class="cap onmetal" x="312" y="116" text-anchor="end"></text><rect class="tab fadedtab" x="283" y="171" width="22" height="10" rx="1"/><text class="cap onmetal" x="276" y="180" text-anchor="end"></text><rect class="tab" x="319" y="171" width="22" height="10" rx="1"/><text class="cap onmetal" x="312" y="180" text-anchor="end"></text><text class="tiny" x="294" y="146" text-anchor="middle">free</text><rect class="swbody" x="370" y="66" width="88" height="140" rx="10"/><text class="lbl" x="414" y="240" text-anchor="middle">Hot water</text><rect class="tab fadedtab" x="385" y="107" width="22" height="10" rx="1"/><text class="cap onmetal" x="378" y="116" text-anchor="end"></text><rect class="tab" x="421" y="107" width="22" height="10" rx="1"/><text class="cap onmetal" x="414" y="116" text-anchor="end"></text><rect class="tab fadedtab" x="385" y="171" width="22" height="10" rx="1"/><text class="cap onmetal" x="378" y="180" text-anchor="end"></text><rect class="tab" x="421" y="171" width="22" height="10" rx="1"/><text class="cap onmetal" x="414" y="180" text-anchor="end"></text><text class="tiny" x="396" y="146" text-anchor="middle">free</text><text class="cap" x="90" y="224" text-anchor="middle">L</text><text class="cap" x="126" y="224" text-anchor="middle">N</text><text class="cap" x="4" y="116">center</text><text class="cap" x="4" y="180">outer</text><g data-k="ac1"><path class="wire-m" d="M76,176 C58,176 52,150 52,0"/><rect class="conn" x="76" y="168" width="28" height="16" rx="3"/><g class="tagg" data-k="ac1t"><rect class="tagb" x="37" y="30" width="30" height="16" rx="3"/><text class="tagt" x="52" y="42" text-anchor="middle">AC1</text></g></g><g data-k="ac2"><path class="wire-m" d="M140,176 C158,176 160,150 160,0"/><rect class="conn" x="112" y="168" width="28" height="16" rx="3"/><g class="tagg" data-k="ac2t"><rect class="tagb" x="145" y="30" width="30" height="16" rx="3"/><text class="tagt" x="160" y="42" text-anchor="middle">AC2</text></g></g><g data-k="ac3"><path class="wire-m" d="M90,104 V0"/><rect class="conn" x="76" y="104" width="28" height="16" rx="3"/><g class="tagg" data-k="ac3t"><rect class="tagb" x="75" y="42" width="30" height="16" rx="3"/><text class="tagt" x="90" y="54" text-anchor="middle">AC3</text></g></g><g data-k="ac89"><path class="wire-m" d="M123,104 V0 M129,104 V0"/><rect class="conn" x="112" y="104" width="28" height="16" rx="3"/><rect class="isl-b" x="116" y="106" width="20" height="12" rx="2"/><g class="tagg"><rect class="tagb" x="97" y="8" width="58" height="16" rx="3"/><text class="tagt" x="126" y="20" text-anchor="middle">AC8+AC9</text></g></g><g data-k="lv1"><path class="lvw" d="M246,0 V112 H240"/><rect class="conn lvc" x="216" y="105" width="24" height="14" rx="3"/><text class="cap" x="242" y="40" text-anchor="end">J7 S</text></g><g data-k="lv2"><path class="lvw" d="M348,0 V112 H342"/><rect class="conn lvc" x="318" y="105" width="24" height="14" rx="3"/><text class="cap" x="344" y="40" text-anchor="end">J7 B</text></g><g data-k="lv3"><path class="lvw" d="M450,0 V112 H444"/><rect class="conn lvc" x="420" y="105" width="24" height="14" rx="3"/><text class="cap" x="446" y="40" text-anchor="end">J5 B15</text></g><g data-k="lv4"><path class="lvg" d="M159,300 V214 H224 V183"/><rect class="conn lvc" x="216" y="169" width="24" height="14" rx="3"/></g><g data-k="lv5"><path class="lvg" d="M232,183 V218 H326 V183"/><rect class="conn lvc" x="318" y="169" width="24" height="14" rx="3"/></g><g data-k="lv6"><path class="lvg" d="M334,183 V214 H428 V183"/><rect class="conn lvc" x="420" y="169" width="24" height="14" rx="3"/></g><g data-k="lvcap"><text class="cap" x="153" y="270" text-anchor="end">J7 GND</text></g><g data-k="pbE" data-when="model:E"><rect class="wallbg" x="58" y="58" width="100" height="190" rx="10"/><rect class="swbody" x="64" y="66" width="88" height="140" rx="10"/><circle class="pbtn" cx="108" cy="112" r="24"/><rect class="blkh" x="74" y="150" width="68" height="34" rx="4"/><text class="cap" x="108" y="171" text-anchor="middle" fill="#E7E9EB">module</text><text class="cap" x="108" y="240" text-anchor="middle">E: push button</text></g></g><g data-k="swm"><rect class="wallbg" x="0" y="0" width="480" height="300"/><rect class="meter" x="90" y="60" width="110" height="140" rx="12"/><rect class="lcd" x="102" y="74" width="86" height="36" rx="4"/><text class="lcdt" x="145" y="100" text-anchor="middle">0.3 Ω</text><circle class="jack" cx="124" cy="176" r="6"/><circle class="jack r" cx="166" cy="176" r="6"/><text class="cap" x="145" y="222" text-anchor="middle">brew ON:</text><text class="cap" x="145" y="236" text-anchor="middle">J7 B to GND</text><rect class="meter" x="280" y="60" width="110" height="140" rx="12"/><rect class="lcd" x="292" y="74" width="86" height="36" rx="4"/><text class="lcdt" x="335" y="100" text-anchor="middle">OL</text><circle class="jack" cx="314" cy="176" r="6"/><circle class="jack r" cx="356" cy="176" r="6"/><text class="cap" x="335" y="222" text-anchor="middle">brew OFF:</text><text class="cap" x="335" y="236" text-anchor="middle">J7 B to GND</text><text class="cap" x="240" y="270" text-anchor="middle">unplugged, J7 and J5 plugs off, probes on their pins</text></g></svg>
+
+          <div class="pg-ctl"><button type="button" class="pg-prev" aria-label="Previous step"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button><span class="pg-pos" aria-live="polite"></span><button type="button" class="pg-next" aria-label="Next step"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button><button type="button" class="pg-again" aria-label="Play this step again"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg></button></div>
+        </figure>
+        <p class="pg-now" aria-hidden="true"></p>
+      </div>
+      <ol class="pg-steps"></ol>
+    </div>
+  </section>
+
+  <section class="block" id="src" aria-labelledby="h-src">
+    <div class="sec-h"><h2 id="h-src">Sources</h2></div>
+    <ul class="pg-src">
+      <li>realNiche's <a href="https://github.com/thejobbitt/gaggiuino_resources/tree/main/wiring_diagrams/rancilio_silvia">Rancilio Silvia wiring diagram</a> (PCB v3.1/v4.0): every run, the switch poles, and the SSR's terminals.</li>
+      <li>The Gaggiuino Discord's Rancilio Silvia install thread (Talon, Juun and others): the M3 thermocouple, the SSR on the left wall, bare spades and silicone tape at the boiler, blue spades for doubled runs, red butt splices in the ground chain, and Juun's OPV tee parts, as collected on <a href="silvia-specifics.html">Silvia specifics</a> and <a href="discord-notes.html">Discord notes</a>.</li>
+      <li>GaggiMate's <a href="https://docs.gaggimate.eu/docs/installation-silvia/">Silvia installation</a> guide (a different mod project): which clamp hole to use for the thermocouple.</li>
+      <li>Gaggiuino, official docs: <a href="https://gaggiuino.github.io/#/guides-stm32/3pln-custom-wiring">custom wiring</a> (the pressure sensor's flat O-ring and quarter-turn limit, the thermocouple barely finger tight with 180 °C paste), the <a href="https://gaggiuino.github.io/#/guides-stm32/pcb-guide">PCB guide</a> (folding the J4 wires), <a href="https://gaggiuino.github.io/#/learning/wiring-basics">wiring basics</a> (connectors and crimping) and the PCB's floating 5 V side. Docs read October 2026.</li>
+      <li>On this site: the <a href="runbook.html">runbook</a>, the <a href="wiring.html">wiring reference</a> and the <a href="power-on-checks.html">power-on checks</a>.</li>
+    </ul>
+  </section>
+</div>
+
+<script>
+/* Part guides: a stepped, animated drawing for each part, with the steps written out beside it.
+   Each step lists moves for the drawing's data-k pieces as [key, {x,y,r,s,sx,sy,o,d}, delay ms, duration ms]; the state
+   after a step is everything before it plus its own moves, so any step can be shown on its own and replayed.
+   x,y move (user units), r turns (deg), s/sx/sy scale, o is opacity, d the hidden share of a drawn path (1 hidden, 0 drawn).
+   loop names the data-loop pieces that run during the step, text sets a readout, count runs a number up.
+   Steps and drawings follow Your Silvia (machine.js): a step or drawing piece with a when condition shows only for the
+   Silvias it fits, and with nothing set every piece shows. Reduced motion shows each step's end state without movement. */
+(function(){
+  var GM=window.SilviaMachine,RM=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var EASE='cubic-bezier(.45,0,.2,1)';
+  function $(id){return document.getElementById(id)}
+  function m(w){return !w||!GM||GM.matches(w)}
+  function T(x){if(x==null)return '';if(typeof x==='string')return x;return x.filter(function(s){return typeof s==='string'||m(s[1])}).map(function(s){return typeof s==='string'?s:s[0]}).join(' ')}
+  function prof(){return (GM&&GM.get())||{}}
+  function famOf(){return null}
+  function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+  /* Links into the wiring page's drawing; wiring.html reads them (applyHash there). A target is 'run:AC5' (| between
+     alternatives), 'part:ssr', 'runs:AC1,AC3', 'short:J7' (every run whose name starts that way), 'layer:E', or ''
+     for the whole harness; join two with ';'. o.label names a set of runs. The Silvia has one drawing, so the
+     Gaggia site's path and schematic options aren't used here. */
+  function mapHref(t,o){
+    o=o||{};var q=[];
+    if(t)t.split(';').forEach(function(x){var i=x.indexOf(':');q.push(x.slice(0,i)+'='+encodeURIComponent(x.slice(i+1)))});
+    if(o.label)q.push('label='+encodeURIComponent(o.label));
+    return 'wiring.html#map'+(q.length?'?'+q.join('&'):'');
+  }
+
+
+  /* Part guides data for the Silvia: the guides (G). Shared by part-guides.js and the wiring page's back-links
+     (wiring-refs.js), so a step's map target is written once. Every step comes from this site's own Silvia install
+     text (runbook-phases.js, docs-silvia-specifics.md, the wiring rules and runs.py, checks.tpl.html), which cite
+     realNiche's harness, the Discord Silvia thread and the official docs. A step's map is a wiring-drawing target
+     (maplink.js), chk lists power-on checks, links other pages; when is a machine.js condition. */
+  var G={};
+  function only(prefix,n,count){var a=[];for(var i=1;i<=count;i++)if(i!==n)a.push([prefix+i,{o:0},0,250]);a.push([prefix+n,{o:1},150,300]);return a}
+  function cat(){return Array.prototype.concat.apply([],arguments)}
+
+  G.tc={svg:'pg-tc',
+    base:{close:{o:1},route:{o:0},j4v:{o:0},ins:{y:0,o:1},l1:{x:0,y:0,o:1},l2:{x:0,y:0,o:1},lcap:{o:1},bt:{y:0,o:1},clp:{y:0,o:1},sc1:{y:0,o:1},sc2:{y:0,o:1},safe:{o:0},
+      tc:{y:-70,o:0},paste:{sy:0},syr:{y:-12,o:0},nosp:{o:0},rlead:{d:1},tcw:{y:44},ma:{o:0},mb:{o:0}},
+    steps:{all:[
+      {t:'Fold back the insulation',when:'ver:V5,V6',d:'From V5 on the boiler is insulated. Fold it back to reach the thermostats before you take any off. It goes back on once the thermocouple is in.',
+       a:[['ins',{y:-140,o:0},0,900]],links:[['Runbook, phase 2','runbook.html#p3a0']]},
+      {t:'Unplug the brew thermostat',d:'Label its two leads, as with every stock wire, then pull them straight off its spades. The new harness doesn\'t use them.',
+       a:[['lcap',{o:0},0,300],['l1',{x:40,y:-60,o:0},0,900],['l2',{x:60,y:-50,o:0},150,900]],links:[['Runbook, phase 2','runbook.html#p2b']]},
+      {t:'Undo its clamp and lift it off',d:'Undo the clamp screws and lift the brew thermostat off the boiler top. The thermocouple goes into one of those threaded holes. The 165 °C safety thermostat on the front of the boiler stays; so can the steam thermostat, which the harness doesn\'t wire.',
+       a:[['sc1',{y:-40,o:0},0,1000],['sc2',{y:-40,o:0},0,1000],['clp',{y:-50,o:0},900,500],['bt',{y:-60,o:0},1100,500],['safe',{o:1},1500,300]],loop:['spinU'],links:[['Runbook, phase 2','runbook.html#p2c']]},
+      {t:'Paste on the thread',d:'Coat the thermocouple\'s M3 thread with thermal paste rated for 180 °C or more.',
+       a:[['tc',{o:1},0,300],['syr',{o:1},250,250],['syr',{y:12},500,1200],['paste',{sy:1},500,1200],['syr',{o:0},1750,250]]},
+      {t:'Screw it in, finger tight only',d:'Into one of the boiler-top holes the brew or steam thermostat\'s clamp used. GaggiMate\'s Silvia guide suggests the middle or left-most hole for better readings, which may mean taking the steam thermostat\'s clamp off too. Finger tight only, with the wire free to rotate. No spanner.',
+       a:[['safe',{o:0},0,300],['tc',{y:0},0,1500],['nosp',{o:1},1550,350]],loop:['spinF'],chk:[['g8','Thermocouple finger tight, lead free to rotate']]},
+      {t:'Route the lead',d:'Around the front of the boiler to the PCB on the right. Low-voltage wires stay low and to the right; mains runs high.',
+       a:[['close',{o:0},0,300],['route',{o:1},200,300],['rlead',{d:0},500,1900]],map:'run:LV10'},
+      {t:'Refit the insulation',when:'ver:V5,V6',d:'Fold it back over the boiler with the thermocouple lead routed out cleanly, clear of the element terminals.',
+       a:[['route',{o:0},0,300],['nosp',{o:0},0,10],['close',{o:1},200,300],['ins',{y:0,o:1},500,900]],links:[['Runbook, phase 3','runbook.html#p3a2']]},
+      {t:'Check it, then clamp it in J4',d:['Measure with the wires out of J4: either wire to the boiler reads open (OL), because the probe is ungrounded; the two wires together read a few ohms.','Then fold each bare wire over, keep the insulation out of the clamp, and put + and − where they were on your bench test: there the reading had to rise when you warmed the probe.'],
+       a:[['route',{o:0},0,300],['close',{o:0},0,300],['j4v',{o:1},200,300],['ma',{o:1},500,300],['mb',{o:1},900,300],['ma',{o:0},2300,300],['mb',{o:0},2300,300],['tcw',{y:0},2600,900],['t1',{r:360},2600,1000],['t2',{r:360},2750,1000]],
+       chk:[['b6','Thermocouple lead to boiler body'],['c7','Thermocouple loop'],['g13','Everything plugged back in']],map:'run:LV10'}
+    ]}};
+
+  G.ps={svg:'pg-ps',
+    base:{tee:{y:30,o:0},cord2:{o:0},asm:{x:-150,y:40},cord1:{o:0},or1:{y:60,o:0},sen:{y:50},qt:{o:0},foam:{o:0},wat:{o:0},wat2:{o:0},lcaps:{o:1},chs:{o:0},j6:{o:0},cab:{d:1},gauge:{o:0}},
+    steps:{all:[
+      {t:'O-ring into the elbow',d:'Press the flat white O-ring, about 11 mm across, into the elbow\'s 1/4" socket until it sits flush at the bottom. The sensor seals on it, not on its thread; the sensor\'s own base O-ring often can\'t reach the seat.',
+       a:[['or1',{o:1},0,300],['or1',{y:0},0,1000]],loop:['pulseR']},
+      {t:'Sensor in: hand tight, then at most a quarter turn',d:'Screw the sensor into the elbow by hand until it stops. A quarter turn more with a spanner is the most it ever gets: more crushes the O-ring or stops the reading.',
+       a:[['sen',{y:0},0,1500],['qt',{o:1},1500,300]],loop:['spinS']},
+      {t:'Thread cord on the tapered threads',d:'Loctite 55 on the elbow\'s and the tee\'s 1/8" tapered threads, not PTFE tape, so they can be turned back to line up.',
+       a:[['qt',{o:0},0,300],['cord1',{o:1},200,600],['tee',{o:1},500,400],['cord2',{o:1},900,600]]},
+      {t:'Tee in at the OPV, elbow into the tee',d:'Juun\'s parts list for this spot: a 1/8" FFM tee and a 1/4"F to 1/8"M elbow. Fit the tee at the OPV and the elbow into the tee, turned so the sensor hangs below it, clear of the steam pipes. The fitting that came out of that port goes into the tee\'s other female port, with Loctite 55 on its thread too.',
+       a:[['lcaps',{o:0},0,300],['tee',{y:0},0,900],['asm',{x:0,y:0},800,1400]],chk:[['g11','Plumbing snug and dry']]},
+      {t:'Let it hang clear',d:'Keep the sensor off the chassis and anything hot. A wrap of foam helps if its readings are noisy. It\'s rated to 105 °C, and this spot never sees steam temperatures.',
+       a:[['chs',{o:1},0,400],['foam',{o:1},400,500]]},
+      {t:'Plug it into J6',d:'Its lead plugs into J6: 5V, GND and P, the signal. Extend it with 22 AWG if it\'s short.',
+       a:[['j6',{o:1},0,300],['cab',{d:0},300,1500]],map:'run:LV9'},
+      {t:'Fill it and test it',d:'At first power-on, once the boiler is filled (the runbook\'s first job after switch-on), [UT] Tube Fill pushes the air out of the sensor\'s line, then [UT] Test OPV with a blank basket should peak at 10.5 to 13 bar, with no leaks. Then switch off, unplug, check each joint with a dry paper towel, close it up and rerun h1 to h4 before you plug back in.',
+       a:[['wat',{o:1},0,600],['wat2',{o:1},0,600],['gauge',{o:1},500,300]],count:['pval',0,11.5,' bar',800,1600],
+       links:[['Runbook, phase 5','runbook.html#p5d'],['Leak check','runbook.html#p5g']]}
+    ]}};
+
+  G.wire={svg:'pg-wire',
+    base:{wv1:{o:1},wv2:{o:0},wv3:{o:0},wv4:{o:0},wv5:{o:0},wv6:{o:0},wv7:{o:0},waste:{y:0,o:1},cutT:{y:-34,o:0},cutB:{y:34,o:0},flag:{o:0,y:-12},mkr:{o:0},wd1:{o:0},
+      slug:{x:0,o:1},sjT:{y:-14,x:0,o:1},sjB:{y:14,x:0,o:1},wd2:{o:0},isp:{x:70},dimp:{o:0},cjT:{y:-18,o:0},cjB:{y:18,o:0},bsp:{x:60},wo:{o:1},wc:{o:0},wcap:{o:1},
+      ojT:{y:-18,o:0},ojB:{y:18,o:0},tape:{sx:0,o:0},tcap:{o:0},tsp:{x:60},fk2:{x:60,o:0},bl:{x:-30},br:{x:30},bd1:{o:0},bd2:{o:0},bjT:{y:-18,x:0,o:0},bjB:{y:18,x:0,o:0},okm:{o:0}},
+    steps:{all:[
+      {t:'Cut and label',d:'Cut each run a little long from the cut list, and put both labels on before you crimp. Ends at the boiler get their ID in oil-based marker on the jacket instead of a paper flag.',
+       a:cat(only('wv',1,7),[['wd1',{o:1},0,300],['cutT',{o:1},150,200],['cutB',{o:1},150,200],['cutT',{y:0},400,450],['cutB',{y:0},400,450],['waste',{y:40,o:0},950,600],['cutT',{y:-34,o:0},950,350],['cutB',{y:34,o:0},950,350],['flag',{o:1,y:0},1400,500],['mkr',{o:1},1900,400]]),
+       links:[['Cut list','cut-list.html'],['Wire labels','wire-labels.html']]},
+      {t:'Strip about 6 mm',d:'About 6 mm fills the barrel of a standard spade with no bare copper showing behind it. If any strands come away with the insulation, cut the end off and strip again. A light twist keeps the strands together.',
+       a:cat(only('wv',2,7),[['sjT',{y:0},400,450],['sjB',{y:0},400,450],['sjT',{x:60},900,900],['sjB',{x:60},900,900],['slug',{x:60},900,900],['slug',{o:0},1700,300],['sjT',{o:0},1700,300],['sjB',{o:0},1700,300],['wd2',{o:1},1900,300]])},
+      {t:'Insulated spades and forks',d:'For ends away from the boiler: a red spade for one 18 AWG wire, crimped in the red die, and the 22 AWG low-voltage wires land on red spades too. A thin 22 AWG wire gets a longer strip, folded over, so it fills the barrel. Forks go on all four SSR screws. Nylon insulation is rated to only 105 °C, so none goes near the boiler.',
+       a:cat(only('wv',3,7),[['isp',{x:0},400,900],['cjT',{o:1},1100,250],['cjB',{o:1},1100,250],['cjT',{y:0},1400,450],['cjB',{y:0},1400,450],['dimp',{o:1},1800,200],['cjT',{y:-18,o:0},2000,400],['cjB',{y:18,o:0},2000,400]]),
+       chk:[['g4','SSR: fork spades on all four terminals, screws tight']]},
+      {t:'Bare spades at the boiler',d:'Every end on the boiler, the safety thermostat and the solenoid gets an uninsulated spade, crimped with the open-barrel crimper: strip only as much as the front tabs cover, so the copper sits under them and the insulation under the rear ones. Leave them bare for the meter checks, then wrap each in self-fusing silicone tape.',
+       a:cat(only('wv',4,7),[['bsp',{x:0},400,900],['ojT',{o:1},1100,250],['ojB',{o:1},1100,250],['ojT',{y:0},1400,450],['ojB',{y:0},1400,450],['wo',{o:0},1700,150],['wc',{o:1},1700,150],['wcap',{o:0},1700,250],['ojT',{y:-18,o:0},1900,400],['ojB',{y:18,o:0},1900,400],['tape',{o:1},2300,200],['tape',{sx:1},2300,900],['tcap',{o:1},3100,300]]),
+       chk:[['g1','Boiler and valve spades bare and taped']],map:[['On the wiring map','runs:AC5,AC6,AC7,AC9,AC11,AC12,AC13,G1,G2',null,'Runs with a bare end']]},
+      {t:'Two wires on one terminal',d:'Where two 18 AWG runs share a terminal, they go into one spade or fork sized for two: blue, never red, or a bare spade sized for 16 to 14 AWG at the boiler. That\'s SSR terminal 1, the safety thermostat, the power switch\'s neutral spade, the lamp, the pump, the solenoid and the boiler ground.',
+       a:cat(only('wv',5,7),[['tsp',{x:0},400,900],['fk2',{o:1},1400,200],['fk2',{x:0},1400,900]]),
+       chk:[['g2','Doubled terminals sized for two']],map:[['On the wiring map','runs:AC3,AC4,AC6,AC7,AC8,AC9,AC10,AC11,AC12,G1,G2',null,'Runs that share a terminal']]},
+      {t:'Butt splices in the ground chain',d:'The switches\' low-voltage ground chain can join with red butt splices instead of shared spades. Push each wire in to the middle stop and crimp each half in the red die. To carry the chain on, the wire coming in and the wire going on share one side, and a short lead from the other side takes the switch\'s spade.',
+       a:cat(only('wv',6,7),[['bl',{x:0},400,900],['br',{x:0},400,900],['bjT',{o:1},1100,250],['bjB',{o:1},1100,250],['bjT',{y:0},1400,400],['bjB',{y:0},1400,400],['bd1',{o:1},1750,150],['bjT',{y:-18},1900,300],['bjB',{y:18},1900,300],['bjT',{x:52},2200,400],['bjB',{x:52},2200,400],['bjT',{y:0},2650,400],['bjB',{y:0},2650,400],['bd2',{o:1},3000,150],['bjT',{y:-18,o:0},3150,400],['bjB',{y:18,o:0},3150,400]]),
+       map:[['On the wiring map','runs:LV4,LV5,LV6',null,'The switch ground chain']]},
+      {t:'Pull-test every crimp',d:'A firm tug on each one. Redo any that move, and leave no stray strands or bare metal, apart from the boiler spades waiting for their tape.',
+       a:cat(only('wv',7,7),[['okm',{o:1},1400,400]]),loop:['tug','jig'],chk:[['g3','Every crimp survives a firm tug']]}
+    ]}};
+
+  G.ssr={svg:'pg-ssr',
+    base:{sv1:{o:1},sv2:{o:0},sv3:{o:0},ssr1:{x:120,o:0},clr:{o:0},scw:{x:-80},wsh:{x:50,o:0},nut:{x:60,o:0},cov:{o:1,y:0},lw1:{y:70,o:0},lw2:{y:70,o:0},cwp:{y:-60,o:0},cwm:{y:-60,o:0}},
+    steps:{all:[
+      {t:'Find its spot',d:'On the left wall inside the machine, clear of the pump. It switches the element; the PCB drives it from J9.',
+       a:[['ssr1',{o:1},0,200],['ssr1',{x:0},100,900],['clr',{o:1},1100,300]],map:'part:ssr'},
+      {t:'Screw it to the wall',d:'One screw, washers and a nut through a drilled hole, or a small bracket, with its base flat on the metal: while it conducts it turns about 10 W into heat at 120 V, a little less at 230 V.',
+       a:[['sv1',{o:0},0,250],['sv2',{o:1},150,300],['scw',{x:0},500,900],['wsh',{o:1},1400,200],['wsh',{x:0},1400,600],['nut',{o:1},1700,200],['nut',{x:0},1700,600]],loop:['nutspin']},
+      {t:'Load terminal 1: two wires, one fork',d:'Switched line from the power switch (AC3) and the PCB\'s feed (AC4) share load terminal 1, in one fork sized for two.',
+       a:[['sv2',{o:0},0,250],['sv3',{o:1},150,300],['cov',{o:0,y:-24},600,600],['lw1',{o:1},1200,200],['lw1',{y:0},1200,900],['sl1',{r:360},2200,800]],map:[['On the wiring map','runs:AC3,AC4',null,'AC3 and AC4']]},
+      {t:'Load terminal 2: to the safety thermostat',d:'AC5 runs from load terminal 2 to the 165 °C safety thermostat, then on to the element. Never bypass the thermostat.',
+       a:[['lw2',{o:1},0,200],['lw2',{y:0},0,900],['sl2',{r:360},1000,800]],chk:[['e4','SSR terminal 2 to element terminal 1']],map:[['On the wiring map','runs:AC5,AC6',null,'AC5 and AC6']]},
+      {t:'Control wires: + and −',d:'J9 R1 goes on + and J9 GND on −: the control side has a polarity.',
+       a:[['cwp',{o:1},0,200],['cwm',{o:1},100,200],['cwp',{y:0},0,900],['cwm',{y:0},100,900],['sc1',{r:360},1000,800],['sc2',{r:360},1100,800]],chk:[['f7','J9 R1 pin to SSR +'],['f8','J9 GND pin to SSR −']],map:[['On the wiring map','runs:LV7,LV8',null,'SSR control wires']]},
+      {t:'Check it',d:'Forks on all four terminals, screws tight, no stray strands, strain relief on its wires, and its terminal cover closed: treat the load screws as live whenever it\'s plugged in. On the bench test its light came on below the setpoint and flashed near it.',
+       a:[['cov',{o:1,y:0},0,600]],loop:['blink'],chk:[['g4','SSR: fork spades on all four terminals, screws tight']],links:[['Runbook, phase 4','runbook.html#p4d']]}
+    ]}};
+
+  G.sw={svg:'pg-sw',
+    base:{swv:{o:1},swm:{o:0},pbE:{y:0,o:1},ac1:{o:0},ac2:{o:0},ac3:{o:0},ac89:{o:0},ac1t:{o:1},ac2t:{o:1},ac3t:{o:1},lv1:{o:0},lv2:{o:0},lv3:{o:0},lv4:{o:0},lv5:{o:0},lv6:{o:0},lvcap:{o:0}},
+    steps:{all:[
+      {t:'E model: fit a latching rocker',when:'model:E',d:'The E\'s power switch is a push button that only works with its energy-saver module. Take the module out, as the harness leaves it out, and fit a double-pole rocker that latches, like the M\'s, before wiring AC1, AC2, AC3, AC8 and AC9. Confirm the part on Discord before buying.',
+       a:[['pbE',{y:-40,o:0},0,1000]],chk:[['g15','The power switch latches on and off by itself']],links:[['Runbook, phase 2','runbook.html#p2b1']]},
+      {t:'Power switch: supply on the outer spades',d:'It stays on mains and breaks both wires, one pole each: inlet line (AC1) on one pole\'s outer spade, inlet neutral (AC2) on the other\'s.',
+       a:[['ac1',{o:1},0,600],['ac2',{o:1},300,600]],map:[['On the wiring map','runs:AC1,AC2',null,'Power switch supply']]},
+      {t:'Loads on the center spades',d:'Switched line (AC3) to SSR terminal 1 leaves the line pole\'s center spade. On the neutral pole, the neutral chain (AC8) and the element\'s neutral (AC9) share one blue spade.',
+       a:[['ac3',{o:1},0,600],['ac89',{o:1},300,600]],chk:[['e9','Inlet L to J11, switch off'],['e10','Inlet N to J10, switch off']],map:[['On the wiring map','runs:AC3,AC8,AC9',null,'Power switch loads']]},
+      {t:'Signal wires on the center spades',d:'Brew, steam and hot water each use one pole, the ground pole: J7 S to steam (LV1), J7 B to brew (LV2) and J5 B15 to hot water (LV3), not A12. The other pole stays free; the LED switch mod puts 5 V on it.',
+       a:[['lv1',{o:1},0,600],['lv2',{o:1},250,600],['lv3',{o:1},500,600]],map:[['On the wiring map','runs:LV1,LV2,LV3',null,'Switch signal wires']],links:[['LED switch mod','led-mod.html']]},
+      {t:'Ground chain on the outer spades',d:'J7 GND goes to the outer spade of the same pole on the first switch (LV4), then on to the next two (LV5, LV6), with shared spades or red butt splices. Talon brings it into the lowest switch first and chains up; start at whichever switch is nearest.',
+       a:[['lv4',{o:1},0,600],['lvcap',{o:1},300,300],['lv5',{o:1},400,600],['lv6',{o:1},800,600]],map:[['On the wiring map','runs:LV4,LV5,LV6',null,'The switch ground chain']]},
+      {t:'Check them',d:'Unplugged, with the J7 and J5 plugs off: each switch on reads close to 0 Ω from its signal pin to J7 GND, and OL when it\'s off. Then each signal pin to the chassis must read OL. Last, with the power switch and all three switches on, J7 GND to inlet L and to inlet N must read OL.',
+       a:[['swv',{o:0},0,250],['swm',{o:1},150,300]],chk:[['f1','Brew ON'],['f2','Brew OFF'],['f3','Steam ON'],['f4','Steam OFF'],['f5','Hot water ON'],['f6','Hot water OFF'],['f9','Signal pins to chassis'],['f10','J7 GND to mains']]}
+    ]}};
+
+
+  /* ---------------- engine ---------------- */
+  function num(v,d){return v==null?d:v}
+  function tf(s){return 'translate('+num(s.x,0)+'px,'+num(s.y,0)+'px) rotate('+num(s.r,0)+'deg) scale('+num(s.sx,num(s.s,1))+','+num(s.sy,num(s.s,1))+')'}
+  function clone(o){var r={};for(var k in o){r[k]={};for(var p in o[k])r[k][p]=o[k][p]}return r}
+  function merge(st,k,props){if(!st[k])st[k]={};for(var p in props)st[k][p]=props[p]}
+  var CH={x:'t',y:'t',r:'t',s:'t',sx:'t',sy:'t',o:'o',d:'d'};
+  function chanVal(s,c){s=s||{};return c==='t'?tf(s):c==='o'?String(num(s.o,1)):String(num(s.d,0))}
+  function prop(c){return c==='t'?'transform':c==='o'?'opacity':'strokeDashoffset'}
+
+  function Guide(id,def){
+    this.id=id;this.def=def;this.root=$('pg-'+id+'-g');if(!this.root)return;
+    this.list=this.root.querySelector('.pg-steps');this.now=this.root.querySelector('.pg-now');
+    this.pos=this.root.querySelector('.pg-pos');this.anims=[];this.timers=[];this.i=0;this.played=false;this.pick=null;
+    var self=this;
+    this.root.querySelector('.pg-prev').addEventListener('click',function(){self.go(self.i-1,true)});
+    this.root.querySelector('.pg-next').addEventListener('click',function(){self.go(self.i+1,true)});
+    this.root.querySelector('.pg-again').addEventListener('click',function(){self.go(self.i,true)});
+    this.list.addEventListener('click',function(e){var b=e.target.closest('button[data-i]');if(b)self.go(Number(b.getAttribute('data-i')),true,true)});
+    this.root.addEventListener('keydown',function(e){if(e.target.closest('.pg-steps,.pg-ctl,.pg-fig')&&(e.key==='ArrowRight'||e.key==='ArrowLeft')&&!e.altKey&&!e.metaKey){e.preventDefault();self.go(self.i+(e.key==='ArrowRight'?1:-1),true)}});
+    var vb=this.root.querySelector('.pg-vars');
+    if(vb&&def.vars){vb.innerHTML=def.vars.map(function(v){return '<button type="button" class="chip" data-var="'+v.k+'" aria-pressed="false">'+esc(v.l)+'</button>'}).join('');
+      vb.addEventListener('click',function(e){var b=e.target.closest('[data-var]');if(!b)return;self.pick=b.getAttribute('data-var');self.setup(true)})}
+    this.setup(false);
+    if('IntersectionObserver' in window){var io=new IntersectionObserver(function(es){if(es[0].isIntersecting&&!self.played){self.played=true;self.go(self.i,true);io.disconnect()}},{threshold:.45});io.observe(this.root.querySelector('.pg-fig'))}
+  }
+  Guide.prototype.variant=function(){var d=this.def;if(!d.vars)return 'all';return this.pick||d.def()};
+  Guide.prototype.setup=function(play){
+    var d=this.def,v=this.variant(),self=this;
+    this.v=v;
+    var svgId=d.svgs?d.svgs[v]:d.svg;
+    Array.prototype.forEach.call(this.root.querySelectorAll('.pg-fig>svg'),function(s){s.style.display=s.id===svgId?'':'none'});
+    this.svg=$(svgId);
+    Array.prototype.forEach.call(this.root.querySelectorAll('[data-var]'),function(b){b.setAttribute('aria-pressed',String(b.getAttribute('data-var')===v))});
+    Array.prototype.forEach.call((this.root.closest('section')||this.root).querySelectorAll('[data-pv]'),function(e){e.hidden=e.getAttribute('data-pv').split(',').indexOf(v)<0});
+    /* drawing pieces for some Silvias only (the E's push button, the V5 and V6 insulation) */
+    Array.prototype.forEach.call(this.svg.querySelectorAll('[data-when]'),function(e){e.style.display=m(e.getAttribute('data-when'))?'':'none'});
+    /* pieces */
+    this.el={};
+    function hiddenV(e){for(var p=e;p&&p!==self.svg;p=p.parentNode){if(p.getAttribute&&p.hasAttribute('data-when')&&p.style.display==='none')return true}return false}
+    Array.prototype.forEach.call(this.svg.querySelectorAll('[data-k]'),function(e){
+      var k=e.getAttribute('data-k');
+      if(hiddenV(e)&&self.el[k])return;
+      self.el[k]=e;
+      var o=e.getAttribute('data-origin');
+      e.style.transformBox=e.getAttribute('data-box')==='view'?'view-box':'fill-box';
+      e.style.transformOrigin=o||'center';
+    });
+    this.base=d.base[v]||d.base;
+    this.steps=(d.steps[v]||d.steps.all).filter(function(s){return m(s.when)});
+    this.states=[];var st=clone(this.base);
+    for(var i=0;i<this.steps.length;i++){(this.steps[i].a||[]).forEach(function(op){merge(st,op[0],op[1])});this.states.push(clone(st))}
+    this.renderList();
+    this.i=Math.min(this.i,this.steps.length-1);
+    if(play&&this.played)this.go(0,true);else this.show(this.played?this.i:-1,this.played?this.i:0);
+  };
+  Guide.prototype.stateBefore=function(i){return i<=0?this.base:this.states[i-1]};
+  Guide.prototype.apply=function(st){
+    for(var k in this.el){var e=this.el[k],s=st[k]||{};
+      e.style.transform=tf(s);e.style.opacity=String(num(s.o,1));
+      if(e.classList.contains('draw')){e.style.strokeDashoffset=String(num(s.d,0));if(num(s.d,0)>=1)e.style.opacity='0'}
+    }
+  };
+  Guide.prototype.stop=function(){
+    this.anims.forEach(function(a){try{a.cancel()}catch(e){}});this.anims=[];
+    this.timers.forEach(function(t){clearTimeout(t);cancelAnimationFrame(t)});this.timers=[];
+    Array.prototype.forEach.call(this.svg.querySelectorAll('[data-loop]'),function(e){e.classList.remove('run')});
+    Array.prototype.forEach.call(this.svg.querySelectorAll('[data-run]'),function(e){e.classList.remove('on')});
+  };
+  /* show the state at step "at" (−1 = before the first) with step "cur" highlighted, no movement */
+  Guide.prototype.show=function(at,cur){
+    this.stop();this.apply(at<0?this.base:this.states[at]);this.i=cur;this.mark();
+    if(at>=0)this.extras(this.steps[at],false);
+  };
+  Guide.prototype.extras=function(step,anim){
+    var self=this;
+    (step.loop||[]).forEach(function(n){Array.prototype.forEach.call(self.svg.querySelectorAll('[data-loop="'+n+'"]'),function(e){e.classList.add('run')});
+      Array.prototype.forEach.call(self.svg.querySelectorAll('[data-run="'+n+'"]'),function(e){e.classList.add('on')})});
+    if(step.count){var c=step.count,el=this.svg.querySelector('[data-k="'+c[0]+'"]');
+      if(el){
+        if(!anim||RM){el.textContent=c[2]+c[3]}
+        else{el.textContent=c[1]+c[3];var t0=null;
+          var tick=function(ts){if(t0===null)t0=ts;var p=Math.min(1,Math.max(0,(ts-t0-c[4])/c[5]));el.textContent=(c[1]+(c[2]-c[1])*(1-Math.pow(1-p,2))).toFixed(1).replace(/\.0$/,'')+c[3];if(p<1)self.timers.push(requestAnimationFrame(tick))};
+          self.timers.push(requestAnimationFrame(tick))}
+      }}
+  };
+  Guide.prototype.go=function(i,anim,fromList){
+    if(i<0||i>=this.steps.length)return;
+    this.stop();var step=this.steps[i],before=this.stateBefore(i),after=this.states[i],self=this;
+    this.i=i;this.played=true;this.mark(fromList);
+    this.apply(after);
+    if(anim&&!RM&&this.svg.animate){
+      var cur=clone(before),lines={};
+      (step.a||[]).forEach(function(op){
+        var k=op[0],e=self.el[k];if(!e)return;
+        var nxt=clone(cur);merge(nxt,k,op[1]);
+        var chans={};for(var p in op[1])chans[CH[p]]=1;
+        for(var c in chans){
+          if(c==='d'&&!e.classList.contains('draw'))continue;
+          var key=k+'|'+c;if(!lines[key])lines[key]={e:e,c:c,pts:[[0,chanVal(cur[k],c)]]};
+          lines[key].pts.push([op[2],chanVal(cur[k],c)],[op[2]+op[3],chanVal(nxt[k],c)]);
+        }
+        cur=nxt;
+      });
+      for(var key in lines){var L=lines[key],end=L.pts[L.pts.length-1][0]||1,kf=[];
+        L.pts.forEach(function(pt,j){var f={offset:Math.min(1,pt[0]/end)};f[prop(L.c)]=pt[1];f.easing=EASE;
+          if(kf.length&&f.offset<kf[kf.length-1].offset)f.offset=kf[kf.length-1].offset;kf.push(f)});
+        try{this.anims.push(L.e.animate(kf,{duration:end,fill:'both'}))}catch(err){}
+        if(L.c==='d'&&L.pts[0][1]==='1'&&L.pts.length>1){var t0=L.pts[1][0];try{this.anims.push(L.e.animate([{opacity:0,offset:0},{opacity:0,offset:Math.min(1,t0/end)},{opacity:1,offset:Math.min(1,t0/end)},{opacity:1,offset:1}],{duration:end,fill:'both'}))}catch(err){}}
+      }
+    }
+    this.extras(step,anim);
+  };
+  Guide.prototype.renderList=function(){
+    var self=this,n=this.steps.length;
+    this.list.innerHTML=this.steps.map(function(s,i){
+      var ph=s.ph,phl='Photo';
+      var chk=(s.chk||[]).map(function(c){return '<a href="power-on-checks.html#'+c[0]+'">'+c[0]+' '+esc(c[1])+'</a>'}).join(' · ');
+      var lk=(s.links||[]).map(function(l){return '<a href="'+l[1]+'">'+esc(l[0])+'</a>'}).join(' · ');
+      if(lk)chk=chk?chk+' · '+lk:lk;
+      /* map: a wiring-drawing target, or [[label, target, when, set label], ...] */
+      var ml=(s.map==null?[]:typeof s.map==='string'?[['On the wiring map',s.map]]:s.map).filter(function(x){return m(x[2])}).map(function(x){var o={};if(x[3])o.label=x[3];return '<a class="pg-map" href="'+mapHref(x[1],o)+'">'+esc(x[0])+'</a>'}).join(' · ');
+      if(ml)chk=chk?chk+' · '+ml:ml;
+      return '<li data-n="'+(i+1)+'"><button type="button" class="pg-sb" data-i="'+i+'"><span class="pg-n">'+(i+1)+'</span><span class="pg-t">'+esc(s.t)+'</span></button>'
+        +'<p>'+esc(T(s.d))+'</p>'+((ph||chk)?'<p class="pg-links">'+(ph?'<a href="'+ph+'" target="_blank" rel="noopener">'+phl+'</a>':'')+(ph&&chk?' · ':'')+(chk?((s.chk&&s.chk.length)?'Check: ':'')+chk:'')+'</p>':'')+'</li>';
+    }).join('');
+    this.n=n;
+  };
+  Guide.prototype.mark=function(fromList){
+    var i=this.i,s=this.steps[i];
+    Array.prototype.forEach.call(this.list.children,function(li,j){li.classList.toggle('cur',j===i);var b=li.querySelector('button');if(j===i)b.setAttribute('aria-current','step');else b.removeAttribute('aria-current')});
+    this.pos.textContent='Step '+(i+1)+' of '+this.steps.length;
+    this.root.querySelector('.pg-prev').disabled=i<=0;this.root.querySelector('.pg-next').disabled=i>=this.steps.length-1;
+    if(this.now&&s)this.now.innerHTML='<b>'+(i+1)+'. '+esc(s.t)+'</b> '+esc(T(s.d));
+    if(fromList&&window.innerWidth<=860){var f=this.root.querySelector('.pg-fig');if(f&&f.getBoundingClientRect().top<0&&f.scrollIntoView)f.scrollIntoView({block:'start',behavior:RM?'auto':'smooth'})}
+  };
+
+  /* where each part goes, following Your Silvia */
+  function where(){
+    var w={tc:['In one of the brew thermostat\'s clamp holes on top of the boiler.',['On boilers made before May 2000, confirm how it mounts on Discord first.','early'],['From V5 on, the boiler insulation folds back first.','ver:V5,V6']],
+      ps:['On a 1/8" tee at the OPV, through an elbow that keeps it clear of the steam pipes. Some builds use the 3-way valve\'s bottom port instead (Talon\'s does); both work, and the OPV tee has an exact parts list.'],
+      wire:['Every run of realNiche\'s harness, mains and low voltage. Ends at the boiler, the safety thermostat and the solenoid get bare spades under silicone tape.'],
+      ssr:['On the left wall inside the machine, clear of the pump. It switches the element; the PCB drives it from J9.'],
+      sw:['Brew, steam and hot water become low-voltage inputs to the PCB; the power switch stays on mains. The same on every Silvia.',['The E needs a latching rocker first.','model:E']]};
+    for(var k in w){var e=$('pg-'+k+'-where');if(e)e.textContent=T(w[k])}
+  }
+
+  var guides={};
+  function init(){
+    where();
+    ['tc','ps','wire','ssr','sw'].forEach(function(k){guides[k]=new Guide(k,G[k])});
+    window.addEventListener('silvia-machine',function(){where();for(var k in guides)if(guides[k].root)guides[k].setup(false)});
+    window.addEventListener('hashchange',fromHash);fromHash();
+  }
+  /* links from other pages (the wiring drawing's back-links, Test yourself): #tc/5 opens step 5 */
+  function fromHash(){
+    var h=(location.hash||'').slice(1).split('/'),g=guides[h[0]];if(!g||!g.root||h.length<2)return;
+    if(h.length>2&&g.def.vars&&g.def.vars.some(function(x){return x.k===h[1]})){g.pick=h[1];g.setup(false)}
+    var n=parseInt(h[h.length-1],10)-1;if(!(n>=0))n=0;n=Math.min(n,g.steps.length-1);
+    var sec=g.root.closest('section')||g.root;sec.scrollIntoView({block:'start'});
+    g.played=true;g.go(n,true);
+    var li=g.list.children[n];if(li&&window.matchMedia&&matchMedia('(max-width:860px)').matches)setTimeout(function(){g.root.querySelector('.pg-fig').scrollIntoView({block:'start'})},60);
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+
+</script>
+<footer class="site-foot"><div class="in"><nav class="foot-nav" aria-label="All pages"><a class="fn-home" href="index.html">Silvia × Gaggiuino home</a><div class="fn-g"><span class="gl">Learn</span><a href="conversion.html">The conversion</a><a href="how-silvia-works.html">How the Silvia works</a><a href="how-gaggiuino-works.html">How Gaggiuino works</a><a href="glossary.html">Glossary</a></div><div class="fn-g"><span class="gl">Plan</span><a href="budget.html">Budget</a><a href="used-checklist.html">Used Silvia check</a><a href="which-silvia.html">Which Silvia</a><a href="parts-tracker.html">Parts tracker</a><a href="test-yourself.html">Test yourself</a></div><div class="fn-g"><span class="gl">Install</span><a href="runbook.html">Runbook</a><a href="part-guides.html" aria-current="page">Part guides</a><a href="wiring.html">Wiring</a><a href="cut-list.html">Cut list</a><a href="wire-labels.html">Wire labels</a><a href="power-on-checks.html">Power-on checks</a></div><div class="fn-g"><span class="gl">After</span><a href="troubleshooting.html">Troubleshooting</a><a href="led-mod.html">LED switch mod</a></div></nav><p><strong>Mains voltage.</strong> This conversion puts your hands near 120/230 V wiring. Work only with the cord out, check everything with a meter before first power-on, and stop if anything here disagrees with the official Gaggiuino docs or your own reading of the machine. Nothing on this site has been reviewed by the Gaggiuino project. You are responsible for your own build.</p><p>Unofficial community material for the Rancilio Silvia, built on the work of realNiche, Talon, Juun, mjr and others on the Gaggiuino Discord, and the official docs at <a href="https://gaggiuino.github.io/">gaggiuino.github.io</a>. Content is <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>, the same terms as realNiche's diagrams. · <a href="https://github.com/Jabawabawaba/silvia-gaggiuino">Source and issues on GitHub</a></p></div></footer></body></html>

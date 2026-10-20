@@ -358,7 +358,6 @@ def ssr():
          'AC5 on load terminal 2, the J9 control wires on + and −, and the cover closed.</title>']
     # 1 where it goes
     s.append('<g data-k="sv1"><rect class="wallp" x="30" y="16" width="420" height="268" rx="6"/><text class="cap onmetal" x="44" y="274">left wall, from inside</text>'
-             '<text class="cap onmetal" x="44" y="34">back</text><text class="cap onmetal" x="436" y="34" text-anchor="end">front</text>'
              '<rect class="pumpb" x="60" y="196" width="112" height="70" rx="8"/><text class="lbl" x="116" y="236" text-anchor="middle" fill="#E7E9EB">pump</text>'
              '<g data-k="ssr1"><rect class="ssrb" x="236" y="100" width="88" height="74" rx="5"/><text class="ssrs" x="280" y="142" text-anchor="middle">SSR</text></g>'
              '<g data-k="clr"><path class="dimln acc" d="M172,214 H232 M172,208 V220 M232,208 V220"/><text class="cap onmetal" x="202" y="234" text-anchor="middle">clear of</text>'

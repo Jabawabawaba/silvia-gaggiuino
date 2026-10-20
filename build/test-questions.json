@@ -1708,7 +1708,7 @@
     "pg",
     "tc",
     null,
-    "Clamp it in J4 and check it"
+    "Check it, then clamp it in J4"
    ]
   ],
   "src": "runbook-phases.js p1c: 'Fold each bare wire over before clamping it in J4, and keep the insulation out of the clamp.'; runs.py CONNECTORS J4: 'Screw terminal'"
@@ -2844,7 +2844,7 @@
     "pg",
     "tc",
     null,
-    "Clamp it in J4 and check it"
+    "Check it, then clamp it in J4"
    ]
   ],
   "src": "checks.tpl.html c7 'Thermocouple loop. Across its two wires, unclamped from J4. A few ohms is normal.' type tc: 'Expect a few Ω, not OL'. fix: 'OL means a broken thermocouple or lead.'"

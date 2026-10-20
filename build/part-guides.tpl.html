@@ -21,8 +21,8 @@
     <div class="sec-h"><h2 id="h-tc">Thermocouple</h2><span class="sum">K type · M3 · ungrounded</span></div>
     <p class="pg-where" id="pg-tc-where"></p>
     <div class="pg-meta">
-      <div><span class="k">You need</span><ul><li>The thermocouple: K type, ungrounded, M3 thread (not the official parts list's M4)</li><li>Thermal paste rated for 180 °C or more</li><li>A screwdriver for the thermostat's clamp screws</li><li>A multimeter</li></ul></div>
-      <div><span class="k">What it does</span><p>It reports the boiler's temperature to the PCB on J4, in place of the brew thermostat. Ungrounded means its junction is insulated from the probe body, because the PCB's low-voltage side floats; <a href="how-gaggiuino-works.html#ground">How Gaggiuino works</a> explains why.</p></div>
+      <div><span class="k">You need</span><ul><li>The thermocouple: K type, ungrounded, M3 thread (not the official parts list's M4)</li><li>Thermal paste rated for 180 °C or more</li><li>A screwdriver for the thermostat's clamp screws, and a small flat one for J4</li><li>A multimeter</li></ul></div>
+      <div><span class="k">What it does</span><p>It reports the boiler's temperature to the PCB on J4, in place of the brew thermostat. It must be ungrounded (its junction insulated from the probe body) because the PCB's low-voltage side floats; <a href="how-gaggiuino-works.html#ground">How Gaggiuino works</a> explains why.</p></div>
     </div>
     <div class="pg" id="pg-tc-g">
       <div class="pg-figcol">
@@ -57,7 +57,7 @@
     <div class="sec-h"><h2 id="h-wire">Making the wires</h2><span class="sum">cut · strip · crimp · tape · pull-test</span></div>
     <p class="pg-where" id="pg-wire-where"></p>
     <div class="pg-meta">
-      <div><span class="k">You need</span><ul><li>18 AWG 200 °C silicone wire for mains and 22 AWG for low voltage, cut from the <a href="%%LINK_CUTLIST%%">cut list</a> (a Silvia harness runs longer than a Gaggia one)</li><li>A wire stripper</li><li>An insulated crimper (red and blue dies) for spades, forks and butt splices</li><li>An open-barrel crimper for the bare boiler spades</li><li>Red and blue 6.3 mm spades, forks for the SSR, uninsulated 6.3 mm spades and red butt splices</li><li>Self-fusing silicone tape, an oil-based marker and your printed <a href="%%LINK_LABELS%%">wire labels</a></li></ul></div>
+      <div><span class="k">You need</span><ul><li>18 AWG 200 °C silicone wire for mains and 22 AWG for low voltage, cut from the <a href="%%LINK_CUTLIST%%">cut list</a> (a Silvia harness runs longer than a Gaggia one)</li><li>A wire stripper</li><li>An insulated crimper (red and blue dies) for spades, forks and butt splices</li><li>An open-barrel crimper for the bare boiler spades</li><li>Red and blue 6.3 mm spades, forks for the SSR (a blue one for the two wires on load terminal 1), uninsulated 6.3 mm spades, some sized for two wires (16 to 14 AWG), and red butt splices</li><li>Self-fusing silicone tape, an oil-based marker and your printed <a href="%%LINK_LABELS%%">wire labels</a></li></ul></div>
       <div><span class="k">Which crimper is which</span><p>An insulated crimper has colored, rounded dies and squashes a nylon sleeve. An open-barrel crimper has small B-shaped dies that roll a bare terminal's tabs over the wire. Most hardware-store crimpers are the insulated kind; the bare spades at the boiler need the open-barrel one.</p></div>
     </div>
     <div class="pg" id="pg-wire-g">
@@ -113,7 +113,7 @@
       <li>realNiche's <a href="https://github.com/thejobbitt/gaggiuino_resources/tree/main/wiring_diagrams/rancilio_silvia">Rancilio Silvia wiring diagram</a> (PCB v3.1/v4.0): every run, the switch poles, and the SSR's terminals.</li>
       <li>The Gaggiuino Discord's Rancilio Silvia install thread (Talon, Juun and others): the M3 thermocouple, the SSR on the left wall, bare spades and silicone tape at the boiler, blue spades for doubled runs, red butt splices in the ground chain, and Juun's OPV tee parts, as collected on <a href="silvia-specifics.html">Silvia specifics</a> and <a href="discord-notes.html">Discord notes</a>.</li>
       <li>GaggiMate's <a href="https://docs.gaggimate.eu/docs/installation-silvia/">Silvia installation</a> guide (a different mod project): which clamp hole to use for the thermocouple.</li>
-      <li>Gaggiuino, official docs: the flat O-ring under the pressure sensor, <a href="https://gaggiuino.github.io/#/learning/wiring-basics">wiring basics</a> (connectors and crimping) and the PCB's floating 5 V side. Docs read October 2026.</li>
+      <li>Gaggiuino, official docs: <a href="https://gaggiuino.github.io/#/guides-stm32/3pln-custom-wiring">custom wiring</a> (the pressure sensor's flat O-ring and quarter-turn limit, the thermocouple barely finger tight with 180 °C paste), the <a href="https://gaggiuino.github.io/#/guides-stm32/pcb-guide">PCB guide</a> (folding the J4 wires), <a href="https://gaggiuino.github.io/#/learning/wiring-basics">wiring basics</a> (connectors and crimping) and the PCB's floating 5 V side. Docs read October 2026.</li>
       <li>On this site: the <a href="%%LINK_RUNBOOK%%">runbook</a>, the <a href="%%LINK_WIRING%%">wiring reference</a> and the <a href="%%LINK_CHECKS%%">power-on checks</a>.</li>
     </ul>
   </section>

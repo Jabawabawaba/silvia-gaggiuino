@@ -55,6 +55,7 @@
       return false;
     }
     function hit(map,sel,c){return targets(map).some(function(x){return ok(x[2])&&covers(resolve(x[1],c),sel,c)})}
+    function overlap(map,part,c){var l=c.landing(part),seen={};targets(map).forEach(function(x){if(!ok(x[2]))return;resolve(x[1],c).runs.forEach(function(r){if(l.indexOf(r)>=0)seen[r]=1})});return Object.keys(seen).length}
     function hitDirect(map,sel,c){return targets(map).some(function(x){if(!ok(x[2]))return false;var r=resolve(x[1],c);return sel.t==='part'?r.part===sel.id:covers({runs:r.runs,part:null},sel,c)})}
     function tslug(i){var s='t-'+TR[i].s.toLowerCase().replace(/\{[a-z]+\}/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,60),n=0;for(var j=0;j<i;j++)if(TR[j].s===TR[i].s)n++;return n?s+'-'+(n+1):s}
     function fillT(s){var m=M();return String(s).replace(/\{gfci\}/g,m?m.text('gfci'):'GFCI or RCD').replace(/\{outlet\}/g,m?m.text('outlet'):'GFCI- or RCD-protected outlet').replace(/\{volts\}/g,m?m.text('volts'):'your mains voltage')}
@@ -68,7 +69,10 @@
         var shown=(d.steps.all||[]).filter(function(s){return ok(s.when)}),at=-1;
         /* a step that names the pick itself beats one that only covers it through a part */
         for(var i=0;i<shown.length&&at<0;i++)if(hitDirect(shown[i].map,sel,c))at=i;
-        for(i=0;i<shown.length&&at<0;i++)if(hit(shown[i].map,sel,c))at=i;
+        /* otherwise the first step that covers it; for a part, the one that covers most of the runs landing on it */
+        if(at<0){var best=0,pick=-1;
+          for(i=0;i<shown.length;i++)if(hit(shown[i].map,sel,c)){if(sel.t!=='part'){pick=i;break}var n=overlap(shown[i].map,sel.id,c);if(n>best||pick<0){if(n>best)best=n;pick=i}}
+          at=pick}
         if(at>=0){pg.push('<a href="'+base(LINK.guides)+'#'+k+'/'+(at+1)+'">'+e(GNAME[k]+', step '+(at+1)+': '+shown[at].t)+'</a>');if(k==='wire')wired=true}
       });
       /* every wire you make: how to make it, and the bare-spade step when it has a boiler end */
