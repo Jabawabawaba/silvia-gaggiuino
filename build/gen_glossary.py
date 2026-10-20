@@ -165,6 +165,116 @@ def is_abbr(t, ex):
     return False
 
 
+# ---------------------------------------------------------------- official images
+# Photos, drawings and screenshots from the official Gaggiuino docs (gaggiuino.github.io, docs repo commit acc4258,
+# read October 2026). Each was looked at before it was linked, and its label says what it shows; Gaggia-only
+# photos say so. Repo images use the docs site's own address; uploads keep the address the docs page embeds.
+OFF = "https://gaggiuino.github.io/"
+IMGS = {
+    # key: (url, what it shows, official page it's on)
+    "labels": (OFF + "schematics/stm32_pcbv3_1_board_labels.png", "PCB v3.1/v4 board labels", "Stock wiring integration"),
+    "pcbcase": (OFF + "media/pcb_housing.png", "PCB v3.1 in its case, wired up", "PCB guide"),
+    "screen": (OFF + "media/screen.png", "the Gen 3 screen", "Screen"),
+    "tofnled": (OFF + "media/tofnled.png", "the ToFnLED board and its housing", "ToFnLED"),
+    "scales": (OFF + "media/scales.png", "hardware scales under a Gaggia drip tray", "Hardware scales"),
+    "home": (OFF + "manual/gen3/mbed/001_000_home.png", "the screen's home page, labeled", "Gen 3 user manual"),
+    "homeweb": (OFF + "manual/gen3/web/001_000_home.png", "the web UI's home page, labeled", "Gen 3 user manual"),
+    "boiler": (OFF + "manual/gen3/web/003_000_settings_boiler.png", "Boiler settings in the web UI", "Gen 3 user manual"),
+    "system": (OFF + "manual/gen3/web/003_002_settings_system.png", "System settings, with Pump Zero", "Gen 3 user manual"),
+    "about": (OFF + "manual/gen3/mbed/003_006_settings_about.png", "the firmware versions on the About page", "Gen 3 user manual"),
+    "ota": (OFF + "manual/gen3/web/003_006_settings_ota_update.png", "OTA Update in the web UI", "Gen 3 user manual"),
+    "descale": (OFF + "manual/gen3/mbed/001_004_descale.png", "descaling on the screen", "Gen 3 user manual"),
+    "shot": (OFF + "manual/gen3/mbed/001_001_shot_in_progress.png", "a shot in progress, with its curves", "Gen 3 user manual"),
+    "phase": (OFF + "manual/gen3/mbed/002_002_profiles_edit_phase.png", "the profile editor's phase settings", "Gen 3 user manual"),
+    "scaleset": (OFF + "manual/gen3/mbed/003_004_settings_scales.png", "Hardware scales settings", "Gen 3 user manual"),
+    "connectors": ("https://github.com/kozikow/gaggiuino.github.io/assets/722866/cba29dc6-3a60-4bd5-a2c1-92f5cc4c08e2", "connectors: a JST plug, a spade and an SSR fork", "Wiring basics"),
+    "boilertop": ("https://github.com/kozikow/gaggiuino.github.io/assets/722866/37c18fea-959b-4788-abbe-896db287d696", "a Gaggia boiler top, labeled: steam thermostat, thermal fuse, brew thermostat", "Wiring basics"),
+    "pumpfuse": ("https://github.com/kozikow/gaggiuino.github.io/assets/722866/9f71d390-a802-4d49-851b-3ccfa03b4536", "the pump thermal fuse in a Gaggia", "Wiring basics"),
+    "openbarrel": ("https://github.com/kozikow/gaggiuino.github.io/assets/722866/31e53688-562a-4ccd-818d-5727f698bb05", "an uninsulated-terminal crimper", "Example tools"),
+    "j4fold": ("https://github.com/user-attachments/assets/3cac0e03-e850-4f7b-844e-4c19971a8382", "thermocouple wires folded into J4", "PCB guide"),
+    "tcinst": ("https://github.com/user-attachments/assets/7eef096a-bcce-4d98-8a7d-ae898c3afec3", "the thermocouple screwed into a Gaggia boiler", "Custom wiring"),
+    "ssrinst": ("https://github.com/user-attachments/assets/94bcb6c1-6e65-4ced-957c-9c00551140b3", "an SSR mounted in a Classic Pro", "Custom wiring"),
+    "xdGC": ("https://github.com/GAGGIUINO/gaggiuino.github.io/assets/117388662/78d801f3-9c4f-4c17-8105-74e32711af09", "the pressure sensor and its push-in fitting (Classic)", "Custom wiring"),
+    "xdGCP": ("https://github.com/GAGGIUINO/gaggiuino.github.io/assets/117388662/f294cdb2-000b-4583-b258-8dd53854a2ec", "the pressure sensor and its barbed fitting (Classic Pro)", "Custom wiring"),
+    "teeGC": ("https://user-images.githubusercontent.com/117388662/239457706-7ee5d101-d209-41b4-a3d3-ce159e98032f.png", "the sensor's T-fitting in a Classic's PTFE tube", "Custom wiring"),
+    "teeGCP": ("https://user-images.githubusercontent.com/117388662/246573952-ca092066-d107-46e6-85f1-e2a7b19865e0.png", "the sensor's T-fitting in a Classic Pro's hose", "Custom wiring"),
+    "ptbA": ("https://github.com/user-attachments/assets/14188d93-508f-4ab4-b003-80f8aeb243a8", "the pressure tap block assembly", "Custom wiring"),
+    "ptbC": ("https://github.com/user-attachments/assets/8cf1157b-b990-41c1-9770-24d7ac5af067", "the tap block clamped at the group", "Custom wiring"),
+    "ptbF": ("https://github.com/user-attachments/assets/53026edc-2026-4144-9714-200cdb2ebf51", "the finished tap block install", "Custom wiring"),
+    "iw": ("https://github.com/user-attachments/assets/09a876da-2380-4a97-9aad-7fbbed6007fa", "the integration wires, labeled", "Stock wiring integration"),
+    "openGC": ("https://user-images.githubusercontent.com/117388662/239368163-aa737736-51b5-43ed-86f9-cb834e031d2a.png", "an opened Classic (GC)", "Stock wiring integration"),
+    "openGCP": ("https://user-images.githubusercontent.com/117388662/243791638-b16cac88-6802-49a7-b1d8-13c04be99b96.png", "an opened Classic Pro (GCP)", "Stock wiring integration"),
+    "pumpGC": ("https://github.com/user-attachments/assets/08201c41-7c72-4839-b85b-654710d979d0", "pump connections in a Classic, with the piggyback spade", "Stock wiring integration"),
+    "pumpGCP": ("https://github.com/user-attachments/assets/b8b0da1a-111e-4a19-8c0f-7b933b973026", "pump connections in a Classic Pro, with the piggyback spade", "Stock wiring integration"),
+    "psm": ("https://github.com/GAGGIUINO/gaggiuino.github.io/assets/117388662/3e99f5c4-f8e1-4413-b91b-2bf3890c3737", "a Gaggia power rocker, with the spring to remove", "Machine-specific guide"),
+    "ccb": ("https://github.com/GAGGIUINO/gaggiuino.github.io/assets/117388662/4c670b12-c555-4aab-91ad-5a9d8e9cec66", "the combined connector block on an Evo Pro or E24", "Machine-specific guide"),
+    "ccbI": ("https://github.com/GAGGIUINO/gaggiuino.github.io/assets/117388662/83f63c3a-9919-4c99-b01e-34eacba4ff71", "its connectors out of the block, insulated and labeled", "Machine-specific guide"),
+    "opv": ("https://github.com/GAGGIUINO/gaggiuino.github.io/assets/117388662/69a9cfbf-e2bc-4868-9f57-f510457fa61b", "a Gaggia OPV spring with washers added", "Machine-specific guide"),
+    "inletNew": ("https://user-images.githubusercontent.com/117388662/236964636-bf53e5ef-53aa-4f0c-ba69-a9c23222c644.png", "the new inlet socket seated in a Classic", "Machine-specific guide"),
+    "earthW": ("https://user-images.githubusercontent.com/117388662/236979713-6508871f-8405-4e0c-b4ed-e7ab59904ad6.png", "two earth wires with uninsulated spades", "Machine-specific guide"),
+    "earthOn": ("https://user-images.githubusercontent.com/117388662/237005812-6b360577-e91f-4ba1-a1ca-83480e9c50cf.png", "the earth wires going on in a Classic", "Machine-specific guide"),
+    "debugger": ("https://github.com/GAGGIUINO/gaggiuino.github.io/assets/117388662/58377fd5-49f2-47f2-98d6-7c800eb6e712", "a WeAct Mini Debugger wired to a PCB's SWD pins", "Flashing"),
+    "ap": ("https://github.com/user-attachments/assets/af24bb4e-1608-4b45-b78d-ccb7d15bec18", "joining the Gaggiuino AP from a phone", "Flashing"),
+    "qwiic": ("https://user-images.githubusercontent.com/117388662/275014009-196a8bbe-da9e-4f45-be38-e82e9292c1a5.png", "the Qwiic plug's pins: SCL, SDA, 3.3V, GND", "ToFnLED"),
+    "tofmount": ("https://user-images.githubusercontent.com/117388662/256464601-0d54fd7a-0f65-495e-8169-83fe9bd14a53.png", "the ToFnLED in place over a Gaggia's tank", "ToFnLED"),
+    "tofcone": ("https://github.com/GAGGIUINO/gaggiuino.github.io/assets/117388662/b59cf346-f689-4e5c-b32d-8c6abc9468b5", "the ToF sensor's light cones", "ToFnLED"),
+    "loadcell": ("https://user-images.githubusercontent.com/117388662/256964354-bca6c07c-4a85-4b3a-b499-7e2b3032d524.png", "load cells, trimmed to fit", "Hardware scales"),
+    "hx": ("https://github.com/GAGGIUINO/gaggiuino.github.io/assets/117388662/5d5141a2-c5ab-4270-a4cd-cc8d902273d4", "two HX711 boards wired into a scale housing", "Hardware scales"),
+}
+
+# glossary term -> official images, most useful first
+IMG_MAP = {
+    'AP': ['ap'],
+    'CLK': ['labels'],
+    'D1, D2': ['labels'],
+    'ESP32, ESP32-S3': ['screen'],
+    'G1/4': ['xdGC', 'xdGCP'],
+    'GC, GCP': ['openGC', 'openGCP'],
+    'GND': ['labels'],
+    'HPWR': ['boiler'],
+    'I/O': ['labels'],
+    'HW scales': ['scales', 'scaleset'],
+    'HX711': ['hx'],
+    'IEC C14, C13': ['inletNew'],
+    'J1 to J13': ['labels', 'pcbcase'],
+    'JST': ['labels', 'connectors'],
+    'K-type': ['tcinst'],
+    'OTA': ['ota'],
+    'PCB': ['pcbcase', 'labels'],
+    'PZ': ['system'],
+    'Qwiic, I2C': ['qwiic', 'labels'],
+    'RX, TX': ['labels'],
+    'SSR': ['ssrinst'],
+    'ST-Link': ['debugger'],
+    'SWD': ['labels', 'debugger'],
+    'ToF': ['tofcone', 'tofnled'],
+    'ToFnLED': ['tofnled', 'tofmount'],
+    'UART': ['labels'],
+    'UI': ['home', 'homeweb'],
+    'Brew Delta': ['boiler'],
+    'Brew Divider': ['boiler'],
+    'Crimp, open-barrel': ['openbarrel'],
+    'Descale': ['descale'],
+    'DreamSteam': ['boiler'],
+    'Earth': ['earthW', 'earthOn'],
+    'Firmware': ['about'],
+    'Flush': ['home'],
+    'Fork spade': ['connectors'],
+    'Load cell': ['loadcell'],
+    'Main Divider': ['boiler'],
+    'Offset': ['boiler'],
+    'Pressure profile': ['shot', 'phase'],
+    'Rocker switch': ['psm'],
+    'Spade connector': ['connectors'],
+    'Thermal fuse': ['boilertop', 'pumpfuse'],
+    'Thermocouple': ['tcinst', 'j4fold'],
+    'Thermostat': ['boilertop'],
+    'Transducer': ['xdGC', 'xdGCP'],
+    'Vibratory pump': ['pumpGCP'],
+    'M3, M4': ['tcinst'],
+}
+
+
 def render():
     groups = {}
     for t, ex, d, see in sorted(E, key=lambda e: re.sub(r"^[^A-Za-z0-9]+", "", e[0]).lower()):
@@ -185,9 +295,19 @@ def render():
             if see:
                 seeh = '<span class="gl-see">' + ", ".join(f'<a href="{h}">{html.escape(x)}</a>' for x, h in see) + "</span>"
             exh = f'<span class="gl-ex">{html.escape(ex)}</span>' if ex else ""
-            out.append(f'<div class="gl-e" id="{slug(t)}" data-kind="{kind}"><dt>{html.escape(t)}{exh}</dt><dd>{html.escape(d)}{seeh}</dd></div>')
+            imgs = IMG_MAP.get(t, [])
+            imgh = ""
+            if imgs:
+                imgh = '<span class="gl-img">' + '<span class="sep"> · </span>'.join(
+                    f'<a href="{IMGS[k][0]}" target="_blank" rel="noopener" title="From the official {html.escape(IMGS[k][2])} page">{html.escape(IMGS[k][1][0].upper() + IMGS[k][1][1:])}</a>'
+                    for k in imgs) + "</span>"
+            out.append(f'<div class="gl-e" id="{slug(t)}" data-kind="{kind}"{" data-img" if imgs else ""}><dt>{html.escape(t)}{exh}</dt><dd>{html.escape(d)}{seeh}{imgh}</dd></div>')
         out.append("</dl></section>")
     return bar, "".join(out), len(E)
+
+
+def image_count():
+    return sum(1 for e in E if IMG_MAP.get(e[0]))
 
 
 if __name__ == "__main__":

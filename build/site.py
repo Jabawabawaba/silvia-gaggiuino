@@ -322,7 +322,7 @@ def render_template(name):
     if name == "glossary.tpl.html":
         import gen_glossary
         bar, body, n = gen_glossary.render()
-        s = s.replace("%%GL_BAR%%", bar).replace("%%GL_BODY%%", body).replace("%%GL_COUNT%%", str(n))
+        s = s.replace("%%GL_BAR%%", bar).replace("%%GL_BODY%%", body).replace("%%GL_COUNT%%", str(n)).replace("%%GL_IMGS%%", str(gen_glossary.image_count()))
     if name == "cutlist.tpl.html":
         from build import runs_json
         s = s.replace("%%RUNS%%", runs_json())

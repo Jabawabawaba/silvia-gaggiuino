@@ -27,7 +27,11 @@ dl{margin:0}
 .gl-e dd{margin:0;font-size:15.5px;max-width:72ch}
 .gl-see{display:block;margin-top:5px;font-size:14px}
 .gl-see::before{content:"Read more: ";color:var(--muted)}
-@media (pointer:coarse){.gl-see{line-height:2.4}.gl-see a{padding:8px 0}}
+.gl-img{display:block;margin-top:5px;font-size:14px}
+.gl-img::before{content:"Official images: ";color:var(--muted)}
+.gl-img a::after{content:" ↗";font-size:12px;color:var(--muted)}
+.gl-img .sep{color:var(--muted)}
+@media (pointer:coarse){.gl-see,.gl-img{line-height:2.4}.gl-see a,.gl-img a{padding:8px 0}}
 .gl-e:target{background:linear-gradient(90deg,var(--accent-soft),transparent 70%);border-radius:8px;padding-left:10px}
 .empty{color:var(--muted);padding:20px 0}
 @media (max-width:640px){.gl-e{grid-template-columns:minmax(0,1fr)}.tools{position:static}.gl-sec,.gl-e{scroll-margin-top:12px}}
@@ -38,13 +42,13 @@ mark{background:var(--accent-soft);color:inherit;border-radius:2px}
   <header class="top">
     <div class="plate"><span class="rivet" aria-hidden="true"></span><span><b>Learn</b></span><span>Glossary</span><span>%%GL_COUNT%% terms</span><span class="rivet" aria-hidden="true"></span></div>
     <h1>Glossary</h1>
-    <p class="lede">Every abbreviation and unusual word on this site, in plain words. Search, or jump by letter. Most terms link to the page that explains them properly.</p>
+    <p class="lede">Every abbreviation and unusual word on this site, in plain words. Search, or jump by letter. Most terms link to the page that explains them properly, and %%GL_IMGS%% link to photos, drawings or screenshots in the official Gaggiuino docs.</p>
   </header>
 
   <div class="tools">
     <label class="search" for="gq"><svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="6" fill="none" stroke="currentColor" stroke-width="2"/><line x1="13" y1="13" x2="18" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span class="vh">Search the glossary</span><input id="gq" type="search" placeholder="SSR, thermocouple, OL…" autocomplete="off"></label>
     <nav class="az" aria-label="Jump to letter">%%GL_BAR%%</nav>
-    <div class="kinds" role="group" aria-label="Show"><button type="button" class="chip" data-k="all" aria-pressed="true">Everything</button><button type="button" class="chip" data-k="abbr" aria-pressed="false">Abbreviations</button><button type="button" class="chip" data-k="word" aria-pressed="false">Words</button><span class="count" id="gcount"></span></div>
+    <div class="kinds" role="group" aria-label="Show"><button type="button" class="chip" data-k="all" aria-pressed="true">Everything</button><button type="button" class="chip" data-k="abbr" aria-pressed="false">Abbreviations</button><button type="button" class="chip" data-k="word" aria-pressed="false">Words</button><button type="button" class="chip" data-k="img" aria-pressed="false">With official images</button><span class="count" id="gcount"></span></div>
   </div>
 
   <div id="gl">%%GL_BODY%%</div>
@@ -63,7 +67,7 @@ mark{background:var(--accent-soft);color:inherit;border-radius:2px}
   items.forEach(function(e){e._t=e.textContent.toLowerCase()});
   function run(){
     var s=q.value.trim().toLowerCase(),n=0;
-    items.forEach(function(e){var ok=(kind==='all'||e.getAttribute('data-kind')===kind)&&(!s||e._t.indexOf(s)>=0);e.hidden=!ok;if(ok)n++});
+    items.forEach(function(e){var ok=(kind==='all'||(kind==='img'?e.hasAttribute('data-img'):e.getAttribute('data-kind')===kind))&&(!s||e._t.indexOf(s)>=0);e.hidden=!ok;if(ok)n++});
     secs.forEach(function(sec){sec.hidden=!sec.querySelector('.gl-e:not([hidden])')});
     document.getElementById('gcount').textContent=n+' of '+items.length;
     document.getElementById('gempty').hidden=n>0;
