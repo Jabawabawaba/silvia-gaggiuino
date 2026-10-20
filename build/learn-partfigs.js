@@ -71,51 +71,73 @@
     draw();
   })();
 
-  /* switches and lamps: a power switch and one thermostat. A lamp across a closed contact is shorted out;
-     once the contact opens, the lamp and the element share the voltage, and the lamp, drawing almost nothing,
-     takes nearly all of it. The Silvia's heating light is the other way round: it's across the element. */
+  /* switches and lamps: the power switch, the steam switch and both thermostats, with the boiler's temperature picked
+     by hand. A lamp across a closed contact is shorted out; once the contact opens, the lamp and the element share the
+     voltage, and the lamp, drawing almost nothing, takes nearly all of it. The steam switch is wired around the brew
+     thermostat, so with it on heating carries on to the steam thermostat. The Silvia's heating light is the other way
+     round: it's across the safety and the element, so it's lit while the thermostats are calling for heat. */
   (function(){
     var fig=$('mini-panel');if(!fig)return;
-    var bp=fig.querySelector('[data-sw="pwr"]'),bt=fig.querySelector('[data-sw="ts"]'),bs=fig.querySelector('[data-sw="safe"]'),note=fig.querySelector('[data-sw-note]');
-    var on=false,ready=false,tripped=false,kind='pro',ctl=false;   /* ctl: the power button works through an Eco board or the E's controller */
-    function F(id){return $(id)}
-    function flows(list){qa('.sw-f',fig).forEach(function(p){p.classList.toggle('on',list.indexOf(p.id)>=0)})}
-    function glow(sel,v){qa('[data-lp="'+sel+'"]',fig).forEach(function(e){e.classList.toggle('glow',!!v)})}
-    function upd(){
-      fig.classList.toggle('on',on);fig.classList.toggle('ready',ready);fig.classList.toggle('tripped',tripped);
-      bp.setAttribute('aria-pressed',String(on));bp.textContent=on?'Power switch on':'Power switch off';
-      bt.setAttribute('aria-pressed',String(ready));bt.textContent=ready?'Boiler hot enough':'Boiler heating';
-      if(bs){bs.setAttribute('aria-pressed',String(tripped));bs.textContent=tripped?'Safety tripped':'Safety OK'}
-      var heat=on&&!ready&&!tripped;fig.classList.toggle('heating',heat);
-      glow('pwr',on);
-      if(kind==='silvia'){
-        /* the heating light sits across the safety and element, so it lights whenever the thermostats are closed */
-        var lit=on&&!ready;glow('heat',lit);glow('rk',on&&!fig.classList.contains('led'));
-        flows(!on?[]:heat?['sw-fh','sw-fp','sw-fl']:lit?['sw-fl','sw-fp']:['sw-fp']);
-        note.textContent=!on?(ctl?OFF_CTL_E:OFF_2P):
-          ready?'Hot enough: the thermostats open, so no current flows through the heating light and it goes dark.':
-          tripped?'Safety tripped: the element gets nothing, but in the usual stock wiring the heating light stays on, because the thermostats are still closed.':
-          'Heating: the thermostats are closed, so the element and the heating light both get the full voltage.';
-        return;
-      }
-      glow('rdy',on&&ready);
-      var g=kind==='gc'?'g':'';
-      flows(!on?[]:ready?['sw-fr'+g,'sw-fp'+g]:['sw-fh'+g,'sw-fp'+g]);
-      var gc=kind==='gc',lamp=gc?'ready lamp':'brew lamp';
-      note.textContent=!on?(gc?OFF_1P:ctl?OFF_CTL_G:OFF_2P):
-        ready?(gc?'Hot enough: a thermostat opens.':'Hot enough: the thermostat opens.')+' A tiny current through the '+lamp+' and the element lights the lamp, far too little to heat'+(gc?'. The element is still wired in, so treat it as live.':', though both ends of the element still sit at line.'):
-        (gc?'Heating: the closed thermostats short out the ':'Heating: the closed thermostat shorts out the ')+lamp+', so it stays dark and the element gets the full voltage.';
-    }
+    var bp=fig.querySelector('[data-sw="pwr"]'),bst=fig.querySelector('[data-sw="steam"]'),bs=fig.querySelector('[data-sw="safe"]'),note=fig.querySelector('[data-sw-note]'),tb=qa('[data-temp]',fig);
+    var on=false,steam=false,temp='cold',tripped=false,kind='pro',ctl=false;   /* ctl: the power button works through an Eco board or the E's controller */
     /* off isn't dead: a single-pole switch may break neutral, and the inlet side of any switch stays live */
     var OFF_2P='Off: both poles are open, so nothing past the switch has power. The inlet and the switch\'s input spades stay live while it\'s plugged in.',
         OFF_1P='Off: the switch breaks one wire only. If line and neutral are swapped at the inlet, everything past it stays live. Unplug before opening it.',
         OFF_CTL_G='Off, as drawn. On an Eco-board machine the button works through the board, whose circuit isn\'t published: treat its wires as mains even when it\'s off.',
-        OFF_CTL_E='Off, as drawn. On the E the button works through its controller, whose switching isn\'t documented: treat its wires as mains even when it\'s off.';
-    function toggle(){on=!on;upd()}
-    bp.addEventListener('click',toggle);
-    bt.addEventListener('click',function(){ready=!ready;upd()});
+        OFF_CTL_E='Off, as drawn. On the E the button works through its controller, whose switching isn\'t documented: treat its wires as mains even when it\'s off.',
+        ON_TO_STEAM='Heating on to steam temperature: the steam switch bypasses the open brew thermostat, so the element keeps heating until the steam thermostat opens.',
+        STEAM_EARLY=' With steam on, heating won\'t stop at brew temperature.';
+    function flows(list){qa('.sw-f',fig).forEach(function(p){p.classList.toggle('on',list.indexOf(p.id)>=0)})}
+    function glow(sel,v){qa('[data-lp="'+sel+'"]',fig).forEach(function(e){e.classList.toggle('glow',!!v)})}
+    function upd(){
+      /* bC, sC: the brew and steam thermostats closed. The brew position conducts through its thermostat or the steam switch. */
+      var bC=temp==='cold',sC=temp!=='steam',pass=bC||steam;
+      function ways(id){return (bC?[id]:[]).concat(steam?[id+'s']:[])}   /* through the brew thermostat, the steam switch, or both */
+      fig.classList.toggle('on',on);fig.classList.toggle('steam',steam);fig.classList.toggle('bopen',!bC);fig.classList.toggle('sopen',!sC);fig.classList.toggle('tripped',tripped);
+      bp.setAttribute('aria-pressed',String(on));bp.textContent=on?'Power switch on':'Power switch off';
+      bst.setAttribute('aria-pressed',String(steam));bst.textContent=steam?'Steam switch on':'Steam switch off';
+      tb.forEach(function(b){b.setAttribute('aria-pressed',String(b.getAttribute('data-temp')===temp))});
+      if(bs){bs.setAttribute('aria-pressed',String(tripped));bs.textContent=tripped?'Safety tripped':'Safety OK'}
+      glow('pwr',on);
+      var heat;
+      if(kind==='silvia'){
+        var call=on&&sC&&pass;heat=call&&!tripped;
+        fig.classList.toggle('heating',heat);glow('heat',call);glow('rk',on&&!fig.classList.contains('led'));glow('stm',on&&steam);
+        flows(!on?[]:['sw-fp'].concat(heat?ways('sw-fh'):[],call?ways('sw-fl'):[]));
+        note.textContent=!on?(ctl?OFF_CTL_E:OFF_2P):
+          (call&&tripped)?'Safety tripped: the element gets nothing, but in the usual stock wiring the heating light stays on, because the thermostats are still calling for heat. Unplug it, let it cool and find the cause before resetting it.':
+          tripped?'Safety tripped: nothing heats, and the heating light is dark because a thermostat has opened. Unplug it, let it cool and find the cause before resetting it.':
+          heat?(steam&&!bC?'Heating on to steam temperature: the steam switch bypasses the open brew thermostat, so the element and the heating light stay on until the steam thermostat opens.':'Heating: the thermostats are closed, so the element and the heating light both get the full voltage.'+(steam?STEAM_EARLY:'')):
+          !sC?'At steam temperature: the steam thermostat opens, so no current flows through the heating light and it goes dark'+(steam?': steam is ready.':'.')+' The element still sits at line.':
+          'At brew temperature: the brew thermostat opens, so no current flows through the heating light and it goes dark. The element still sits at line.'+(steam?'':' Switch steam on to keep heating.');
+        return;
+      }
+      if(kind==='gc'){
+        var tp=sC&&pass,rd=on&&!tp;heat=on&&tp;
+        fig.classList.toggle('heating',heat);glow('rdy',rd);
+        flows(!on?[]:['sw-fpg'].concat(heat?ways('sw-fhg'):[],rd?['sw-frg']:[]));
+        note.textContent=!on?OFF_1P:
+          heat?(steam&&!bC?ON_TO_STEAM:'Heating: the closed thermostats short out the ready lamp, so it stays dark and the element gets the full voltage.'+(steam?STEAM_EARLY:'')):
+          !sC?'At steam temperature: the steam thermostat opens, so the ready lamp lights'+(steam?': steam is ready.':'.')+' The element is still wired in, so treat it as live.':
+          'At brew temperature: the brew thermostat opens. A tiny current through the ready lamp and the element lights the lamp, far too little to heat. The element is still wired in, so treat it as live.'+(steam?'':' Switch steam on to keep heating.');
+        return;
+      }
+      var sL=on&&!sC&&pass,bL=on&&sC&&!bC&&!steam;heat=on&&sC&&pass;
+      fig.classList.toggle('heating',heat);glow('brw',bL);glow('stm',sL);
+      flows(!on?[]:['sw-fp'].concat(heat?ways('sw-fh'):[],sL?['sw-fsl']:[],bL?['sw-fbl']:[]));
+      note.textContent=!on?(ctl?OFF_CTL_G:OFF_2P):
+        heat?(steam&&!bC?ON_TO_STEAM:'Heating: both thermostats are closed, so they short out both lamps and the element gets the full voltage.'+(steam?STEAM_EARLY:'')):
+        bL?'At brew temperature: the brew thermostat opens. A tiny current through the brew lamp and the element lights the lamp, far too little to heat, though both ends of the element still sit at line. Switch steam on to keep heating.':
+        sL?'At steam temperature: the steam thermostat opens, so the steam lamp lights the same way: steam is ready. The element still sits at line.':
+        'Steam temperature with steam off: both thermostats are open, so the two lamps share the voltage in series; whether they glow isn\'t documented. The element still sits at line, and the boiler cools back to brew temperature.';
+    }
+    function tPower(){on=!on;upd()}
+    function tSteam(){steam=!steam;upd()}
+    bp.addEventListener('click',tPower);bst.addEventListener('click',tSteam);
+    tb.forEach(function(b){b.addEventListener('click',function(){temp=b.getAttribute('data-temp');upd()})});
     if(bs)bs.addEventListener('click',function(){tripped=!tripped;upd()});
-    qa('[data-fr="pwr"],#sw-rock',fig).forEach(function(e){e.addEventListener('click',toggle)});
+    qa('[data-fr="pwr"],#sw-rock',fig).forEach(function(e){e.addEventListener('click',tPower)});
+    qa('[data-fr="steam"]',fig).forEach(function(e){e.addEventListener('click',tSteam)});
     function adapt(){
       var m=PFM.get();
       if(m.site==='g'){kind=m.fam==='GC'?'gc':'pro';ctl=!!m.eco;fig.classList.toggle('gc',kind==='gc')}

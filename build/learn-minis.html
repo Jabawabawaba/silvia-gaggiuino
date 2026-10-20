@@ -247,8 +247,10 @@
 
 <!-- SWITCHES AND LAMPS: what's inside a rocker, and why a ready lamp lights when its thermostat opens -->
 <figure class="mini" id="mini-panel">
-  <div class="mini-ctl"><button type="button" class="btn" data-sw="pwr" aria-pressed="false">Power switch off</button><button type="button" class="btn" data-sw="ts" aria-pressed="false">Boiler heating</button><button type="button" class="btn" data-sw="safe" aria-pressed="false">Safety OK</button><span class="mini-note" data-sw-note>Off: both poles of the power switch are open, so nothing past it has power.</span></div>
-  <svg viewBox="0 0 360 280" role="img" aria-label="Top left, a rocker switch cut open: the rocker tips a spring-loaded plunger from one side to the other, and the plunger rocks a contact arm onto or off a fixed contact. Top right, the front: brew, hot water and steam rockers, the power switch and the lights. Below, the circuit: the power switch feeds the safety thermostat, the element and the brew and steam thermostats in series. The heating light is wired across the safety and the element, so it lights whenever the thermostats are closed, even if the safety has tripped and the element is cold.">
+  <div class="mini-ctl"><button type="button" class="btn" data-sw="pwr" aria-pressed="false">Power switch off</button><button type="button" class="btn" data-sw="steam" aria-pressed="false">Steam switch off</button><button type="button" class="btn" data-sw="safe" aria-pressed="false">Safety OK</button></div>
+  <div class="mini-ctl"><span class="mini-note" id="sw-tl">Boiler:</span><span class="mini-seg" role="group" aria-labelledby="sw-tl"><button type="button" class="chip" data-temp="cold" aria-pressed="true">Cold</button><button type="button" class="chip" data-temp="brew" aria-pressed="false">At brew temperature</button><button type="button" class="chip" data-temp="steam" aria-pressed="false">At steam temperature</button></span></div>
+  <div class="mini-ctl"><span class="mini-note" data-sw-note>Flip the switches and pick a boiler temperature to see what has power.</span></div>
+  <svg viewBox="0 0 360 330" role="img" aria-label="Top left, a rocker switch cut open: the rocker tips a spring-loaded plunger from one side to the other, and the plunger rocks a contact arm onto or off a fixed contact. Top right, the front: brew, hot water and steam rockers, the power switch and the lights. Below, the heating circuit: the power switch feeds the safety thermostat, the element and then the steam and brew thermostats, with the steam switch wired around the brew thermostat, so with steam on, heating carries on to the steam thermostat. The heating light is wired across the safety and the element, so it lights whenever the thermostats are calling for heat, even if the safety has tripped and the element is cold.">
     <g class="sw-cut">
       <rect x="28" y="40" width="100" height="56" rx="6" class="sw-house"/>
       <rect x="40" y="82" width="8" height="4" class="sw-stop"/>
@@ -266,7 +268,7 @@
       <rect x="190" y="8" width="164" height="114" rx="8" class="sw-face"/>
       <g class="sw-fr lit" transform="translate(212 32)"><rect x="-13" y="-17" width="26" height="34" rx="4" class="sw-bez"/><rect x="-10" y="-14" width="20" height="14" rx="2.5" class="rk-a"/><rect x="-10" y="0" width="20" height="14" rx="2.5" class="rk-b"/></g>
       <g class="sw-fr lit" transform="translate(212 66)"><rect x="-13" y="-17" width="26" height="34" rx="4" class="sw-bez"/><rect x="-10" y="-14" width="20" height="14" rx="2.5" class="rk-a"/><rect x="-10" y="0" width="20" height="14" rx="2.5" class="rk-b"/></g>
-      <g class="sw-fr lit" transform="translate(212 100)"><rect x="-13" y="-17" width="26" height="34" rx="4" class="sw-bez"/><rect x="-10" y="-14" width="20" height="14" rx="2.5" class="rk-a"/><rect x="-10" y="0" width="20" height="14" rx="2.5" class="rk-b"/></g>
+      <g class="sw-fr lit" data-fr="steam" data-lp="stm" transform="translate(212 100)"><rect x="-13" y="-17" width="26" height="34" rx="4" class="sw-bez"/><rect x="-10" y="-14" width="20" height="14" rx="2.5" class="rk-a"/><rect x="-10" y="0" width="20" height="14" rx="2.5" class="rk-b"/></g>
       <text x="230" y="36" class="cap">brew</text><text x="230" y="70" class="cap">water</text><text x="230" y="104" class="cap">steam</text>
       <g class="sw-fr m-pwr" data-fr="pwr" data-lp="rk" transform="translate(290 46)"><rect x="-15" y="-25" width="30" height="50" rx="5" class="sw-bez"/><rect x="-12" y="-22" width="24" height="22" rx="3" class="rk-a"/><rect x="-12" y="0" width="24" height="22" rx="3" class="rk-b"/></g>
       <g class="e-pwr" data-fr="pwr" transform="translate(290 46)"><circle r="17" class="sw-bez"/><circle r="13" class="pb-face"/></g>
@@ -276,25 +278,35 @@
       <text x="331" y="19" class="cap" text-anchor="middle">lights</text>
     </g>
     <g class="sw-circ c-sil">
-      <text x="6" y="164.5" class="sw-rail">L</text><text x="344" y="164.5" class="sw-rail">N</text>
-      <path d="M18,160 H30 M54,160 H80 M106,160 H116 M158,160 H196 M236,160 H276 M300,160 H340 M68,160 V248 H156 M174,248 H262 V160 M68,208 H112 M130,208 H174 V160" class="sw-w"/>
-      <circle cx="30" cy="160" r="2.5" class="sw-pin"/><circle cx="54" cy="160" r="2.5" class="sw-pin"/><line x1="30" y1="160" x2="54" y2="160" class="sw-blade p" id="sw-p1"/>
-      <circle cx="276" cy="160" r="2.5" class="sw-pin"/><circle cx="300" cy="160" r="2.5" class="sw-pin"/><line x1="276" y1="160" x2="300" y2="160" class="sw-blade p" id="sw-p2"/>
-      <path d="M42,152 V138 H288 V152" class="sw-link"/>
-      <circle cx="80" cy="160" r="2.5" class="sw-pin"/><circle cx="106" cy="160" r="2.5" class="sw-pin"/><line x1="80" y1="160" x2="106" y2="160" class="sw-blade" id="sw-sf"/>
-      <polyline points="116,160 120,153 127,167 134,153 141,167 148,153 155,167 158,160" class="sw-el" id="sw-el"/>
-      <circle cx="196" cy="160" r="2.5" class="sw-pin"/><circle cx="236" cy="160" r="2.5" class="sw-pin"/><line x1="196" y1="160" x2="236" y2="160" class="sw-blade" id="sw-ts"/>
-      <g class="sw-lamp" data-lp="heat"><circle cx="121" cy="208" r="9"/><path d="M114.6,201.6 L127.4,214.4 M127.4,201.6 L114.6,214.4"/></g>
-      <g class="sw-lamp" data-lp="pwr"><circle cx="165" cy="248" r="9"/><path d="M158.6,241.6 L171.4,254.4 M171.4,241.6 L158.6,254.4"/></g>
-      <circle cx="68" cy="160" r="2.6" class="sw-node"/><circle cx="68" cy="208" r="2.6" class="sw-node"/><circle cx="174" cy="160" r="2.6" class="sw-node"/><circle cx="262" cy="160" r="2.6" class="sw-node"/>
-      <text x="42" y="186" class="cap" text-anchor="middle">power</text><text x="42" y="198" class="cap" text-anchor="middle">switch</text><text x="93" y="198" class="cap" text-anchor="middle">safety</text><text x="137" y="186" class="cap" text-anchor="middle">element</text><text x="216" y="186" class="cap" text-anchor="middle">thermostats</text>
-      <text x="121" y="234" class="cap" text-anchor="middle">heating light</text><text x="165" y="274" class="cap" text-anchor="middle">power light</text>
-      <path d="M18,160 H340" class="sw-f big" id="sw-fh"/>
-      <path d="M18,160 H68 V208 H174 V160 H340" class="sw-f" id="sw-fl"/>
-      <path d="M18,160 H68 V248 H262 V160 H340" class="sw-f" id="sw-fp"/>
-    </g>
+      <text x="6" y="208.5" class="sw-rail">L</text><text x="344" y="208.5" class="sw-rail">N</text>
+      <path d="M16,204 H18 M38,204 H60 M84,204 H94 M126,204 H150 M178,204 H220 M248,204 H294 M314,204 H340 M52,204 V170 H85 M103,170 H136 V204 M200,204 V262 H220 M248,262 H270 V204 M52,204 V300 H158 M176,300 H282 V204" class="sw-w"/>
+      <path d="M28,196 V136 H304 V196" class="sw-link"/>
+      <polyline points="94,204 98,197 102,211 106,197 110,211 114,197 118,211 122,197 126,204" class="sw-el" id="sw-el"/>
+      <circle cx="18" cy="204" r="2.5" class="sw-pin"/><circle cx="38" cy="204" r="2.5" class="sw-pin"/><line x1="18" y1="204" x2="38" y2="204" class="sw-blade p" id="sw-p1"/>
+      <circle cx="294" cy="204" r="2.5" class="sw-pin"/><circle cx="314" cy="204" r="2.5" class="sw-pin"/><line x1="294" y1="204" x2="314" y2="204" class="sw-blade p" id="sw-p2"/>
+      <circle cx="60" cy="204" r="2.5" class="sw-pin"/><circle cx="84" cy="204" r="2.5" class="sw-pin"/><line x1="60" y1="204" x2="84" y2="204" class="sw-blade" id="sw-sf"/>
+      <circle cx="150" cy="204" r="2.5" class="sw-pin"/><circle cx="178" cy="204" r="2.5" class="sw-pin"/><line x1="150" y1="204" x2="178" y2="204" class="sw-blade" id="sw-tsm"/>
+      <circle cx="220" cy="204" r="2.5" class="sw-pin"/><circle cx="248" cy="204" r="2.5" class="sw-pin"/><line x1="220" y1="204" x2="248" y2="204" class="sw-blade" id="sw-tb"/>
+      <circle cx="220" cy="262" r="2.5" class="sw-pin"/><circle cx="248" cy="262" r="2.5" class="sw-pin"/><line x1="220" y1="262" x2="248" y2="262" class="sw-blade st" id="sw-st"/>
+      <g class="sw-lamp" data-lp="heat"><circle cx="94" cy="170" r="9"/><path d="M87.6,163.6 L100.4,176.4 M100.4,163.6 L87.6,176.4"/></g>
+      <g class="sw-lamp" data-lp="pwr"><circle cx="167" cy="300" r="9"/><path d="M160.6,293.6 L173.4,306.4 M173.4,293.6 L160.6,306.4"/></g>
+      <circle cx="52" cy="204" r="2.6" class="sw-node"/><circle cx="136" cy="204" r="2.6" class="sw-node"/><circle cx="200" cy="204" r="2.6" class="sw-node"/><circle cx="270" cy="204" r="2.6" class="sw-node"/><circle cx="282" cy="204" r="2.6" class="sw-node"/>
+      <text x="28" y="220" class="cap" text-anchor="middle">power</text><text x="28" y="232" class="cap" text-anchor="middle">switch</text>
+      <text x="72" y="196" class="cap sm" text-anchor="middle">safety</text>
+      <text x="110" y="220" class="cap" text-anchor="middle">element</text>
+      <text x="164" y="220" class="cap sm" text-anchor="middle">steam</text><text x="164" y="232" class="cap sm" text-anchor="middle">thermostat</text>
+      <text x="234" y="220" class="cap sm" text-anchor="middle">brew</text><text x="234" y="232" class="cap sm" text-anchor="middle">thermostat</text>
+      <text x="94" y="152" class="cap" text-anchor="middle">heating light</text>
+      <text x="234" y="284" class="cap" text-anchor="middle">steam switch</text>
+      <text x="167" y="322" class="cap" text-anchor="middle">power light</text>
+      <path d="M16,204 H340" class="sw-f big" id="sw-fh"/>
+      <path d="M16,204 H200 V262 H270 V204 H340" class="sw-f big" id="sw-fhs"/>
+      <path d="M16,204 H52 V170 H136 V204 H340" class="sw-f" id="sw-fl"/>
+      <path d="M16,204 H52 V170 H136 V204 H200 V262 H270 V204 H340" class="sw-f" id="sw-fls"/>
+      <path d="M16,204 H52 V300 H282 V204 H340" class="sw-f" id="sw-fp"/>
+      </g>
   </svg>
-  <figcaption>Simplified: the brew and steam thermostats are drawn as one, and the power switch's two poles break line and neutral together. In the usual stock wiring, from community drawings of the harness, the heating light sits across the safety and the element, not across the thermostats, so it lights whenever they're calling for heat, even if the safety has tripped and the element is cold. Trace yours before relying on it. While the machine is plugged in, treat every wire as live.<span data-when="ver:V5,V6"> From the V5 the power and heating lights are LEDs, green and orange.</span><span data-when="ver:V5,V6;model:E"> On the E the power button works through the auto-off controller, drawn here as a plain switch, and the controller may drive the lights; treat its wires as mains even when it's off.</span></figcaption>
+  <figcaption>Simplified: the power switch's two poles break line and neutral together. The steam switch is wired around the brew thermostat, so with it on, heating carries on past brew temperature to the steam thermostat. In the usual stock wiring, from community drawings of the harness, the heating light sits across the safety and the element, not across the thermostats, so it lights whenever they're calling for heat, even if the safety has tripped and the element is cold. Trace yours before relying on it. The brew switch runs the pump and the 3-way valve, and the hot water switch runs the pump only; those are covered with their parts. While the machine is plugged in, treat every wire as live.<span data-when="ver:V5,V6"> From the V5 the power and heating lights are LEDs, green and orange.</span><span data-when="ver:V5,V6;model:E"> On the E the power button works through the auto-off controller, drawn here as a plain switch, and the controller may drive the lights; treat its wires as mains even when it's off.</span></figcaption>
 </figure>
 
 <!-- POWER INLET AND EARTH: what the earth wire does when something goes wrong -->
