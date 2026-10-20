@@ -230,7 +230,8 @@
 #mini-tstat.brass .tb-wall{fill:url(#cut-brass);stroke:#6E5420}
 #mini-tstat .tb-stud{fill:url(#cut-chrome);stroke:#4A5057}
 #mini-tstat .tb-thread{stroke:#4A5057;stroke-width:1}
-#mini-tstat.sil .tb-stud,#mini-tstat.sil .tb-thread{display:none}
+#mini-tstat .tb-clamp{fill:url(#cut-chrome);stroke:#4A5057}
+#mini-tstat .tb-screw{fill:#6B737A;stroke:#3A3F44}
 #mini-tstat .tb-spade{fill:#C99A4A;stroke:#6E5420}
 #mini-tstat .tb-house{fill:#E6E1D6;stroke:#8C8577;stroke-width:1.2}
 #mini-tstat .tb-cav{fill:#30353B}

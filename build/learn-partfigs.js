@@ -21,6 +21,7 @@
       var m=PFM.get();site=m.site;TH=m.th;
       if(site==='g'){P=m.model==='E24'?1.0:1.35;KL=0.0022;gc=m.fam==='GC';fig.classList.toggle('brass',m.model==='E24');fig.classList.toggle('gc',gc)}
       else{P=m.volts===230?0.58:0.5;KL=0.0016;gc=false;fig.classList.add('brass','sil')}
+      var bs=K('b-sub');if(bs)bs.textContent='opens at '+TH.bo+' °C';
       [['bo',TH.bo],['bc',TH.bc],['so',TH.so],['sc',TH.sc],['cut',TH.cut]].forEach(function(r){
         var l=K('tg-'+r[0]),y=Y(r[1]).toFixed(1);l.setAttribute('y1',y);l.setAttribute('y2',y);
         var t=K('tg-'+r[0]+'-t');if(t){t.setAttribute('y',(Y(r[1])-3).toFixed(1));t.textContent=t.textContent.replace(/ [\d.]+ °C$/,'')+' '+r[1]+' °C'}
@@ -81,7 +82,7 @@
     }
     function noteFor(){
       var g=site==='g',EL=g?'elements':'element',last=g?'fuse':'safety thermostat',on=heating(),sw=TH.so-TH.sc,bw=TH.bo-TH.bc;
-      if(cut)return g?'The fuse has melted at '+TH.cut+' °C and stays open for good: '+(gc?'it\'s in the neutral feed, so the whole machine is dead, power lamp included.':'nothing but the power lamp works.')+' Unplug it, replace what failed, then fit a new fuse.'
+      if(cut)return g?'The fuse has melted at '+TH.cut+' °C and stays open for good. '+(gc?'It\'s in the neutral feed, so nothing works, power lamp included, but everything past the power switch is still at line voltage while it\'s plugged in.':'Nothing but the power lamp works.')+' Unplug it, replace what failed, then fit a new '+TH.cut+' °C fuse.'
         :'The safety thermostat has tripped at '+TH.cut+' °C and stays open, so the element is off. Unplug it, let it cool and find the cause before pressing reset.';
       if(fault==='s'&&steam)return 'The steam thermostat\'s contacts are welded shut, and the steam switch bypasses the brew thermostat, so nothing stops the '+EL+'. The '+last+' is the last line, at '+TH.cut+' °C.';
       if(fault==='s'&&!on&&bD)return 'At brew temperature: the brew thermostat has snapped open. The stuck steam thermostat makes no difference until steam goes on.';
@@ -103,9 +104,17 @@
     fb.forEach(function(b){b.addEventListener('click',function(){fault=b.getAttribute('data-fault');fb.forEach(function(x){x.setAttribute('aria-pressed',String(x===b))});changed()})});
     bFix.addEventListener('click',function(){
       if(!cut)return;
-      if(site==='s'&&T>TH.cut-25){tell('It won\'t reset yet: the disc only snaps back once it has cooled. Leave it unplugged a while.');return}
+      /* it has to cool first: the Silvia's disc won't snap back while hot, and nobody should work on a hot Gaggia. With reduced
+         motion the wait is skipped ahead to; otherwise it's a few seconds of watching it cool. */
+      var pre='';
+      if(T>TH.cut-25){
+        if(!RM){tell(site==='g'?'Leave it unplugged to cool before working on it.':'It won\'t reset yet: the disc only snaps back once it has cooled. Leave it unplugged a while.');return}
+        var w=0;while(T>TH.cut-25&&w<900){sec();w++}pre='After it cooled: ';
+      }
       cut=false;parts();
-      tell(fault!=='none'?(site==='g'?'New fuse fitted. The thermostat is still stuck, so it will melt again: the stuck part has to be replaced first.':'Reset. The thermostat is still stuck, so it will trip again: the stuck part has to be replaced first.'):(site==='g'?'New fuse fitted.':'Reset.'));
+      var name=fault==='b'?'brew':'steam',again=fault==='s'&&steam;
+      tell(pre+(site==='g'?'New fuse fitted.':'Reset.')+(again?' The steam thermostat is still stuck and steam is on, so it will '+(site==='g'?'melt':'trip')+' again: replace the stuck thermostat first.'
+        :fault!=='none'?' The '+name+' thermostat is still stuck shut and needs replacing: '+(fault==='b'?'shots will come out far too hot.':'with steam on, the boiler would run away again.'):''));
       if(RM){advance(site==='g'?120:240);draw(0);parts()}
     });
     window.addEventListener(PFM.ev,function(){conf();draw(0);refresh()});

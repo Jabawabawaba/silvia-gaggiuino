@@ -277,7 +277,7 @@
 
   /* ---------- the circuit ---------- */
   /* what the part figures need to know about your Silvia */
-  var PFM={ev:'silvia-machine',get:function(){var m=window.SilviaMachine,p=(m&&m.get())||{},v=p.ver||null;return {site:'s',ver:v,e:(v==='V5'||v==='V6')&&p.model==='E',volts:p.volts||null,th:{bo:%%BREW_OPEN%%,bc:%%BREW_CLOSE%%,so:%%STEAM_OPEN%%,sc:%%STEAM_CLOSE%%,cut:165}}}};
+  var PFM={ev:'silvia-machine',get:function(){var m=window.SilviaMachine,p=(m&&m.get())||{},v=p.ver||null;return {site:'s',ver:v,e:(v==='V5'||v==='V6')&&p.model==='E',volts:p.volts||null,th:{bo:v==='V1'?110:%%BREW_OPEN%%,bc:v==='V1'?98:%%BREW_CLOSE%%,so:%%STEAM_OPEN%%,sc:%%STEAM_CLOSE%%,cut:165}}}};
 %%INCLUDE:learn-partfigs.js%%
 
 %%INCLUDE:learn-sim.js%%

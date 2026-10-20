@@ -10,11 +10,14 @@ def zig(x0, x1, y, n, amp):
     pts.append(f'{x1:g},{y}')
     return ' '.join(pts)
 
-def thermostat(key, reset=False):
+def thermostat(key, reset=False, clamp=False):
     """A snap-disc thermostat in section, local coords 0..110 x 0..100. key names its parts for the script."""
     btn = ('<g class="tb-reset" data-k="%s-btn"><rect x="47" y="6" width="16" height="9" rx="2.5" class="tb-btn"/></g>' % key) if reset else ''
-    return f'''<rect x="0" y="88" width="110" height="12" class="tb-wall"/>
-        <rect x="49" y="74" width="12" height="16" class="tb-stud"/><path d="M49,78 h12 M49,82 h12 M49,86 h12" class="tb-thread"/>
+    mount = ('<rect x="2" y="68" width="16" height="8" rx="1.5" class="tb-clamp"/><rect x="92" y="68" width="16" height="8" rx="1.5" class="tb-clamp"/>'
+             '<circle cx="8" cy="72" r="2.5" class="tb-screw"/><circle cx="102" cy="72" r="2.5" class="tb-screw"/>') if clamp else \
+            '<rect x="49" y="74" width="12" height="16" class="tb-stud"/><path d="M49,79 h12 M49,83 h12 M49,87 h12" class="tb-thread"/>'
+    return f'''<rect x="0" y="76" width="110" height="24" class="tb-wall"/>
+        {mount}
         <rect x="24" y="0" width="8" height="20" rx="1" class="tb-spade"/><rect x="78" y="0" width="8" height="20" rx="1" class="tb-spade"/>
         {btn}
         <rect x="10" y="14" width="90" height="48" rx="6" class="tb-house"/>
@@ -68,31 +71,31 @@ def figure(site):
             + ('elements are' if g else 'element is') + ' heating. Below, each part in section. A thermostat is a bimetal disc in a cup that touches the boiler: '
             'at its set point the disc snaps from one shape to the other and pushes a ceramic pin up, which lifts a spring blade and parts the contacts; it snaps back, closing them, '
             'once it has cooled several degrees. ' +
-            ('The thermal fuse is a sealed metal tube: a pellet inside holds a spring that keeps a sliding contact pressed on the lead. At its rating the pellet melts, the spring lets go, a second spring pushes the contact away, and it stays open for good.'
+            ('The thermal fuse is a sealed metal tube: typically, a pellet inside holds a spring that keeps a sliding contact pressed on the lead. At its rating the pellet melts, the spring lets go, a second spring pushes the contact away, and it stays open for good.'
              if g else 'The safety thermostat works the same way, but its disc stays snapped open until its reset button is pressed.'))
     if g:
         cap = ('<figcaption>Simplified; the closing points and timings are illustrative. The thermostats are in series, so one stuck shut is still caught by the other: '
                'a stuck brew thermostat leaves the steam one in charge at %%STEAM_OPEN%% °C, and the coffee comes out far too hot. Only the steam thermostat stuck shut with steam on, '
                'or both stuck, lets the boiler run away, and then the fuse is the last line. '
                '<span data-when="fam:GCP"><span data-when="unset:model">On the Pro family it\'s</span><span data-when="set:model">It\'s</span> in the switched line, so when it melts only the power lamp still lights.</span>'
-               '<span data-when="fam:GC"> <span data-when="unset:model">On the original Classic it\'s</span><span data-when="set:model">On your Classic it\'s</span> in the neutral feed, so when it melts the whole machine goes dark.</span>'
-               ' The fuse is drawn as a typical pellet-type thermal cutoff. Never bypass it; unplug, find the cause and fit a new one. '
-               'The resettable fuse some Gaggiuino kits include works like the thermostats, with a reset button instead.</figcaption>')
+               '<span data-when="fam:GC"> <span data-when="unset:model">On the original Classic it\'s</span><span data-when="set:model">On your Classic it\'s</span> in the neutral feed, so when it melts the whole machine goes dark, but everything past the power switch stays live while it\'s plugged in.</span>'
+               ' The fuse is drawn as a typical pellet-type thermal cutoff. Never bypass it; unplug, find the cause and fit a new one of the same %%FUSE%% °C rating. '
+               'The resettable fuse some Gaggiuino kits include works like the thermostats, with a reset button instead; unplug it and find the cause before resetting that too.</figcaption>')
     else:
         cap = ('<figcaption>Simplified; the closing points and timings are illustrative. The thermostats are in series, so one stuck shut is still caught by the other: '
                'a stuck brew thermostat leaves the steam one in charge at %%STEAM_OPEN%% °C, and the coffee comes out far too hot. Only the steam thermostat stuck shut with steam on, '
                'or both stuck, lets the boiler run away, and then the safety thermostat is the last line. It stays open until it has cooled and you press its red button. '
-               'In the usual stock wiring the heating light stays on while it\'s tripped. Unplug before resetting it, and find the cause first.'
-               '<span data-when="ver:V1,V2"> Machines made before mid-2007 have a 110 °C brew thermostat.</span></figcaption>')
-    tmarks = mark(1, 90, 44) + mark(2, 43, 47) + mark(3, 76, 55) + mark(4, 29, 56) + mark(5, 104, 66)
+               'In the usual stock wiring, from community drawings of the harness, the heating light stays on while it\'s tripped; trace yours. Unplug before resetting it, and find the cause first.'
+               '<span data-when="ver:V1,V2"> Machines made before mid-2007 have a 110 °C brew thermostat: it\'s drawn at 110 °C for a V1 and at 100 °C otherwise.</span></figcaption>')
+    tmarks = mark(1, 90, 44) + mark(2, 43, 47) + mark(3, 76, 55) + mark(4, 32, 70) + mark(5, 104, 62)
     fmarks = mark(6, 26, 21) + mark(7, 45, 21) + mark(8, 61, 21) + mark(9, 88, 25)
     def box(title, sub, body, key, x, top, marks=''):
         return (f'\n    <g class="tb-box"><text x="{x + BW/2:.1f}" y="{top}" class="cap sm tb-t" text-anchor="middle">{title}</text>'
                 f'<text x="{x + BW/2:.1f}" y="{top + 12}" class="cap sm" text-anchor="middle">{sub}</text>'
                 f'<g transform="translate({x} {top + 20}) scale({S})">{body}{marks}</g></g>' + badge(key, round(x + BW/2, 1), top + 20 + 100*S + 6))
     ax, bx = 14, 360 - 14 - BW
-    rows = (box('brew thermostat', 'opens at %%BREW_OPEN%% °C', thermostat('b'), 'b', ax, 186, tmarks)
-            + box('steam thermostat', 'opens at %%STEAM_OPEN%% °C', thermostat('s'), 's', bx, 186)
+    rows = (box('brew thermostat', '<tspan data-k="b-sub">opens at %%BREW_OPEN%% °C</tspan>', thermostat('b', clamp=not g), 'b', ax, 186, tmarks)
+            + box('steam thermostat', 'opens at %%STEAM_OPEN%% °C', thermostat('s', clamp=not g), 's', bx, 186)
             + box(third_t, third_s, fuse() if g else thermostat('cut', reset=True), 'cut', ax, 396, fmarks if g else mark(6, 40, 10)))
     key = [('h', 'In each thermostat'), (1, 'spring blade'), (2, 'contacts'), (3, 'ceramic pin'), (4, 'bimetal disc'), (5, 'cup on the boiler')]
     key += ([('h', 'In the fuse'), (6, 'pellet'), (7, 'spring'), (8, 'sliding contact'), (9, 'lead')] if g else [('h', 'On the safety'), (6, 'reset button')])
