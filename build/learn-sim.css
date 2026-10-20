@@ -160,3 +160,34 @@
 .simx .xp-b{fill:none;stroke-width:5;stroke-linecap:round;stroke-linejoin:round}
 .simx .xf{fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:6 8;opacity:0}
 @media (prefers-reduced-motion:reduce){.sim.fresh #f-sw-pwr,.sim.fresh #f-pb-pwr,.sim .need{animation:none;filter:drop-shadow(0 0 3px var(--accent))}.sim .wiggle{animation:none}.simf #f-knobp,.simx #x-knobp,.simx #x-vpl,.simx #x-lid{transition:none}.sim .vap{animation:none;opacity:.7}}
+
+/* ---------- the coach under the machine ---------- */
+.coach{margin-top:14px;border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:14px 16px;display:grid;gap:12px}
+.coach-h{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px}
+.coach-h h3{margin:0;font:600 18px/1.1 var(--f-display);letter-spacing:.06em;text-transform:uppercase}
+.coach-sub{font:500 12px var(--f-mono);color:var(--muted);letter-spacing:.04em}
+.coach-feed{display:grid;gap:10px}
+.ck-empty{margin:0;color:var(--muted);font-size:15px}
+.ck{border:1px solid var(--line);border-left:4px solid var(--line);border-radius:10px;padding:12px 14px;display:grid;gap:8px;background:var(--bg)}
+.ck.good{border-left-color:var(--good)}.ck.mid{border-left-color:var(--accent)}.ck.bad{border-left-color:var(--bad)}.ck.slip{border-left-color:var(--accent)}
+.ck p{margin:0;font-size:15px;line-height:1.5}
+.ck-h{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px}
+.ck-h h4{margin:0;font-size:17px;font-weight:600}
+.ck-tag{font:600 11px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.ck-score{margin-left:auto;font:600 13px var(--f-mono);color:var(--muted)}
+.ck-stats{font:500 13.5px var(--f-mono)!important;color:var(--muted)}
+.ck-list{margin:0;padding:0;list-style:none;display:grid;gap:4px}
+.ck-list li{display:grid;grid-template-columns:20px minmax(0,1fr);gap:6px;font-size:15px;line-height:1.45}
+.ck-list .ck-i{font-weight:700;text-align:center}
+.ck-list li.ok .ck-i{color:var(--good)}.ck-list li.no .ck-i{color:var(--bad)}
+.ck-next{display:grid;gap:4px}
+.ck-next .k,.ck-more summary{font:600 11px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.ck-next ul,.ck-ctl{margin:0;padding-left:20px;display:grid;gap:4px;font-size:15px;line-height:1.45}
+.ck-more summary{cursor:pointer;margin-bottom:4px}
+.ck-best{padding-top:2px}
+.ck-now{border-top:1px dashed var(--line);padding-top:8px}
+.coach-guide>summary{cursor:pointer;font-weight:600;font-size:15.5px}
+.cg-cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px 28px;margin-top:10px}
+@media (max-width:760px){.cg-cols{grid-template-columns:minmax(0,1fr)}}
+.cg-cols h4{margin:0 0 6px;font:600 11px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.cg-steps{margin:0;padding-left:22px;display:grid;gap:6px;font-size:15px;line-height:1.5}

@@ -304,6 +304,7 @@
 
   /* ---------- the circuit ---------- */
 %%INCLUDE:learn-sim.js%%
+%%INCLUDE:learn-coach.js%%
 
   %%INCLUDE:learn-ladder.js%%
 })();
