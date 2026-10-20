@@ -30,6 +30,7 @@ PAGES = [
     ("M1XvJ1RVFmLVkTG2qErFJf", "used-silvia-checklist.html", "used-checklist.html", "Used Silvia check", "plan"),
     (None, "which.tpl.html", "which-silvia.html", "Which Silvia", "plan"),
     ("AeEeTNkB5mBChPXBAGSjVG", "silvia-parts-tracker.html", "parts-tracker.html", "Parts tracker", "plan"),
+    (None, "test-yourself.tpl.html", "test-yourself.html", "Test yourself", "plan"),
     ("Gq87FYxKzHytcFKB93RWDL", "silvia-install-runbook.html", "runbook.html", "Runbook", "install"),
     ("D9WraKUFqQPNH1bvFE5VPV", "silvia-wiring-reference.html", "wiring.html", "Wiring", "install"),
     (None, "cutlist.tpl.html", "cut-list.html", "Cut list", "install"),
@@ -325,6 +326,15 @@ def render_template(name):
         from build import runs_json
         s = s.replace("%%RUNS%%", runs_json())
     s = s.replace("%%BASECSS%%", open(os.path.join(HERE, "base.css")).read())
+    if "%%TEST_QUESTIONS%%" in s:
+        # the Test yourself questions, without the fact-check notes (src), and what their review links need
+        from build import check_index
+        qs = [{k: v for k, v in q.items() if k != "src"} for q in json.load(open(os.path.join(HERE, "test-questions.json")))]
+        s = s.replace("%%TEST_QUESTIONS%%", json.dumps(qs, ensure_ascii=False, separators=(",", ":")))
+        s = s.replace("%%CHECK_INDEX%%", check_index())
+    if "%%GLOSSARY_INDEX%%" in s:
+        import gen_glossary
+        s = s.replace("%%GLOSSARY_INDEX%%", json.dumps({gen_glossary.slug(e[0]): e[0] for e in gen_glossary.E}, ensure_ascii=False))
     if "%%STORY%%" in s:
         s = s.replace("%%STORY%%", open(os.path.join(HERE, "story.tpl.html")).read())
     s = s.replace("%%NCHECKS%%", str(n_checks()))

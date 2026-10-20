@@ -1,0 +1,128 @@
+<title>Test yourself</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+%%BASECSS%%
+%%INCLUDE:test-yourself.css%%
+</style>
+
+<div class="wrap" id="ty">
+  <header class="top">
+    <div class="plate"><span class="rivet" aria-hidden="true"></span><span><b>Test yourself</b></span><span>Rancilio Silvia</span><span>Gaggiuino Gen 3 · PCB v4</span><span class="rivet" aria-hidden="true"></span></div>
+    <h1>Test yourself</h1>
+    <p class="lede">Questions on everything this site covers, from how the stock Silvia works to the power-on checks. Get one wrong and you see the right answer, why, and where on the site to read up. Clear every topic, then pass the final exam to graduate: ready to start the modifications.</p>
+    <div class="ty-mach" id="ty-mach" role="status"></div>
+  </header>
+
+  <p class="ty-flash" id="ty-flash" role="status" hidden></p>
+
+  <section class="ty-quiz" id="ty-quiz" aria-label="Question" hidden></section>
+
+  <div id="ty-home">
+    <section aria-label="Your progress" id="ty-pathwrap"></section>
+
+    <section class="block" aria-labelledby="h-topics">
+      <div class="sec-h"><h2 id="h-topics">Practice by topic</h2><span class="sum" id="ty-tsum"></span></div>
+      <div class="ty-topics" id="ty-topics"></div>
+      <div class="ty-actions"><button type="button" class="btn" id="ty-mix" data-act="mix">Mixed practice, every topic</button></div>
+    </section>
+
+    <section class="block" aria-labelledby="h-review">
+      <div class="sec-h"><h2 id="h-review">To review</h2><span class="sum" id="ty-rsum"></span></div>
+      <div id="ty-review"></div>
+    </section>
+
+    <section class="block" aria-labelledby="h-exam" id="ty-exam">
+      <div class="sec-h"><h2 id="h-exam">Final exam</h2></div>
+      <div id="ty-examb"></div>
+    </section>
+
+    <section class="block" aria-labelledby="h-cert" id="ty-cert" hidden>
+      <div class="sec-h"><h2 id="h-cert">Your certificate</h2></div>
+      <div id="ty-certb"></div>
+    </section>
+
+    <section class="block no-print" aria-labelledby="h-about">
+      <div class="sec-h"><h2 id="h-about">About this test</h2></div>
+      <ul class="ty-about">
+        <li>The questions come from this site's own pages, which follow the official Gaggiuino docs and realNiche's harness. Each one links to where it's covered, so you can check it there.</li>
+        <li>A few questions depend on your Silvia, so set your version, model and mains voltage. Change them and the questions change with them.</li>
+        <li>Progress saves in this browser only. <button type="button" class="linkbtn" data-act="reset">Start over</button></li>
+      </ul>
+    </section>
+  </div>
+</div>
+
+<script>
+%%INCLUDE:maplink.js%%
+var TY=(function(){
+  var SM=window.SilviaMachine;
+  /* the pages a review link can point into, from their own data, so a link always lands on what the page shows */
+  var RB=(function(){
+%%INCLUDE:runbook-phases.js%%
+    return PHASES;
+  })();
+  var TR=(function(){
+%%INCLUDE:trouble-data.js%%
+    return T;
+  })();
+  var CKT=%%CHECK_INDEX%%;
+  var GL=%%GLOSSARY_INDEX%%;
+  function prof(){return (SM&&SM.get())||{}}
+  function newer(v){return v==='V5'||v==='V6'}
+  function andList(a){return a.length<2?a.join(''):a.slice(0,-1).join(', ')+' and '+a[a.length-1]}
+  function stepT(t){t=typeof t==='function'?t():t;return Array.isArray(t)?t.map(function(x){return typeof x==='string'?x:x[0]}).join(' '):String(t||'')}
+  function fillT(s){return String(s).replace(/\{gfci\}/g,SM?SM.text('gfci'):'GFCI or RCD').replace(/\{outlet\}/g,SM?SM.text('outlet'):'GFCI- or RCD-protected outlet').replace(/\{volts\}/g,SM?SM.text('volts'):'your mains voltage')}
+  function tslug(i){var s='t-'+TR[i].s.toLowerCase().replace(/\{[a-z]+\}/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,60),n=0;for(var j=0;j<i;j++)if(TR[j].s===TR[i].s)n++;return n?s+'-'+(n+1):s}
+  function ok(w){return !w||!SM||SM.matches(w)}
+  function ref(r){
+    var k=r[0];
+    if(k==='url')return {h:r[1],l:r[2]};
+    if(k==='gl')return GL[r[1]]?{h:'glossary.html#'+r[1],l:'Glossary: '+GL[r[1]]}:null;
+    if(k==='map')return {h:mapHref(String(r[1]).replace(/=/g,':')),l:r[2]||'The wiring drawing'};
+    if(k==='ck'){var c=CKT.filter(function(x){return x[0]===r[1]})[0];if(!c)return null;return {h:'power-on-checks.html#'+c[0],l:'Power-on check '+c[0]+': '+c[1]}}
+    /* two symptoms can share their words: the first one that applies wins */
+    if(k==='tr'){for(var i=0;i<TR.length;i++)if(TR[i].s===r[1]&&(!TR[i].w||ok(TR[i].w)))return {h:'troubleshooting.html#'+tslug(i),l:'Troubleshooting: '+fillT(TR[i].s)};return null}
+    if(k==='rb'){
+      for(var a=0;a<RB.length;a++){var ph=RB[a];
+        if(ph.id===r[1])return {h:'runbook.html#'+ph.id,l:'Runbook, '+ph.n+': '+ph.name};
+        for(var b=0;b<ph.steps.length;b++){var s=ph.steps[b];if(s.id===r[1]){if(s.w&&!ok(s.w))return null;return {h:'runbook.html#'+s.id,l:'Runbook, '+ph.n+': '+fillT(stepT(s.t))}}}
+      }
+      return null;
+    }
+    return null;
+  }
+  return {
+    key:'silvia-test-v1',
+    Q:%%TEST_QUESTIONS%%,
+    topics:[
+      {k:'silvia',name:'How the Silvia works',d:'The stock machine: what each part does, and how to use it well.'},
+      {k:'gg',name:'How Gaggiuino works',d:'What the PCB, sensors, SSR and screen take over, and how.'},
+      {k:'plan',name:'Your Silvia and planning',d:'Which Silvia you have, what it changes, the parts and the tools.'},
+      {k:'safety',name:'Mains safety',d:'What stays live, what you never bypass, and when the cord comes out.',crit:true},
+      {k:'install',name:'Install steps',d:'The runbook\'s phases, the Silvia specifics and the LED switch mod.'},
+      {k:'wiring',name:'Wiring',d:'realNiche\'s harness: the PCB\'s connectors and every run.'},
+      {k:'checks',name:'Power-on checks',d:'What to measure before first power-on, and what the readings mean.'},
+      {k:'trouble',name:'Troubleshooting',d:'Symptoms, their likely causes, and what to check first.'}
+    ],
+    M:{
+      ok:function(w){return !w||(!!SM&&SM.decided(w)&&SM.matches(w))},
+      ready:function(){var p=prof();return !!(p.ver&&p.volts&&(!newer(p.ver)||p.model))},
+      need:function(){var p=SM&&SM.get();if(!p)return 'Pick your version, model and mains voltage, so the questions about your own Silvia are included.';var m=SM.missing(p);return m.length?'Add your '+andList(m)+'.':''},
+      label:function(){var p=prof();return p.ver?'Silvia '+SM.label():''},
+      profile:function(){return SM?SM.current():null},
+      set:function(){var chip=document.getElementById('mchip'),pan=document.getElementById('mpanel');try{window.scrollTo({top:0,behavior:'smooth'})}catch(e){window.scrollTo(0,0)}if(chip&&pan&&pan.hidden)chip.click()},
+      on:function(fn){addEventListener('silvia-machine',fn)}
+    },
+    ref:ref,
+    fill:fillT,
+    exam:{n:30,crit:8,per:3,pass:0.85},
+    site:'Silvia × Gaggiuino toolkit',
+    mine:'Your Silvia',setWord:'Set Your Silvia',
+    certFine:'A self-check from this unofficial community site, not a qualification. The official Gaggiuino docs stay the authority: follow them step by step, work with the cord out, and pass every power-on check before first power-on.',
+    startHref:'runbook.html',startWord:'Open the runbook'
+  };
+})();
+%%INCLUDE:test-yourself.js%%
+</script>

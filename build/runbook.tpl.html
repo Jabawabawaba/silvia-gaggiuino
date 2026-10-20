@@ -151,7 +151,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
       <span class="rivet" aria-hidden="true"></span>
     </div>
     <h1>Silvia Install Runbook</h1>
-    <p class="lede">The whole Gaggiuino install in eight phases, from photos of the stock machine to the first calibrated shot. Tick each step as you go; your place is saved, so you can put the tablet down and pick up where you left off.</p>
+    <p class="lede">The whole Gaggiuino install in eight phases, from photos of the stock machine to the first calibrated shot. Tick each step as you go; your place is saved, so you can put the tablet down and pick up where you left off. Before you open the machine, check you're ready with <a href="%%LINK_TEST%%">Test yourself</a>.</p>
     <p class="lede print-only" id="print-for"></p>
     <div class="hdr-actions"><button type="button" class="btn" data-print hidden>Print the whole runbook</button></div>
   </header>
@@ -338,7 +338,10 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
 
   /* links from other pages (the wiring map's back-links): #p3a opens its phase and points at the step */
   function fromHash(){
-    var id=(location.hash||'').slice(1),s=ALL.filter(function(x){return x.id===id})[0];if(!s||!vis(s))return;
+    var id=(location.hash||'').slice(1);
+    /* a phase id (#p3) opens that phase */
+    var pi=PHASES.map(function(p){return p.id}).indexOf(id);if(pi>=0){if(state.phase!==pi){state.phase=pi;renderNav();renderPhase()}var t=$('ph-title');if(t)t.scrollIntoView({block:'start'});return}
+    var s=ALL.filter(function(x){return x.id===id})[0];if(!s||!vis(s))return;
     if(state.phase!==s.phase){state.phase=s.phase;renderNav();renderPhase()}
     var el=document.querySelector('[data-step="'+id+'"]');if(!el)return;
     el.scrollIntoView({block:'center'});el.classList.add('hit');setTimeout(function(){el.classList.remove('hit')},2600);

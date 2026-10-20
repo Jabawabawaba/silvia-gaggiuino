@@ -17,7 +17,7 @@ ART = json.load(open(LINKS_FILE)) if os.path.exists(LINKS_FILE) else {}
 SITE = {"WIRING": "wiring.html", "LABELS": "wire-labels.html", "CHECKS": "power-on-checks.html",
         "RUNBOOK": "runbook.html", "CUTLIST": "cut-list.html", "TROUBLE": "troubleshooting.html",
         "WHICH": "which-silvia.html", "LED": "led-mod.html", "TRACKER": "parts-tracker.html",
-        "BUDGET": "budget.html", "USED": "used-checklist.html", "HOME": "index.html"}
+        "BUDGET": "budget.html", "USED": "used-checklist.html", "HOME": "index.html", "TEST": "test-yourself.html"}
 ART_EXTRA = {"LED": "https://claude.ai/artifact/YammPPcWMq2CmaBdT3L1km",
              "TRACKER": "https://claude.ai/artifact/AeEeTNkB5mBChPXBAGSjVG",
              "BUDGET": "https://claude.ai/artifact/ArT3ks46jbJ4KEjXbDwcX7",
