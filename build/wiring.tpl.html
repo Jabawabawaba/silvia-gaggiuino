@@ -82,6 +82,7 @@ figcaption{font-size:14px;color:var(--muted);margin-top:8px;max-width:90ch}
 .sp{fill:var(--surface-2);stroke:var(--muted);stroke-width:1}
 .sp-idle{opacity:.5}
 .term{fill:var(--surface-2);stroke:var(--ink);stroke-width:1.2}
+.splice{fill:var(--ink)}
 .div{stroke:var(--line);stroke-width:1}
 .elem{fill:none;stroke:var(--muted);stroke-width:1.5}
 .fuse{fill:var(--accent-soft);stroke:var(--accent-ink);stroke-width:1}
@@ -211,6 +212,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     <div class="warn" role="note">
       <strong>Cross-check, not a validated schematic</strong>
       <p>There is no official Silvia schematic. This is redrawn from realNiche's community diagram (PCB v3.1/v4.0) with lengths from Talon's harness and the older RS diagram. Check each run against <a href="https://github.com/thejobbitt/gaggiuino_resources/tree/main/wiring_diagrams/rancilio_silvia" target="_blank" rel="noopener">realNiche's original</a> before you crimp, and pass the <a href="%%LINK_CHECKS%%" target="_blank" rel="noopener">power-on checks</a> before the machine is plugged in.</p>
+      <p data-when="shelly">The Shelly runs (SH1 to SH4) and the neutral splice aren't on realNiche's diagram, and nothing about the Shelly is in the official docs. They follow gblur's Silvia V6 E drawing from his <a href="https://youtu.be/nquiqOzltUo" target="_blank" rel="noopener">build video</a>, with the Shelly on its own leads from the inlet, so the machine's neutral never runs through it and nothing uses its terminals as a bridge, which Shelly's docs warn against. Runs tagged <i>changed for the Shelly</i> differ from realNiche's diagram. gblur's drawing shows a 230 V solenoid, so it's likely of a 230 V machine; this site uses the same runs at 120 V too. The <a href="%%LINK_GUIDES%%#shl" target="_blank" rel="noopener">Shelly guide</a> covers the part, where it goes and how to set it up.</p>
     </div>
   </header>
 
@@ -228,7 +230,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
   <p class="msel" id="msel" aria-live="polite"></p>
 
   <figure id="fig">
-    <div class="scroll" id="scroll">%%SVG%%</div>
+    <div class="scroll" id="scroll">%%SVG%%</div><template id="svg-sh">%%SVG_SH%%</template>
     <div class="legend" aria-label="Legend">
       <span><i class="lg-L"></i>Line, incl. PCB pump and valve outputs</span>
       <span><i class="lg-H"></i>Heater line after the SSR</span>
@@ -238,7 +240,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
       <span><i class="lg-LVG"></i>Switch ground</span>
       <span><i class="lg-S"></i>SSR control and sensors</span>
     </div>
-    <figcaption>Thick lines carry mains, thin lines are low voltage. Where two wires meet at one spade, both go into a single spade sized for two wires. The switch order and which side each pole sits on are drawn for clarity; match each switch by function and each pole by what’s wired to it. The pressure sensor is drawn on its tee, which goes at the OPV; some builds use the 3-way valve's bottom port instead, and both work.</figcaption>
+    <figcaption>Thick lines carry mains, thin lines are low voltage. Where two wires meet at one spade, both go into a single spade sized for two wires. The switch order and which side each pole sits on are drawn for clarity; match each switch by function and each pole by what’s wired to it. The pressure sensor is drawn on its tee, which goes at the OPV; some builds use the 3-way valve's bottom port instead, and both work.<span data-when="shelly"> The Shelly's place on the drawing is only schematic: it goes where it stays under 40 °C, as the Shelly guide shows.</span></figcaption>
   </figure>
 
   <div class="detail empty" id="detail" aria-live="polite"></div>
@@ -259,15 +261,17 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     <div class="sec-h"><h2 id="h-rules">Spades and routing</h2></div>
     <div class="rules">
       <div class="rule"><h3>Brew, steam, hot water</h3><p>Use one pole of each switch, the ground pole. The PCB signal goes on its center spade and ground on its outer spade. The other pole stays free; the LED mod puts 5 V on its outer spade.</p></div>
-      <div class="rule"><h3>Power switch</h3><p>It stays on mains and breaks both wires: line through one pole, neutral through the other. Supply on the outer spades, loads on the center spades. Its own lamp keeps working.</p></div>
+      <div class="rule" data-when="!shelly"><h3>Power switch</h3><p>It stays on mains and breaks both wires: line through one pole, neutral through the other. Supply on the outer spades, loads on the center spades. Its own lamp keeps working.</p></div>
+      <div class="rule" data-when="shelly"><h3>Power switch, with the Shelly<span class="vtag">Shelly</span></h3><p>It only tells the Shelly to switch, but it still carries mains: AC1 brings line to the L pole's outer spade and SH2 takes it from the center spade to the Shelly's SW. The N pole stays empty. If the switch still broke neutral, the app couldn't turn the machine on with the switch off, so AC2 meets AC8 and AC9 in a splice instead and the Shelly's relay breaks line only. A lamp inside the switch may stay dark now.</p></div>
       <div class="rule"><h3>At the boiler</h3><p>Uninsulated spades crimped with an open-barrel crimper, then wrapped in self-fusing silicone tape. Nylon-insulated spades are rated to 105 °C and stay away from the boiler. The solenoid sits on the group and gets hot too, so bare spades and tape are the safer choice there as well.</p></div>
-      <div class="rule"><h3>Doubled spades</h3><p>Two 18 AWG wires never go into a red spade or fork. Use a blue one, or a bare spade sized for 16 to 14 AWG at the boiler, wherever two runs share a terminal: SSR terminal 1, the safety thermostat, the power switch's neutral spade, the lamp, the pump, the solenoid and the boiler ground.</p></div>
+      <div class="rule"><h3>Doubled spades</h3><p>Two 18 AWG wires never go into a red spade or fork. Use a blue one, or a bare spade sized for 16 to 14 AWG at the boiler, wherever two runs share a terminal: SSR terminal 1, the safety thermostat, <span data-when="!shelly">the power switch's neutral spade, </span><span data-when="shelly">the inlet's L and N pins, </span>the lamp, the pump, the solenoid and the boiler ground.<span data-when="shelly"> The neutral splice is a BN2 butt splice: AC2 on one side, AC8 and AC9 on the other.</span></p></div>
       <div class="rule"><h3>Keep mains and low voltage apart</h3><p>Route mains high and low voltage low, with the PCB connections to the right. Only 200 °C silicone wire may touch the boiler or steam wand. Talon ran mains, the pump hose and the pump wiring through the center slot at the back.</p></div>
       <div class="rule"><h3>Earth and 5 V ground</h3><p>Earth goes to the boiler ground spade and the solenoid's ground spade. It never connects to the PCB's 5 V ground, which floats so the thermocouple reads correctly.</p></div>
     </div>
     <div class="rules vnotes">
       <div class="rule" data-when="ver:V5,V6"><h3>Heating light from V5 on<span class="vtag">V5 and V6</span></h3><p>The vertical bar lamp became a round LED beside the power switch. Trace where its wires go before you cut: stock, it usually runs from the switched line to the element terminal it shares with the steam thermostat. The new harness puts it across the element instead, AC7 from the heater line after the safety thermostat and AC8 from neutral, so it lights while the SSR heats. If it has more than two wires, or the E's energy-saver module drives it, ask on Discord before rewiring it.</p></div>
-      <div class="rule" data-when="model:E"><h3>E model power switch<span class="vtag">E model</span></h3><p>The E's power switch is a push button that works with its GICAR energy-saver module. This harness leaves the module out and needs a power switch that latches, breaking line and neutral like the M's double-pole rocker. Fit one before wiring AC1, AC2, AC3, AC8 and AC9.</p></div>
+      <div class="rule" data-when="model:E;!shelly"><h3>E model power switch<span class="vtag">E model</span></h3><p>The E's power switch is a push button that works with its GICAR energy-saver module. This harness leaves the module out and needs a power switch that latches, breaking line and neutral like the M's double-pole rocker. Fit one before wiring AC1, AC2, AC3, AC8 and AC9.</p></div>
+      <div class="rule" data-when="model:E;shelly"><h3>E model power button, with the Shelly<span class="vtag">E model</span></h3><p>The GICAR energy-saver module still comes out, but the push button can stay, as in gblur's build: it feeds the Shelly's SW input, set to Button, so each press turns the machine on or off. The Shelly's Auto off can turn it off a set time after it comes on, whether it's in use or not. The button now carries mains, so keep it only if the rating on its body says 250 V. If it doesn't, fit a latching double-pole rocker like the M's and set the Shelly to Switch.</p></div>
       <div class="rule" data-when="volts:230"><h3>230 V machines<span class="vtag">230 V</span></h3><p>realNiche's diagram covers 110 to 240 V and the harness is the same. The element reads about three times the resistance of a 120 V one (about 48 Ω against 15 Ω), and the protection on the circuit is an RCD rather than a GFCI.</p></div>
       <div class="rule" data-when="early"><h3>Boilers before May 2000<span class="vtag">V1 early</span></h3><p>The boiler changed design in May 2000. Confirm the thermocouple mounting and the terminal layout on yours before following the boiler end of this harness.</p></div>
     </div>
@@ -291,7 +295,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
       <a href="%%LINK_CUTLIST%%" target="_blank" rel="noopener">Cut list</a>
       <a href="%%LINK_LED%%" target="_blank" rel="noopener">LED switch mod</a>
     </div>
-    <p class="fine">Sources: realNiche, "Rancillio Silvia Wiring" for PCB v3.1/v4.0 (thejobbitt/gaggiuino_resources on GitHub); Talon's harness and install rules and the older RS Wiring lengths, from the Gaggiuino Discord Silvia thread; the official custom wiring, PCB and grounding guides at gaggiuino.github.io. Checked October 14, 2026.</p>
+    <p class="fine">Sources: realNiche, "Rancillio Silvia Wiring" for PCB v3.1/v4.0 (thejobbitt/gaggiuino_resources on GitHub); Talon's harness and install rules and the older RS Wiring lengths, from the Gaggiuino Discord Silvia thread; the official custom wiring, PCB and grounding guides at gaggiuino.github.io. Checked October 14, 2026.<span data-when="shelly"> The Shelly runs: gblur's Silvia V6 E drawing from his build video on YouTube, and Shelly's own documentation for the 1PM Gen4; checked October 24, 2026.</span></p>
   </footer>
   </div>
 </div>
@@ -300,12 +304,14 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
 (function(){
 %%INCLUDE:wiring-refs.js%%
 %%INCLUDE:wiring-parts.js%%
-  var RUNS=%%RUNS%%;
+  /* the harness as drawn, and with the Shelly add-on, which shows once it's chosen in Your Silvia */
+  var VAR=[{runs:%%RUNS%%,svg:''},{runs:%%RUNS_SH%%,svg:''}];
+  var RUNS=VAR[0].runs,byId={},SH=false;
+  function shOn(){var m=window.SilviaMachine;return !!(m&&m.shelly&&m.shelly())}
   var SYS=%%SYS%%;
   var CONN=%%CONN%%;
   var LAYERS=[['all','All',null],['line','Line and heater','var(--w-l)'],['N','Neutral','var(--w-n)'],['E','Earth','var(--w-e)'],['lv','Low voltage','var(--w-lv)'],['opt','Optional','var(--w-opt)']];
   var SYSCOLOR={L:'var(--w-l)',H:'var(--w-h)',N:'var(--w-n)',E:'var(--w-e)',LV:'var(--w-lv)',LVG:'var(--w-lvg)',S:'var(--w-s)',OPT:'var(--w-opt)'};
-  var byId={};RUNS.forEach(function(r){byId[r.id]=r});
   function $(id){return document.getElementById(id)}
   function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
   function inLayer(r,l){
@@ -317,35 +323,50 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
   }
   function lenText(r){return r.mm?(r.mm+' mm'):'Measure'}
 
-  /* readouts */
-  var ac=RUNS.filter(function(r){return r.sys==='L'||r.sys==='H'||r.sys==='N'||r.sys==='E'});
-  var mm=ac.reduce(function(a,r){return a+(r.mm||0)},0),known=ac.filter(function(r){return r.mm}).length;
-  $('r-ac').textContent=ac.length;
-  $('r-acm').textContent=(mm/1000).toFixed(1)+' m';
-  $('r-acm-s').textContent=known+' of '+ac.length+' runs; the rest reuse stock leads or are measured';
-  $('r-lv').textContent=RUNS.filter(function(r){return r.sys==='LV'||r.sys==='LVG'||r.sys==='S'}).length;
-  $('r-dbl').textContent='7';
-
-  /* table */
+  function shTag(r){return r.sh==='new'?'<span class="vtag">Shelly</span>':r.sh==='chg'?'<span class="vtag">changed for the Shelly</span>':''}
   var groups=[['L','Line'],['H','Heater line'],['N','Neutral chain'],['E','Earth'],['LV','Switch signals'],['LVG','Switch ground chain'],['S','SSR control and sensors'],['OPT','Optional add-ons']];
-  var html='';
-  groups.forEach(function(g){
-    var rs=RUNS.filter(function(r){return r.sys===g[0]});if(!rs.length)return;
-    html+='<tr class="grp"><td colspan="5"><span class="sysdot" style="background:'+SYSCOLOR[g[0]]+'"></span>'+esc(g[1])+'</td></tr>';
-    rs.forEach(function(r){
-      html+='<tr class="row" data-row="'+r.id+'"><td class="id"><button type="button" class="idbtn" data-pick="'+r.id+'">'+r.id+'</button></td><td>'+esc(r.frm)+'</td><td>'+esc(r.to)+'</td><td>'+esc(r.gauge)+'</td><td class="len">'+lenText(r)+(r.lenNote?'<small>'+esc(r.lenNote)+'</small>':'')+'</td></tr>';
+  function tables(){
+    /* readouts */
+    var ac=RUNS.filter(function(r){return r.sys==='L'||r.sys==='H'||r.sys==='N'||r.sys==='E'});
+    var mm=ac.reduce(function(a,r){return a+(r.mm||0)},0),known=ac.filter(function(r){return r.mm}).length;
+    $('r-ac').textContent=ac.length;
+    $('r-acm').textContent=(mm/1000).toFixed(1)+' m';
+    $('r-acm-s').textContent=known+' of '+ac.length+' runs; the rest reuse stock leads or are measured';
+    $('r-lv').textContent=RUNS.filter(function(r){return r.sys==='LV'||r.sys==='LVG'||r.sys==='S'}).length;
+    /* mains terminals that take two wires, from each run's end codes */
+    var dbl={};RUNS.forEach(function(r){(r.k||[]).forEach(function(k){if(/^(f2|fk2|b2):/.test(k))dbl[k]=1})});
+    $('r-dbl').textContent=Object.keys(dbl).length;
+    /* table */
+    var html='';
+    groups.forEach(function(g){
+      var rs=RUNS.filter(function(r){return r.sys===g[0]});if(!rs.length)return;
+      html+='<tr class="grp"><td colspan="5"><span class="sysdot" style="background:'+SYSCOLOR[g[0]]+'"></span>'+esc(g[1])+'</td></tr>';
+      rs.forEach(function(r){
+        html+='<tr class="row" data-row="'+r.id+'"><td class="id"><button type="button" class="idbtn" data-pick="'+r.id+'">'+r.id+'</button></td><td>'+esc(r.frm)+'</td><td>'+esc(r.to)+shTag(r)+'</td><td>'+esc(r.gauge)+'</td><td class="len">'+lenText(r)+(r.lenNote?'<small>'+esc(r.lenNote)+'</small>':'')+'</td></tr>';
+      });
     });
-  });
-  $('runs').innerHTML=html;
-  $('runs-sum').textContent=RUNS.length+' runs';
+    $('runs').innerHTML=html;
+    $('runs-sum').textContent=RUNS.length+' runs';
+  }
   $('conn').innerHTML=CONN.map(function(c){return '<tr><td class="id">'+c[0]+'</td><td>'+esc(c[1])+'</td><td>'+esc(c[2])+'</td><td>'+esc(c[3])+'</td></tr>'}).join('');
 
   /* state */
-  var svg=document.querySelector('.dia'),layer='all',sel=null,selPart=null,selSet=null,setLabel='';
-  var PARTN={};Array.prototype.forEach.call(svg.querySelectorAll('.phit'),function(r){PARTN[r.getAttribute('data-part')]=r.textContent});
-  var ENDS={};Array.prototype.forEach.call(svg.querySelectorAll('.run'),function(g){ENDS[g.getAttribute('data-run')]=[g.getAttribute('data-a'),g.getAttribute('data-b')]});
-  /* the stepper walks the drawn runs in the list's order */
-  var ORDER=[];groups.forEach(function(g){RUNS.forEach(function(r){if(r.sys===g[0]&&ENDS[r.id])ORDER.push(r.id)})});
+  var svg=null,layer='all',sel=null,selPart=null,selSet=null,setLabel='',PARTN={},ENDS={},ORDER=[];
+  /* show the variant Your Silvia asks for: its drawing, runs, readouts and list */
+  function load(){
+    SH=shOn();
+    var sc=$('scroll'),t=$('svg-sh');
+    if(!VAR[0].svg){VAR[0].svg=sc.innerHTML;VAR[1].svg=t?t.innerHTML:VAR[0].svg}
+    if(SH||sc.innerHTML!==VAR[0].svg)sc.innerHTML=VAR[SH?1:0].svg;
+    svg=sc.querySelector('.dia');
+    RUNS=VAR[SH?1:0].runs;byId={};RUNS.forEach(function(r){byId[r.id]=r});
+    PARTN={};Array.prototype.forEach.call(svg.querySelectorAll('.phit'),function(r){PARTN[r.getAttribute('data-part')]=r.textContent});
+    ENDS={};Array.prototype.forEach.call(svg.querySelectorAll('.run'),function(g){ENDS[g.getAttribute('data-run')]=[g.getAttribute('data-a'),g.getAttribute('data-b')]});
+    /* the stepper walks the drawn runs in the list's order */
+    ORDER=[];groups.forEach(function(g){RUNS.forEach(function(r){if(r.sys===g[0]&&ENDS[r.id])ORDER.push(r.id)})});
+    tables();
+  }
+  load();
   function atPart(id){return !!(selPart&&ENDS[id]&&ENDS[id].indexOf(selPart)>=0)}
   function inSet(id){return !!(selSet&&selSet.indexOf(id)>=0)}
   function paint(){
@@ -400,7 +421,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     if(!sel){d.className='detail empty';d.innerHTML='<p class="d-note" style="color:var(--muted)">Tap any wire or tag in the drawing, or an ID in the list below, to see where that run starts and ends, what goes on each end, and how long to cut it. Tap a part to see every run that lands on it, or step through the runs with the arrows above the drawing.</p>';return}
     var r=byId[sel];
     d.className='detail';d.style.borderLeftColor=SYSCOLOR[r.sys];
-    d.innerHTML='<div class="d-head"><span class="d-id">'+r.id+'</span><span class="d-route">'+esc(r.frm)+' → '+esc(r.to)+'</span><button type="button" class="chip" id="clear" style="margin-left:auto">Show all runs</button></div>'+
+    d.innerHTML='<div class="d-head"><span class="d-id">'+r.id+'</span><span class="d-route">'+esc(r.frm)+' → '+esc(r.to)+shTag(r)+'</span><button type="button" class="chip" id="clear" style="margin-left:auto">Show all runs</button></div>'+
       '<div class="d-grid"><div><span class="k">Circuit</span><span><span class="sysdot" style="background:'+SYSCOLOR[r.sys]+'"></span>'+esc(SYS[r.sys])+'</span></div>'+
       '<div><span class="k">Wire</span><span>'+esc(r.gauge)+'</span></div>'+
       '<div><span class="k">Length</span><span>'+lenText(r)+(r.lenNote?' · '+esc(r.lenNote):'')+'</span></div>'+
@@ -431,7 +452,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     i=i<0?(n>0?0:ORDER.length-1):(i+n+ORDER.length)%ORDER.length;
     pick(ORDER[i],false,true);centerOn(svg.querySelector('.run[data-run="'+ORDER[i]+'"]'));
   }
-  svg.addEventListener('click',function(e){
+  $('scroll').addEventListener('click',function(e){
     var g=e.target.closest('[data-run]');
     if(g){pick(g.getAttribute('data-run'),false);return}
     var p=e.target.closest('[data-part]');
@@ -469,6 +490,8 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     var first=sel||(selSet&&selSet[0]);if(first)centerOn(svg.querySelector('.run[data-run="'+first+'"]'));else if(selPart)centerOn(svg.querySelector('.phit[data-part="'+selPart+'"]'));
   }
   window.addEventListener('hashchange',applyHash);
+  /* the Shelly chosen or dropped in Your Silvia: swap the drawing and list in place */
+  window.addEventListener('silvia-machine',function(){if(shOn()===SH)return;sel=null;selPart=null;selSet=null;setLabel='';layer='all';load();paint()});
   paint();
   applyHash();
 })();

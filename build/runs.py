@@ -165,3 +165,64 @@ for _r in RUNS:
     _r["color"] = COLOR_OVERRIDE.get(_r["id"], COLOR[_r["sys"]])
     if _r["id"] in HEADER:
         _r["hdr"] = HEADER[_r["id"]]
+
+
+# ---- The Shelly smart relay (an unofficial add-on, shown once it's chosen in Your Silvia) ----
+# From gblur's Silvia V6 E drawing (unofficial): the inlet's line feeds the Shelly, its O output feeds what the power
+# switch's line pole used to, and the power switch only signals the Shelly's SW input. Neutral is no longer switched:
+# AC2 ends in a splice by the power switch, where AC8 and AC9 now start. The Shelly gets its own leads, so no
+# machine current runs through its terminals (Shelly's docs warn against using them as a bridge).
+FER = "Bootlace ferrule in the Shelly's {} terminal"
+SHELLY = dict(
+    drop=["AC3"],
+    edit={
+        "AC1": dict(ends=[SPADE2 + ", shared with SH1", SPADE], k=["f2:INL", "f"],
+                    lenNote="Reuse the stock lead with a new two-wire spade at the inlet end, or measure",
+                    note="With the Shelly the power switch only signals the Shelly: AC1 brings line to the L pole's outer spade, and SH2 takes it from the center spade to SW."),
+        "AC2": dict(short="Inlet N → BN2 neutral splice", to="BN2 neutral splice, by the power switch",
+                    lenNote="Reuse the stock lead with a new two-wire spade at the inlet end, or measure",
+                    ends=[SPADE2 + ", shared with SH4", "BN2 butt splice, with AC8 and AC9 on its other side"], k=["f2:INN", "bn2:NSP"],
+                    note="With the Shelly the power switch no longer breaks neutral: AC2 ends in a splice by the switch, where AC8 and AC9 start. The splice sits where the N pole was, so the lengths hold."),
+        "AC4": dict(ends=["Shared fork with SH3", SPADE]),
+        "AC8": dict(short="BN2 splice → Lamp N", frm="BN2 neutral splice, by the power switch",
+                    ends=["BN2 butt splice, with AC9", SPADE2 + ", shared with AC10"], k=["bn2:NSP", "f2:LAMPN"],
+                    note="Start of the neutral daisy chain, now from the splice with AC2 instead of the power switch."),
+        "AC9": dict(short="BN2 splice → Element", frm="BN2 neutral splice, by the power switch",
+                    ends=["BN2 butt splice, with AC8", HOT], k=["bn2:NSP", "b"]),
+    },
+    add=[
+        ("AC1", dict(id="SH1", sys="L", short="Inlet L → Shelly L", frm="Power inlet, L pin", to="Shelly, L terminal",
+                     gauge="18 AWG", mm=None, lenNote="Measure: it depends on where the Shelly sits",
+                     ends=[SPADE2 + ", shared with AC1", FER.format("L")], k=["f2:INL", "fer"], src="gblur's V6 E drawing",
+                     note="The Shelly's supply, and the line its relay switches.")),
+        ("SH1", dict(id="SH2", sys="L", short="Power sw L → Shelly SW", frm="Power switch, L pole center spade", to="Shelly, SW terminal",
+                     gauge="18 AWG", mm=None, lenNote="Measure: from the power switch to where the Shelly sits", ends=[SPADE, FER.format("SW")], k=["f", "fer"], src="gblur's V6 E drawing",
+                     note="Tells the Shelly the switch is on. It carries mains from AC1 through the switch, so treat it as a mains wire.")),
+        ("SH2", dict(id="SH3", sys="L", short="Shelly O → SSR 1", frm="Shelly, O terminal", to="SSR load terminal 1",
+                     gauge="18 AWG", mm=None, lenNote="Measure: from where the Shelly sits to the SSR", ends=[FER.format("O"), FORK2 + ", shared with AC4"], k=["fer", "fk2:SSR1"],
+                     src="gblur's V6 E drawing",
+                     note="The switched line, where AC3 used to come from the power switch. With the Shelly off, the SSR, the PCB and the heating lamp get nothing.")),
+        ("AC2", dict(id="SH4", sys="N", short="Inlet N → Shelly N", frm="Power inlet, N pin", to="Shelly, N terminal",
+                     gauge="18 AWG", mm=None, lenNote="Measure: it depends on where the Shelly sits",
+                     ends=[SPADE2 + ", shared with AC2", FER.format("N")], k=["f2:INN", "fer"], src="gblur's V6 E drawing / this site",
+                     note="Powers the Shelly itself. The machine's neutral (AC2) shares the inlet's N spade and never runs through the Shelly: Shelly's own docs warn that using its L and N terminals as a bridge doubles the current through them and can overheat it.")),
+    ])
+
+
+def runs_for(shelly=False):
+    """the harness as a list of runs, with the Shelly's changes applied when shelly is True"""
+    import copy
+    runs = copy.deepcopy(RUNS)
+    if not shelly:
+        return runs
+    runs = [r for r in runs if r["id"] not in SHELLY["drop"]]
+    by = {r["id"]: r for r in runs}
+    for rid, f in SHELLY["edit"].items():
+        by[rid].update(copy.deepcopy(f))
+        if rid != "AC4":  # AC4 only gets a new neighbor in its fork
+            by[rid]["sh"] = "chg"
+    for after, r in SHELLY["add"]:
+        r = dict(copy.deepcopy(r), sh="new", color=COLOR[r["sys"]])
+        i = next(i for i, x in enumerate(runs) if x["id"] == after) + 1
+        runs.insert(i, r)
+    return runs

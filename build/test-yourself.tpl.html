@@ -71,7 +71,7 @@ var TY=(function(){
 %%INCLUDE:part-guides-data.js%%
     return G;
   })();
-  var GNAME={tc:'Thermocouple',ps:'Pressure sensor',wire:'Making the wires',ssr:'SSR',sw:'Switches',scr:'Screen housing',tof:'ToFnLED',fw:'Firmware updates',scl:'Hardware scales'};
+  var GNAME={tc:'Thermocouple',ps:'Pressure sensor',wire:'Making the wires',ssr:'SSR',sw:'Switches',scr:'Screen housing',tof:'ToFnLED',fw:'Firmware updates',scl:'Hardware scales',shl:'Shelly smart relay'};
   var CKT=%%CHECK_INDEX%%;
   var GL=%%GLOSSARY_INDEX%%;
   function prof(){return (SM&&SM.get())||{}}
@@ -86,7 +86,7 @@ var TY=(function(){
     if(k==='url')return {h:r[1],l:r[2]};
     if(k==='gl')return GL[r[1]]?{h:'glossary.html#'+r[1],l:'Glossary: '+GL[r[1]]}:null;
     if(k==='map')return {h:mapHref(String(r[1]).replace(/=/g,':')),l:r[2]||'The wiring drawing'};
-    if(k==='ck'){var c=CKT.filter(function(x){return x[0]===r[1]})[0];if(!c)return null;return {h:'power-on-checks.html#'+c[0],l:'Power-on check '+c[0]+': '+c[1]}}
+    if(k==='ck'){var c=CKT.filter(function(x){return x[0]===r[1]})[0];if(!c||(c[2]&&!ok(c[2])))return null;return {h:'power-on-checks.html#'+c[0],l:'Power-on check '+c[0]+': '+c[1]}}
     /* two symptoms can share their words: the first one that applies wins */
     if(k==='tr'){for(var i=0;i<TR.length;i++)if(TR[i].s===r[1]&&(!TR[i].w||ok(TR[i].w)))return {h:'troubleshooting.html#'+tslug(i),l:'Troubleshooting: '+fillT(TR[i].s)};return null}
     if(k==='rb'){
@@ -122,7 +122,7 @@ var TY=(function(){
       ok:function(w){return !w||(!!SM&&SM.decided(w)&&SM.matches(w))},
       ready:function(){var p=prof();return !!(p.ver&&p.volts&&(!newer(p.ver)||p.model))},
       need:function(){var p=SM&&SM.get();if(!p)return 'Pick your version, model and mains voltage, so the questions about your own Silvia are included.';var m=SM.missing(p);return m.length?'Add your '+andList(m)+'.':''},
-      label:function(){var p=prof();return p.ver?'Silvia '+SM.label():''},
+      label:function(){var p=prof();return p.ver?'Silvia '+SM.label(Object.assign({},p,{shelly:false}))+(p.shelly?', with a Shelly':''):''},
       profile:function(){return SM?SM.current():null},
       set:function(){var chip=document.getElementById('mchip'),pan=document.getElementById('mpanel');try{window.scrollTo({top:0,behavior:'smooth'})}catch(e){window.scrollTo(0,0)}if(chip&&pan&&pan.hidden)chip.click()},
       on:function(fn){addEventListener('silvia-machine',fn)}

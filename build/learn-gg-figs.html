@@ -204,3 +204,18 @@
   </svg>
   <figcaption>The thermocouple tip touches the earthed boiler, so its junction has to be insulated inside the probe: an ungrounded thermocouple.</figcaption>
 </figure>
+
+<figure class="gfig" id="g-shelly">
+  <svg viewBox="0 0 360 214" role="img" aria-label="Line from the inlet goes through the Shelly's relay, from L to O, and on to the machine. Neutral goes from the inlet to the machine without passing through the power switch, with a thin lead to power the Shelly. The power switch takes line and only feeds the Shelly's SW input.">
+    <rect x="128" y="10" width="92" height="28" rx="5" class="shbx"/><text x="174" y="29" class="cap" text-anchor="middle">power switch</text>
+    <rect x="8" y="70" width="64" height="120" rx="6" class="shbx"/><text x="40" y="100" class="cap" text-anchor="middle">L</text><text x="40" y="178" class="cap" text-anchor="middle">N</text><text x="40" y="208" class="cap" text-anchor="middle">inlet</text>
+    <rect x="118" y="70" width="112" height="70" rx="8" class="shbx"/><text x="174" y="130" class="cap" text-anchor="middle">Shelly</text>
+    <text x="134" y="114" class="cap" text-anchor="middle">L</text><text x="214" y="114" class="cap" text-anchor="middle">O</text>
+    <circle cx="148" cy="96" r="4" class="shdot"/><circle cx="200" cy="96" r="4" class="shdot"/><path d="M148,96 L194,82" class="shcon"/>
+    <rect x="276" y="70" width="76" height="120" rx="6" class="shbx"/><text x="314" y="117" class="cap" text-anchor="middle">SSR, PCB,</text><text x="314" y="131" class="cap" text-anchor="middle">heating</text><text x="314" y="145" class="cap" text-anchor="middle">lamp</text>
+    <path d="M72,96 H148" class="shln L"/><path d="M200,96 H276" class="shln L"/>
+    <path d="M72,174 H276" class="shln N"/><path d="M160,174 V140" class="shln N thin"/>
+    <path d="M96,96 V24 H128" class="shln L thin"/><path d="M200,38 V70" class="shln S thin"/><text x="206" y="58" class="cap">SW</text>
+  </svg>
+  <figcaption>Line runs through the Shelly's relay; neutral runs straight to the machine, no longer through the power switch, with a thin lead to power the Shelly. The power switch only signals it.</figcaption>
+</figure>

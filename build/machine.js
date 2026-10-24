@@ -1,8 +1,12 @@
-/* Site-wide "your Silvia" profile: version, E/M model, mains voltage. Every field is optional.
+/* Site-wide "your Silvia" profile: version, E/M model, mains voltage, and the Shelly add-on. Every field is optional.
    Elements with data-when="ver:V5,V6;model:E;volts:230;early" show only when every condition matches.
    A field the user hasn't set never hides anything: with no version, every version's notes show; with no
    voltage, both voltages' notes show and the wording stays generic. Nothing is ever filled in for them.
-   Elements with data-mtext="gfci|outlet|volts" get voltage-specific wording. */
+   The one exception is shelly, the Shelly smart relay add-on (unofficial): its content shows only once the
+   reader chooses it, and "!shelly" marks what it replaces. "!key" is the opposite of key, once that field is set.
+   Elements with data-mtext="gfci|outlet|volts" get voltage-specific wording.
+   txt(x) turns text into what applies: a plain string as is, or a list of segments, each a string (always kept)
+   or [text, when] (kept only when the condition matches), joined with spaces. */
 (function(){
   var KEY='silvia-machine-v1',VERS=['V1','V2','V3','V4','V5','V6'];
   var TEXT={
@@ -16,8 +20,9 @@
     var ver=VERS.indexOf(s.ver)>=0?s.ver:null;
     var model=newer(ver)&&(s.model==='E'||s.model==='M')?s.model:null;
     var v=Number(s.volts),volts=v===230?230:v===120?120:null;
-    if(!ver&&!volts)return null;
-    return {ver:ver,model:model,volts:volts,early:ver==='V1'&&s.early===true};
+    var shelly=s.shelly===true;
+    if(!ver&&!volts&&!shelly)return null;
+    return {ver:ver,model:model,volts:volts,early:ver==='V1'&&s.early===true,shelly:shelly};
   }
   function read(){try{return clean(JSON.parse(localStorage.getItem(KEY)||'null'))}catch(e){return null}}
   var prof=read();
@@ -28,8 +33,15 @@
   }
   /* true unless the profile rules the element out; unknown fields never rule anything out */
   function matches(when){
-    if(!when||!prof)return true;
-    return conds(when).every(function(c){
+    if(!when)return true;
+    if(!prof)return conds(when).every(function(c){return c.k!=='shelly'});
+    return conds(when).every(one);
+  }
+  /* "!key" holds once the field is set and key doesn't; the Shelly is always set (off until chosen) */
+  function one(c){
+    if(c.k.charAt(0)==='!'){var inner={k:c.k.slice(1),vals:c.vals};return !decided(c.k.slice(1)+(c.vals.length?':'+c.vals.join(','):''))||!one(inner)}
+    return (function(c){
+      if(c.k==='shelly')return !!prof.shelly;
       if(c.k==='ver')return !prof.ver||c.vals.indexOf(prof.ver)>=0;
       if(c.k==='model'){
         if(!prof.ver)return true;
@@ -39,24 +51,34 @@
       if(c.k==='volts')return !prof.volts||c.vals.indexOf(String(prof.volts))>=0;
       if(c.k==='early')return !prof.ver||prof.early;
       return true;
-    });
+    })(c);
   }
   /* true when the profile pins down every field the condition depends on (so a "which machines" tag adds nothing) */
   function decided(when){
     if(!prof)return false;
     return conds(when).every(function(c){
-      if(c.k==='ver'||c.k==='early')return !!prof.ver;
-      if(c.k==='model')return !!prof.ver&&(!newer(prof.ver)||!!prof.model);
-      if(c.k==='volts')return !!prof.volts;
+      var k=c.k.charAt(0)==='!'?c.k.slice(1):c.k;
+      if(k==='ver'||k==='early')return !!prof.ver;
+      if(k==='model')return !!prof.ver&&(!newer(prof.ver)||!!prof.model);
+      if(k==='volts')return !!prof.volts;
       return true;
     });
+  }
+  function txt(x){
+    if(x==null)return '';
+    if(!Array.isArray(x))return String(x);
+    /* a segment that starts with punctuation joins without a space before it */
+    return x.filter(function(seg){return typeof seg==='string'||matches(seg[1])}).map(function(seg){return typeof seg==='string'?seg:seg[0]}).join(' ').replace(/ ([,.;:])/g,'$1');
   }
   function text(key){var t=TEXT[key];if(!t)return '';return prof&&prof.volts?t[String(prof.volts)]:t['']}
   function label(p){
     p=p||prof;if(!p)return 'Set it';
     var a=[];if(p.ver)a.push(p.ver+(newer(p.ver)&&p.model?' '+p.model:''));if(p.volts)a.push(p.volts+' V');
+    if(p.shelly)a.push('Shelly');
     return a.join(', ');
   }
+  /* "For a V6 M, 120 V Silvia with the Shelly." for printed sheets; empty with nothing set */
+  function forText(p){p=p||prof;if(!p)return '';var b=label(Object.assign({},p,{shelly:false}));return 'For a '+(b?b+' ':'')+'Silvia'+(p.shelly?' with the Shelly':'')+'.'}
   function missing(p){
     p=p||prof;if(!p)return [];var m=[];
     if(!p.ver)m.push('version');else if(newer(p.ver)&&!p.model)m.push('model');
@@ -66,12 +88,17 @@
   function summary(p){
     p=p||prof;
     if(!p)return 'Pick your version and voltage. Until you do, every page shows all the version notes, each tagged with the machines it applies to.';
-    var m=missing(p);
-    return 'Pages now show the steps and notes for a '+label(p)+' Silvia.'+(m.length?' Add your '+m.join(' and ')+' to narrow them down; until then those notes all show.':'');
+    var m=missing(p),base=[];if(p.ver)base.push(p.ver+(newer(p.ver)&&p.model?' '+p.model:''));if(p.volts)base.push(p.volts+' V');
+    return 'Pages now show the steps and notes for a '+(base.length?base.join(', ')+' ':'')+'Silvia'+(p.shelly?' with the Shelly smart relay':'')+'.'+(m.length?' Add your '+m.join(' and ')+' to narrow them down; until then those notes all show.':'')+(p.shelly?' The Shelly\'s wires, checks and steps are added.':'');
   }
   function apply(root){
     root=root||document;
-    Array.prototype.forEach.call(root.querySelectorAll('[data-when]'),function(el){el.hidden=!matches(el.getAttribute('data-when'))});
+    Array.prototype.forEach.call(root.querySelectorAll('[data-when]'),function(el){
+      var hide=!matches(el.getAttribute('data-when'));
+      /* inside a drawing, hidden doesn't apply, so SVG elements get display="none" instead */
+      if(window.SVGElement&&el instanceof SVGElement){if(hide)el.setAttribute('display','none');else el.removeAttribute('display')}
+      else el.hidden=hide;
+    });
     Array.prototype.forEach.call(root.querySelectorAll('[data-mtext]'),function(el){var t=text(el.getAttribute('data-mtext'));if(t)el.textContent=t});
     var l=document.getElementById('mchip-l');if(l)l.textContent=label();
     var ch=document.getElementById('mchip');if(ch){ch.classList.toggle('set',!!prof);ch.setAttribute('aria-label','Your Silvia: '+(prof?label():'not set'))}
@@ -84,7 +111,7 @@
     try{window.dispatchEvent(new CustomEvent('silvia-machine',{detail:prof}))}catch(e){}
   }
   /* start from what's saved, never from guesses */
-  function current(){return Object.assign({ver:null,model:null,volts:null,early:false},prof||{})}
+  function current(){return Object.assign({ver:null,model:null,volts:null,early:false,shelly:false},prof||{})}
   /* ---- nav panel ---- */
   function syncPanel(){
     var pan=document.getElementById('mpanel');if(!pan)return;
@@ -92,6 +119,7 @@
     Array.prototype.forEach.call(pan.querySelectorAll('[data-mv]'),function(b){b.setAttribute('aria-pressed',String(b.getAttribute('data-mv')===p.ver))});
     Array.prototype.forEach.call(pan.querySelectorAll('[data-mm]'),function(b){b.disabled=!nw;b.setAttribute('aria-pressed',String(nw&&b.getAttribute('data-mm')===p.model))});
     Array.prototype.forEach.call(pan.querySelectorAll('[data-mvolt]'),function(b){b.setAttribute('aria-pressed',String(Number(b.getAttribute('data-mvolt'))===p.volts))});
+    Array.prototype.forEach.call(pan.querySelectorAll('[data-mshelly]'),function(b){b.setAttribute('aria-pressed',String(!!p.shelly))});
     var ew=document.getElementById('m-early-w');if(ew)ew.hidden=p.ver!=='V1';
     var ec=document.getElementById('m-early');if(ec)ec.checked=!!p.early;
     var mh=document.getElementById('m-model-hint');if(mh)mh.hidden=nw;
@@ -115,6 +143,7 @@
         if(b.hasAttribute('data-mv'))p.ver=b.getAttribute('data-mv');
         else if(b.hasAttribute('data-mm'))p.model=b.getAttribute('data-mm');
         else if(b.hasAttribute('data-mvolt'))p.volts=Number(b.getAttribute('data-mvolt'));
+        else if(b.hasAttribute('data-mshelly'))p.shelly=!p.shelly;
         else if(b.id==='m-clear'){set(null);return}
         else if(b.id==='m-done'){pan.hidden=true;chip.setAttribute('aria-expanded','false');sync();chip.focus();return}
         else return;
@@ -126,8 +155,12 @@
     }
     if(nt&&nl)nt.addEventListener('click',function(){var open=nt.getAttribute('aria-expanded')!=='true';nt.setAttribute('aria-expanded',String(open));nl.classList.toggle('open',open);if(open)closePanel();sync()});
     Array.prototype.forEach.call(document.querySelectorAll('[data-setmachine]'),function(b){
+      /* data-setmachine="V5" sets the version; "shelly:yes" (key:value pairs, ; between) sets those fields */
       b.addEventListener('click',function(){
-        var p=current();p.ver=b.getAttribute('data-setmachine');set(p);
+        var p=current(),v=b.getAttribute('data-setmachine');
+        if(v.indexOf(':')<0)p.ver=v;
+        else v.split(';').forEach(function(kv){var i=kv.indexOf(':'),k=kv.slice(0,i).trim(),x=kv.slice(i+1).trim();if(k==='ver')p.ver=x;else if(k==='model')p.model=x;else if(k==='volts')p.volts=Number(x);else if(k==='shelly')p.shelly=x==='yes'});
+        set(p);
       });
     });
     var inViewer=typeof window.claude!=='undefined';
@@ -144,6 +177,6 @@
       else if(!over&&h)h.remove();
     });
   }
-  window.SilviaMachine={get:function(){return prof},set:set,current:current,matches:matches,decided:decided,text:text,label:label,missing:missing,summary:summary,apply:apply};
+  window.SilviaMachine={get:function(){return prof},set:set,current:current,matches:matches,decided:decided,text:text,txt:txt,label:label,forText:forText,missing:missing,summary:summary,apply:apply,shelly:function(){return !!(prof&&prof.shelly)}};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',wire);else wire();
 })();

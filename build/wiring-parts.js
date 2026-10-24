@@ -2,12 +2,14 @@
      For the detail card: a line on what the part is and does, and one on what the Gaggiuino PCB does with it,
      on realNiche's harness as the drawing shows it. */
   function partInfo(id){
+    /* with the Shelly add-on drawn (the page's SH), a few parts change jobs */
+    var sh=typeof SH!=='undefined'&&SH;
     switch(id){
       case 'pcb':
         return {w:'The Gaggiuino board: the controller that takes over from the thermostats. Mains comes in on J10 (neutral) and J11 (line) and feeds its own 5 V supply and its pump and valve outputs.',
           p:'It reads the thermocouple on J4, the pressure sensor on J6, the brew and steam switches on J7 and the hot water switch on J5 B15. It heats through the SSR on J9, runs the pump on J12 and opens the 3-way valve on J13. The screen talks to it on J1.'};
       case 'ssr':
-        return {w:'A solid-state relay (SSR-40DA): an electronic switch with no moving contacts. A small DC signal on its two control screws switches mains through its two load screws. Its light shows when it\'s on. Here switched line comes in on load terminal 1, which also feeds the PCB, and terminal 2 feeds the 165 °C safety thermostat and then the element.',
+        return {w:'A solid-state relay (SSR-40DA): an electronic switch with no moving contacts. A small DC signal on its two control screws switches mains through its two load screws. Its light shows when it\'s on. Here switched line comes in on load terminal 1, '+(sh?'from the Shelly\'s O terminal (SH3), ':'')+'which also feeds the PCB, and terminal 2 feeds the 165 °C safety thermostat and then the element.',
           p:'The PCB drives it from J9 (R1 to +, GND to −), switching the element on and off in pulses to hold the temperature it reads from the thermocouple.'};
       case 'boiler':
         return {w:'The brass boiler, with one heating element, the 165 °C safety thermostat on its front (reset by hand) and the ground spade. The brew thermostat comes out and the thermocouple goes into one of its holes; realNiche\'s harness doesn\'t wire the steam thermostat.',
@@ -34,14 +36,22 @@
         return {w:'The hot water switch, now low voltage: the signal goes on its center spade and the ground chain on its outer spade. Keep it off mains: switching the pump around the PCB would short its pump output.',
           p:'On, it joins J5 B15 to the 5 V ground and the PCB starts hot water mode. Talon confirmed on Discord that Gen 3 reads it there.'};
       case 'pwr':
+        if(sh)return {w:'The power switch, still on mains but now only a signal: AC1 brings line to the L pole\'s outer spade and SH2 takes it from the center spade to the Shelly\'s SW input. The N pole stays empty; neutral meets in the splice beside it instead.',
+          p:'The PCB has no input from it: it powers up when the Shelly switches on.'};
         return {w:'The power switch, still on mains: it breaks both line and neutral, one per pole. Supply goes on the outer spades, the loads come off the center ones.',
           p:'The PCB has no input from it: it simply powers up with the machine.'};
+      case 'shelly':
+        return {w:'The Shelly smart relay, an unofficial add-on: it switches line to the machine from its O terminal (SH3, to SSR terminal 1), powered from the inlet by SH1 and SH4, and the power switch tells it when through SW (SH2). Its place on the drawing is only schematic: it goes outside the case, in an enclosure, where it stays under 40 °C.',
+          p:'The PCB doesn\'t know it\'s there: it powers up when the Shelly switches on, from the app, a schedule or the power switch.'};
+      case 'nsp':
+        return {w:'A BN2 butt splice by the power switch, with the Shelly: inlet neutral (AC2) on one side, the neutral chain (AC8) and the element\'s neutral (AC9) on the other. Neutral isn\'t switched any more.',
+          p:'J10 gets its neutral through it, by way of the chain.'};
       case 'lamp':
         return {w:'The heating lamp, wired across the element: it lights whenever the SSR is feeding the element.',
           p:'So it shows the PCB\'s heat pulses: on while it heats, off when the boiler is at temperature.'};
       case 'inlet':
         return {w:'The power inlet: line, neutral and earth come in here. Earth goes to the boiler\'s ground spade.',
-          p:'Mains reaches the PCB on J11 (line, from the power switch by way of the SSR\'s terminal 1 screw) and J10 (neutral). Earth never connects to the PCB\'s 5 V side.'};
+          p:sh?'With the Shelly, its L and N tabs each take two wires: AC1 and SH1, AC2 and SH4. Mains reaches the PCB on J11 (line, from the Shelly by way of the SSR\'s terminal 1 screw) and J10 (neutral, through the splice). Earth never connects to the PCB\'s 5 V side.':'Mains reaches the PCB on J11 (line, from the power switch by way of the SSR\'s terminal 1 screw) and J10 (neutral). Earth never connects to the PCB\'s 5 V side.'};
     }
     return null;
   }

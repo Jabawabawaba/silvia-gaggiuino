@@ -177,14 +177,14 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
       <a href="%%LINK_LED%%" target="_blank" rel="noopener">LED switch mod</a>
       <a href="%%LINK_TRACKER%%" target="_blank" rel="noopener">Parts tracker</a>
     </div>
-    <p class="fine">Steps come from the build plan's install phases, the official Gaggiuino PCB, custom wiring, flashing and Gen 3 manual pages, and the Discord Silvia thread. Tags show where each one comes from: Official, Discord or Plan.</p>
+    <p class="fine">Steps come from the build plan's install phases, the official Gaggiuino PCB, custom wiring, flashing and Gen 3 manual pages, and the Discord Silvia thread. Tags show where each one comes from: Official, Discord or Plan.<span data-when="shelly"> The Shelly's steps are tagged Community (gblur's build, not the official docs), Shelly docs, or Plan.</span></p>
     <button type="button" class="linkbtn" id="reset">Clear all ticks</button>
   </footer>
 </div>
 
 <script>
 (function(){
-  var L={wiring:'%%LINK_WIRING%%',labels:'%%LINK_LABELS%%',checks:'%%LINK_CHECKS%%',led:'%%LINK_LED%%',which:'%%LINK_WHICH%%',cut:'%%LINK_CUTLIST%%',trouble:'%%LINK_TROUBLE%%',gtc:'%%LINK_GUIDES%%#tc',gps:'%%LINK_GUIDES%%#ps',gwire:'%%LINK_GUIDES%%#wire',gssr:'%%LINK_GUIDES%%#ssr',gsw:'%%LINK_GUIDES%%#sw',gscr:'%%LINK_GUIDES%%#scr',gtof:'%%LINK_GUIDES%%#tof',gfw:'%%LINK_GUIDES%%#fw',gscl:'%%LINK_GUIDES%%#scl'};
+  var L={wiring:'%%LINK_WIRING%%',labels:'%%LINK_LABELS%%',checks:'%%LINK_CHECKS%%',led:'%%LINK_LED%%',which:'%%LINK_WHICH%%',cut:'%%LINK_CUTLIST%%',trouble:'%%LINK_TROUBLE%%',gtc:'%%LINK_GUIDES%%#tc',gps:'%%LINK_GUIDES%%#ps',gwire:'%%LINK_GUIDES%%#wire',gssr:'%%LINK_GUIDES%%#ssr',gsw:'%%LINK_GUIDES%%#sw',gscr:'%%LINK_GUIDES%%#scr',gtof:'%%LINK_GUIDES%%#tof',gfw:'%%LINK_GUIDES%%#fw',gscl:'%%LINK_GUIDES%%#scl',gshl:'%%LINK_GUIDES%%#shl',shdoc:'https://www.shelly.com/blogs/documentation/shelly-1pm-gen4-web-interface-guide'};
 %%INCLUDE:runbook-phases.js%%
   var SETTINGS=[['DreamSteam','Off','Settings, Boiler'],['Brew Delta','Off','Settings, Boiler'],['Temperature Offset','5','Settings, Boiler'],['HPWR','100','Boiler, Advanced'],['Main Divider','5','Boiler, Advanced'],['Brew Divider','3','Boiler, Advanced']];
   var ALL=[];PHASES.forEach(function(p,i){p.steps.forEach(function(s){s.phase=i;ALL.push(s)})});
@@ -193,17 +193,19 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
   function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
   function fmtDate(ts){try{return new Date(ts).toLocaleDateString('en-US',{month:'short',day:'numeric'})}catch(e){return ''}}
   function M(){return window.SilviaMachine||null}
-  function vis(s){var m=M();return !s.w||!m||m.matches(s.w)}
+  /* the Shelly add-on's steps show only once it's chosen, so with no Your Silvia at all they stay hidden */
+  function ok(w){var m=M();if(!w)return true;if(!m)return !/(^|;)shelly/.test(w);return m.matches(w)}
+  function vis(s){return ok(s.w)}
   function stepsOf(i){return PHASES[i].steps.filter(vis)}
   function visAll(){return ALL.filter(vis)}
   var FALLBACK={outlet:'GFCI-protected outlet (an RCD outside North America)',gfci:'GFCI',volts:'120 V'};
-  function fill(t){var m=M();return String(t).replace(/\{(outlet|gfci|volts)\}/g,function(_,k){return m?m.text(k):FALLBACK[k]})}
-  function wlabel(w){var out=[];String(w).split(';').forEach(function(c){c=c.trim();if(!c)return;var i=c.indexOf(':'),k=i<0?c:c.slice(0,i),v=i<0?[]:c.slice(i+1).split(',');if(k==='ver')out.push(v.length>1?v[0]+'–'+v[v.length-1]:v[0]+' only');else if(k==='model')out.push(v.join('/')+' model');else if(k==='volts')out.push(v.join('/')+' V');else if(k==='early')out.push('V1 before May 2000')});return out.join(' · ')}
+  function fill(t){var m=M();if(Array.isArray(t))t=m?m.txt(t):t.filter(function(x){return typeof x==='string'||!/(^|;)shelly/.test(x[1])}).map(function(x){return typeof x==='string'?x:x[0]}).join(' ').replace(/ ([,.;:])/g,'$1');return String(t).replace(/\{(outlet|gfci|volts)\}/g,function(_,k){return m?m.text(k):FALLBACK[k]})}
+  function wlabel(w){var out=[];String(w).split(';').forEach(function(c){c=c.trim();if(!c)return;var i=c.indexOf(':'),k=i<0?c:c.slice(0,i),v=i<0?[]:c.slice(i+1).split(',');if(k==='ver')out.push(v.length>1?v[0]+'–'+v[v.length-1]:v[0]+' only');else if(k==='model')out.push(v.join('/')+' model');else if(k==='volts')out.push(v.join('/')+' V');else if(k==='early')out.push('V1 before May 2000');else if(k==='shelly')out.push('With the Shelly')});return out.join(' · ')}
 %%INCLUDE:maplink.js%%
   /* links to the step's wiring on the wiring map, on whatever page L.wiring points to */
   function mapLinks(s){
     if(s.map==null)return '';var m=M();
-    return (typeof s.map==='string'?[['On the wiring map',s.map]]:s.map).filter(function(x){return !x[2]||!m||m.matches(x[2])}).map(function(x){var u=mapHref(x[1],x[3]?{label:x[3]}:{}).replace(/^wiring\.html/,L.wiring.split('#')[0]);return '<a class="maplk" href="'+esc(u)+'" target="_blank" rel="noopener">'+esc(x[0])+'</a>'}).join('');
+    return (typeof s.map==='string'?[['On the wiring map',s.map]]:s.map).filter(function(x){return ok(x[2])}).map(function(x){var u=mapHref(x[1],x[3]?{label:x[3]}:{}).replace(/^wiring\.html/,L.wiring.split('#')[0]);return '<a class="maplk" href="'+esc(u)+'" target="_blank" rel="noopener">'+esc(x[0])+'</a>'}).join('');
   }
   function wtag(s){var m=M();if(!s.w||(m&&m.decided&&m.decided(s.w)))return '';return '<span class="vtag">'+esc(wlabel(s.w))+'</span>'}
 
@@ -259,7 +261,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
   }
   function renderPrint(){
     var m=M(),pf=$('print-for');
-    if(pf)pf.textContent=(m&&m.get()?'For a '+m.label()+' Silvia. ':'')+'Printed '+new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})+'. Started: ____________   Finished: ____________';
+    if(pf)pf.textContent=(m&&m.get()?m.forText()+' ':'')+'Printed '+new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})+'. Started: ____________   Finished: ____________';
     $('print-all').innerHTML=PHASES.map(function(p,i){
       var h='<section class="pp"><div class="pp-h"><span class="pp-n">'+esc(p.n)+'</span><h2>'+esc(p.name)+'</h2></div><p class="pp-goal">'+esc(p.goal)+'</p>';
       if(p.stop)h+='<p class="pp-stop"><b>Stop point.</b> '+esc(p.stop)+'</p>';

@@ -1,5 +1,8 @@
-"""Generate the Silvia harness diagram as inline SVG (classes styled by the page CSS)."""
-from runs import RUNS
+"""Generate the Silvia harness diagram as inline SVG (classes styled by the page CSS).
+build() draws the harness as realNiche drew it; build(sh=True) draws it with the Shelly smart relay add-on
+(runs.runs_for(True)): the Shelly between the inlet and the power switch, and a BN2 splice where the neutral
+pole was."""
+from runs import RUNS, runs_for
 
 W, H = 1240, 860
 
@@ -41,6 +44,21 @@ PATHS = {
     "LV11": ["M1010,232 V172", "M1030,232 V172", "M1050,232 V172", "M1070,232 V172"],
 }
 
+# with the Shelly: AC3 goes, AC2 ends at the splice and AC8/AC9 start there, and the Shelly's own runs. AC1 and AC2
+# move over on their inlet spades to make room for SH1 and SH4, which share them.
+PATHS_SH = dict(PATHS)
+del PATHS_SH["AC3"]
+PATHS_SH.update({
+    "AC1": "M653,790 V115 H678",
+    "AC2": "M789,790 V166",
+    "AC8": "M782,134 V24 H512 V111 H545",
+    "AC9": "M790,134 V128 H806 V730 H276 V700 H260",
+    "SH1": "M659,790 V436 H700 V420",
+    "SH2": "M708,75 H720 V330",
+    "SH3": "M680,360 H344 V452 H298 V424",
+    "SH4": "M783,790 V436 H750 V420",
+})
+
 TAGS = {
     "AC1": (656, 400), "AC2": (786, 759), "AC3": (344, 380), "AC4": (336, 680), "AC5": (158, 494),
     "AC6": (48, 630), "AC7": (240, 250), "AC8": (660, 24), "AC9": (366, 730), "AC10": (532, 420),
@@ -51,7 +69,10 @@ TAGS = {
     "LV9": (893, 484), "LV10": (720, 516), "LV11": (1040, 202),
 }
 
-SYS_CLASS = {r["id"]: r["sys"] for r in RUNS}
+TAGS_SH = {k: v for k, v in TAGS.items() if k != "AC3"}
+TAGS_SH.update({"AC2": (789, 380), "SH1": (680, 436), "SH2": (720, 240), "SH3": (480, 360), "SH4": (766, 436)})
+
+SYS_CLASS = {r["id"]: r["sys"] for r in RUNS + runs_for(True)}
 
 # parts you can tap, with the box that picks them; the runs that land on each come from their ends' wording
 PARTS = [
@@ -63,10 +84,12 @@ PARTS = [
     ("inlet", "Power inlet", (630, 790, 812, 840)), ("psens", "Pressure sensor and tee", (818, 560, 872, 650)),
     ("screen", "4.3 in screen", (980, 60, 1180, 172)), ("pcb", "Gaggiuino PCB", (930, 232, 1200, 828)),
 ]
+PARTS_SH = PARTS + [("shelly", "Shelly smart relay", (676, 326, 774, 424)), ("nsp", "BN2 neutral splice", (744, 128, 796, 172))]
 PART_WORDS = [("Power inlet", "inlet"), ("Power switch", "pwr"), ("SSR", "ssr"), ("Safety thermostat", "boiler"),
               ("Boiler", "boiler"), ("Thermocouple", "boiler"), ("Heating lamp", "lamp"), ("Pump", "pump"),
               ("Solenoid", "sol"), ("PCB", "pcb"), ("Steam switch", "steam"), ("Brew switch", "brew"),
-              ("Hot water switch", "hw"), ("Pressure", "psens"), ("4.3 in", "screen")]
+              ("Hot water switch", "hw"), ("Pressure", "psens"), ("4.3 in", "screen"), ("Shelly", "shelly"),
+              ("BN2 neutral splice", "nsp")]
 
 
 def part_of(end):
@@ -77,6 +100,7 @@ def part_of(end):
 
 
 ENDS = {r["id"]: [part_of(r["frm"]), part_of(r["to"])] for r in RUNS}
+ENDS_SH = {r["id"]: [part_of(r["frm"]), part_of(r["to"])] for r in runs_for(True)}
 
 
 def esc(s):
@@ -111,10 +135,23 @@ def switch(cx, name, lamp=False):
     return "".join(out)
 
 
-def build():
-    o = [f'<svg viewBox="0 0 {W} {H}" class="dia" role="img" aria-labelledby="dia-title dia-desc" xmlns="http://www.w3.org/2000/svg">']
+def build(sh=False):
+    paths, tags, parts, ends = (PATHS_SH, TAGS_SH, PARTS_SH, ENDS_SH) if sh else (PATHS, TAGS, PARTS, ENDS)
+    sfx = "-sh" if sh else ""
+    o = [f'<svg viewBox="0 0 {W} {H}" class="dia{" dia-sh" if sh else ""}" role="img" aria-labelledby="dia-title{sfx} dia-desc{sfx}" xmlns="http://www.w3.org/2000/svg">']
+    if sh:
+        o.append('<title id="dia-title-sh">Silvia Gaggiuino harness with the Shelly smart relay, run by run</title>')
+        o.append('<desc id="dia-desc-sh">As realNiche\'s diagram, with the Shelly add-on: the inlet\'s line feeds the Shelly, whose O output feeds SSR terminal 1 and PCB J11. The power switch\'s line pole only feeds the Shelly\'s SW input, and its neutral pole is unused: inlet neutral runs to a splice by the switch, where the neutral chain and the element\'s neutral start. The Shelly takes its own leads from the inlet.</desc>')
+        o.append(_build_rest(sh, paths, tags, parts, ends))
+        return "".join(o)
     o.append('<title id="dia-title">Silvia Gaggiuino harness, run by run</title>')
     o.append('<desc id="dia-desc">Schematic redrawn from realNiche\'s Silvia diagram for PCB v4. Mains comes in at the inlet and through the double-pole power switch. Switched line feeds SSR terminal 1 and PCB J11. SSR terminal 2 feeds the 165 C safety thermostat, then the boiler element and the heating lamp. Neutral daisy-chains from the power switch to the lamp, pump, solenoid and PCB J10, with a separate run to the element. The PCB switches the pump (J12) and solenoid (J13). Earth runs from the inlet and the solenoid to the boiler ground spade. Low-voltage runs connect the brew, steam and hot water switches, SSR control, pressure sensor, thermocouple and screen to the PCB.</desc>')
+    o.append(_build_rest(False, paths, tags, parts, ends))
+    return "".join(o)
+
+
+def _build_rest(sh, paths, tags, parts, ends):
+    o = []
 
     # ----- components (under wires) -----
     o.append('<g class="parts">')
@@ -125,7 +162,7 @@ def build():
     o.append(switch(560, "Heating lamp", lamp=True))
     o.append(switch(720, "Power"))
     o.append(text(693, 64, "L pole", "tiny"))
-    o.append(text(747, 64, "N pole", "tiny"))
+    o.append(text(747, 64, "N pole", "tiny idle" if sh else "tiny"))
     for cx in (100, 260, 420):
         o.append(text(cx - 27, 64, "gnd pole", "tiny"))
         o.append(text(cx + 27, 64, "LED pole", "tiny idle"))
@@ -236,11 +273,17 @@ def build():
         o.append(f'<circle cx="{x}" cy="232" r="3.5" class="pin"/>')
         o.append(text(x, 250, lab, "pinl"))
     o.append(text(1090, 250, "J1", "jn", "start"))
+    if sh:
+        o.append('<rect x="680" y="330" width="90" height="90" rx="8" class="box"/>')
+        for (x, y, lab, lx, ly, anc) in ((680, 360, "O", 690, 364, "start"), (720, 330, "SW", 720, 346, "middle"), (700, 420, "L", 700, 410, "middle"), (750, 420, "N", 750, 410, "middle")):
+            o.append(f'<circle cx="{x}" cy="{y}" r="5" class="term"/>' + text(lx, ly, lab, "tiny", anc))
+        o.append(text(728, 374, "Shelly", "nm") + text(728, 388, "1PM", "tiny"))
+        o.append('<rect x="780" y="134" width="12" height="32" rx="2" class="splice"/>' + text(774, 158, "BN2", "tiny", "end"))
     o.append('</g>')
 
     # ----- tap targets for parts, under the wires -----
     o.append('<g class="phits">')
-    for pid, name, (x0, y0, x1, y1) in PARTS:
+    for pid, name, (x0, y0, x1, y1) in parts:
         o.append(f'<rect x="{x0}" y="{y0}" width="{x1 - x0}" height="{y1 - y0}" rx="8" class="phit" data-part="{pid}"><title>{esc(name)}</title></rect>')
     o.append('</g>')
 
@@ -249,12 +292,14 @@ def build():
     order = ["LV11", "LV9", "LV10", "LV7", "LV8", "LV1", "LV2", "LV3", "LV4", "LV5", "LV6",
              "G1", "G2", "AC2", "AC8", "AC9", "AC10", "AC11", "AC12", "AC5", "AC6", "AC7",
              "AC1", "AC3", "AC4", "AC13", "AC14"]
+    if sh:
+        order = [x for x in order if x != "AC3"] + ["SH4", "SH1", "SH2", "SH3"]
     for rid in order:
-        ds = PATHS[rid]
+        ds = paths[rid]
         if isinstance(ds, str):
             ds = [ds]
         sysc = SYS_CLASS[rid]
-        a, b = ENDS[rid]
+        a, b = ends[rid]
         o.append(f'<g class="run s-{sysc}" data-run="{rid}" data-a="{a}" data-b="{b}" tabindex="-1">')
         for k in ("halo", "wire", "flow", "hit"):
             for d in ds:
@@ -264,7 +309,7 @@ def build():
 
     # ----- tags -----
     o.append('<g class="tags">')
-    for rid, (x, y) in TAGS.items():
+    for rid, (x, y) in tags.items():
         w = 8 + 7 * len(rid)
         sysc = SYS_CLASS[rid]
         o.append(f'<g class="tag s-{sysc}" data-run="{rid}"><rect x="{x - w / 2}" y="{y - 8}" width="{w}" height="16" rx="4"/>'
@@ -272,6 +317,7 @@ def build():
     o.append('</g>')
     o.append('</svg>')
     return "".join(o)
+
 
 
 if __name__ == "__main__":

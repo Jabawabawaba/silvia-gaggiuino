@@ -333,7 +333,8 @@ def wires():
              + copper(360, 380, 189.5, 14) +
              '<g data-k="fk2"><rect class="metal" x="392" y="180" width="44" height="19" rx="2"/><rect class="hole" x="416" y="186" width="22" height="7" rx="3"/>'
              '<path class="isl-b" d="M352,177 H386 L394,181 V198 L386,202 H352 Z"/></g>'
-             '<text class="cap" x="330" y="232" text-anchor="middle">SSR terminal 1: one fork for AC3 and AC4</text></g>')
+             '<text class="cap" x="330" y="232" text-anchor="middle" data-when="!shelly">SSR terminal 1: one fork for AC3 and AC4</text>'
+             '<text class="cap" x="330" y="232" text-anchor="middle" data-when="shelly">SSR terminal 1: one fork for SH3 and AC4</text></g>')
     # 6 a red butt splice in the switch ground chain
     s.append('<g data-k="wv6"><g data-k="bl"><rect class="ins-k" x="10" y="135" width="188" height="10" rx="3"/>' + copper(196, 236, 140, 6) + '</g>'
              '<g data-k="br"><rect class="ins-k" x="282" y="135" width="188" height="10" rx="3"/>' + copper(244, 284, 140, 6) + '</g>'
@@ -355,7 +356,7 @@ def wires():
 # ---------------------------------------------------------------- SSR on the left wall
 def ssr():
     s = ['<svg id="pg-ssr" viewBox="0 0 480 300" role="img" aria-labelledby="pg-ssr-t"><title id="pg-ssr-t">SSR install on a Silvia, drawn step by step: '
-         'its place on the left wall clear of the pump, one screw with washers and a nut through a drilled hole, AC3 and AC4 in one fork on load terminal 1, '
+         'its place on the left wall clear of the pump, one screw with washers and a nut through a drilled hole, the switched line and AC4 in one fork on load terminal 1, '
          'AC5 on load terminal 2, the J9 control wires on + and −, and the cover closed.</title>']
     # 1 where it goes
     s.append('<g data-k="sv1"><rect class="wallp" x="30" y="16" width="420" height="268" rx="6"/><text class="cap onmetal" x="44" y="274">left wall, from inside</text>'
@@ -380,7 +381,7 @@ def ssr():
              '<circle data-k="led" data-run="blink" class="led" cx="240" cy="98" r="5"/>' + screw("sc1", 190, 90, 10) + screw("sc2", 290, 90, 10) + screw("sl1", 190, 210, 13) + screw("sl2", 290, 210, 13) +
              '<text class="lbl onssr" x="168" y="94" text-anchor="end">+</text><text class="lbl onssr" x="312" y="94">−</text>'
              '<text class="lbl onssr" x="168" y="214" text-anchor="end">1</text><text class="lbl onssr" x="312" y="214">2</text>')
-    s.append('<g data-k="lw1">' + fork(190, 210, two=True) + '<path class="wire-m" d="M186,252 V300 M194,252 V300"/><text class="lbl" x="172" y="290" text-anchor="end">AC3 + AC4</text></g>'
+    s.append('<g data-k="lw1">' + fork(190, 210, two=True) + '<path class="wire-m" d="M186,252 V300 M194,252 V300"/><text class="lbl" x="172" y="290" text-anchor="end" data-when="!shelly">AC3 + AC4</text><text class="lbl" x="172" y="290" text-anchor="end" data-when="shelly">SH3 + AC4</text></g>'
              '<g data-k="lw2">' + fork(290, 210) + '<path class="wire-m" d="M290,252 V300"/><text class="lbl" x="308" y="290">AC5</text></g>')
     s.append('<g data-k="cwp">' + fork(190, 90, up=False, cls="isl") + '<path class="lvw" d="M190,48 V0"/><text class="lbl" x="172" y="18" text-anchor="end">J9 R1</text></g>'
              '<g data-k="cwm">' + fork(290, 90, up=False, cls="isl") + '<path class="lvg" d="M290,48 V0"/><text class="lbl" x="308" y="18">J9 GND</text></g>')
@@ -401,7 +402,12 @@ def switches():
     for key, x0, nm in names:
         s.append(f'<rect class="swbody" x="{x0}" y="66" width="{W}" height="140" rx="10"/><text class="lbl" x="{x0 + W // 2}" y="240" text-anchor="middle">{nm}</text>')
         free = key != "pw"
-        s.append(spade_tab(x0 + 26, 112, "", faded=free) + spade_tab(x0 + 62, 112, "") + spade_tab(x0 + 26, 176, "", faded=free) + spade_tab(x0 + 62, 176, ""))
+        if free:
+            s.append(spade_tab(x0 + 26, 112, "", faded=free) + spade_tab(x0 + 62, 112, "") + spade_tab(x0 + 26, 176, "", faded=free) + spade_tab(x0 + 62, 176, ""))
+        else:
+            # the power switch: with the Shelly its N pole stays empty
+            s.append(spade_tab(x0 + 26, 112, "") + '<g data-when="!shelly">' + spade_tab(x0 + 62, 112, "") + spade_tab(x0 + 62, 176, "") + '</g>'
+                     + spade_tab(x0 + 26, 176, "") + '<g data-when="shelly">' + spade_tab(x0 + 62, 112, "", faded=True) + spade_tab(x0 + 62, 176, "", faded=True) + '</g>')
         if free:
             s.append(f'<text class="tiny" x="{x0 + 26}" y="146" text-anchor="middle">free</text>')
     pw = X["pw"]
@@ -410,10 +416,14 @@ def switches():
     # power switch: mains, each tag sitting on its own wire
     l, n = pw + 26, pw + 62
     s.append(conn("ac1", l, 176, f"M{l - 14},176 C{l - 32},176 {l - 38},150 {l - 38},0", "AC1", -38, -136))
-    s.append(conn("ac2", n, 176, f"M{n + 14},176 C{n + 32},176 {n + 34},150 {n + 34},0", "AC2", 34, -136))
-    s.append(conn("ac3", l, 112, f"M{l},104 V0", "AC3", 0, -60))
-    s.append(f'<g data-k="ac89"><path class="wire-m" d="M{n - 3},104 V0 M{n + 3},104 V0"/><rect class="conn" x="{n - 14}" y="104" width="28" height="16" rx="3"/><rect class="isl-b" x="{n - 10}" y="106" width="20" height="12" rx="2"/>'
-             f'<g class="tagg"><rect class="tagb" x="{n - 29}" y="8" width="58" height="16" rx="3"/><text class="tagt" x="{n}" y="20" text-anchor="middle">AC8+AC9</text></g></g>')
+    s.append(f'<g data-when="!shelly">' + conn("ac2", n, 176, f"M{n + 14},176 C{n + 32},176 {n + 34},150 {n + 34},0", "AC2", 34, -136) + '</g>')
+    # the line pole's center spade: AC3 to the SSR, or with the Shelly, SH2 to its SW input
+    s.append(f'<g data-k="ac3"><path class="wire-m" d="M{l},104 V0"/><rect class="conn" x="{l - 14}" y="104" width="28" height="16" rx="3"/>'
+             f'<g class="tagg" data-k="ac3t"><rect class="tagb" x="{l - 15}" y="42" width="30" height="16" rx="3"/>'
+             f'<text class="tagt" x="{l}" y="54" text-anchor="middle" data-when="!shelly">AC3</text><text class="tagt" x="{l}" y="54" text-anchor="middle" data-when="shelly">SH2</text></g></g>')
+    s.append(f'<g data-when="!shelly"><g data-k="ac89"><path class="wire-m" d="M{n - 3},104 V0 M{n + 3},104 V0"/><rect class="conn" x="{n - 14}" y="104" width="28" height="16" rx="3"/><rect class="isl-b" x="{n - 10}" y="106" width="20" height="12" rx="2"/>'
+             f'<g class="tagg"><rect class="tagb" x="{n - 29}" y="8" width="58" height="16" rx="3"/><text class="tagt" x="{n}" y="20" text-anchor="middle">AC8+AC9</text></g></g></g>')
+    s.append(f'<g data-k="nemp" data-when="shelly"><text class="tiny" x="{n}" y="146" text-anchor="middle">empty</text></g>')
     # low voltage: the signal comes in from above to the center spade, the ground chain runs along the bottom to the outer spades
     for key, sw, lab in (("lv1", "st", "J7 S"), ("lv2", "br", "J7 B"), ("lv3", "hw", "J5 B15")):
         x0 = X[sw]
@@ -427,8 +437,8 @@ def switches():
     s.append(f'<g data-k="lvcap"><text class="cap" x="{gx - 6}" y="270" text-anchor="end">J7 GND</text></g>')
     # the E's push button and module, before the rocker goes in
     s.append(f'<g data-k="pbE" data-when="model:E"><rect class="wallbg" x="{pw - 6}" y="58" width="{W + 12}" height="190" rx="10"/><rect class="swbody" x="{pw}" y="66" width="{W}" height="140" rx="10"/>'
-             f'<circle class="pbtn" cx="{pw + 44}" cy="112" r="24"/><rect class="blkh" x="{pw + 10}" y="150" width="{W - 20}" height="34" rx="4"/>'
-             f'<text class="cap" x="{pw + 44}" y="171" text-anchor="middle" fill="#E7E9EB">module</text><text class="cap" x="{pw + 44}" y="240" text-anchor="middle">E: push button</text></g>')
+             f'<circle class="pbtn" cx="{pw + 44}" cy="112" r="24"/><g data-k="pbEm"><rect class="blkh" x="{pw + 10}" y="150" width="{W - 20}" height="34" rx="4"/>'
+             f'<text class="cap" x="{pw + 44}" y="171" text-anchor="middle" fill="#E7E9EB">module</text></g><text class="cap" x="{pw + 44}" y="240" text-anchor="middle">E: push button</text></g>')
     s.append('</g>')
     s.append(meters("swm", ("0.3 Ω", "brew ON:", "J7 B to GND"), ("OL", "brew OFF:", "J7 B to GND"), "unplugged, J7 and J5 plugs off, probes on their pins"))
     s.append('</svg>')

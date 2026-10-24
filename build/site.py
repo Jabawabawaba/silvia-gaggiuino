@@ -174,6 +174,9 @@ def nav(current):
              '<span class="mh" id="m-model-hint">E and M only exist from V5 on.</span></div>'
              '<div class="mrow"><span class="mk">Mains</span><div class="mseg" role="group" aria-label="Mains voltage">'
              '<button type="button" data-mvolt="120" aria-pressed="false">120 V</button><button type="button" data-mvolt="230" aria-pressed="false">230 V</button></div></div>'
+             '<div class="mrow"><span class="mk">Extras</span><div class="mseg" role="group" aria-label="Add-ons">'
+             '<button type="button" data-mshelly aria-pressed="false">Shelly smart relay</button></div>'
+             '<span class="mh">Optional and unofficial: switch the machine on and off from your phone. Adds its wires, checks and steps to the pages.</span></div>'
              '<p id="m-summary"></p>'
              '<div class="mact"><a href="which-silvia.html">Not sure which you have? Identify your Silvia</a><button type="button" id="m-clear">Clear</button><button type="button" id="m-done">Done</button></div>'
              '</div></div>')
@@ -283,8 +286,11 @@ def page_src(name):
 
 
 def n_checks():
-    """How many checks the power-on checklist has, so the home page and README never go stale."""
-    return len(re.findall(r"\{id:'[a-z]\d+'", open(os.path.join(HERE, "checks.tpl.html")).read()))
+    """How many checks the power-on checklist has, so the home page and README never go stale. The harness as
+    drawn: never the Shelly add-on's checks (w:'shelly'), always the ones it replaces (w:'!shelly')."""
+    src = open(os.path.join(HERE, "checks.tpl.html")).read()
+    items = re.findall(r"\{id:'[a-z]\d+'.*?\}(?=,\s*\{id:|\s*\])", src, re.S)
+    return sum(1 for it in items if not re.search(r",w:'shelly'", it))
 
 
 # Stock thermostats for the circuit diagram (learn-ladder.js): Rancilio's opening points, illustrative closing points
@@ -326,7 +332,7 @@ def render_template(name):
         s = s.replace("%%GL_BAR%%", bar).replace("%%GL_BODY%%", body).replace("%%GL_COUNT%%", str(n)).replace("%%GL_IMGS%%", str(gen_glossary.image_count()))
     if name == "cutlist.tpl.html":
         from build import runs_json
-        s = s.replace("%%RUNS%%", runs_json())
+        s = s.replace("%%RUNS_SH%%", runs_json(True)).replace("%%RUNS%%", runs_json())
     s = s.replace("%%BASECSS%%", open(os.path.join(HERE, "base.css")).read())
     if "%%TEST_QUESTIONS%%" in s:
         # the Test yourself questions, without the fact-check notes (src), and what their review links need
@@ -342,7 +348,7 @@ def render_template(name):
     s = s.replace("%%NCHECKS%%", str(n_checks()))
     if "%%GL_N%%" in s:
         import gen_glossary
-        s = s.replace("%%GL_N%%", str(len(gen_glossary.E)))
+        s = s.replace("%%GL_N%%", str(len([e for e in gen_glossary.E if e[0] not in gen_glossary.WHEN])))
     return s
 
 
@@ -364,7 +370,7 @@ def main():
     for src, dst, kind in DOCS:
         open(os.path.join(OUT, dst), "w").write(wrap(render_doc(src, kind), dst))
     for f in ("README.md", "LICENSE", "CONTRIBUTING.md"):
-        s = open(os.path.join(HERE, "site-" + f)).read().replace("%%SITE_URL%%", SITE_URL or "(site url)").replace("%%REPO_URL%%", REPO_URL or "(repo url)").replace("%%NCHECKS%%", str(n_checks())).replace("%%GL_N%%", str(__import__("gen_glossary").E.__len__()))
+        s = open(os.path.join(HERE, "site-" + f)).read().replace("%%SITE_URL%%", SITE_URL or "(site url)").replace("%%REPO_URL%%", REPO_URL or "(repo url)").replace("%%NCHECKS%%", str(n_checks())).replace("%%GL_N%%", str(len([e for e in __import__("gen_glossary").E if e[0] not in __import__("gen_glossary").WHEN])))
         open(os.path.join(OUT, f), "w").write(s)
     for f in ("silvia-specifics.md", "discord-notes.md"):
         shutil.copy(os.path.join(HERE, "docs-" + f), os.path.join(OUT, "docs", f))

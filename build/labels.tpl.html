@@ -99,7 +99,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
       <span class="rivet" aria-hidden="true"></span>
     </div>
     <h1>Silvia Wire Labels</h1>
-    <p class="lede">A flag label for each end of every harness run, using the IDs from the <a href="%%LINK_WIRING%%" target="_blank" rel="noopener">wiring reference</a>. Each label says which end it sits on and where the other end goes, so you can check a wire without tracing it.</p>
+    <p class="lede">A flag label for each end of every harness run, using the IDs from the <a href="%%LINK_WIRING%%" target="_blank" rel="noopener">wiring reference</a>. Each label says which end it sits on and where the other end goes, so you can check a wire without tracing it.<span data-when="shelly"> With the Shelly, its four runs are here too, and AC3 is gone.</span></p>
   </header>
 
   <section class="panel" aria-label="Label settings">
@@ -156,7 +156,9 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
 <script>
 %%CORE%%
 (function(){
-  var RUNS=%%RUNS%%;
+  /* the harness as drawn, and with the Shelly add-on once it's chosen in Your Silvia */
+  var RUNS0=%%RUNS%%,RUNS1=%%RUNS_SH%%,RUNS=RUNS0;
+  function shOn(){var m=window.SilviaMachine;return !!(m&&m.shelly&&m.shelly())}
   var GROUPS=[['mains','Mains',['L','H','N']],['earth','Earth',['E']],['lv','Low voltage',['LV','LVG','S']],['opt','Optional add-ons',['OPT']]];
   var KEY='silvia-wire-labels-v1';
   var prefs={groups:{mains:true,earth:true,lv:true,opt:false},paper:'letter'};
@@ -170,10 +172,14 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
   }
   function rgb(c){return 'rgb('+c.join(',')+')'}
 
-  $('groups').innerHTML=GROUPS.map(function(g){
-    var n=RUNS.filter(function(r){return g[2].indexOf(r.sys)>=0}).length;
-    return '<label class="chip"><input type="checkbox" id="g-'+g[0]+'" data-g="'+g[0]+'"'+(prefs.groups[g[0]]?' checked':'')+'><span class="box" aria-hidden="true"></span>'+g[1]+' <span class="n">'+n+'</span></label>';
-  }).join('');
+  function chips(){
+    RUNS=shOn()?RUNS1:RUNS0;
+    $('groups').innerHTML=GROUPS.map(function(g){
+      var n=RUNS.filter(function(r){return g[2].indexOf(r.sys)>=0}).length;
+      return '<label class="chip"><input type="checkbox" id="g-'+g[0]+'" data-g="'+g[0]+'"'+(prefs.groups[g[0]]?' checked':'')+'><span class="box" aria-hidden="true"></span>'+g[1]+' <span class="n">'+n+'</span></label>';
+    }).join('');
+  }
+  chips();
 
   function sheetSvg(S,pg,pi,total){
     var P=S.paper,L=S.L,o=[];
@@ -256,6 +262,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     }).then(function(){busy=false;$('dl').disabled=!selected().length});
   });
 
+  window.addEventListener('silvia-machine',function(){var was=RUNS;chips();if(RUNS!==was)render()});
   render();
 })();
 </script>

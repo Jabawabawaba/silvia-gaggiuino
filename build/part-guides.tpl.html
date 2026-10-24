@@ -9,10 +9,10 @@
 %%INCLUDE:part-defs.svg.html%%
 <div class="wrap">
   <header class="top">
-    <div class="plate"><span class="rivet" aria-hidden="true"></span><span><b>Install</b></span><span>Part guides</span><span>nine guides, drawn step by step</span><span class="rivet" aria-hidden="true"></span></div>
+    <div class="plate"><span class="rivet" aria-hidden="true"></span><span><b>Install</b></span><span>Part guides</span><span><span data-when="!shelly">nine</span><span data-when="shelly">ten</span> guides, drawn step by step</span><span class="rivet" aria-hidden="true"></span></div>
     <h1>Part Guides</h1>
-    <p class="lede">The thermocouple, the pressure sensor, the wires themselves, the SSR and the switches, then the screen housing, the ToFnLED, firmware updates and the hardware scales, each drawn step by step for a Silvia. Tap a step to watch it, or step through with the arrows. The <a href="%%LINK_RUNBOOK%%">runbook</a> has the same work in order with everything else, and the <a href="%%LINK_WIRING%%">wiring reference</a> has every run.</p>
-    <nav class="pg-jump" aria-label="Guides on this page"><a class="chip" href="#tc">Thermocouple</a><a class="chip" href="#ps">Pressure sensor</a><a class="chip" href="#wire">Making the wires</a><a class="chip" href="#ssr">SSR</a><a class="chip" href="#sw">Switches</a><a class="chip" href="#scr">Screen</a><a class="chip" href="#tof">ToFnLED</a><a class="chip" href="#fw">Firmware</a><a class="chip" href="#scl">Scales</a></nav>
+    <p class="lede">The thermocouple, the pressure sensor, the wires themselves, the SSR and the switches, then the screen housing, the ToFnLED, firmware updates and the hardware scales, each drawn step by step for a Silvia.<span data-when="shelly"> The Shelly smart relay comes last.</span> Tap a step to watch it, or step through with the arrows. The <a href="%%LINK_RUNBOOK%%">runbook</a> has the same work in order with everything else, and the <a href="%%LINK_WIRING%%">wiring reference</a> has every run.</p>
+    <nav class="pg-jump" aria-label="Guides on this page"><a class="chip" href="#tc">Thermocouple</a><a class="chip" href="#ps">Pressure sensor</a><a class="chip" href="#wire">Making the wires</a><a class="chip" href="#ssr">SSR</a><a class="chip" href="#sw">Switches</a><a class="chip" href="#scr">Screen</a><a class="chip" href="#tof">ToFnLED</a><a class="chip" href="#fw">Firmware</a><a class="chip" href="#scl">Scales</a><a class="chip" href="#shl" data-when="shelly">Shelly</a></nav>
   </header>
 
   <div class="warn"><strong>Cord out, boiler cold</strong><p>Unplug the machine and let the boiler cool before you open it. The drawings show what your hands do, not to scale. There's no official Silvia guide: these steps follow realNiche's harness and the Silvia builds on the Gaggiuino Discord, as the rest of this site does.</p></div>
@@ -184,6 +184,25 @@
     </div>
   </section>
 
+  <section class="block" id="shl" aria-labelledby="h-shl" data-when="shelly">
+    <div class="sec-h"><h2 id="h-shl">Shelly smart relay</h2><span class="sum">add-on · unofficial</span></div>
+    <p class="pg-where" id="pg-shl-where"></p>
+    <div class="pg-note"><p><b>Unofficial, and always live.</b> Nothing about the Shelly is in the Gaggiuino docs: this follows gblur's Silvia V6 E build from his <a href="https://youtu.be/nquiqOzltUo">build video</a>, with the Shelly on its own leads from the inlet so the machine's neutral never runs through it. The inlet, the Shelly, the power switch and the wires between them are live whenever the cord is in, even with the machine off, and the Shelly's relay breaks line only, where the stock power switch broke both. Unplug before you open anything.</p></div>
+    <div class="pg-meta">
+      <div><span class="k">You need</span><ul><li>A Shelly 1PM Gen4, the UL-certified version in North America</li><li>A closed enclosure made for mains wiring, and a grommet for where its wires pass the back panel</li><li>SH1 to SH4 from the <a href="%%LINK_CUTLIST%%">cut list</a>, two-wire spades for the inlet's L and N tabs, and a BN2 butt splice</li><li>Four 0.75 mm² (18 AWG) insulated ferrules with 6 mm sleeves, and a ferrule crimper</li></ul></div>
+      <div><span class="k">What it does</span><p>Switches the whole machine on and off from the Shelly app, a schedule or the power switch, which now only signals it. It also reports the power the machine draws. The PCB doesn't know it's there: it simply powers up when the Shelly switches on.</p></div>
+    </div>
+    <div class="pg" id="pg-shl-g">
+      <div class="pg-figcol">
+        <figure class="pg-fig">%%INCLUDE:part-shl.svg.html%%
+          <div class="pg-ctl"><button type="button" class="pg-prev" aria-label="Previous step"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button><span class="pg-pos" aria-live="polite"></span><button type="button" class="pg-next" aria-label="Next step"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button><button type="button" class="pg-again" aria-label="Play this step again"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg></button></div>
+        </figure>
+        <p class="pg-now" aria-hidden="true"></p>
+      </div>
+      <ol class="pg-steps"></ol>
+    </div>
+  </section>
+
   <section class="block" id="src" aria-labelledby="h-src">
     <div class="sec-h"><h2 id="h-src">Sources</h2></div>
     <ul class="pg-src">
@@ -193,6 +212,7 @@
       <li>Gaggiuino, official docs: <a href="https://gaggiuino.github.io/#/guides-stm32/3pln-custom-wiring">custom wiring</a> (the pressure sensor's flat O-ring and quarter-turn limit, the thermocouple barely finger tight with 180 °C paste), the <a href="https://gaggiuino.github.io/#/guides-stm32/pcb-guide">PCB guide</a> (folding the J4 wires), <a href="https://gaggiuino.github.io/#/learning/wiring-basics">wiring basics</a> (connectors and crimping) and the PCB's floating 5 V side. Docs read October 2026.</li>
       <li>Gaggiuino, <a href="https://gaggiuino.github.io/#/guides/interface-screen?id=assembly">Interface: Screen</a>, <a href="https://gaggiuino.github.io/#/accessories/tofnled">Accessory: ToFnLED</a>, <a href="https://gaggiuino.github.io/#/guides-stm32/mcu-flashing">MCU Flashing</a>, <a href="https://gaggiuino.github.io/#/guides-upgrade/pcb-upgrade">PCB Upgrade Guide</a>, <a href="https://gaggiuino.github.io/#/accessories/hw-scales">Accessory: Hardware Scales</a> and the <a href="https://gaggiuino.github.io/#/learning/user-manual-gen3">Gen 3 user manual</a>, with their photos (of Gaggias).</li>
       <li>The Discord Silvia thread, as collected on <a href="silvia-specifics.html">Silvia specifics</a>: screen cable lengths and housings, the ToF on the Silvia's deeper covered tank and how it's mounted, and the Silvia scales mount and parts.</li>
+      <li data-when="shelly">The Shelly: gblur's Silvia V6 E wiring drawing from his <a href="https://youtu.be/nquiqOzltUo">build video</a> on YouTube, unofficial; Shelly's <a href="https://www.shelly.com/blogs/documentation/shelly-1pm-gen4">1PM Gen4</a> and <a href="https://us.shelly.com/blogs/documentation/shelly-plus-1pm-ul">Plus 1PM UL</a> pages (ratings, terminals, strip lengths, the 40 °C limit, the confined-space warning, and the warning against using its terminals as a bridge) and its <a href="https://www.shelly.com/blogs/documentation/shelly-1pm-gen4-web-interface-guide">web interface guide</a> (input modes, Action on power on, timers). Read October 2026.</li>
       <li>On this site: the <a href="%%LINK_RUNBOOK%%">runbook</a>, the <a href="%%LINK_WIRING%%">wiring reference</a> and the <a href="%%LINK_CHECKS%%">power-on checks</a>.</li>
     </ul>
   </section>

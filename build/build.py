@@ -4,10 +4,12 @@
   (site.py calls render(name, "site") for the GitHub Pages versions)
 
 runs.py is the single source of truth for harness runs; the wiring, labels and cut list pages use it.
+Each of those pages carries the harness twice, as drawn and with the Shelly add-on (runs.runs_for(True)), and
+shows the second only once the reader picks the Shelly in Your Silvia.
 """
 import json, os, re, sys
 sys.path.insert(0, os.path.dirname(__file__))
-from runs import RUNS, SYS, CONNECTORS
+from runs import RUNS, SYS, CONNECTORS, runs_for
 from wiring_svg import build as build_svg
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -28,9 +30,9 @@ FILES = {"wiring": ("wiring.tpl.html", "silvia-wiring-reference.html"),
          "runbook": ("runbook.tpl.html", "silvia-install-runbook.html")}
 
 
-def runs_json():
+def runs_json(shelly=False):
     out = []
-    for r in RUNS:
+    for r in runs_for(shelly):
         d = dict(r)
         for k, v in (("mm", None), ("lenNote", ""), ("hot", ""), ("note", ""), ("k", ["", ""]), ("color", "")):
             d.setdefault(k, v)
@@ -39,9 +41,14 @@ def runs_json():
 
 
 def check_index():
-    """Every power-on check's id and title, for the wiring map's back-links (wiring-refs.js)."""
+    """Every power-on check's id and title, and its condition when it has one (w, see machine.js: the Shelly's
+    checks and the ones it replaces), for the wiring map's back-links (wiring-refs.js) and the quiz's review links."""
     src = open(os.path.join(HERE, "checks.tpl.html")).read()
-    return json.dumps([[m.group(1), m.group(2).replace("\\'", "'")] for m in re.finditer(r"\{id:'([a-h]\d+)',t:'((?:[^'\\]|\\.)*)'", src)], ensure_ascii=False)
+    out = []
+    for m in re.finditer(r"\{id:'([a-h]\d+)',t:'((?:[^'\\]|\\.)*)'(.*?)\}(?=,\s*\{id:|\s*\])", src, re.S):
+        w = re.search(r",w:'([^']*)'$", m.group(3))
+        out.append([m.group(1), m.group(2).replace("\\'", "'")] + ([w.group(1)] if w else []))
+    return json.dumps(out, ensure_ascii=False)
 
 
 def render(name, mode="artifact"):
@@ -55,9 +62,10 @@ def render(name, mode="artifact"):
     s = s.replace("%%MODE%%", mode)
     extra = {}
     if name == "wiring":
-        extra = {"CHECK_INDEX": check_index(), "SVG": build_svg(), "RUNS": runs_json(), "SYS": json.dumps(SYS), "CONN": json.dumps(CONNECTORS, ensure_ascii=False)}
+        extra = {"CHECK_INDEX": check_index(), "SVG_SH": build_svg(sh=True), "SVG": build_svg(), "RUNS_SH": runs_json(True), "RUNS": runs_json(),
+                 "SYS": json.dumps(SYS), "CONN": json.dumps(CONNECTORS, ensure_ascii=False)}
     elif name == "labels":
-        extra = {"RUNS": runs_json(), "CORE": open(os.path.join(HERE, "labels-core.js")).read()}
+        extra = {"RUNS_SH": runs_json(True), "RUNS": runs_json(), "CORE": open(os.path.join(HERE, "labels-core.js")).read()}
     for k, v in extra.items():
         s = s.replace("%%" + k + "%%", v)
     return s

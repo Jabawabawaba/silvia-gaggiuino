@@ -78,11 +78,13 @@ details.tb.danger .tb-body{border-left-color:var(--bad)}
   function $(id){return document.getElementById(id)}
   function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
   function M(){return window.SilviaMachine||null}
-  function fill(t){var m=M();return String(t).replace(/\{gfci\}/g,m?m.text('gfci'):'GFCI or RCD')}
+  /* a cause or check can be a list of segments for some machines only; the Shelly's need it chosen */
+  function okw(w){var m=M();if(!w)return true;if(!m)return !/(^|;)shelly/.test(w);return m.matches(w)}
+  function fill(t){var m=M();if(Array.isArray(t))t=m?m.txt(t):t.filter(function(x){return typeof x==='string'||okw(x[1])}).map(function(x){return typeof x==='string'?x:x[0]}).join(' ').replace(/ ([,.;:])/g,'$1');return String(t).replace(/\{gfci\}/g,m?m.text('gfci'):'GFCI or RCD')}
   function refs(t){
     return esc(fill(t)).replace(/\[([A-Za-z0-9]+)\]/g,function(_,id){
       if(CHECKREF.test(id))return '<a class="ref" href="power-on-checks.html#'+id+'">'+id+'</a>';
-      if(/^(AC|LV|G|OP)[0-9]+$/.test(id))return '<a class="ref" href="'+esc(mapHref('run:'+id))+'">'+id+'</a>';
+      if(/^(AC|LV|G|OP|SH)[0-9]+$/.test(id))return '<a class="ref" href="'+esc(mapHref('run:'+id))+'">'+id+'</a>';
       return '['+id+']';
     });
   }
@@ -90,22 +92,22 @@ details.tb.danger .tb-body{border-left-color:var(--bad)}
   /* the symptom's wiring on the wiring reference's drawing (see maplink.js) */
   function tmap(t){
     if(t.map==null)return '';var m=window.SilviaMachine||null;
-    var l=(typeof t.map==='string'?[['On the wiring map',t.map]]:t.map).filter(function(x){return !x[2]||!m||m.matches(x[2])});
+    var l=(typeof t.map==='string'?[['On the wiring map',t.map]]:t.map).filter(function(x){return okw(x[2])});
     return l.length?'<p class="tb-map">'+l.map(function(x){return '<a href="'+esc(mapHref(x[1],x[3]?{label:x[3]}:{}))+'">'+esc(x[0])+'</a>'}).join(' · ')+'</p>':'';
   }
-  function wlabel(w){return w.replace('model:E','E model').replace('ver:V1','V1 only').replace(/ver:V5,V6/,'V5 and V6')}
+  function wlabel(w){return w.split(';').filter(function(c){return c.charAt(0)!=='!'}).join(';').replace('model:E','E model').replace('ver:V1','V1 only').replace(/ver:V5,V6/,'V5 and V6').replace('shelly','With the Shelly').replace(';',' · ')}
   var cat='all',q='';
   function visible(t){
-    var m=M();if(t.w&&m&&!m.matches(t.w))return false;
+    if(!okw(t.w))return false;
     if(cat!=='all'&&t.c!==cat)return false;
     if(!q)return true;
-    var hay=(t.s+' '+t.causes.join(' ')+' '+t.check.join(' ')).replace(/\{gfci\}/g,'GFCI RCD breaker').toLowerCase();
+    var hay=(t.s+' '+t.causes.map(fill).join(' ')+' '+t.check.map(fill).join(' ')).replace(/\{gfci\}/g,'GFCI RCD breaker').toLowerCase();
     return q.split(/\s+/).every(function(w){return hay.indexOf(w)>=0});
   }
   function render(){
     var shown=T.filter(visible),m=M();
     $('cats').innerHTML=[['all','All']].concat(CATS).map(function(c){
-      var n=c[0]==='all'?T.filter(function(t){return !t.w||!m||m.matches(t.w)}).length:T.filter(function(t){return t.c===c[0]&&(!t.w||!m||m.matches(t.w))}).length;
+      var n=c[0]==='all'?T.filter(function(t){return okw(t.w)}).length:T.filter(function(t){return t.c===c[0]&&okw(t.w)}).length;
       return '<button type="button" class="chip" data-cat="'+c[0]+'" aria-pressed="'+(cat===c[0])+'">'+esc(c[1])+' <span class="n">'+n+'</span></button>';
     }).join('');
     var html='';
@@ -114,11 +116,11 @@ details.tb.danger .tb-body{border-left-color:var(--bad)}
       html+='<h2 class="cat-h">'+esc(c[1])+'</h2>';
       items.forEach(function(t){
         html+='<details class="tb'+(t.d?' danger':'')+'" id="'+tslug(T.indexOf(t))+'"'+(q?' open':'')+'><summary><span class="sym">'+esc(fill(t.s))+(t.w&&!(m&&m.decided&&m.decided(t.w))?'<span class="vtag">'+esc(wlabel(t.w))+'</span>':'')+'</span><span class="first">Most likely: '+refs(t.causes[0])+'</span><span class="flag">'+(t.d?'<span class="unplug">Unplug now</span>':'')+'<span class="chev" aria-hidden="true"></span></span></summary>'+
-          '<div class="tb-body"><div><h3>Likely causes, in order</h3><ol>'+t.causes.map(function(x){return '<li>'+refs(x)+'</li>'}).join('')+'</ol></div><div><h3>What to do</h3><ul>'+t.check.map(function(x){return '<li>'+refs(x)+'</li>'}).join('')+'</ul>'+tmap(t)+'</div><div class="src">Source: '+esc(t.src)+'</div></div></details>';
+          '<div class="tb-body"><div><h3>Likely causes, in order</h3><ol>'+t.causes.filter(function(x){return fill(x)}).map(function(x){return '<li>'+refs(x)+'</li>'}).join('')+'</ol></div><div><h3>What to do</h3><ul>'+t.check.filter(function(x){return fill(x)}).map(function(x){return '<li>'+refs(x)+'</li>'}).join('')+'</ul>'+tmap(t)+'</div><div class="src">Source: '+esc(t.src)+'</div></div></details>';
       });
     });
     $('list').innerHTML=html||'<p class="empty">Nothing matches. Try fewer words, or pick All.</p>';
-    $('count').textContent=shown.length+' of '+T.length+' symptoms';
+    $('count').textContent=shown.length+' of '+T.filter(function(t){return okw(t.w)}).length+' symptoms';
   }
   $('q').addEventListener('input',function(){q=this.value.trim().toLowerCase();render()});
   $('cats').addEventListener('click',function(e){var b=e.target.closest('[data-cat]');if(!b)return;cat=b.getAttribute('data-cat');render()});

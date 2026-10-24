@@ -3252,5 +3252,355 @@
   ],
   "src": "trouble-data.js, extras: cause 'Ranges set for a Gaggia tank. The Silvia's is deeper, about 200 mm.' check 'Set the ranges in the ToFnLED settings, then check at known fill levels.' how-gaggiuino-works #tof: 'It plugs into the Qwiic socket, J2'.",
   "g": "tof"
+ },
+ {
+  "id": "sh-01",
+  "k": "safety",
+  "crit": true,
+  "g": "sh-live",
+  "w": "shelly",
+  "q": "With the Shelly fitted and the machine switched off, what is still live while it's plugged in?",
+  "a": [
+   "The inlet, the Shelly, the power switch and the wires between them",
+   "Nothing: the Shelly cuts everything",
+   "Only the inlet's pins",
+   "Only the PCB's 5 V side"
+  ],
+  "why": "The Shelly's relay only cuts what comes after it. The inlet, the Shelly itself, the power switch and AC1 carry mains whenever the cord is in, and SH2 too while the switch is on, so unplug before you open anything.",
+  "r": [
+   [
+    "pg",
+    "shl",
+    null,
+    "Switch: the L pole's center spade to SW"
+   ],
+   [
+    "rb",
+    "p0s3"
+   ]
+  ],
+  "src": "part-guides-data.js G.shl step 5; runbook p0s3; the Shelly's relay only switches O."
+ },
+ {
+  "id": "sh-02",
+  "k": "safety",
+  "crit": true,
+  "g": "sh-bridge",
+  "w": "shelly",
+  "q": "Why does the Shelly get its own leads from the inlet, instead of the machine's neutral running through its terminals?",
+  "a": [
+   "Shelly warns that using its L and N terminals as a bridge doubles the current through them and can overheat it",
+   "The Shelly has no N terminal",
+   "A relay must never touch neutral",
+   "So the power switch can still break neutral"
+  ],
+  "why": "Shelly's own docs warn against using its L and N terminals as bridges: it doubles the current through them and can overheat the device. Here SH4 only powers the Shelly, and AC2 shares the inlet's N tab with it.",
+  "r": [
+   [
+    "pg",
+    "shl",
+    null,
+    "Neutral: inlet N to the Shelly's N, and a splice"
+   ],
+   [
+    "map",
+    "run=SH4",
+    "SH4 on the wiring map"
+   ]
+  ],
+  "src": "us.shelly.com Plus 1PM UL: 'Make sure you are not using the L and N device terminals as bridges. Using them as bridges doubles the current through them which leads to overheating.'"
+ },
+ {
+  "id": "sh-03",
+  "k": "safety",
+  "crit": true,
+  "g": "sh-remote",
+  "w": "shelly",
+  "q": "Before switching the machine on from your phone when you're not beside it, what has to be true?",
+  "a": [
+   "Water in the tank, the boiler full, and the brew, steam and hot water switches off",
+   "The power switch is on",
+   "The drip tray is in",
+   "The portafilter is locked in"
+  ],
+  "why": "It heats with no one watching. The PCB fills the boiler at start-up, and with steam switched on it would heat to the steam setpoint. Refill the boiler after steaming, keep the tank filled and the switches off; the 165 °C safety thermostat is the last line if not.",
+  "r": [
+   [
+    "rb",
+    "p7s"
+   ]
+  ],
+  "src": "runbook p7s; official PCB guide: 'Filling boiler' after boot and brew temperature as the target; 165 C safety thermostat in realNiche's harness."
+ },
+ {
+  "id": "sh-04",
+  "k": "plan",
+  "g": "sh-model",
+  "w": "shelly",
+  "q": "Which Shelly does this site draw?",
+  "a": [
+   "A Shelly 1PM Gen4, the UL-certified 15 A version in North America",
+   "A Shelly 1 Mini, which switches 8 A",
+   "Any Shelly: they all switch the same current",
+   "A Shelly Plug between the wall and the machine"
+  ],
+  "why": "The 1PM Gen4 switches 16 A (15 A for the UL-certified US version) and reports power; the Mini models switch 8 A. A Shelly 1's relay is a dry contact and needs different wiring.",
+  "r": [
+   [
+    "rb",
+    "p0s"
+   ],
+   [
+    "pg",
+    "shl",
+    null,
+    "Pick the Shelly"
+   ]
+  ],
+  "src": "Shelly 1PM Gen4 doc: 16 A (240 V~); us.shelly.com: 1PM Gen4 UL-Certified 15A; Mini Gen4 up to 8 A; Shelly 1 Gen4: potential-free contacts."
+ },
+ {
+  "id": "sh-05",
+  "k": "plan",
+  "g": "sh-where",
+  "w": "shelly",
+  "q": "Where does the Shelly go, and why?",
+  "a": [
+   "Outside the case, in a closed enclosure on the back panel: Shelly rates it for 40 °C around it",
+   "Beside the boiler, where it's out of the way",
+   "Under the drip tray, where it stays dry",
+   "Stuck to the PCB housing, so the wires stay short"
+  ],
+  "why": "The inside of the case runs hotter than Shelly's 40 °C rating once the boiler is hot. It goes outside, in an enclosure made for mains wiring with its wires through a grommet, and you watch its temperature in the app at first, because a confined space can warm it too.",
+  "r": [
+   [
+    "rb",
+    "p0s2"
+   ],
+   [
+    "pg",
+    "shl",
+    null,
+    "Plan where it goes"
+   ]
+  ],
+  "src": "Shelly 1PM Gen4 doc: ambient -20 to 40 C; Plus 1PM UL: confined space can raise the ambient temperature above the allowed limits."
+ },
+ {
+  "id": "sh-06",
+  "k": "wiring",
+  "g": "sh-sw",
+  "w": "shelly",
+  "q": "Which wire tells the Shelly that the power switch is on?",
+  "a": [
+   "SH2, from the power switch's L pole center spade to SW",
+   "SH3, from O to SSR terminal 1",
+   "SH1, from inlet L to L",
+   "LV4, from J7 GND to the steam switch"
+  ],
+  "why": "AC1 brings line to the L pole's outer spade. With the switch on, SH2 carries it from the center spade to the Shelly's SW input, so it's a mains wire.",
+  "r": [
+   [
+    "map",
+    "run=SH2",
+    "SH2 on the wiring map"
+   ],
+   [
+    "pg",
+    "shl",
+    null,
+    "Switch: the L pole's center spade to SW"
+   ]
+  ],
+  "src": "runs.py SHELLY SH2; gblur's V6 E drawing: power switch to SW."
+ },
+ {
+  "id": "sh-07",
+  "k": "wiring",
+  "g": "sh-nsp",
+  "w": "shelly",
+  "q": "With the Shelly in, where do AC8 and AC9 start?",
+  "a": [
+   "A BN2 splice by the power switch, with AC2 on its other side",
+   "The power switch's N pole center spade, as before",
+   "The Shelly's N terminal",
+   "The inlet's N tab"
+  ],
+  "why": "The Shelly's relay breaks line only, so neutral isn't switched any more: AC2 ends in a splice by the power switch, and AC8 and AC9 start there. The switch's N pole stays empty.",
+  "r": [
+   [
+    "map",
+    "part=nsp",
+    "The neutral splice on the wiring map"
+   ],
+   [
+    "pg",
+    "shl",
+    null,
+    "Neutral: inlet N to the Shelly's N, and a splice"
+   ]
+  ],
+  "src": "runs.py SHELLY AC2/AC8/AC9 edits; gblur's V6 E drawing: neutral not through the power switch."
+ },
+ {
+  "id": "sh-08",
+  "k": "checks",
+  "g": "sh-open",
+  "w": "shelly",
+  "q": "Unplugged, with the Shelly fitted, why doesn't inlet L to PCB J11 read low any more?",
+  "a": [
+   "The Shelly's relay is open while it has no power",
+   "The power switch is off",
+   "J11 is only live once the PCB boots",
+   "The SSR is open"
+  ],
+  "why": "J11 now comes after the Shelly's relay, which is open whenever the Shelly is unpowered. So e13 expects OL or a high value, and e12 checks the switched line from the Shelly's O terminal instead.",
+  "r": [
+   [
+    "ck",
+    "e13"
+   ],
+   [
+    "ck",
+    "e12"
+   ]
+  ],
+  "src": "checks.tpl.html e12, e13; relay contact open without power (ESPHome Shelly 1 Gen4 config)."
+ },
+ {
+  "id": "sh-09",
+  "k": "checks",
+  "g": "sh-d10",
+  "w": "shelly",
+  "q": "With the Shelly fitted, which reading catches the element bypassing the SSR?",
+  "a": [
+   "Shelly O terminal to inlet N (d10)",
+   "Inlet L to inlet N (d7)",
+   "Inlet earth to the boiler ground spade (b2)",
+   "J9 R1 to SSR + (f7)"
+  ],
+  "why": "Inlet L only reaches the Shelly's own supply now. From the O terminal, a reading near the element's resistance means current gets around the SSR.",
+  "r": [
+   [
+    "ck",
+    "d10"
+   ]
+  ],
+  "src": "checks.tpl.html d7 (Shelly wording) and d10."
+ },
+ {
+  "id": "sh-10",
+  "k": "install",
+  "g": "sh-poweron",
+  "w": "shelly",
+  "q": "What should the Shelly's Action on power on be set to?",
+  "a": [
+   "Turn OFF, so a power cut never starts the machine by itself",
+   "Restore last known state, so it picks up where it was",
+   "Turn ON, so it's ready after an outage",
+   "Current state of the switch, so the rocker decides"
+  ],
+  "why": "A machine that starts heating by itself after a power cut, with no one there, is the risk to avoid. Turn OFF keeps it off until someone switches it on.",
+  "r": [
+   [
+    "rb",
+    "p5s2"
+   ],
+   [
+    "pg",
+    "shl",
+    null,
+    "Set it up at first power-on"
+   ]
+  ],
+  "src": "Shelly 1PM Gen4 web interface guide: Action on power on options Turn ON, Turn OFF, Restore last known state, Current state of the switch."
+ },
+ {
+  "id": "sh-11",
+  "k": "install",
+  "g": "sh-mode",
+  "w": "shelly",
+  "q": "An E keeps its push button, which springs back when you let go. Which Shelly input mode does it need?",
+  "a": [
+   "Button: each press toggles the machine",
+   "Switch: the switch's position is on or off",
+   "Detached: the switch is ignored",
+   "Edge Switch: any flip changes it"
+  ],
+  "why": "Button mode toggles on each press. Switch mode expects a switch that stays where it's put, like the M's rocker, and Detached ignores the switch altogether.",
+  "r": [
+   [
+    "rb",
+    "p5s2"
+   ]
+  ],
+  "src": "Shelly 1PM Gen4 web interface guide: Button, each press toggles; Switch, position corresponds to output."
+ },
+ {
+  "id": "sh-12",
+  "k": "install",
+  "g": "sh-edge",
+  "w": "shelly",
+  "q": "Why set an M's rocker to Toggle Switch rather than Edge Switch?",
+  "a": [
+   "With Edge Switch, flipping the rocker to off could turn the machine on",
+   "Edge Switch wears the rocker out",
+   "Edge Switch ignores the app",
+   "Edge Switch only works with a push button"
+  ],
+  "why": "With Edge Switch every change of the rocker's position toggles the output. After switching off from the app with the rocker up, flipping it to off would turn the machine on. With Toggle Switch, off always means off.",
+  "r": [
+   [
+    "rb",
+    "p5s2"
+   ]
+  ],
+  "src": "Shelly 1PM Gen4 web interface guide: Edge Switch, each change of the switch's position toggles the state; Toggle Switch, output follows the switch."
+ },
+ {
+  "id": "sh-13",
+  "k": "trouble",
+  "g": "sh-tr1",
+  "w": "shelly",
+  "q": "The power switch does nothing, but the app turns the machine on. What do you check first?",
+  "a": [
+   "The Shelly's input mode, then SH2 and AC1 with e14 and e15",
+   "The SSR's control wires",
+   "The thermocouple's polarity",
+   "The pressure sensor's O-ring"
+  ],
+  "why": "The Shelly works, so the problem is its input: Detached or the wrong mode, or SH2 or AC1 off their spades.",
+  "r": [
+   [
+    "tr",
+    "The power switch does nothing, but the app turns the machine on"
+   ],
+   [
+    "ck",
+    "e14"
+   ]
+  ],
+  "src": "trouble-data.js Shelly entry."
+ },
+ {
+  "id": "sh-14",
+  "k": "trouble",
+  "g": "sh-tr2",
+  "w": "shelly",
+  "q": "With the Shelly, the machine comes on by itself after a power cut. Why?",
+  "a": [
+   "Action on power on is set to Turn ON, Restore last known state, or the switch's state with the rocker left on",
+   "The SSR has failed closed",
+   "The PCB restarts the last profile",
+   "The thermocouple is reversed"
+  ],
+  "why": "The Shelly decides what happens when power returns. Set Action on power on to Turn OFF.",
+  "r": [
+   [
+    "tr",
+    "It comes on by itself after a power cut"
+   ]
+  ],
+  "src": "trouble-data.js Shelly entry; Shelly web interface guide."
  }
 ]

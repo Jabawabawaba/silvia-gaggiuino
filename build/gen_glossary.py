@@ -148,7 +148,12 @@ E = [
     ("Purge", "", "A second or two of steam into the drip tray, before steaming to clear condensed water out of the wand, and after it to blow out any milk drawn back inside.", [("Barista school", "barista-school.html#milk")]),
     ("TDS", "total dissolved solids", "How concentrated a drink is: the share of the cup that is dissolved coffee. Espresso is usually around 8 to 12%. With the dose and the yield it gives the extraction yield.", [("Barista school", "barista-school.html#practice")]),
     ("WDT", "Weiss distribution technique", "Stirring the grounds in the basket with fine needles to break up clumps before tamping, so water flows evenly through the puck.", [("Barista school", "barista-school.html#recipes")]),
+    ("Shelly", "", "A small Wi-Fi relay made to fit behind a wall switch. In this build an optional one, a 1PM, switches the whole machine on and off from a phone or a schedule, and the power switch becomes its input. Not part of the official Gaggiuino docs.", [("Part guides", "part-guides.html#shl"), ("Wiring", "wiring.html")]),
+    ("Ferrule", "", "A thin metal tube with a plastic collar, crimped over a stranded wire's end so no strand escapes a screw terminal. Each wire into the Shelly gets one.", [("Part guides", "part-guides.html#shl")]),
+    ("Dry contact", "potential-free contact", "A relay contact with no supply of its own, so it can switch any circuit. The Shelly 1 has one, between its I and O terminals; the 1PM this site draws switches its own L out to O instead.", [("Part guides", "part-guides.html#shl")]),
 ]
+# terms for an add-on, shown only once it is chosen in Your Silvia (machine.js conditions)
+WHEN = {"Shelly": "shelly", "Ferrule": "shelly", "Dry contact": "shelly"}
 
 
 def slug(t):
@@ -322,9 +327,10 @@ def render():
                 imgh = '<span class="gl-img">' + '<span class="sep"> · </span>'.join(
                     f'<a href="{IMGS[k][0]}" target="_blank" rel="noopener" title="From the official {html.escape(IMGS[k][2])} page">{html.escape(IMGS[k][1][0].upper() + IMGS[k][1][1:])}</a>'
                     for k in imgs) + "</span>"
-            out.append(f'<div class="gl-e" id="{slug(t)}" data-kind="{kind}"{" data-img" if imgs else ""}><dt>{html.escape(t)}{exh}</dt><dd>{html.escape(d)}{seeh}{imgh}</dd></div>')
+            wh = f' data-when="{WHEN[t]}"' if t in WHEN else ""
+            out.append(f'<div class="gl-e" id="{slug(t)}" data-kind="{kind}"{" data-img" if imgs else ""}{wh}><dt>{html.escape(t)}{exh}</dt><dd>{html.escape(d)}{seeh}{imgh}</dd></div>')
         out.append("</dl></section>")
-    return bar, "".join(out), len(E)
+    return bar, "".join(out), len([e for e in E if e[0] not in WHEN])
 
 
 def image_count():

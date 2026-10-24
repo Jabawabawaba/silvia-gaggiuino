@@ -279,3 +279,30 @@
 @media (prefers-reduced-motion: reduce){.pg-fig .wifi path{animation:none;opacity:.8}}
 .pg-group{font:700 clamp(24px,3.4vw,32px)/1.1 var(--f-display);text-transform:uppercase;letter-spacing:.02em;margin:36px 0 4px;padding-top:18px;border-top:3px solid var(--ink)}
 .pg-gnote{margin:0 0 8px;color:var(--muted);font-size:15.5px;max-width:75ch}
+/* the Shelly guide (gen_part_shelly.py) */
+.pg-fig .shb{fill:#E9EDF0;stroke:#59616A;stroke-width:1.2}
+.pg-fig .nm{font:600 14px var(--f-mono);fill:var(--ink)}
+.pg-fig text.onshb{fill:#2B3036}
+.pg-fig text.onpla{fill:#E7E9EB}
+.pg-fig .shhalo{fill:none;stroke:var(--surface);stroke-width:10;stroke-linecap:round;stroke-linejoin:round}
+.pg-fig .shw{fill:none;stroke-width:4.5;stroke-linecap:round;stroke-linejoin:round}
+.pg-fig .shw.L{stroke:#A0521F}
+.pg-fig .shw.N{stroke:#2F6FC0}
+.pg-fig .shw.O{stroke:#E08A1E}
+.pg-fig .shw.SW{stroke:#D9479B}
+.pg-fig .shw.E{stroke:#2D7A4C}
+.pg-fig .encl{fill:rgba(127,166,194,.08);stroke:var(--muted);stroke-width:1.4;stroke-dasharray:6 4}
+.pg-fig .grom{fill:#2B3036}
+.pg-fig .bn2{fill:#9AA3AA;stroke:#3E454C;stroke-width:1.1}
+.pg-fig .pig{fill:#2F6FC0;stroke:#1D3F6E;stroke-width:1}
+.pg-fig .hotz{fill:rgba(214,69,52,.12);stroke:#D64534;stroke-width:1.6;stroke-dasharray:5 3}
+.pg-fig .copperw{fill:none;stroke:#C47A3A;stroke-width:4;stroke-linecap:butt}
+.pg-fig .ferc{fill:#8C939A;stroke:#3E454C;stroke-width:1}
+.pg-fig .ferm{fill:url(#pg-steel);stroke:#59616A;stroke-width:1}
+.pg-fig .jawp{fill:#59616A;opacity:.85}
+.pg-fig .phone{fill:#23272C}
+.pg-fig .pscr{fill:#F4F6F7}
+.pg-fig .prow{fill:#FFFFFF;stroke:#CBD0D5;stroke-width:1}
+.pg-fig .pt{font:600 13px var(--f-mono);fill:#16191C}
+.pg-fig .pk{font:500 10.5px var(--f-mono);fill:#59616A}
+.pg-fig .pv{font:600 12px var(--f-mono);fill:#16191C}

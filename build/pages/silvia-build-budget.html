@@ -243,8 +243,13 @@ h1{font:700 clamp(36px,6.4vw,56px)/.95 var(--f-display);letter-spacing:.01em;mar
     {id:'meter',cat:'tools',name:'Multimeter',lo:25,hi:45,req:true,note:'Needed for the continuity checks before first power-on. A basic auto-ranging meter is enough.'},
     {id:'crimper',cat:'tools',name:'Open-barrel crimper',lo:20,hi:35,req:false,def:true,note:'For the bare spades at the boiler. Turn this off if your crimper is already the open-barrel kind.'},
     {id:'tof',cat:'extras',name:'Water tank sensor',sub:'ToF only, no LED',lo:15,hi:35,req:false,def:false,note:'Tank level on screen and a low-water warning at 20%.'},
-    {id:'led',cat:'extras',name:'LED switch mod',lo:5,hi:15,req:false,def:false,note:'Brings back the switch lights after the low-voltage conversion: orange 5 mm LEDs with their own 1k to 3k resistors.'}
+    {id:'led',cat:'extras',name:'LED switch mod',lo:5,hi:15,req:false,def:false,note:'Brings back the switch lights after the low-voltage conversion: orange 5 mm LEDs with their own 1k to 3k resistors.'},
+    /* the Shelly add-on: shown only once it's chosen in Your Silvia (when, see machine.js) */
+    {id:'shelly',when:'shelly',wtag:'Shelly add-on',cat:'extras',name:'Shelly smart relay',sub:'1PM Gen4, enclosure and fittings',lo:50,hi:85,req:false,def:true,note:'Turns the machine on and off from your phone; unofficial. The Shelly 1PM Gen4 is $32.99 from Shelly US (UL-certified, 15 A). Add a closed enclosure made for mains wiring, a grommet, ferrules and a ferrule crimper. Rough total.',src:[['Shelly US','https://us.shelly.com/products/shelly-1pm-gen4-ul-certified-list']]}
   ];
+  function okw(w){var m=window.SilviaMachine;if(!w)return true;if(!m)return !/(^|;)shelly/.test(w);return m.matches(w)}
+  /* a line counts when it's required or ticked, and fits Your Silvia */
+  function counts(l){return okw(l.when)&&(l.req||!!state.on[l.id])}
   var SUPPLIERS=[
     {id:'diyefi',name:'DIY-EFI (UK)',note:'An approved supplier in the official docs. The screen comes with a 60 cm cable. UK shipping and any import duty come on top.',src:[['DIY-EFI','https://diy-efi.co.uk/product-category/gaggiuino/']]},
     {id:'peak',name:'Peak Coffee',note:'Ships weekly from Asia with US tax included. Talon OK\'d its PCB and screen for a Silvia build in 2025. Not on the docs\' current approved list; no warranty, and no refunds once an order is packed.',src:[['Peak Coffee','https://www.peakcoffee.cc/product-category/gaggiuino/']]}
@@ -294,7 +299,7 @@ h1{font:700 clamp(36px,6.4vw,56px)/.95 var(--f-display);letter-spacing:.01em;mar
     var mp=priceOf(byId(MACHINES,machineId||state.machine));
     t.machine.lo+=mp.lo;t.machine.hi+=mp.hi;
     LINES.forEach(function(l){
-      if(l.req||state.on[l.id]){var p=priceOf(l,sup);t[l.cat].lo+=p.lo;t[l.cat].hi+=p.hi}
+      if(counts(l)){var p=priceOf(l,sup);t[l.cat].lo+=p.lo;t[l.cat].hi+=p.hi}
     });
     var sp=priceOf(byId(SCALES,state.scale));
     t.extras.lo+=sp.lo;t.extras.hi+=sp.hi;
@@ -322,7 +327,7 @@ h1{font:700 clamp(36px,6.4vw,56px)/.95 var(--f-display);letter-spacing:.01em;mar
     return '<div class="line" data-line="'+l.id+'">'+
       '<div class="tick">'+tick+'</div>'+
       '<div class="lbody">'+
-        '<div class="lname">'+nameInner+(cur(l).sub?'<span class="sub">'+esc(cur(l).sub)+'</span>':'')+(l.req?'<span class="tag">Required</span>':'')+'</div>'+
+        '<div class="lname">'+nameInner+(cur(l).sub?'<span class="sub">'+esc(cur(l).sub)+'</span>':'')+(l.req?'<span class="tag">Required</span>':l.wtag?'<span class="tag">'+esc(l.wtag)+'</span>':'')+'</div>'+
         '<p class="note" id="note-'+l.id+'">'+esc(cur(l).note)+'</p>'+srcHtml(cur(l).src)+
       '</div>'+
       '<div class="lprice"><span class="amt" data-amt="'+l.id+'"></span><span class="own" data-own="'+l.id+'" hidden>Your price</span>'+
@@ -378,6 +383,7 @@ h1{font:700 clamp(36px,6.4vw,56px)/.95 var(--f-display);letter-spacing:.01em;mar
       document.querySelector('[data-amt="'+l.id+'"]').textContent=rng(p.lo,p.hi);
       document.querySelector('[data-own="'+l.id+'"]').hidden=!p.own;
       document.querySelector('[data-line="'+l.id+'"]').classList.toggle('off',!active);
+      document.querySelector('[data-line="'+l.id+'"]').hidden=!okw(l.when);
       var showOv=p.own||!!openOverrides[l.id];
       document.querySelector('[data-ov="'+l.id+'"]').hidden=!showOv;
       document.querySelector('[data-edit="'+l.id+'"]').hidden=showOv;
@@ -411,7 +417,7 @@ h1{font:700 clamp(36px,6.4vw,56px)/.95 var(--f-display);letter-spacing:.01em;mar
     var owns=Object.keys(state.price).filter(function(k){
       if(k===other) return false;
       if(byId(SCALES,k)) return k===state.scale;
-      var l=byId(LINES,k); if(l) return l.req||!!state.on[l.id];
+      var l=byId(LINES,k); if(l) return counts(l);
       return k===state.machine;
     }).length;
     $('compare').innerHTML=
@@ -489,6 +495,7 @@ h1{font:700 clamp(36px,6.4vw,56px)/.95 var(--f-display);letter-spacing:.01em;mar
   renderStatic();
   state=loadLocal()||defaults();
   syncControls();render();setStatus('loading');
+  window.addEventListener('silvia-machine',function(){render()});
 
   document.addEventListener('change',function(e){
     var t=e.target;

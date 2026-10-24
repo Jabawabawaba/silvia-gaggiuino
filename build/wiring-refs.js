@@ -24,7 +24,7 @@
     })();
     var CKT=%%CHECK_INDEX%%;
     var LINK={runbook:'%%LINK_RUNBOOK%%',checks:'%%LINK_CHECKS%%',trouble:'%%LINK_TROUBLE%%',led:'%%LINK_LED%%',guides:'%%LINK_GUIDES%%'};
-    var GNAME={tc:'Thermocouple',ps:'Pressure sensor',wire:'Making the wires',ssr:'SSR',sw:'Switches',scr:'Screen housing',tof:'ToFnLED',fw:'Firmware updates',scl:'Hardware scales'};
+    var GNAME={tc:'Thermocouple',ps:'Pressure sensor',wire:'Making the wires',ssr:'SSR',sw:'Switches',scr:'Screen housing',tof:'ToFnLED',fw:'Firmware updates',scl:'Hardware scales',shl:'Shelly smart relay'};
     /* cables that come with their parts: nothing to make */
     var MADE=['LV9','LV10','LV11','OP1','OP2'];
     /* the LED switch mod's own wiring step: the switch signal and ground runs, and the LED runs */
@@ -93,7 +93,7 @@
       if(rb.length)groups.push(['Runbook',rb]);
       var ck=[];
       CKT.forEach(function(x){
-        var t=CK[x[0]];if(!t)return;
+        var t=CK[x[0]];if(!t||(x[2]&&!ok(x[2])))return;
         if(covers(resolve(t,c),sel,c))ck.push('<a href="'+base(LINK.checks)+'#'+x[0]+'" title="'+e(x[1])+'">'+x[0]+'</a>');
       });
       if(ck.length)groups.push(['Power-on checks',ck]);

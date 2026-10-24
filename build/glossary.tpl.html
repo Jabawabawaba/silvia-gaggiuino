@@ -65,14 +65,17 @@ mark{background:var(--accent-soft);color:inherit;border-radius:2px}
 (function(){
   var q=document.getElementById('gq'),kind='all',items=Array.prototype.slice.call(document.querySelectorAll('.gl-e')),secs=Array.prototype.slice.call(document.querySelectorAll('.gl-sec'));
   items.forEach(function(e){e._t=e.textContent.toLowerCase()});
+  /* terms for an add-on (data-when, like the Shelly) show only once it's chosen in Your Silvia */
+  function mine(e){var w=e.getAttribute('data-when'),m=window.SilviaMachine;if(!w)return true;if(!m)return !/(^|;)shelly/.test(w);return m.matches(w)}
   function run(){
-    var s=q.value.trim().toLowerCase(),n=0;
-    items.forEach(function(e){var ok=(kind==='all'||(kind==='img'?e.hasAttribute('data-img'):e.getAttribute('data-kind')===kind))&&(!s||e._t.indexOf(s)>=0);e.hidden=!ok;if(ok)n++});
+    var s=q.value.trim().toLowerCase(),n=0,all=0;
+    items.forEach(function(e){var my=mine(e);if(my)all++;var ok=my&&(kind==='all'||(kind==='img'?e.hasAttribute('data-img'):e.getAttribute('data-kind')===kind))&&(!s||e._t.indexOf(s)>=0);e.hidden=!ok;if(ok)n++});
     secs.forEach(function(sec){sec.hidden=!sec.querySelector('.gl-e:not([hidden])')});
-    document.getElementById('gcount').textContent=n+' of '+items.length;
+    document.getElementById('gcount').textContent=n+' of '+all;
     document.getElementById('gempty').hidden=n>0;
   }
   q.addEventListener('input',run);
+  window.addEventListener('silvia-machine',run);
   Array.prototype.forEach.call(document.querySelectorAll('[data-k]'),function(b){b.addEventListener('click',function(){kind=b.getAttribute('data-k');Array.prototype.forEach.call(document.querySelectorAll('[data-k]'),function(x){x.setAttribute('aria-pressed',String(x===b))});run()})});
   run();
 })();

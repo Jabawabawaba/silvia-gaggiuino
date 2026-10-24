@@ -9,8 +9,9 @@
   var GM=window.SilviaMachine,RM=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
   var EASE='cubic-bezier(.45,0,.2,1)';
   function $(id){return document.getElementById(id)}
-  function m(w){return !w||!GM||GM.matches(w)}
-  function T(x){if(x==null)return '';if(typeof x==='string')return x;return x.filter(function(s){return typeof s==='string'||m(s[1])}).map(function(s){return typeof s==='string'?s:s[0]}).join(' ')}
+  /* the Shelly add-on shows only once it's chosen, so with no Your Silvia at all its pieces stay hidden */
+  function m(w){if(!w)return true;if(!GM)return !/(^|;)shelly/.test(w);return GM.matches(w)}
+  function T(x){if(x==null)return '';if(typeof x==='string')return x;if(GM)return GM.txt(x);return x.filter(function(s){return typeof s==='string'||m(s[1])}).map(function(s){return typeof s==='string'?s:s[0]}).join(' ').replace(/ ([,.;:])/g,'$1')}
   function prof(){return (GM&&GM.get())||{}}
   function famOf(){return null}
   function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
@@ -171,18 +172,19 @@
       ps:['On a 1/8" tee at the OPV, through an elbow that keeps it clear of the steam pipes. Some builds use the 3-way valve\'s bottom port instead (Talon\'s does); both work, and the OPV tee has an exact parts list.'],
       wire:['Every run of realNiche\'s harness, mains and low voltage. Ends at the boiler, the safety thermostat and the solenoid get bare spades under silicone tape.'],
       ssr:['On the left wall inside the machine, clear of the pump. It switches the element; the PCB drives it from J9.'],
-      sw:['Brew, steam and hot water become low-voltage inputs to the PCB; the power switch stays on mains. The same on every Silvia.',['The E needs a latching rocker first.','model:E']],
+      sw:['Brew, steam and hot water become low-voltage inputs to the PCB; the power switch stays on mains. The same on every Silvia.',['The E needs a latching rocker first.','model:E;!shelly'],['With the Shelly, the power switch only signals it.','shelly'],['The E keeps its push button for that.','model:E;shelly']],
       scr:['On top of or in front of the machine, on the mount you print or order; its cable runs inside to J1.'],
       tof:['Above the water tank, under the lid, on its cable from J2 on the back of the PCB.'],
       fw:['Over Wi-Fi from a phone or computer, with the machine closed up; by wire only as a fallback.'],
-      scl:['Under the drip tray, on a load cell mount made for the Silvia, with the boards and the cable to J8 inside.']};
+      scl:['Under the drip tray, on a load cell mount made for the Silvia, with the boards and the cable to J8 inside.'],
+      shl:['Outside the case, in a closed enclosure on the back panel. Its four wires reach the inlet, the power switch and SSR terminal 1 through a grommet.']};
     for(var k in w){var e=$('pg-'+k+'-where');if(e)e.textContent=T(w[k])}
   }
 
   var guides={};
   function init(){
     where();
-    ['tc','ps','wire','ssr','sw','scr','tof','fw','scl'].forEach(function(k){guides[k]=new Guide(k,G[k])});
+    ['tc','ps','wire','ssr','sw','scr','tof','fw','scl','shl'].forEach(function(k){guides[k]=new Guide(k,G[k])});
     window.addEventListener('silvia-machine',function(){where();for(var k in guides)if(guides[k].root)guides[k].setup(false)});
     window.addEventListener('hashchange',fromHash);fromHash();
   }

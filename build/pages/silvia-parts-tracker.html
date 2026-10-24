@@ -260,7 +260,11 @@ h2{font:600 22px/1.1 var(--f-display);letter-spacing:.05em;text-transform:upperc
         subs:[['board','ToFnLED board: DIY-EFI (£30) or the Gaggiuino.co kit option','https://diy-efi.co.uk/product-category/gaggiuino/page/2/'],['cable','4-pin JST SH Qwiic cable, 250 mm or longer, "opposite direction" type','https://www.digikey.com/en/products/detail/jst-sales-america-inc/A04SR04SR30K254A/9922185'],['housing','Housing ($2 at Hudson)','https://gaggiuino.hudsoncreativegroup.com/Store/Product/42'],['disk','Adhesive steel disk to hold the magnets ($28 for 50, or a phone-mount plate)','https://totalelement.com/products/1-inch-steel-disc-with-3m-adhesive-blank-metal-strike-plates-50-pack'],['coat','Clear nail polish, for conformal coating (any drugstore)']]},
       {id:'led',name:'LED switch mod',use:'Brings back the lights in the brew, steam and hot water switches, which go dark once they run on low voltage.',spec:'Brings back the lights in the brew, steam and hot water switches, which go dark once they run on low voltage. Per mjr’s Discord guide: remove the stock lamp and the two 47k metal studs, then fit an orange 5 mm LED with its own resistor, powered from the 5 V screen line. Orange with 1k to 3k ohms matches the other switch lights best. Wiring: 5 V and ground go to the two outer spades, and the PCB input goes to the center spade on the ground side. Before connecting to the PCB: check with the multimeter that the poles are open when off and shorted when on, then touch a 5 V phone charger to the center spades. When the LED lights, the pole on the charger’s red lead is the 5 V side: wire 5 V to that pole’s outer spade and ground to the other. If 5 V and ground ever get swapped, move the PCB input with the ground, or the input sees 5 V.',lo:5,hi:15,req:false,def:'skip',
         src:[['Illustrated guide','https://claude.ai/artifact/YammPPcWMq2CmaBdT3L1km']],
-        subs:[['leds','3 orange 5 mm LEDs (a pack one builder used for a good color match)','https://www.aliexpress.com/item/1005005708360014.html'],['res','3 resistors, 1k to 3k ohms, 1/4 W','https://www.aliexpress.com/item/3256802484566250.html'],['splice','BN1.25 butt splice to tap the 5 V line','https://www.aliexpress.com/item/3256801144001097.html'],['melf','Optional: 0 ohm 0407 MELFs in place of the studs, if you’d rather not just remove them','https://www.digikey.com/en/products/detail/vishay/MMB02070Z0000ZB200/2177496']]}
+        subs:[['leds','3 orange 5 mm LEDs (a pack one builder used for a good color match)','https://www.aliexpress.com/item/1005005708360014.html'],['res','3 resistors, 1k to 3k ohms, 1/4 W','https://www.aliexpress.com/item/3256802484566250.html'],['splice','BN1.25 butt splice to tap the 5 V line','https://www.aliexpress.com/item/3256801144001097.html'],['melf','Optional: 0 ohm 0407 MELFs in place of the studs, if you’d rather not just remove them','https://www.digikey.com/en/products/detail/vishay/MMB02070Z0000ZB200/2177496']]},
+      /* the Shelly add-on: listed only once it's chosen in Your Silvia (when, see machine.js) */
+      {id:'shelly',when:'shelly',wtag:'Shelly add-on',name:'Shelly smart relay and its enclosure',use:'Switches the machine on and off from your phone or on a schedule; the power switch becomes its input. An unofficial add-on.',spec:'A Shelly 1PM Gen4: it switches 16 A and reports the power the machine draws. In North America, the UL-certified version, rated 15 A. Not a Mini, which switches 8 A. It goes outside the case, in a closed enclosure made for mains wiring: Shelly rates it for 40 °C around it at most. Rough total.',lo:50,hi:85,req:false,def:'need',
+        src:[['Shelly 1PM Gen4 specs','https://www.shelly.com/blogs/documentation/shelly-1pm-gen4']],
+        subs:[['relay','Shelly 1PM Gen4, UL-certified in North America ($32.99 from Shelly US)','https://us.shelly.com/products/shelly-1pm-gen4-ul-certified-list'],['encl','A closed enclosure made for mains wiring, with room for air around the Shelly and screws to fix it to the back panel'],['grom','A rubber grommet for where its wires pass the back panel'],['ferr','Insulated bootlace ferrules, 0.75 mm² (18 AWG), with 6 mm sleeves, and a ferrule crimper'],['spl','Two blue spades for two wires each, for the inlet\'s L and N tabs, a BN2 butt splice and silicone heat shrink']]}
     ]}
   ];
   var STATUSES=[['need','To buy'],['ordered','Ordered'],['received','Received'],['have','Already have'],['skip','Not getting']];
@@ -301,8 +305,9 @@ h2{font:600 22px/1.1 var(--f-display);letter-spacing:.05em;text-transform:upperc
     out.updatedAt=typeof s.updatedAt==='number'?s.updatedAt:0;
     return out;
   }
+  function okw(w){var m=window.SilviaMachine;if(!w)return true;if(!m)return !/(^|;)shelly/.test(w);return m.matches(w)}
   function allParts(){
-    var list=[];GROUPS.forEach(function(g){g.parts.forEach(function(p){list.push(p)})});
+    var list=[];GROUPS.forEach(function(g){g.parts.forEach(function(p){if(okw(p.when))list.push(p)})});
     state.custom.forEach(function(c){list.push({id:c.id,name:c.name,lo:c.est,hi:c.est,req:false,def:'need',group:'custom',custom:true,src:c.url?[['Link',c.url]]:null})});
     return list;
   }
@@ -333,7 +338,7 @@ h2{font:600 22px/1.1 var(--f-display);letter-spacing:.05em;text-transform:upperc
   var OPEN={};
   function partHtml(p){
     var s=ps(p);
-    var tags=(p.req?'':'<span class="tag">'+(p.custom?'Added':'Optional')+'</span>');
+    var tags=(p.req?'':'<span class="tag">'+(p.custom?'Added':p.wtag?esc(p.wtag):'Optional')+'</span>');
     var src=(p.src&&p.src.length)?'<div class="src">'+p.src.map(function(x){return '<a href="'+esc(x[1])+'" target="_blank" rel="noopener">'+esc(x[0])+'</a>'}).join(' · ')+'</div>':'';
     var opts=STATUSES.map(function(o){return '<option value="'+o[0]+'"'+(s.status===o[0]?' selected':'')+'>'+o[1]+'</option>'}).join('');
     var subs='';
@@ -360,7 +365,7 @@ h2{font:600 22px/1.1 var(--f-display);letter-spacing:.05em;text-transform:upperc
   function renderAll(){
     var html='';
     GROUPS.forEach(function(g){
-      html+='<section class="group" data-group="'+g.id+'" aria-labelledby="h-'+g.id+'"><div class="group-h"><h2 id="h-'+g.id+'">'+esc(g.name)+'</h2><span class="sum" data-gsum="'+g.id+'"></span></div>'+g.parts.map(partHtml).join('')+'</section>';
+      html+='<section class="group" data-group="'+g.id+'" aria-labelledby="h-'+g.id+'"><div class="group-h"><h2 id="h-'+g.id+'">'+esc(g.name)+'</h2><span class="sum" data-gsum="'+g.id+'"></span></div>'+g.parts.filter(function(p){return okw(p.when)}).map(partHtml).join('')+'</section>';
     });
     if(state.custom.length){
       var cparts=allParts().filter(function(p){return p.custom});
@@ -551,6 +556,7 @@ h2{font:600 22px/1.1 var(--f-display);letter-spacing:.05em;text-transform:upperc
 
   state=loadLocal()||defaults();
   renderAll();setStatus('loading');
+  window.addEventListener('silvia-machine',function(){renderAll()});
   connect();
 })();
 </script>

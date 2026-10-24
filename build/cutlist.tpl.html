@@ -62,7 +62,7 @@
   <header class="top">
     <div class="plate"><span class="rivet" aria-hidden="true"></span><span><b>Cut list</b></span><span>Rancilio Silvia harness</span><span>18 + 22 AWG</span><span class="rivet" aria-hidden="true"></span></div>
     <h1>Silvia Harness Cut List</h1>
-    <p class="lede">What to buy and what to cut for the custom harness, worked out run by run from the <a href="wiring.html">wiring reference</a>. Shared terminals are counted once, so the connector totals are what you actually crimp.</p>
+    <p class="lede">What to buy and what to cut for the custom harness, worked out run by run from the <a href="wiring.html">wiring reference</a>. Shared terminals are counted once, so the connector totals are what you actually crimp.<span data-when="shelly"> With the Shelly, its four runs, their ferrules and the neutral splice are counted too, and AC3 drops out.</span></p>
   </header>
 
   <div class="bar" role="group" aria-label="Settings">
@@ -80,7 +80,7 @@
     <section class="panel" aria-labelledby="h-conn">
       <h2 id="h-conn">Connectors</h2>
       <table><thead><tr><th>Part</th><th class="num">Need</th><th class="num">Buy</th></tr></thead><tbody id="conn"></tbody></table>
-      <p class="note">"Buy" adds a few spares for crimps you redo. Bare spades need an open-barrel crimper; the rest take an insulated-terminal crimper.</p>
+      <p class="note" id="conn-note">"Buy" adds a few spares for crimps you redo. Bare spades need an open-barrel crimper; the rest take an insulated-terminal crimper.</p>
     </section>
   </div>
 
@@ -97,7 +97,9 @@
 
 <script>
 (function(){
-  var RUNS=%%RUNS%%;
+  /* the harness as drawn, and with the Shelly add-on once it's chosen in Your Silvia */
+  var RUNS0=%%RUNS%%,RUNS1=%%RUNS_SH%%,RUNS=RUNS0;
+  function shOn(){var m=window.SilviaMachine;return !!(m&&m.shelly&&m.shelly())}
   var KEY='silvia-cut-list-v1';
   var KIND={
     f:['6.3 mm female spade, insulated, red','one 18 AWG wire'],
@@ -111,9 +113,11 @@
     lv2:['6.3 mm female spade, insulated, red','two 22 AWG wires'],
     jst:['JST-PH 2.0 crimp terminal',''],
     jst3:['JST-PH 2.0 crimp terminal',''],
-    bn:['BN1.25 butt splice','LED mod 5 V tap']
+    bn:['BN1.25 butt splice','LED mod 5 V tap'],
+    bn2:['BN2 butt splice, bare','the neutral splice: AC2 on one side, AC8 and AC9 on the other'],
+    fer:['Bootlace ferrule, insulated, 0.75 mm² (18 AWG)','one per wire in the Shelly\'s screw terminals']
   };
-  var ORDER=['b','b2','f','f2','fk','fk2','fks','lv','lv2','jst','bn'];
+  var ORDER=['b','b2','f','f2','fk','fk2','fks','lv','lv2','jst','bn','bn2','fer'];
   var SWATCH={red:'#C2412F',orange:'#E08A1E',blue:'#2F5FB3',green:'#2D7A4C',white:'#F4F4F2',black:'#1B1D20',yellow:'#E3C21A'};
   var STOCK={AC1:1,AC2:1,G1:1};
   function $(id){return document.getElementById(id)}
@@ -133,6 +137,7 @@
   function gaugeOf(r){return r.gauge.indexOf('22')===0?'22 AWG':'18 AWG'}
 
   function render(){
+    var sh=shOn();RUNS=sh?RUNS1:RUNS0;
     $('slack').value=st.slack;$('slack-o').textContent=st.slack+'%';
     $('opt-stock').checked=st.stock;$('opt-led').checked=st.led;
     var runs=RUNS.filter(active);
@@ -148,7 +153,7 @@
       var p=k.split('|'),mm=tot[k],buy=Math.max(1,Math.ceil(mm/500)*0.5);
       return '<tr><td><span class="swatch" style="background:'+(SWATCH[p[1]]||'transparent')+'"></span>'+esc(p[0])+' '+esc(p[1])+'</td><td class="num">'+(mm/1000).toFixed(2)+' m</td><td class="num big">'+buy.toFixed(1)+' m</td></tr>';
     }).join('');
-    $('wire-note').textContent='Colors are a suggestion: line red, heater orange, neutral blue, earth green, switch signals white, switch ground black'+(st.led?', LED 5 V yellow':'')+'. Any distinct colors work if you label both ends. 200 °C silicone wire throughout.'+(missing.length?' Not counted yet, no length entered: '+missing.join(', ')+'.':'');
+    $('wire-note').textContent='Colors are a suggestion: line red, heater orange, neutral blue, earth green, switch signals white, switch ground black'+(st.led?', LED 5 V yellow':'')+'. Any distinct colors work if you label both ends. 200 °C silicone wire throughout.'+(sh&&!st.stock?' With the Shelly, a reused AC1 or AC2 needs a new two-wire spade at the inlet end, shared with SH1 or SH4, and AC2\'s other end goes into the neutral splice.':'')+(missing.length?' Not counted yet, no length entered: '+missing.join(', ')+'.':'');
     /* connectors: shared terminals once */
     var seen={},cnt={},housings={};
     runs.forEach(function(r){
@@ -169,7 +174,8 @@
     $('conn').innerHTML=rows.map(function(x){
       var buy=x.n+Math.max(2,Math.ceil(x.n*0.2));
       return '<tr><td>'+esc(x.name)+'<div class="note">'+esc(x.uses.filter(function(u){return !/× $/.test(u)}).join(' · '))+'</div></td><td class="num">'+x.n+'</td><td class="num big">'+buy+'</td></tr>';
-    }).join('')+(bare?'<tr><td>Self-fusing silicone tape<div class="note">Over each bare spade at the boiler and valve</div></td><td class="num">'+bare+' spades</td><td class="num big">1 roll</td></tr>':'');
+    }).join('')+(bare?'<tr><td>Self-fusing silicone tape<div class="note">Over each bare spade at the boiler and valve</div></td><td class="num">'+bare+' spades</td><td class="num big">1 roll</td></tr>':'')+(cnt.bn2?'<tr><td>Silicone heat shrink<div class="note">Over the neutral splice</div></td><td class="num">'+cnt.bn2+' splice</td><td class="num big">10 cm</td></tr>':'');
+    $('conn-note').textContent='"Buy" adds a few spares for crimps you redo. Bare spades need an open-barrel crimper; the rest take an insulated-terminal crimper.'+(cnt.fer?' Ferrules take a ferrule crimper.':'');
     /* cut table */
     var groups=[['L','Line'],['H','Heater line'],['N','Neutral'],['E','Earth'],['LV','Switch signals'],['LVG','Switch ground'],['S','SSR control and sensors'],['OPT','LED switch mod']];
     var html='',n=0,done=0;
@@ -199,6 +205,7 @@
     if(mid){var v=e.target.value;if(v==='')delete st.mm[mid];else{var x=Number(v);if(isFinite(x)&&x>0)st.mm[mid]=Math.round(x)}save();render();var el=$('mm-'+mid);if(el)el.focus()}
   });
   $('clear').addEventListener('click',function(){st.cut={};save();render()});
+  window.addEventListener('silvia-machine',function(){render()});
   render();
 })();
 </script>
