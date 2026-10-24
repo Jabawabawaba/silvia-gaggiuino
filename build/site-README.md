@@ -14,6 +14,7 @@ Gaggiuino is documented for the Gaggia Classic. The Silvia works, but there is n
 | `conversion.html` | Everyone | A scroll-driven animation of the whole conversion, from the stock machine to a profiled shot, each step linked to its page |
 | `how-silvia-works.html` | Learning | The stock machine as an animated x-ray you can run through heat, brew, hot water and steam; every part explained; a live ladder diagram of the stock circuit you can switch |
 | `how-gaggiuino-works.html` | Learning | What the PCB, sensors and SSR take over, how Gaggiuino holds the temperature and drives the pump, the new parts and mods, and why the low-voltage side floats, with interactive figures |
+| `barista-school.html` | Learning | Hands-on lessons on the stock machine: temperature surfing for light, medium and dark roasts, steaming milk for two, refilling the boiler after steaming, and cleaning, with a live temperature map and a coach that grades every shot |
 | `glossary.html` | Reference | %%GL_N%% acronyms and shop words used across the site, searchable, each with a plain definition and links |
 | `budget.html` | Planning | Cost builder: new or used machine, scales choice, ToF, LED mod; enter real quotes |
 | `used-checklist.html` | Buying used | Inspection checklist per listing, with a price gauge |

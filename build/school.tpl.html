@@ -1,0 +1,157 @@
+<title>Barista School</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+%%BASECSS%%
+%%INCLUDE:learn-sim.css%%
+%%INCLUDE:school.css%%
+</style>
+
+<div class="wrap school-wrap">
+  <header class="top">
+    <div class="plate"><span class="rivet" aria-hidden="true"></span><span><b>Learn</b></span><span id="bs-plate">Rancilio Silvia</span><span>stock machine</span><span class="rivet" aria-hidden="true"></span></div>
+    <h1>Barista School</h1>
+    <p class="lede">Learn to pull shots for light, medium and dark roasts on a stock Silvia by surfing its temperature wave, steam silky milk for two, refill the boiler and get back to brew temperature afterwards, and keep the machine clean. A live temperature map shows where you are in the heating cycle and what a shot started now would get; a coach grades every shot, jug and clean-up.</p>
+    <p class="fine school-note"><b>Stock machine.</b> Everything here is for the Silvia as it comes, before Gaggiuino. With Gaggiuino the board holds the brew temperature, so surfing is no longer needed; the puck prep, recipes, steaming and cleaning all still apply. <span id="bs-name">Drawn as a 120 V Silvia V6 M; pick your version in Your Silvia and the machine, its lights and its timings follow.</span></p>
+  </header>
+
+  <section class="block" id="course" aria-labelledby="h-course">
+    <div class="sec-h"><h2 id="h-course">The course</h2><span class="sum" id="course-count"></span></div>
+    <p class="fine course-lede">Short lessons, each on the practice bench below. Steps tick themselves off as you do them, and each lesson ends with up to three stars. Your progress saves in this browser.</p>
+    <div class="course" id="course-map"></div>
+  </section>
+
+  <section class="block" id="practice" aria-labelledby="h-practice">
+    <div class="sec-h"><h2 id="h-practice">Practice bench</h2><span class="sum" id="bs-mname"></span></div>
+    <div class="school sim" id="school">
+      <aside class="lesson" id="lesson" aria-live="polite" aria-label="Lesson"></aside>
+      <div class="stage">
+        <div class="tbar" role="toolbar" aria-label="Machine and time">
+          <button type="button" class="tbtn" id="t-reset" title="A cold machine, just switched off overnight"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12a7 7 0 1 0 2.1-5"/><path d="M4 4v5h5"/></svg>Cold start</button>
+          <button type="button" class="tbtn" id="t-warm" title="Switched on 40 minutes ago, heat-soaked"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3c2 3-2 4 0 7s5 2 5 6a5 5 0 0 1-10 0c0-3 2-4 2-6"/></svg>Warm machine</button>
+          <span class="tseg" role="group" aria-label="Speed">
+            <button type="button" data-speed="1" aria-pressed="true">1×</button><button type="button" data-speed="5" aria-pressed="false">5×</button><button type="button" data-speed="20" aria-pressed="false">20×</button><button type="button" data-speed="60" aria-pressed="false">60×</button>
+          </span>
+          <button type="button" class="tbtn icon" id="t-pause" aria-pressed="false" aria-label="Pause"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="pz" d="M8 5v14M16 5v14"/><path class="pl" d="M8 5l11 7-11 7z"/></svg></button>
+        </div>
+        <div class="panes">
+          <div class="pane mach">
+            %%INCLUDE:school-sim-front.html%%
+            <div class="ro" role="group" aria-label="Readouts">
+              <div class="roi"><span class="rok">Scale</span><b id="ro-g">0.0</b><span class="rou">g</span></div>
+              <div class="roi"><span class="rok">Timer</span><b id="ro-t">0.0</b><span class="rou">s</span></div>
+              <div class="roi"><span class="rok">Ratio</span><b id="ro-r">–</b></div>
+              <div class="roi"><span class="rok">Milk</span><b id="ro-m">–</b><span class="rou">°C</span></div>
+              <div class="roi sim-only"><span class="rok">Boiler</span><b id="ro-b">–</b><span class="rou">°C</span></div>
+            </div>
+            <p class="tapnote">Tap the switches, the knob, the portafilter, the cup, the jug and the drip tray. The tank is in the inside view.</p>
+          </div>
+          <div class="pane mapp">
+            <div class="vtabs" role="tablist" aria-label="View">
+              <button type="button" role="tab" data-view="map" aria-selected="true">Temperature map</button><button type="button" role="tab" data-view="x" aria-selected="false">Inside the machine</button>
+            </div>
+            <div data-viewp="map" class="mapview">
+              <div class="surf" id="surf" aria-live="off">
+                <div class="sm-top"><span class="sm-k">A shot started now</span><span class="sm-tr" id="sm-tr"></span></div>
+                <div class="sm-v"><b id="sm-T">–</b><span class="sm-u">°C at the puck</span></div>
+                <p class="sm-st" id="sm-st"></p>
+                <div class="sm-g" aria-hidden="true"><span class="sm-bd" id="sm-bd"></span><span class="sm-mk" id="sm-mk"></span><span class="sm-lo" id="sm-lo"></span><span class="sm-hi" id="sm-hi"></span></div>
+                <p class="sm-ph" id="sm-ph"></p>
+              </div>
+              <div class="tm" id="tmap"></div>
+              <div class="tm-key">
+                <span class="tk tw">Boiler water</span><span class="tk fc">A shot started then</span><span class="tk pk">At the puck</span><span class="tk bd">Band for your beans</span><span class="tk ht">Element heating</span>
+                <span class="tk-ctl"><button type="button" class="chip sm" id="t-hints" aria-pressed="true">Forecast</button><button type="button" class="chip sm" id="t-lines" aria-pressed="false">More lines</button>
+                <span class="tseg sm" role="group" aria-label="Time span"><button type="button" data-span="120">2 min</button><button type="button" data-span="300">5 min</button><button type="button" data-span="900">15 min</button></span></span>
+              </div>
+            </div>
+            <div data-viewp="x" hidden class="xview">
+              %%INCLUDE:school-sim-x.html%%
+            </div>
+          </div>
+        </div>
+        <div class="bench">
+          <div class="btabs" role="tablist" aria-label="Bench">
+            <button type="button" role="tab" data-btab="coffee" aria-selected="true">Coffee</button><button type="button" role="tab" data-btab="milk" aria-selected="false">Milk</button><button type="button" role="tab" data-btab="clean" aria-selected="false">Cleaning</button>
+          </div>
+          <div class="bpanel" data-bpanel="coffee">
+            <div class="bg"><span class="bk">Beans</span><div class="tseg roast" role="group" aria-label="Roast"><button type="button" data-roast="light"><i class="rd light"></i>Light</button><button type="button" data-roast="medium"><i class="rd medium"></i>Medium</button><button type="button" data-roast="dark"><i class="rd dark"></i>Dark</button></div></div>
+            <div class="bg"><span class="bk">Grinder</span><div class="grind"><span class="gl">finer</span><input type="range" id="b-g" min="1" max="20" step="1" value="10" aria-label="Grind setting, 1 fine to 20 coarse"><span class="gl">coarser</span><output id="b-gv" for="b-g">10</output></div></div>
+            <div class="bg"><span class="bk">Dose</span><div class="stp"><button type="button" id="b-dose-m" aria-label="Less coffee">−</button><output id="b-dose">18.0 g</output><button type="button" id="b-dose-p" aria-label="More coffee">+</button></div></div>
+            <div class="bg"><span class="bk">Stop at <span class="ratio" id="b-ratio">1:2.0</span></span><div class="stp"><button type="button" id="b-yield-m" aria-label="Stop sooner">−</button><output id="b-yield">36 g</output><button type="button" id="b-yield-p" aria-label="Stop later">+</button></div></div>
+            <div class="bg wide"><span class="bk">Puck</span><div class="prep"><button type="button" class="pbtn" id="b-grind" aria-pressed="false"><span>1</span>Grind and dose</button><button type="button" class="pbtn" id="b-wdt" aria-pressed="false"><span>2</span>Distribute</button><button type="button" class="pbtn" id="b-tamp" aria-pressed="false"><span>3</span>Tamp</button></div><p class="bhint" id="b-prephint"></p></div>
+            <div class="bg"><span class="bk">Cup</span><button type="button" class="btn sm" id="b-aside">Set this cup aside, fresh cup on</button><p class="bhint" id="b-asidehint"></p></div>
+            <div class="bg wide rec"><p id="b-rec"></p><button type="button" class="linkbtn" id="b-recipe">Reset to the recipe</button></div>
+          </div>
+          <div class="bpanel" data-bpanel="milk" hidden>
+            <div class="bg"><span class="bk">Drink</span><div class="tseg" role="group" aria-label="Drink"><button type="button" data-drink="flat">Flat white</button><button type="button" data-drink="latte">Latte</button><button type="button" data-drink="capp">Cappuccino</button></div></div>
+            <div class="bg"><span class="bk">Milk</span><div class="tseg" role="group" aria-label="Milk in the jug"><button type="button" data-milk="1">For one</button><button type="button" data-milk="2">For two</button></div></div>
+            <div class="bg wide"><span class="bk">Wand tip</span><div class="tseg tip" role="group" aria-label="Where the wand tip sits in the milk"><button type="button" data-tip="high">Too high</button><button type="button" data-tip="surf">At the surface</button><button type="button" data-tip="sub">Under, spinning</button></div><p class="bhint">Put the jug under the wand first (tap it on the machine). At the surface it hisses and draws air in; under, it spins and folds the bubbles in.</p></div>
+            <div class="bg"><span class="bk">Cloth</span><button type="button" class="btn sm" id="b-wipe">Wipe the wand</button></div>
+            <div class="bg"><span class="bk">Pour</span><button type="button" class="btn sm primary" id="b-pour">Pour the milk</button><p class="bhint" id="b-pourhint"></p></div>
+          </div>
+          <div class="bpanel" data-bpanel="clean" hidden>
+            <div class="bg"><span class="bk">Basket</span><div class="tseg" role="group" aria-label="Basket"><button type="button" data-basket="double">Double</button><button type="button" data-basket="blind">Blind</button></div></div>
+            <div class="bg"><span class="bk">Cleaner</span><button type="button" class="btn sm" id="b-det" aria-pressed="false">Detergent in the blind basket</button></div>
+            <div class="bg wide" id="b-descbox"></div>
+            <div class="bg"><span class="bk">Cloth</span><button type="button" class="btn sm" id="b-wipe2">Wipe the wand</button></div>
+            <div class="bg wide"><p class="bhint" id="b-cleanhint"></p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="coachwrap">
+      <div class="coach" id="coach">
+        <div class="coach-h"><h3>Coach</h3><span class="coach-sub">every shot, jug and clean-up</span></div>
+        <div class="coach-feed" id="coach-feed" aria-live="polite"></div>
+      </div>
+      <div class="cpbox" id="compass">
+        <div class="coach-h"><h3>Espresso compass</h3><span class="coach-sub">where your shots land</span></div>
+        <ul class="cp-list" id="cp-list"></ul>
+        <p class="fine">Extraction is how much of the coffee ended up in the cup; strength is how concentrated the cup is. Grind, temperature and time move a shot left and right along its ratio line; the ratio moves it between lines. The figures come from the simulation, not a refractometer.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="surfing" aria-labelledby="h-surfing">
+    <div class="sec-h"><h2 id="h-surfing">Surfing the wave</h2><span class="sum">routines by roast</span></div>
+    <div class="prose wide" id="surf-intro"></div>
+    <div class="routines" id="routines"></div>
+  </section>
+
+  <section class="block" id="recipes" aria-labelledby="h-recipes">
+    <div class="sec-h"><h2 id="h-recipes">Recipes by roast</h2><span class="sum">a starting point, then taste</span></div>
+    <div class="tablewrap"><table class="rtab" id="recipe-table"></table></div>
+    <div class="dial" id="dial"></div>
+  </section>
+
+  <section class="block" id="milk" aria-labelledby="h-milk">
+    <div class="sec-h"><h2 id="h-milk">Steaming milk</h2><span class="sum">for one or for two</span></div>
+    <div class="milkref" id="milk-ref"></div>
+  </section>
+
+  <section class="block" id="care" aria-labelledby="h-care">
+    <div class="sec-h"><h2 id="h-care">Care and cleaning</h2><span class="sum">log it as you go</span></div>
+    <div class="care-top"><p class="fine" id="care-lede"></p><label class="care-w"><span class="k">Your water</span><select id="care-water"></select></label></div>
+    <div class="care" id="care-list"></div>
+  </section>
+
+  <section class="block" id="sources" aria-labelledby="h-sources">
+    <div class="sec-h"><h2 id="h-sources">Sources</h2></div>
+    <div class="prose wide" id="school-sources"></div>
+  </section>
+</div>
+
+<script>
+(function(){
+  function $(id){return document.getElementById(id)}
+  var RM=!!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  function GM(){return window.SilviaMachine||null}
+  function prof(){var m=GM();return (m&&m.get())||{}}
+%%INCLUDE:school-engine.js%%
+%%INCLUDE:school-sim.js%%
+%%INCLUDE:school-site.js%%
+%%INCLUDE:school.js%%
+})();
+</script>

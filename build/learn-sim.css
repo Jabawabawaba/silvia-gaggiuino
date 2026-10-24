@@ -166,6 +166,7 @@
 .coach-h{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px}
 .coach-h h3{margin:0;font:600 18px/1.1 var(--f-display);letter-spacing:.06em;text-transform:uppercase}
 .coach-sub{font:500 12px var(--f-mono);color:var(--muted);letter-spacing:.04em}
+.coach-more{margin-left:auto;font-size:14px}
 .coach-feed{display:grid;gap:10px}
 .ck-empty{margin:0;color:var(--muted);font-size:15px}
 .ck{border:1px solid var(--line);border-left:4px solid var(--line);border-radius:10px;padding:12px 14px;display:grid;gap:8px;background:var(--bg)}

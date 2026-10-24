@@ -24,6 +24,7 @@ sys.path.insert(0, HERE)
 PAGES = [
     (None, "conversion.tpl.html", "conversion.html", "The conversion", "learn"),
     (None, "learn-silvia.tpl.html", "how-silvia-works.html", "How the Silvia works", "learn"),
+    (None, "school.tpl.html", "barista-school.html", "Barista school", "learn"),
     (None, "learn-gaggiuino.tpl.html", "how-gaggiuino-works.html", "How Gaggiuino works", "learn"),
     (None, "glossary.tpl.html", "glossary.html", "Glossary", "learn"),
     ("ArT3ks46jbJ4KEjXbDwcX7", "silvia-build-budget.html", "budget.html", "Budget", "plan"),
@@ -373,7 +374,7 @@ def main():
     gen = os.path.join(OUT, "build")
     os.makedirs(gen)
     for f in sorted(os.listdir(HERE)):
-        if f.endswith((".py", ".js", ".css", ".tpl.html", ".md", ".json")) or f == "site-LICENSE" or (f.startswith("learn-") and f.endswith(".html")):
+        if f.endswith((".py", ".js", ".css", ".tpl.html", ".md", ".json")) or f == "site-LICENSE" or (f.startswith(("learn-", "school-")) and f.endswith(".html")):
             if f.startswith(("t-", "chk-", "test-", "shot", "svgtest", "gen-pdf", "story-shots", "page-shot", "toolkit-shot", "smoke", "sheet", "fontroute", "mobile-", "nav-shots", "el-shot", "cut-", "_", "ls-", "slice", "budget-test", "tracker-", "led-test", "edit_")) or f in ("runs.json", "wrap.py", "links.json", "chk.js"):
                 continue
             shutil.copy(os.path.join(HERE, f), gen)
