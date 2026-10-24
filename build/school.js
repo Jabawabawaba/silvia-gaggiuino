@@ -309,7 +309,7 @@
       /* the shot's temperature, the same way the forecast and the map take it: the water reaching the puck, from 2 s on */
       if(c.dosed&&(q.boilout||0)>0&&s.pf.in&&s.t-c.t0>2){c.xw=(c.xw||0)+q.boilout*dt;c.xwT=(c.xwT||0)+q.boilout*dt*q.Tout;c.trace.push([s.t-c.t0,q.Tout])}
       if(c.flush){c.vol=(c.vol||0)+((q.group||0)+(q.spout||0))*dt;c.hot=Math.max(c.hot||0,q.flash||0);if(q.flash>0)c.lastFlash=s.t}
-      if(c.dosed&&s.t-c.t0>60)slip('long-shot','A very long shot','Run well past the recipe, the coffee turns thin and bitter as the puck runs out of flavour.',['brew'],'Switch brew off when the scale reaches your target.');
+      if(c.dosed&&s.t-c.t0>60)slip('long-shot','A very long shot','Run well past the recipe, the coffee turns thin and bitter as the puck runs out of flavor.',['brew'],'Switch brew off when the scale reaches your target.');
     }
     function endShot(s){
       var c=SHOT.cur;SHOT.cur=null;if(!c)return;c.t1=s.t;var secs=s.t-c.t0;st.lastDraw=s.t;
@@ -514,7 +514,7 @@
       var hb=$('t-hints');if(hb)hb.setAttribute('aria-pressed',String(B.hints));
       var lb=$('t-lines');if(lb)lb.setAttribute('aria-pressed',String(B.lines));
       var pa=$('t-pause');if(pa){pa.setAttribute('aria-pressed',String(SIM.pause()));pa.setAttribute('aria-label',SIM.pause()?'Resume':'Pause')}
-      root.classList.toggle('hints-off',!B.hints);
+      root.classList.toggle('hints-off',!B.hints);root.classList.toggle('lines-on',!!B.lines);
       X.benchSync&&X.benchSync(s);
     }
     function setRoast(r){B.roast=r;var R0=recipe();B.g=R0.grind;B.yield=Math.round(B.D*R0.ratio[2]);saveBench();benchSync();FC.next=0;if(MAP)MAP.draw(true);logEv('roast',r)}

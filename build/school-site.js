@@ -92,8 +92,11 @@
       return w;
     };
     X.tempAdvice=function(dir,roast){
-      if(dir==='cool')return roast==='light'?'For a hotter shot: when the heating light goes out, flush only until the hissing stops and brew straight away (about 94 °C on a Scace).':roast==='dark'?'For a hotter shot: give it a few seconds after the heating light comes on, while the element heats, before you brew.':'For a hotter shot: flush a little less, about 8 s instead of 12: Whole Latte Love found a shorter flush gives a hotter shot.';
-      return roast==='dark'?'For a cooler shot: brew at the bottom of the wave: wait for the heating light to come on, then lock in and brew at once.':'For a cooler shot: when the heating light goes out, flush about 12 s and wait about 20 s before brewing (Whole Latte Love\'s routine, about 93 °C).';
+      var hv=prof().volts===230;
+      if(dir==='cool')return roast==='light'?'For a hotter shot: when the heating light goes out, flush only until the hissing stops and brew straight away (about 94 °C on a Scace).':roast==='dark'?'For a hotter shot: give it a few seconds after the heating light comes on, while the element heats, before you brew.':'For a hotter shot: flush a little less. Whole Latte Love suggests a shorter flush; in this page\'s simulation, about '+(hv?'6':'8')+' s instead of 12.';
+      if(roast==='dark')return 'For a cooler shot: brew at the bottom of the wave: wait for the heating light to come on, then lock in and brew at once.';
+      if(roast==='light')return 'For a cooler shot: give it 10 to 20 s after the flush before you brew (this page\'s estimate).';
+      return 'For a cooler shot: start when the heating light goes out and flush the full 12 s; for cooler still, wait about 40 s after the flush instead of 20 (this page\'s estimate).';
     };
     X.onShotStart=function(s,c,slip){
       if(s.steam&&c.dosed)slip('brew-steam','Brew with steam on','With steam on, the boiler heads for 140 °C, and the coffee switch still runs a shot: it comes out scalding.',['brew','steam','lamps'],'Switch steam off before brewing, refill the boiler with the hot water switch and run a cupful through the group first.');
@@ -112,11 +115,11 @@
 
     /* ---------- the surfing routines ---------- */
     X.intro={
-      surf:function(){return '<p><b>The light first.</b> The orange heating light is on while the element heats and goes out when it stops. Rancilio\'s manuals say to wait for it to go out before brewing, steaming or drawing hot water. The brew thermostat on the boiler opens at 100 °C, but the element sits in the water and keeps heating it for a moment after: the water overshoots well past it. Thermocouple graphs that erics posted on home-barista show an older Silvia\'s boiler water swinging from about 91 °C to over 120 °C.</p>'+
+      surf:function(){return '<p><b>The light first.</b> The orange heating light is on while the element heats and goes out when it stops. Rancilio\'s manuals say to wait for it to go out before brewing, steaming or drawing hot water. The brew thermostat on the boiler wall opens at 100 °C, but the element sits in the water and heats it faster than the wall warms, so the water runs ahead of the thermostat and overshoots. Thermocouple graphs that erics posted on home-barista show an older Silvia\'s boiler water swinging from about 91 °C to over 120 °C.</p>'+
         '<p><b>Older machines may run hotter.</b> Silvias made before about 2009 can have a 110 °C brew thermostat instead, KaffeeWiki says. Its test: with the portafilter out, run water through the group just as the light goes out; a strong hiss of steam means the 110 °C one. The routines and the simulation here assume 100 °C.</p>'+
         '<p><b>So the first water is far too hot.</b> Whole Latte Love clocked the boiler water at about 99 °C (210 °F) as the light went out: too hot to brew with. Their routine, a 12 s flush then a 20 s wait, gave ten shots between 91.4 and 95.6 °C, about 93 °C on average. Dan Kehn\'s Scace on a V3 peaked at about 94.4 °C two seconds after flushing until the flash boiling stopped, then fell about 2 °C through the shot. That is the lever: flush to throw away the overheated water, and where in the cycle you brew sets the temperature. The bottom of the wave, just as the light comes back on, is the coolest point.</p>'+
         '<p><b>The Silvia swings wide.</b> Its brass group is heavy and slow, and the cycle is long: minutes, not seconds. A routine that starts from the same point in the cycle each time, such as the light going out, gives a repeatable shot, though not an identical one: Whole Latte Love\'s ten shots spanned about 4 °C.</p>'+
-        '<p class="fine">The simulation is tuned to those published measurements, not measured on your machine. It lands Whole Latte Love\'s routine within about a degree of their average, but runs the water as the light goes out about 3 °C hotter than their 99 °C, and its steam takes about two minutes to come up. Use it to learn the pattern, then let your own cups decide.</p>'}
+        '<p class="fine">The simulation is tuned to those published measurements, not measured on your machine. It lands Whole Latte Love\'s routine within about a degree of their average, but a shot brewed as the light goes out comes out about 3 °C hotter than their 99 °C, its boiler water line peaks near 110 °C, between their reading and erics\' graphs, and its steam takes about two minutes to come up. Use it to learn the pattern, then let your own cups decide.</p>'}
     };
     X.routines=function(){
       var S0=SURF();
@@ -127,7 +130,7 @@
         wave:'The flush drags the boiler water down off its overshoot, close to where the element comes back on; in the wait it settles a little further before the shot.',
         src:'Whole Latte Love\'s Silvia V6 review: ten shots at 91.4 to 95.6 °C, about 93 °C on average. For a hotter shot, they say, flush less.'},
       {id:'bottom',roast:'dark',name:'Bottom of the wave',tag:'Dark',lesson:'dark',
-        why:'Dark roasts give up their flavour easily and turn ashy in hot water. The coolest water the Silvia gives is at the bottom of its cycle, just as the heating light comes back on.',
+        why:'Dark roasts give up their flavor easily and turn ashy in hot water. The coolest water the Silvia gives is at the bottom of its cycle, just as the heating light comes back on.',
         steps:['Dose and tamp first, and leave the machine alone: no flush.','Wait for the heating light to come on: the boiler has coasted down to the brew thermostat\'s cut-in.','Lock in and brew at once; stop around 1:1.8.','If it is still harsh, grind a step coarser.'],
         wave:'With the light just on, the boiler is at the bottom of the wave and the element is only starting to heat.',
         src:'The direction is from Seattle Coffee Gear (darker roasts want less time after the light comes on); brewing right as it comes on is this page\'s estimate from the simulation, about '+S0.darkT+' °C, so taste and adjust.'},
@@ -170,7 +173,7 @@
       '<li>Refill the boiler with the hot water switch before the next shot.</li></ol>'+
       '<p class="fine">The Silvia\'s 300 ml boiler gives strong steam: Whole Latte Love heated 142 g of milk to 60 °C in 19 to 25 s on a V6. Rancilio\'s 2006 manual says never to steam for more than 4 to 5 minutes without refilling the boiler.</p></div>'+
       '<div class="mr-side"><div class="mr-box"><h3>How much foam</h3><p><b>Flat white:</b> a thin layer of microfoam, about 5 mm.</p><p><b>Latte:</b> a thin, silky layer, a little more.</p><p><b>Cappuccino:</b> at least 10 mm, glossy.</p><p class="fine">Perfect Daily Grind for the flat white and the cappuccino (the SCA\'s minimum); Clive for the latte.</p></div>'+
-      '<div class="mr-box"><h3>Two drinks</h3><p>Pull both shots first, then steam once for both: the shots keep their flavour for several minutes even as the crema fades.</p><p>For flat whites, a shorter ratio (1:1.5 to 1:2) holds up better in milk.</p></div></div>'};
+      '<div class="mr-box"><h3>Two drinks</h3><p>Pull both shots first, then steam once for both: the shots keep their flavor for several minutes even as the crema fades.</p><p>For flat whites, a shorter ratio (1:1.5 to 1:2) holds up better in milk.</p></div></div>'};
 
     /* ---------- the lessons ---------- */
     function lastFlush(c,since){var f=c.flushes[c.flushes.length-1];return f&&f.t1>=(since==null?c.since:since)?f:null}
@@ -194,15 +197,15 @@
         ],
         score:function(c){var early=c.count('shot',null,0)>0;return {stars:early?2:3,text:early?'Warm. A shot pulled before the group soaked would have run cool; now the group is at '+Math.round(c.s.Tg)+' °C.':'Warm and ready: the group is at '+Math.round(c.s.Tg)+' °C and the portafilter at '+Math.round(c.s.Tpf)+' °C.'}}},
       {id:'wave',track:'Get to know it',title:'Read the temperature wave',time:'4 min',sub:'What the heating light is really telling you.',
-        why:'Every surfing routine is built on one fact: the orange light is on while the element heats. Watch a cycle on the map, see how far the water overshoots after the light goes out, then see what a flush does.',
+        why:'Every surfing routine is built on one fact: the orange light is on while the element heats. Watch a cycle on the map, see how far the water has overshot by the time the light goes out, then see what a flush does.',
         start:{state:'warm',speed:5},
         steps:[
           {t:'Wait for the heating light to come on: the element is heating (the amber band on the map).',done:function(c){return c.has('heat-on')},hint:'The cycle is slow on a Silvia: several minutes. Time is running at 5×.'},
           {t:'Watch it go out: the element has stopped.',done:function(c){return c.has('heat-off')}},
-          {t:'Watch the boiler line keep rising after the light goes out: the element sits in the water and keeps heating it for a moment.',done:function(c){return c.phase==='coast'||c.phase==='peak'}},
+          {t:'Turn on More lines and watch the boiler wall keep rising after the light goes out while the water line tops out: the element heats the water first, and the wall, where the thermostat sits, catches up.',done:function(c){return c.phase==='coast'||c.phase==='peak'}},
           {t:'Check yourself.',quiz:{id:'lamp',q:'The heating light just went out. What is the element doing?',opts:['Heating','Off: the brew thermostat has opened','Making steam'],a:1,yes:'Right: light out means the element just stopped.',no:'Not quite: the light is on while the element heats and goes out when it stops.'},done:function(c){return c.has('quiz-ok',function(d){return d==='lamp'})}},
-          {t:'Take the portafilter out and run a 3 s flush. Watch the boiler line drop and the light come back on.',done:function(c){var f=c.ev('flush',function(d){return d.secs>=2});return !!f},hint:'Tap the portafilter to take it out, then coffee on and off.'},
-          {t:'Check yourself.',quiz:{id:'first',q:'The light has just gone out. How hot is the water in the boiler?',opts:['About 93 °C, just right for a shot','About 99 °C, far too hot for a shot'],a:1,yes:'Right: Whole Latte Love clocked it at about 99 °C, and it keeps rising for a moment after the light goes out.',no:'Not quite: Whole Latte Love clocked it at about 99 °C, and it keeps rising for a moment after the light goes out: far too hot for a shot.'},done:function(c){return c.has('quiz-ok',function(d){return d==='first'})}}
+          {t:'Take the portafilter out and run a 3 s flush. Watch the boiler water line drop as fresh water comes in. It takes a longer flush, about 14 s here, before the light comes back on.',done:function(c){var f=c.ev('flush',function(d){return d.secs>=2});return !!f},hint:'Tap the portafilter to take it out, then coffee on and off.'},
+          {t:'Check yourself.',quiz:{id:'first',q:'The light has just gone out. Is the water ready for a shot?',opts:['Yes: the light says it is at temperature','No: it has overshot, too hot to brew with'],a:1,yes:'Right: Whole Latte Love clocked about 99 °C at that moment and called it too hot to brew with. The water line here reads higher: this simulation overshoots more than their probe showed.',no:'Not quite: the light only says the element stopped. Whole Latte Love clocked about 99 °C at that moment, too hot to brew with until you flush.'},done:function(c){return c.has('quiz-ok',function(d){return d==='first'})}}
         ],
         score:function(){return {stars:3,text:'You can read the wave. Everything after this builds on it.'}}},
       {id:'medium',track:'Espresso by roast',title:'Medium roast: light out, flush, wait',time:'4 min',sub:'Whole Latte Love\'s measured routine.',
@@ -217,7 +220,7 @@
         ],
         score:function(c){var r=c.lastShot();if(!r)return {stars:1,text:'No shot.'};var ok=inBand(r);return {stars:Math.min(stars(r.taste.score),ok?3:2),text:(ok?'In the band: ':'Outside the band: ')+r.Tq.toFixed(1)+' °C at the puck, '+r.taste.word.toLowerCase()+'.'}}},
       {id:'dark',track:'Espresso by roast',title:'Dark roast: the bottom of the wave',time:'4 min',sub:'The coolest point in the cycle.',
-        why:'Dark roasts dissolve easily, and hot water pulls out ashy, bitter flavours. Aim for 90 to 93 °C at the puck with a coarser grind and a shorter ratio: brew as the heating light comes back on, when the boiler has coasted to the bottom of its wave.',
+        why:'Dark roasts dissolve easily, and hot water pulls out ashy, bitter flavors. Aim for 90 to 93 °C at the puck with a coarser grind and a shorter ratio: brew as the heating light comes back on, when the boiler has coasted to the bottom of its wave.',
         start:{state:'warm',speed:1,until:function(s){return !s.heat&&s.Tb<=89.2},bench:{roast:'dark',D:18},tab:'coffee'},
         steps:[
           {t:'Take the portafilter out, then grind, dose, distribute and tamp (the grinder is set coarser for dark beans). No flush this time.',done:DOSED},
@@ -285,7 +288,7 @@
         steps:[
           {t:'Take the portafilter out and knock out the puck (tap the basket).',done:function(c){return c.has('knock')}},
           {t:'Flush the group with the portafilter out for a few seconds to rinse it.',done:function(c){return c.has('flush',function(d){return !d.pfIn&&d.secs>=2.5})}},
-          {t:'Purge the steam wand into the drip tray: steam on, wait for the heating light to go out, then open the knob 2 s and close it.',done:function(c){return c.has('purge')},hint:'The wand has milk inside it from the last jug; with the boiler below steam temperature little comes out.'},
+          {t:'Purge the steam wand into the drip tray: steam on, wait for the heating light to go out, then open the knob 2 s and close it.',done:function(c){return c.has('purge')},hint:'The wand has milk inside it from the last jug; with the boiler below steam temperature little comes out. Steam takes a couple of minutes to come up here: speed time up while you wait.'},
           {t:'Wipe the wand with a damp cloth (Milk or Cleaning tab).',done:function(c){return c.has('wipe')}},
           {t:'Empty the drip tray, lock the empty portafilter back in, and switch off (steam off first).',done:function(c){return c.has('act',function(d){return d==='tray'})&&!c.s.pwr&&c.s.pf.in&&!c.s.steam}}
         ],
@@ -339,7 +342,7 @@
       {id:'descale',group:'If your water is hard',title:'Descale',src:'Community method; not in Rancilio\'s current manuals',when:function(w){return w==='tap'?'Every 1 to 3 months depending on the minerals in your water, an older Seattle Coffee Gear guide says. Better: filter the water.':'Rarely or never on soft, filtered water: Rancilio\'s current manuals rely on water at about 89 ppm instead.'},every:function(w){return w==='tap'?60:null},
         steps:['Citric acid at 8 to 12 g per liter (home-barista\'s mild mix). Portafilter out.','Run it through the wand (hot water switch, knob open) and the group, a minute at a time with a minute\'s rest for the pump.','Let it sit 20 minutes, then run the rest through.','Rinse with two or more tanks of fresh water, through the wand and the group.','Don\'t drink anything that comes out until the rinse is done.'],lesson:'descale'},
       {id:'gasket',group:'Yearly',title:'New group gasket and screen',src:'Seattle Coffee Gear (once a year); Whole Latte Love (the steps)',when:'About once a year, Seattle Coffee Gear says, or sooner if it leaks or the handle locks further round than it used to.',every:365,
-        steps:['Signs: water around the rim during a shot, the handle locking past 6 o\'clock, a flat, cracked or shiny gasket.','Unplug it and let it cool completely. Undo the screen\'s centre screw, pry out the old gasket with a pick, and press the new one into the groove with your fingers.','Check the thickness for your Silvia: listings run 8 to 8.5 mm, and some sellers advise rubber over silicone.']},
+        steps:['Signs: water around the rim during a shot, the handle locking past 6 o\'clock, a flat, cracked or shiny gasket.','Unplug it and let it cool completely. Undo the screen\'s center screw, pry out the old gasket with a pick, and press the new one into the groove with your fingers.','Check the thickness for your Silvia: listings run 8 to 8.5 mm, and some sellers advise rubber over silicone.']},
       {id:'idle',group:'After a break',title:'After a break, or a new machine',src:'Rancilio manuals (2018, 2024)',when:'Before the first coffee.',every:null,
         steps:['Fill the tank and open the steam knob. Switch on the coffee switch only, then the power: the pump fills the boiler (Rancilio; Clive does it with the hot water switch).','Close the knob once water comes out of the wand, let water run through the group and pour it away: 500 ml in Rancilio\'s 2018 manual, 1000 ml in 2024 (which also lets about 200 ml out of the wand). Then switch coffee off.']}
     ];

@@ -155,6 +155,8 @@
 .tm-key{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;font:500 12px var(--f-body);color:#A9B1B8}
 .tk::before{content:"";display:inline-block;width:16px;height:3px;border-radius:2px;margin-right:6px;vertical-align:3px}
 .tk.tw::before{background:#F2A33A}.tk.fc::before{background:#5CC3C9}.tk.pk::before{background:#F6D7A0;height:4px}.tk.bd::before{background:rgba(99,192,138,.5);height:10px;vertical-align:-1px}.tk.ht::before{background:rgba(242,163,58,.3);height:10px;vertical-align:-1px}
+.tk.xl{display:none}.lines-on .tk.xl{display:inline}
+.tk.tb::before{background:repeating-linear-gradient(90deg,#F2A33A 0 4px,transparent 4px 8px);opacity:.7}.tk.tg::before{background:repeating-linear-gradient(90deg,#A9B1B8 0 6px,transparent 6px 10px)}.tk.tpf::before{background:repeating-linear-gradient(90deg,#A9B1B8 0 2px,transparent 2px 5px)}
 .tk-ctl{margin-left:auto;display:inline-flex;flex-wrap:wrap;gap:6px;align-items:center}
 .mapview .chip{background:#181D22;border-color:#30363D;color:#E7E9EB;min-height:32px;padding:4px 11px;font-size:13px}
 .mapview .chip[aria-pressed="true"]{background:#E7E9EB;color:#111316;border-color:#E7E9EB}
