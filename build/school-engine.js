@@ -29,13 +29,16 @@
        cold water coming in picks up heat from the brass, all in W/K; Cg the group's heat capacity, gl its loss to the
        room, pk its contact with the portafilter, pl the portafilter's loss; xg and xp how much heat water running
        through the group and the portafilter trades with them; ms the steam the wand draws per bar.
-       Fitted by search against the published measurements, shot temperatures being the water running through the
-       soaked puck: Whole Latte Love's V6 (about 99 °C for a shot started as the light goes out; about 93 °C after a 12 s
-       flush and a 20 s wait; 142 g of milk to 60 °C in 19 to 25 s), Dan Kehn's Scace (about 94 °C after flushing until
-       the flash boiling stops, falling about 2 °C through the shot), erics' thermocouple logs (the element on for about
-       45 s, the group idling around 80 °C) and Auber's 25 to 45 minutes for the group to settle. */
+       Fitted by search against the published measurements, with shot temperatures taken the way a Scace thermometer
+       in the portafilter reads them: the water reaching the puck, from 2 s after the pump starts (the coach and the
+       map use the same reading). Whole Latte Love's V6 weighs most: ten shots averaging about 93 °C after a 12 s flush
+       and a 20 s wait (the fit gives about 92.5 at 120 V), the water at about 99 °C as the light goes out (the fit runs about
+       3 °C hotter), and 142 g of milk to 60 °C in 19 to 25 s. Then Dan Kehn's Scace on a V3 (about 94 °C after
+       flushing until the flash boiling stops, falling about 2 °C through the shot), erics' thermocouple graphs (the
+       element on for about 45 s, the group idling around 80 °C) and Auber's 25 to 45 minutes for the group to settle
+       on a PID-fitted Silvia. Steam takes about two minutes to come up here, where Clive says 45 s to a minute. */
     var TUNE={
-      silvia:{Cel:70,ew:185,eb:4.06,Cb:936,bw:36.5,bg:3.33,ba:1.2,bai:0.353,ix:17.6,Cg:2340,gl:0.428,pk:3.14,pl:0.326,xg:0.4,xp:0.362,ms:0.217}
+      silvia:{Cel:57.044,ew:216.297,eb:3.313,Cb:936,bw:36.5,bg:3.381,ba:1.2,bai:0.353,ix:21.313,Cg:2340,gl:0.422,pk:3.557,pl:0.326,xg:0.495,xp:0.312,ms:0.219}
     };
     var K={};
     /* p: {ver:'V1'..'V6', model:'M'|'E', volts:120|230}; with none picked, a V6 M */

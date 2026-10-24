@@ -246,7 +246,8 @@
 .rtab td b{font-weight:600}
 .rtab .rsw{display:inline-flex;align-items:center;gap:8px;font-weight:600}
 .dial{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(260px,100%),1fr));gap:12px;margin-top:16px}
-.dial .dc{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:12px 14px;display:grid;gap:6px}
+.dial .dc{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:12px 14px;display:grid;gap:6px;align-content:start}
+.rnote{margin:10px 0 0;max-width:72ch}
 .dial .dc h3{font:600 15px var(--f-body);margin:0}
 .dial .dc p,.dial .dc ul{margin:0;font-size:14.5px;line-height:1.45}
 .dial .dc ul{padding-left:18px}

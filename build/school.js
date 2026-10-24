@@ -29,7 +29,8 @@
     /* ======================= history: what the map draws ======================= */
     var H=[],HMAX=8000,EV=[],lastSample=-1,lastHeat=null,lastReady=null,lampOnAt=null,lampOffAt=null,heatOnAt=null,heatOffAt=null;
     function sample(s){
-      var q=s.q||{},shotOn=s.sol&&s.pf.in&&s.pf.b==='dosed'&&s.pf.wet>=s.pf.soak&&(q.spout||0)>0;
+      /* during a shot, the water reaching the puck: what a Scace thermometer in the portafilter would read */
+      var q=s.q||{},shotOn=s.sol&&s.pf.in&&s.pf.b==='dosed'&&(q.boilout||0)>0;
       H.push({t:s.t,Tw:s.Tw,Tb:s.Tb,Tg:s.Tg,Tpf:s.Tpf,heat:!!s.heat,lamp:X.indicator(s),brew:!!s.brew,steam:!!s.steam,water:!!s.water,
         puck:shotOn?q.Tout:null,fc:FC.on&&FC.last&&FC.last.t>s.t-1.2?FC.last.Tq:null,flash:FC.last&&FC.last.flash});
       if(H.length>HMAX)H.splice(0,H.length-HMAX);
@@ -57,9 +58,9 @@
       s.brew=1;
       for(var i=0;i<600;i++){
         E.step(s,dt);var q=s.q;if((q.boilout||0)>0){tv+=q.boilout*dt;if(q.flash>0)fv+=q.boilout*dt}
-        /* the shot's temperature: the water running through the soaked puck, as the map draws it */
-        if((q.spout||0)>0&&s.pf.wet>=s.pf.soak){s.fcw=(s.fcw||0)+q.spout*dt;s.fcwT=(s.fcwT||0)+q.spout*dt*q.Tout}
-        if(opts.trace&&q.spout>0&&s.pf.wet>=s.pf.soak)tr.push([s.t-t0,q.Tout]);
+        /* the shot's temperature: the water reaching the puck from 2 s after the pump starts, as a Scace thermometer in
+           the portafilter reads it (the published measurements and the bands are Scace readings) */
+        if((q.boilout||0)>0&&s.t-t0>2){s.fcw=(s.fcw||0)+q.boilout*dt;s.fcwT=(s.fcwT||0)+q.boilout*dt*q.Tout;if(opts.trace)tr.push([s.t-t0,q.Tout])}
         if(E.grams(s)>=target-1)break;
       }
       var secs=s.t-t0,bev=E.grams(s);
@@ -248,7 +249,7 @@
       if(SHOT.cur){
         var pk=H.length&&H[H.length-1].puck;
         SM.T.textContent=pk?r1(pk):'–';SM.box.setAttribute('data-st',pk?bandCls({Tq:pk,flash:0}):'');
-        SM.st.textContent=pk?'At the puck right now':'Soaking the puck';
+        SM.st.textContent=pk?'At the puck right now':'Water on its way';
         SM.mk.style.left=(pk?gx(pk):50)+'%';SM.mk.hidden=!pk;SM.tr.textContent='';return;
       }
       if(!B.hints){SM.T.textContent='?';SM.box.setAttribute('data-st','hid');SM.st.textContent='Forecast hidden: go by '+X.phrase('lamp')+'.';SM.mk.hidden=true;SM.tr.textContent='';return}
@@ -303,9 +304,10 @@
     function trackShot(s,dt){
       var c=SHOT.cur,q=s.q||{};c.maxP=Math.max(c.maxP,s.P);c.flash=Math.max(c.flash,q.flash||0);
       if(s.air||s.tank<=0.5)c.dry=true;
-      if(c.dosed&&q.spout>0&&s.pf.wet>=s.pf.soak){if(c.first==null)c.first=s.t-c.t0;c.trace.push([s.t-c.t0,q.Tout])}
+      if(c.dosed&&q.spout>0&&c.first==null)c.first=s.t-c.t0;
       if(c.dosed&&(q.boilout||0)>0&&s.pf.in){c.fw=(c.fw||0)+q.boilout*dt;if(q.flash>0)c.fv=(c.fv||0)+q.boilout*dt}
-      if(c.dosed&&(q.spout||0)>0&&s.pf.wet>=s.pf.soak){c.xw=(c.xw||0)+q.spout*dt;c.xwT=(c.xwT||0)+q.spout*dt*q.Tout}
+      /* the shot's temperature, the same way the forecast and the map take it: the water reaching the puck, from 2 s on */
+      if(c.dosed&&(q.boilout||0)>0&&s.pf.in&&s.t-c.t0>2){c.xw=(c.xw||0)+q.boilout*dt;c.xwT=(c.xwT||0)+q.boilout*dt*q.Tout;c.trace.push([s.t-c.t0,q.Tout])}
       if(c.flush){c.vol=(c.vol||0)+((q.group||0)+(q.spout||0))*dt;c.hot=Math.max(c.hot||0,q.flash||0);if(q.flash>0)c.lastFlash=s.t}
       if(c.dosed&&s.t-c.t0>60)slip('long-shot','A very long shot','Run well past the recipe, the coffee turns thin and bitter as the puck runs out of flavour.',['brew'],'Switch brew off when the scale reaches your target.');
     }
@@ -336,7 +338,8 @@
     }
     function shotCard(c,res,s){
       var R0=recipe(c.roast),T=res.taste,L=[],N=[];
-      var inT=res.Tq>=R0.T[0]&&res.Tq<=R0.T[1];
+      /* judged on the figure shown, to a tenth of a degree */
+      var tq1=Math.round(res.Tq*10)/10,inT=tq1>=R0.T[0]&&tq1<=R0.T[1];
       L.push([inT,'About <b>'+r1(res.Tq)+' °C</b> at the puck: '+(inT?'in the band for a '+R0.name.toLowerCase()+' roast ('+R0.T[0]+' to '+R0.T[1]+' °C).':res.Tq<R0.T[0]?r1(R0.T[0]-res.Tq)+' °C under the '+R0.name.toLowerCase()+'-roast band ('+R0.T[0]+' to '+R0.T[1]+' °C).':r1(res.Tq-R0.T[1])+' °C over the '+R0.name.toLowerCase()+'-roast band ('+R0.T[0]+' to '+R0.T[1]+' °C).')]);
       L.push([null,X.surfNote(c,res,R0)]);
       if(!inT)N.push(X.tempAdvice(res.Tq<R0.T[0]?'cool':'hot',c.roast,c));
@@ -353,7 +356,7 @@
       if(c.prep<0.99)N.push('Distribute the grounds and tamp level before you lock the portafilter in.');
       var gw=c.tg0>=X.warm.group,pw=c.tpf0>=X.warm.pf;
       L.push([gw,'Group at '+r0(c.tg0)+' °C'+(gw?': heat-soaked.':': still warming up.')]);
-      if(!gw)N.push(X.warmAdvice);
+      if(!gw)N.push(txt(X.warmAdvice));
       L.push([pw,'Portafilter at '+r0(c.tpf0)+' °C'+(pw?'.':': a cool portafilter takes heat out of the shot.')]);
       if(!pw)N.push('Keep the portafilter locked in while the machine heats, dose quickly, and lock it straight back in.');
       if(c.tray)L.push([c.tc0>=38,'Cup at '+r0(c.tc0)+' °C'+(c.tc0>=38?': warmed.':': a cold cup cools the shot.')]);
@@ -378,7 +381,7 @@
     }
 
     /* ---- milk ---- */
-    function startMilk(s){MILK.cur={t0:s.t,ready:E.ready(s)&&!!s.steam,purged:st.purgeT>=1,spurt:0,maxT:s.jug.T,T0:s.jug.T,offOpen:false,m:s.jug.m,drink:B.drink};}
+    function startMilk(s){MILK.cur={t0:s.t,ready:!!s.steam&&(E.ready(s)||st.steamReady!=null),purged:st.purgeT>=1,spurt:0,maxT:s.jug.T,T0:s.jug.T,offOpen:false,m:s.jug.m,drink:B.drink};}
     function endMilk(s){
       var m=MILK.cur;MILK.cur=null;if(!m)return;var j=s.jug,T=m.maxT,secs=s.t-m.t0;
       if(T<20&&secs<3)return;
@@ -410,7 +413,7 @@
       var word=T>70?'Scalded':T<50?'Lukewarm':m.spurt>=2?'Watery':bigR>0.35?'Bubbly':!fOk&&foamPct<D0.foam[0]?'Flat':!fOk?'Too foamy':score>=84?'Silky':'Nearly there';
       card('milk '+cls,'<div class="ck-h"><span class="ck-tag">Milk '+MILK.n+' · '+esc(D0.name)+'</span><h4>'+esc(word)+'</h4><span class="ck-score">'+score+'</span></div>'+
         '<p class="ck-stats">'+[r0(m.m)+' ml milk',r0(secs)+' s of steam',r0(T)+' °C',r0(foamPct)+'% stretch',tex].join(' · ')+'</p>'+checks(L)+nextList(N)+
-        '<p class="ck-now"><b>Now:</b> purge the wand into the drip tray for a second and wipe it with a damp cloth before the milk dries on. '+esc(X.refill.now)+'</p>');
+        '<p class="ck-now"><b>Now:</b> purge the wand into the drip tray for '+esc(X.purgeAfter)+' and wipe it with a damp cloth before the milk dries on. '+esc(X.refill.now)+'</p>');
       st.milkPending={t:s.t,purge:false,wipe:false,done:false};
       logEv('milk',{T:T,foam:foamPct,big:bigR,water:water,score:score,drink:m.drink});
     }
@@ -428,7 +431,9 @@
       if(!s.brew&&st.prevBrew){endShot(s)}
       if(s.bfc!==st.bfc){st.bfc=s.bfc;logEv('bf-cycle',{det:s.det})}
       /* steam */
-      if(s.steam&&!st.prevSteam){st.purgeT=0;st.steamOn=s.t;mark('steam','Steam');logEv('steam-on')}
+      if(s.steam&&!st.prevSteam){st.purgeT=0;st.steamOn=s.t;st.steamReady=null;mark('steam','Steam');logEv('steam-on')}
+      /* the steam-ready light came on at least once since steam went on (it can blink off again during the purge) */
+      if(s.steam&&st.steamReady==null&&st.steamOn!=null&&s.t-st.steamOn>0.5&&E.ready(s))st.steamReady=s.t;
       if(!s.steam&&st.prevSteam){st.steamOff=s.t;st.refill={t0:s.t,full:false,cool:false,cycle:false,vol0:s.vol,done:false};mark('steam','Steam off');logEv('steam-off');if(MILK.cur)endMilk(s)}
       if(s.water&&!st.prevWater)logEv('water-on');if(!s.water&&st.prevWater)logEv('water-off');
       if(s.knob!==st.prevKnob)logEv(s.knob?'knob-open':'knob-close');
@@ -452,7 +457,7 @@
       var mp=st.milkPending;
       if(mp&&!mp.done){
         if(mp.purge&&mp.wipe){mp.done=true;logEv('wand-clean');card('clean good','<div class="ck-h"><span class="ck-tag">Clean-up</span><h4>Wand clean</h4></div>'+checks([[true,'Purged the wand after steaming: no milk left inside it.'],[true,'Wiped the outside before the milk dried on.']]))}
-        else if(s.t-mp.t>90){mp.done=true;slip('wand-dirty','Milk left on the wand','Milk dries onto a hot wand in a minute or two and bakes into a crust that holds bacteria; milk pulled back inside it sours.',['knob'],'Straight after steaming: point the wand at the drip tray, open the knob for a second to blow it out, and wipe it with a damp cloth.')}
+        else if(s.t-mp.t>90){mp.done=true;slip('wand-dirty','Milk left on the wand','Milk dries onto a hot wand in a minute or two and bakes into a crust that holds bacteria; milk pulled back inside it sours.',['knob'],'Straight after steaming: point the wand at the drip tray, open the knob for '+X.purgeAfter+' to blow it out, and wipe it with a damp cloth.')}
       }
       /* after steaming: refill the boiler and bring it back to brew temperature */
       var rf=st.refill;
@@ -568,7 +573,7 @@
       if(ev==='dose-ask'){doDose();benchSync();return}
       if(ev==='blocked'&&a!=='pf'){if(X.onBlocked)X.onBlocked(a,slip);return}
       if(ev==='blocked'){slip('pf-stuck','Don\'t force the portafilter','There was still pressure in the group. Forced out, a real one sprays scalding water and grounds.',['pf','brew'],'Switch brew off and give it a couple of seconds for the 3-way valve to vent the pressure into the drip tray, then take it out.');return}
-      if(ev==='setup'){benchSync();X.adapt&&X.adapt(K);refs();FC.next=0;if(MAP)MAP.draw(true);if(LESSON){LESSON.render();LESSON.renderCourse()}return}
+      if(ev==='setup'){benchSync();X.adapt&&X.adapt(K);refs();if(careRender)careRender();FC.next=0;if(MAP)MAP.draw(true);if(LESSON){LESSON.render();LESSON.renderCourse()}return}
     });
 
     /* ======================= the espresso compass: extraction against strength ======================= */
@@ -710,6 +715,8 @@
     })});
 
     /* ======================= the care log: real dates, saved in this browser ======================= */
+    /* redrawn when the machine changes, since some cards follow the model */
+    var careRender=null;
     (function(){
       var box=$('care-list');if(!box)return;
       var C=store('school-care-v1')||{};C.done=C.done||{};C.water=C.water||X.waterDefault;
@@ -724,16 +731,16 @@
           return '<div class="cg"><h3 class="cg-h">'+esc(g)+'</h3>'+X.care.filter(function(t){return t.group===g}).map(function(t){
             var last=C.done[t.id],ev=every(t),due=last&&ev?last+ev*DAY:null,left=due?Math.ceil((due-now)/DAY):null;
             var status=!ev?'':!last?'<span class="cs none">Not logged yet</span>':left<0?'<span class="cs over">Overdue by '+(-left)+' day'+(-left===1?'':'s')+'</span>':left===0?'<span class="cs due">Due today</span>':'<span class="cs ok">Next in '+left+' day'+(left===1?'':'s')+'</span>';
-            return '<div class="ct" id="care-'+t.id+'"><div class="ct-h"><span class="ct-t">'+esc(t.title)+'</span><span class="ct-src">'+esc(t.src)+'</span></div>'+
+            return '<div class="ct" id="care-'+t.id+'"><div class="ct-h"><span class="ct-t">'+esc(t.title)+'</span><span class="ct-src">'+esc(txt(t.src))+'</span></div>'+
               '<p class="ct-every">'+esc(typeof t.when==='function'?t.when(C.water):t.when)+'</p>'+
-              '<details class="ct-how"><summary>How</summary><ol>'+t.steps.map(function(x){return '<li>'+txt(x)+'</li>'}).join('')+'</ol>'+(t.lesson?'<p><button type="button" class="linkbtn" data-clesson="'+t.lesson+'">Practise it on the machine above</button></p>':'')+'</details>'+
+              '<details class="ct-how"><summary>How</summary><ol>'+txt(t.steps).map(function(x){return '<li>'+txt(x)+'</li>'}).join('')+'</ol>'+(t.lesson?'<p><button type="button" class="linkbtn" data-clesson="'+t.lesson+'">Practise it on the machine above</button></p>':'')+'</details>'+
               (ev?'<div class="ct-f">'+status+(last?'<span class="ct-last">Last done '+ago(now-last)+'</span>':'')+'<button type="button" class="btn sm" data-cdone="'+t.id+'">Done today</button>'+(last?'<button type="button" class="linkbtn" data-cundo="'+t.id+'">Clear</button>':'')+'</div>':'')+'</div>'}).join('')+'</div>'}).join('');
         Array.prototype.forEach.call(box.querySelectorAll('[data-cdone]'),function(b){b.addEventListener('click',function(){C.done[b.getAttribute('data-cdone')]=Date.now();save();render()})});
         Array.prototype.forEach.call(box.querySelectorAll('[data-cundo]'),function(b){b.addEventListener('click',function(){delete C.done[b.getAttribute('data-cundo')];save();render()})});
         Array.prototype.forEach.call(box.querySelectorAll('[data-clesson]'),function(b){b.addEventListener('click',function(){LESSON.start(b.getAttribute('data-clesson'),true)})});
       }
       var w=$('care-water');if(w)w.addEventListener('change',function(){C.water=w.value;save();render()});
-      render();
+      careRender=render;render();
     })();
 
     /* ======================= drinks: shots set aside, then milk poured into them ======================= */
@@ -759,7 +766,7 @@
       L.push([fOk,'Milk stretched about '+Math.round(foamPct)+'%: '+(fOk?'right':'not quite right')+' for a '+D0.name.toLowerCase()+'.']);
       L.push([bigR<=0.15,bigR<=0.15?'Silky enough to pour.':'Big bubbles: it pours in lumps.']);
       L.push([j.T>=55&&j.T<=66,'Milk at '+Math.round(j.T)+' °C.']);
-      if(cups.some(function(d){return s.t-d.t>X.pourWithin}))N.push(X.twoWorkflow);
+      if(cups.some(function(d){return s.t-d.t>X.pourWithin}))N.push(txt(X.twoWorkflow));
       if(!fOk)N.push(D0.name+': '+D0.note+'.');
       var good=L.filter(function(x){return x[0]}).length,score=Math.round(100*good/L.length);
       card('milk '+(score>=80?'good':score>=60?'mid':'bad'),'<div class="ck-h"><span class="ck-tag">Poured</span><h4>'+(cups.length>1?cups.length+' '+esc(D0.plural||D0.name+'s'):esc(D0.name))+'</h4><span class="ck-score">'+score+'</span></div>'+checks(L)+nextList(N));
@@ -797,7 +804,7 @@
       set(CM.grime,s.grime,'Oil');set(CM.det,s.det,'Detergent');set(CM.scale,s.scale,'Scale');set(CM.desc,s.descB,'Descaler');
       var h=$('b-cleanhint');if(h){var p=s.pf,t;
         if(s.descB>0.05||s.desc>0.05)t=s.desc>0.05?'Descaler in the tank. Follow the descaling steps; fresh water and a full rinse come after.':'Descaler still in the boiler: rinse it through the group and the wand with fresh water.';
-        else if(p.b==='blind')t=p.in?(s.det>0.05?'Blind basket with detergent: brew on for about 10 s, off for 10 s, five times.':'Blind basket in: brew on for about 10 s, off for 10 s, five times. That is a plain-water backflush.'):(s.det>0.05?'Detergent in the blind basket: lock it in and backflush.':'Blind basket on the counter: lock it in to backflush, or add detergent first.');
+        else if(p.b==='blind')t=p.in?X.bfHint(s.det>0.05):(s.det>0.05?'Detergent in the blind basket: lock it in and backflush.':'Blind basket on the counter: lock it in to backflush, or add detergent first.');
         else if(s.det>0.05)t='Detergent still in the group: flush water through it and backflush with plain water before the next coffee.';
         else t='Swap to the blind basket (portafilter out) to backflush.';
         h.textContent=t}
@@ -816,6 +823,7 @@
       var tb=$('recipe-table');
       if(tb)tb.innerHTML='<thead><tr><th>Beans</th><th class="num">At the puck</th><th class="num">Dose</th><th class="num">Out</th><th class="num">Time</th><th>Grind</th><th>Aim for</th></tr></thead><tbody>'+
         ['light','medium','dark'].map(function(k){var R0=X.recipes[k];return '<tr><td><span class="rsw"><i class="rd '+k+'"></i>'+esc(R0.name)+'</span></td><td class="num">'+R0.T[0]+' to '+R0.T[1]+' °C</td><td class="num">18 g</td><td class="num">'+r0(18*R0.ratio[0])+' to '+r0(18*R0.ratio[1])+' g<br><small>1:'+R0.ratio[0]+' to 1:'+R0.ratio[1]+'</small></td><td class="num">'+R0.time[0]+' to '+R0.time[1]+' s</td><td>'+esc(R0.grindWord)+'</td><td>'+esc(R0.aim)+'</td></tr>'}).join('')+'</tbody>';
+      var rn=$('recipe-note');if(rn)rn.innerHTML=txt(X.recipeNote||'');
       var dl=$('dial');if(dl)dl.innerHTML=X.dial.map(function(d){return '<div class="dc"><h3>'+esc(d.h)+'</h3>'+(d.p?'<p>'+txt(d.p)+'</p>':'')+(d.ul?'<ul>'+d.ul.map(function(x){return '<li>'+txt(x)+'</li>'}).join('')+'</ul>':'')+'</div>'}).join('');
       var mr=$('milk-ref');if(mr)mr.innerHTML=txt(X.milkRef);
       var cl0=$('care-lede');if(cl0)cl0.innerHTML=txt(X.intro.care);

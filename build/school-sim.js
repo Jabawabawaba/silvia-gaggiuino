@@ -20,6 +20,8 @@
     function tog(e,c,on){if(e&&e.classList.contains(c)!==!!on)e.classList.toggle(c,!!on)}
     var K=E.K,S=null,HOOKS=[],paused=false;
     function emit(a,b,c){for(var i=0;i<HOOKS.length;i++)try{HOOKS[i](a,b,c)}catch(err){if(window.console)console.error(err)}}
+    /* one step of machine time; a safety thermostat that trips is reported, so the page can say what to do on a real one */
+    function tick(){var was=S.trip;E.step(S,E.DT);emit('step',S,E.DT);if(S.trip&&!was)emit('blocked','safety-trip')}
     /* the Silvia you picked; with none picked, a 120 V V6 M */
     function setup(){
       var p=prof();
@@ -208,7 +210,7 @@
     function frame(ms){
       raf=0;if(!vis)return;
       var dtr=last?Math.min(0.1,(ms-last)/1000):0;last=ms;if(!paused)acc+=dtr*speed;
-      var n=0;while(acc>=E.DT&&n<800){E.step(S,E.DT);emit('step',S,E.DT);acc-=E.DT;n++}if(n>=800)acc=0;
+      var n=0;while(acc>=E.DT&&n<800){tick();acc-=E.DT;n++}if(n>=800)acc=0;
       render(dtr);raf=requestAnimationFrame(frame);
     }
     function wake(){if(vis&&!raf){last=0;raf=requestAnimationFrame(frame)}}
@@ -236,7 +238,7 @@
     ['f-tray','x-tray'].forEach(function(id){act(id,'tray',function(){S.drip=0;S.puddle=0})});
     act('x-tank','tank',function(){if(S.tank<E.TANK-10){S.fillDesc=0;S.fill=E.TANK-S.tank}});
     /* the safety resets by hand, and only once it has cooled (on a real Silvia: unplugged, cover off, a technician's job) */
-    act('x-safety','safety',function(e){if(!S.trip)return false;if(S.Tel>150){wiggle(e);emit('blocked','safety');return false}S.trip=0});
+    act('x-safety','safety',function(e){if(!S.trip)return false;if(S.Tel>150){wiggle(e);emit('blocked','safety');return false}S.trip=0;emit('blocked','safety-reset')});
     function freshJug(j){j.w=0;j.T=5;j.foam=0;j.used=0;j.airC=0;j.airH=0;j.spin=0;j.big=0;j.spit=0}
     window.addEventListener('silvia-machine',function(){setup();render(0);emit('setup')});
     setup();S=E.fresh();root.classList.add('fresh');
@@ -246,7 +248,7 @@
       set:function(s){S=s;acc=0;[fPuff,xPuff,bub,mbub].forEach(function(p){p.clear()});render(0)},
       on:function(fn){HOOKS.push(fn)},emit:emit,
       render:function(){render(0)},
-      step:function(n){for(var i=0;i<n;i++){E.step(S,E.DT);emit('step',S,E.DT)}render(0)},
+      step:function(n){for(var i=0;i<n;i++)tick();render(0)},
       speed:function(v){if(v!=null){speed=v}return speed},
       pause:function(v){if(v!=null)paused=!!v;return paused},
       ready:function(){return E.ready(S)},

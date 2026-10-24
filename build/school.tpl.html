@@ -13,7 +13,7 @@
     <div class="plate"><span class="rivet" aria-hidden="true"></span><span><b>Learn</b></span><span id="bs-plate">Rancilio Silvia</span><span>stock machine</span><span class="rivet" aria-hidden="true"></span></div>
     <h1>Barista School</h1>
     <p class="lede">Learn to pull shots for light, medium and dark roasts on a stock Silvia by surfing its temperature wave, steam silky milk for two, refill the boiler and get back to brew temperature afterwards, and keep the machine clean. A live temperature map shows where you are in the heating cycle and what a shot started now would get; a coach grades every shot, jug and clean-up.</p>
-    <p class="fine school-note"><b>Stock machine.</b> Everything here is for the Silvia as it comes, before Gaggiuino. With Gaggiuino the board holds the brew temperature, so surfing is no longer needed; the puck prep, recipes, steaming and cleaning all still apply. <span id="bs-name">Drawn as a 120 V Silvia V6 M; pick your version in Your Silvia and the machine, its lights and its timings follow.</span></p>
+    <p class="fine school-note"><b>Stock machine.</b> Everything here is for the Silvia as it comes, before Gaggiuino. With Gaggiuino the board holds the brew temperature, so surfing is no longer needed. Puck prep and milk technique still apply; for recipes, backflushing, descaling and steam settings, follow the <a href="https://gaggiuino.github.io/#/learning/user-manual-gen3">Gaggiuino user manual</a>. <span id="bs-name">Drawn as a 120 V Silvia V6 M; pick your version in Your Silvia and the machine, its lights and its timings follow.</span></p>
   </header>
 
   <section class="block" id="course" aria-labelledby="h-course">
@@ -29,7 +29,7 @@
       <div class="stage">
         <div class="tbar" role="toolbar" aria-label="Machine and time">
           <button type="button" class="tbtn" id="t-reset" title="A cold machine, just switched off overnight"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12a7 7 0 1 0 2.1-5"/><path d="M4 4v5h5"/></svg>Cold start</button>
-          <button type="button" class="tbtn" id="t-warm" title="Switched on 40 minutes ago, heat-soaked"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3c2 3-2 4 0 7s5 2 5 6a5 5 0 0 1-10 0c0-3 2-4 2-6"/></svg>Warm machine</button>
+          <button type="button" class="tbtn" id="t-warm" title="Switched on 40 minutes ago and in use since, heat-soaked"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3c2 3-2 4 0 7s5 2 5 6a5 5 0 0 1-10 0c0-3 2-4 2-6"/></svg>Warm machine</button>
           <span class="tseg" role="group" aria-label="Speed">
             <button type="button" data-speed="1" aria-pressed="true">1×</button><button type="button" data-speed="5" aria-pressed="false">5×</button><button type="button" data-speed="20" aria-pressed="false">20×</button><button type="button" data-speed="60" aria-pressed="false">60×</button>
           </span>
@@ -123,6 +123,7 @@
   <section class="block" id="recipes" aria-labelledby="h-recipes">
     <div class="sec-h"><h2 id="h-recipes">Recipes by roast</h2><span class="sum">a starting point, then taste</span></div>
     <div class="tablewrap"><table class="rtab" id="recipe-table"></table></div>
+    <p class="fine rnote" id="recipe-note"></p>
     <div class="dial" id="dial"></div>
   </section>
 
