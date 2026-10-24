@@ -88,11 +88,15 @@
 }
 .swipe-hint{margin:6px 0 0;font:500 12.5px "Barlow",system-ui,sans-serif;color:var(--muted,#59616A);display:flex;align-items:center;gap:6px}
 .swipe-hint::before{content:"";width:18px;height:10px;background:linear-gradient(90deg,transparent 0 3px,currentColor 3px 15px,transparent 15px) center/100% 2px no-repeat;opacity:.7}
-</style></head><body><nav class="site-nav" aria-label="Site"><div class="in"><a class="brand" href="index.html">Silvia × Gaggiuino<small>unofficial</small></a><button type="button" class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="nav-links">Pages</button><div class="nav-links" id="nav-links"><span class="grp"><span class="gl">Learn</span><a href="conversion.html">The conversion</a><a href="how-silvia-works.html">How the Silvia works</a><a href="barista-school.html">Barista school</a><a href="how-gaggiuino-works.html" aria-current="page">How Gaggiuino works</a><a href="glossary.html">Glossary</a></span><span class="grp"><span class="gl">Plan</span><a href="budget.html">Budget</a><a href="used-checklist.html">Used Silvia check</a><a href="which-silvia.html">Which Silvia</a><a href="parts-tracker.html">Parts tracker</a><a href="test-yourself.html">Test yourself</a></span><span class="grp"><span class="gl">Install</span><a href="runbook.html">Runbook</a><a href="part-guides.html">Part guides</a><a href="wiring.html">Wiring</a><a href="cut-list.html">Cut list</a><a href="wire-labels.html">Wire labels</a><a href="power-on-checks.html">Power-on checks</a></span><span class="grp"><span class="gl">After</span><a href="troubleshooting.html">Troubleshooting</a><a href="led-mod.html">LED switch mod</a></span></div><button type="button" class="mchip" id="mchip" aria-expanded="false" aria-controls="mpanel" aria-label="Your Silvia: not set"><span class="mchip-k">Your Silvia</span><b id="mchip-l">Set it</b></button></div><div class="mpanel" id="mpanel" hidden><div class="in"><div class="mrow"><span class="mk">Version</span><div class="mseg" role="group" aria-label="Version"><button type="button" data-mv="V1" aria-pressed="false">V1</button><button type="button" data-mv="V2" aria-pressed="false">V2</button><button type="button" data-mv="V3" aria-pressed="false">V3</button><button type="button" data-mv="V4" aria-pressed="false">V4</button><button type="button" data-mv="V5" aria-pressed="false">V5</button><button type="button" data-mv="V6" aria-pressed="false">V6</button></div><label class="mh" id="m-early-w" hidden><input type="checkbox" id="m-early"> Boiler made before May 2000</label></div><div class="mrow"><span class="mk">Model</span><div class="mseg" role="group" aria-label="Model"><button type="button" data-mm="M" aria-pressed="false">M, manual off</button><button type="button" data-mm="E" aria-pressed="false">E, auto-off</button></div><span class="mh" id="m-model-hint">E and M only exist from V5 on.</span></div><div class="mrow"><span class="mk">Mains</span><div class="mseg" role="group" aria-label="Mains voltage"><button type="button" data-mvolt="120" aria-pressed="false">120 V</button><button type="button" data-mvolt="230" aria-pressed="false">230 V</button></div></div><p id="m-summary"></p><div class="mact"><a href="which-silvia.html">Not sure which you have? Identify your Silvia</a><button type="button" id="m-clear">Clear</button><button type="button" id="m-done">Done</button></div></div></div></nav><div class="nav-scrim" id="nav-scrim" hidden></div><script>(function(){var n=(performance.getEntriesByType&&performance.getEntriesByType('navigation')[0])||{};if(n.type==='back_forward')return;var moved=false;['wheel','touchstart','keydown'].forEach(function(t){addEventListener(t,function(){moved=true},{once:true,passive:true})});function go(){if(moved)return;try{var h=location.hash;if(h){var t=document.getElementById(decodeURIComponent(h.slice(1)));if(t&&t.scrollIntoView)t.scrollIntoView({block:'start'});return}window.scrollTo(0,0);var e=document.body&&document.body.firstElementChild;if(e&&e.scrollIntoView)e.scrollIntoView({block:'start'})}catch(x){}}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',go);else go();addEventListener('load',go)})();</script><script>(function(){var nav=document.querySelector('.site-nav');if(!nav)return;var root=document.documentElement,last=0,acc=0,ticking=false,hidden=false,hold=0,touched=false;function h(){return nav.offsetHeight}function fv(a){try{return a.matches(':focus-visible')}catch(e){return true}}function busy(){var t=document.getElementById('nav-toggle'),p=document.getElementById('mpanel'),a=document.activeElement;return (t&&t.getAttribute('aria-expanded')==='true')||(p&&!p.hidden)||(a&&a!==document.body&&nav.contains(a)&&fv(a))}function cover(){root.style.setProperty('--nav-cover',hidden?'0px':h()+'px')}function set(hide){hidden=hide;nav.classList.toggle('nav-hide',hide);cover()}function Y(){var y=window.pageYOffset||0,m=Math.max(0,root.scrollHeight-innerHeight);return y<0?0:y>m?m:y}function update(){ticking=false;var y=Y(),d=y-last;last=y;nav.classList.toggle('nav-float',y>2);if(y<=h()||busy()){acc=0;if(hidden)set(false);return}if(Date.now()<hold||Math.abs(d)>innerHeight*0.8){acc=0;if(!hidden)set(true);return}if((d>0)!==(acc>0))acc=0;acc+=d;if(acc>10&&!hidden)set(true);else if(acc<-24&&hidden)set(false)}function jump(){last=Y();acc=0;if(last>h()&&!busy())set(true)}addEventListener('scroll',function(){if(!ticking){ticking=true;requestAnimationFrame(update)}},{passive:true});addEventListener('hashchange',function(){hold=Date.now()+600;jump()});document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[href*="#"]');if(a&&a.hash&&a.pathname===location.pathname&&a.host===location.host){hold=Date.now()+600;setTimeout(jump,0)}},true);nav.addEventListener('focusin',function(e){if(hidden&&fv(e.target))set(false)});['wheel','touchstart','keydown'].forEach(function(t){addEventListener(t,function(){touched=true},{once:true,passive:true})});if(window.ResizeObserver)new ResizeObserver(function(){if(!hidden)cover()}).observe(nav);set(false);function init(){last=Y();if(location.hash&&last>h()&&!touched)set(true)}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();addEventListener('load',init)})();</script><script>/* Site-wide "your Silvia" profile: version, E/M model, mains voltage. Every field is optional.
+</style></head><body><nav class="site-nav" aria-label="Site"><div class="in"><a class="brand" href="index.html">Silvia × Gaggiuino<small>unofficial</small></a><button type="button" class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="nav-links">Pages</button><div class="nav-links" id="nav-links"><span class="grp"><span class="gl">Learn</span><a href="conversion.html">The conversion</a><a href="how-silvia-works.html">How the Silvia works</a><a href="barista-school.html">Barista school</a><a href="how-gaggiuino-works.html" aria-current="page">How Gaggiuino works</a><a href="glossary.html">Glossary</a></span><span class="grp"><span class="gl">Plan</span><a href="budget.html">Budget</a><a href="used-checklist.html">Used Silvia check</a><a href="which-silvia.html">Which Silvia</a><a href="parts-tracker.html">Parts tracker</a><a href="test-yourself.html">Test yourself</a></span><span class="grp"><span class="gl">Install</span><a href="runbook.html">Runbook</a><a href="part-guides.html">Part guides</a><a href="wiring.html">Wiring</a><a href="cut-list.html">Cut list</a><a href="wire-labels.html">Wire labels</a><a href="power-on-checks.html">Power-on checks</a></span><span class="grp"><span class="gl">After</span><a href="troubleshooting.html">Troubleshooting</a><a href="led-mod.html">LED switch mod</a></span></div><button type="button" class="mchip" id="mchip" aria-expanded="false" aria-controls="mpanel" aria-label="Your Silvia: not set"><span class="mchip-k">Your Silvia</span><b id="mchip-l">Set it</b></button></div><div class="mpanel" id="mpanel" hidden><div class="in"><div class="mrow"><span class="mk">Version</span><div class="mseg" role="group" aria-label="Version"><button type="button" data-mv="V1" aria-pressed="false">V1</button><button type="button" data-mv="V2" aria-pressed="false">V2</button><button type="button" data-mv="V3" aria-pressed="false">V3</button><button type="button" data-mv="V4" aria-pressed="false">V4</button><button type="button" data-mv="V5" aria-pressed="false">V5</button><button type="button" data-mv="V6" aria-pressed="false">V6</button></div><label class="mh" id="m-early-w" hidden><input type="checkbox" id="m-early"> Boiler made before May 2000</label></div><div class="mrow"><span class="mk">Model</span><div class="mseg" role="group" aria-label="Model"><button type="button" data-mm="M" aria-pressed="false">M, manual off</button><button type="button" data-mm="E" aria-pressed="false">E, auto-off</button></div><span class="mh" id="m-model-hint">E and M only exist from V5 on.</span></div><div class="mrow"><span class="mk">Mains</span><div class="mseg" role="group" aria-label="Mains voltage"><button type="button" data-mvolt="120" aria-pressed="false">120 V</button><button type="button" data-mvolt="230" aria-pressed="false">230 V</button></div></div><div class="mrow"><span class="mk">Extras</span><div class="mseg" role="group" aria-label="Add-ons"><button type="button" data-mshelly aria-pressed="false">Shelly smart relay</button></div><span class="mh">Optional and unofficial: switch the machine on and off from your phone. Adds its wires, checks and steps to the pages.</span></div><p id="m-summary"></p><div class="mact"><a href="which-silvia.html">Not sure which you have? Identify your Silvia</a><button type="button" id="m-clear">Clear</button><button type="button" id="m-done">Done</button></div></div></div></nav><div class="nav-scrim" id="nav-scrim" hidden></div><script>(function(){var n=(performance.getEntriesByType&&performance.getEntriesByType('navigation')[0])||{};if(n.type==='back_forward')return;var moved=false;['wheel','touchstart','keydown'].forEach(function(t){addEventListener(t,function(){moved=true},{once:true,passive:true})});function go(){if(moved)return;try{var h=location.hash;if(h){var t=document.getElementById(decodeURIComponent(h.slice(1)));if(t&&t.scrollIntoView)t.scrollIntoView({block:'start'});return}window.scrollTo(0,0);var e=document.body&&document.body.firstElementChild;if(e&&e.scrollIntoView)e.scrollIntoView({block:'start'})}catch(x){}}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',go);else go();addEventListener('load',go)})();</script><script>(function(){var nav=document.querySelector('.site-nav');if(!nav)return;var root=document.documentElement,last=0,acc=0,ticking=false,hidden=false,hold=0,touched=false;function h(){return nav.offsetHeight}function fv(a){try{return a.matches(':focus-visible')}catch(e){return true}}function busy(){var t=document.getElementById('nav-toggle'),p=document.getElementById('mpanel'),a=document.activeElement;return (t&&t.getAttribute('aria-expanded')==='true')||(p&&!p.hidden)||(a&&a!==document.body&&nav.contains(a)&&fv(a))}function cover(){root.style.setProperty('--nav-cover',hidden?'0px':h()+'px')}function set(hide){hidden=hide;nav.classList.toggle('nav-hide',hide);cover()}function Y(){var y=window.pageYOffset||0,m=Math.max(0,root.scrollHeight-innerHeight);return y<0?0:y>m?m:y}function update(){ticking=false;var y=Y(),d=y-last;last=y;nav.classList.toggle('nav-float',y>2);if(y<=h()||busy()){acc=0;if(hidden)set(false);return}if(Date.now()<hold||Math.abs(d)>innerHeight*0.8){acc=0;if(!hidden)set(true);return}if((d>0)!==(acc>0))acc=0;acc+=d;if(acc>10&&!hidden)set(true);else if(acc<-24&&hidden)set(false)}function jump(){last=Y();acc=0;if(last>h()&&!busy())set(true)}addEventListener('scroll',function(){if(!ticking){ticking=true;requestAnimationFrame(update)}},{passive:true});addEventListener('hashchange',function(){hold=Date.now()+600;jump()});document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[href*="#"]');if(a&&a.hash&&a.pathname===location.pathname&&a.host===location.host){hold=Date.now()+600;setTimeout(jump,0)}},true);nav.addEventListener('focusin',function(e){if(hidden&&fv(e.target))set(false)});['wheel','touchstart','keydown'].forEach(function(t){addEventListener(t,function(){touched=true},{once:true,passive:true})});if(window.ResizeObserver)new ResizeObserver(function(){if(!hidden)cover()}).observe(nav);set(false);function init(){last=Y();if(location.hash&&last>h()&&!touched)set(true)}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();addEventListener('load',init)})();</script><script>/* Site-wide "your Silvia" profile: version, E/M model, mains voltage, and the Shelly add-on. Every field is optional.
    Elements with data-when="ver:V5,V6;model:E;volts:230;early" show only when every condition matches.
    A field the user hasn't set never hides anything: with no version, every version's notes show; with no
    voltage, both voltages' notes show and the wording stays generic. Nothing is ever filled in for them.
-   Elements with data-mtext="gfci|outlet|volts" get voltage-specific wording. */
+   The one exception is shelly, the Shelly smart relay add-on (unofficial): its content shows only once the
+   reader chooses it, and "!shelly" marks what it replaces. "!key" is the opposite of key, once that field is set.
+   Elements with data-mtext="gfci|outlet|volts" get voltage-specific wording.
+   txt(x) turns text into what applies: a plain string as is, or a list of segments, each a string (always kept)
+   or [text, when] (kept only when the condition matches), joined with spaces. */
 (function(){
   var KEY='silvia-machine-v1',VERS=['V1','V2','V3','V4','V5','V6'];
   var TEXT={
@@ -106,8 +110,9 @@
     var ver=VERS.indexOf(s.ver)>=0?s.ver:null;
     var model=newer(ver)&&(s.model==='E'||s.model==='M')?s.model:null;
     var v=Number(s.volts),volts=v===230?230:v===120?120:null;
-    if(!ver&&!volts)return null;
-    return {ver:ver,model:model,volts:volts,early:ver==='V1'&&s.early===true};
+    var shelly=s.shelly===true;
+    if(!ver&&!volts&&!shelly)return null;
+    return {ver:ver,model:model,volts:volts,early:ver==='V1'&&s.early===true,shelly:shelly};
   }
   function read(){try{return clean(JSON.parse(localStorage.getItem(KEY)||'null'))}catch(e){return null}}
   var prof=read();
@@ -118,8 +123,15 @@
   }
   /* true unless the profile rules the element out; unknown fields never rule anything out */
   function matches(when){
-    if(!when||!prof)return true;
-    return conds(when).every(function(c){
+    if(!when)return true;
+    if(!prof)return conds(when).every(function(c){return c.k!=='shelly'});
+    return conds(when).every(one);
+  }
+  /* "!key" holds once the field is set and key doesn't; the Shelly is always set (off until chosen) */
+  function one(c){
+    if(c.k.charAt(0)==='!'){var inner={k:c.k.slice(1),vals:c.vals};return !decided(c.k.slice(1)+(c.vals.length?':'+c.vals.join(','):''))||!one(inner)}
+    return (function(c){
+      if(c.k==='shelly')return !!prof.shelly;
       if(c.k==='ver')return !prof.ver||c.vals.indexOf(prof.ver)>=0;
       if(c.k==='model'){
         if(!prof.ver)return true;
@@ -129,24 +141,35 @@
       if(c.k==='volts')return !prof.volts||c.vals.indexOf(String(prof.volts))>=0;
       if(c.k==='early')return !prof.ver||prof.early;
       return true;
-    });
+    })(c);
   }
   /* true when the profile pins down every field the condition depends on (so a "which machines" tag adds nothing) */
   function decided(when){
-    if(!prof)return false;
+    /* with nothing picked, the Shelly is still known: it's off until chosen */
+    if(!prof)return conds(when).every(function(c){return c.k==='shelly'||c.k==='!shelly'});
     return conds(when).every(function(c){
-      if(c.k==='ver'||c.k==='early')return !!prof.ver;
-      if(c.k==='model')return !!prof.ver&&(!newer(prof.ver)||!!prof.model);
-      if(c.k==='volts')return !!prof.volts;
+      var k=c.k.charAt(0)==='!'?c.k.slice(1):c.k;
+      if(k==='ver'||k==='early')return !!prof.ver;
+      if(k==='model')return !!prof.ver&&(!newer(prof.ver)||!!prof.model);
+      if(k==='volts')return !!prof.volts;
       return true;
     });
+  }
+  function txt(x){
+    if(x==null)return '';
+    if(!Array.isArray(x))return String(x);
+    /* a segment that starts with punctuation joins without a space before it */
+    return x.filter(function(seg){return typeof seg==='string'||matches(seg[1])}).map(function(seg){return typeof seg==='string'?seg:seg[0]}).join(' ').replace(/ ([,.;:])/g,'$1');
   }
   function text(key){var t=TEXT[key];if(!t)return '';return prof&&prof.volts?t[String(prof.volts)]:t['']}
   function label(p){
     p=p||prof;if(!p)return 'Set it';
     var a=[];if(p.ver)a.push(p.ver+(newer(p.ver)&&p.model?' '+p.model:''));if(p.volts)a.push(p.volts+' V');
+    if(p.shelly)a.push('Shelly');
     return a.join(', ');
   }
+  /* "For a V6 M, 120 V Silvia with the Shelly." for printed sheets; empty with nothing set */
+  function forText(p){p=p||prof;if(!p)return '';var b=label(Object.assign({},p,{shelly:false}));return 'For a '+(b?b+' ':'')+'Silvia'+(p.shelly?' with the Shelly':'')+'.'}
   function missing(p){
     p=p||prof;if(!p)return [];var m=[];
     if(!p.ver)m.push('version');else if(newer(p.ver)&&!p.model)m.push('model');
@@ -156,12 +179,17 @@
   function summary(p){
     p=p||prof;
     if(!p)return 'Pick your version and voltage. Until you do, every page shows all the version notes, each tagged with the machines it applies to.';
-    var m=missing(p);
-    return 'Pages now show the steps and notes for a '+label(p)+' Silvia.'+(m.length?' Add your '+m.join(' and ')+' to narrow them down; until then those notes all show.':'');
+    var m=missing(p),base=[];if(p.ver)base.push(p.ver+(newer(p.ver)&&p.model?' '+p.model:''));if(p.volts)base.push(p.volts+' V');
+    return 'Pages now show the steps and notes for a '+(base.length?base.join(', ')+' ':'')+'Silvia'+(p.shelly?' with the Shelly smart relay':'')+'.'+(m.length?' Add your '+m.join(' and ')+' to narrow them down; until then those notes all show.':'')+(p.shelly?' The Shelly\'s wires, checks and steps are added.':'');
   }
   function apply(root){
     root=root||document;
-    Array.prototype.forEach.call(root.querySelectorAll('[data-when]'),function(el){el.hidden=!matches(el.getAttribute('data-when'))});
+    Array.prototype.forEach.call(root.querySelectorAll('[data-when]'),function(el){
+      var hide=!matches(el.getAttribute('data-when'));
+      /* inside a drawing, hidden doesn't apply, so SVG elements get display="none" instead */
+      if(window.SVGElement&&el instanceof SVGElement){if(hide)el.setAttribute('display','none');else el.removeAttribute('display')}
+      else el.hidden=hide;
+    });
     Array.prototype.forEach.call(root.querySelectorAll('[data-mtext]'),function(el){var t=text(el.getAttribute('data-mtext'));if(t)el.textContent=t});
     var l=document.getElementById('mchip-l');if(l)l.textContent=label();
     var ch=document.getElementById('mchip');if(ch){ch.classList.toggle('set',!!prof);ch.setAttribute('aria-label','Your Silvia: '+(prof?label():'not set'))}
@@ -174,7 +202,7 @@
     try{window.dispatchEvent(new CustomEvent('silvia-machine',{detail:prof}))}catch(e){}
   }
   /* start from what's saved, never from guesses */
-  function current(){return Object.assign({ver:null,model:null,volts:null,early:false},prof||{})}
+  function current(){return Object.assign({ver:null,model:null,volts:null,early:false,shelly:false},prof||{})}
   /* ---- nav panel ---- */
   function syncPanel(){
     var pan=document.getElementById('mpanel');if(!pan)return;
@@ -182,6 +210,7 @@
     Array.prototype.forEach.call(pan.querySelectorAll('[data-mv]'),function(b){b.setAttribute('aria-pressed',String(b.getAttribute('data-mv')===p.ver))});
     Array.prototype.forEach.call(pan.querySelectorAll('[data-mm]'),function(b){b.disabled=!nw;b.setAttribute('aria-pressed',String(nw&&b.getAttribute('data-mm')===p.model))});
     Array.prototype.forEach.call(pan.querySelectorAll('[data-mvolt]'),function(b){b.setAttribute('aria-pressed',String(Number(b.getAttribute('data-mvolt'))===p.volts))});
+    Array.prototype.forEach.call(pan.querySelectorAll('[data-mshelly]'),function(b){b.setAttribute('aria-pressed',String(!!p.shelly))});
     var ew=document.getElementById('m-early-w');if(ew)ew.hidden=p.ver!=='V1';
     var ec=document.getElementById('m-early');if(ec)ec.checked=!!p.early;
     var mh=document.getElementById('m-model-hint');if(mh)mh.hidden=nw;
@@ -205,6 +234,7 @@
         if(b.hasAttribute('data-mv'))p.ver=b.getAttribute('data-mv');
         else if(b.hasAttribute('data-mm'))p.model=b.getAttribute('data-mm');
         else if(b.hasAttribute('data-mvolt'))p.volts=Number(b.getAttribute('data-mvolt'));
+        else if(b.hasAttribute('data-mshelly'))p.shelly=!p.shelly;
         else if(b.id==='m-clear'){set(null);return}
         else if(b.id==='m-done'){pan.hidden=true;chip.setAttribute('aria-expanded','false');sync();chip.focus();return}
         else return;
@@ -216,8 +246,12 @@
     }
     if(nt&&nl)nt.addEventListener('click',function(){var open=nt.getAttribute('aria-expanded')!=='true';nt.setAttribute('aria-expanded',String(open));nl.classList.toggle('open',open);if(open)closePanel();sync()});
     Array.prototype.forEach.call(document.querySelectorAll('[data-setmachine]'),function(b){
+      /* data-setmachine="V5" sets the version; "shelly:yes" (key:value pairs, ; between) sets those fields */
       b.addEventListener('click',function(){
-        var p=current();p.ver=b.getAttribute('data-setmachine');set(p);
+        var p=current(),v=b.getAttribute('data-setmachine');
+        if(v.indexOf(':')<0)p.ver=v;
+        else v.split(';').forEach(function(kv){var i=kv.indexOf(':'),k=kv.slice(0,i).trim(),x=kv.slice(i+1).trim();if(k==='ver')p.ver=x;else if(k==='model')p.model=x;else if(k==='volts')p.volts=Number(x);else if(k==='shelly')p.shelly=x==='yes'});
+        set(p);
       });
     });
     var inViewer=typeof window.claude!=='undefined';
@@ -234,7 +268,7 @@
       else if(!over&&h)h.remove();
     });
   }
-  window.SilviaMachine={get:function(){return prof},set:set,current:current,matches:matches,decided:decided,text:text,label:label,missing:missing,summary:summary,apply:apply};
+  window.SilviaMachine={get:function(){return prof},set:set,current:current,matches:matches,decided:decided,text:text,txt:txt,label:label,forText:forText,missing:missing,summary:summary,apply:apply,shelly:function(){return !!(prof&&prof.shelly)}};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',wire);else wire();
 })();
 </script>
@@ -679,6 +713,15 @@ td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:ta
 #g-ground .tip{fill:#C99A4A;stroke:#6E5420}
 #g-ground .tcw{fill:none;stroke:#C77800;stroke-width:3}
 @media (prefers-reduced-motion:reduce){#g-blocks .cw{animation:none}}
+/* the Shelly figure (shown once the Shelly is chosen) */
+.gfig .shbx{fill:var(--surface-2);stroke:var(--ink);stroke-width:1.2}
+.gfig .shln{fill:none;stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round}
+.gfig .shln.thin{stroke-width:2}
+.gfig .shln.L{stroke:#C2412F}
+.gfig .shln.N{stroke:#2F5FB3}
+.gfig .shln.S{stroke:#D9479B}
+.gfig .shdot{fill:var(--ink)}
+.gfig .shcon{stroke:var(--ink);stroke-width:2.5;stroke-linecap:round}
 
 /* Layout: plate header; who does what now (before and after); how the temperature is held; how the pump is driven;
    each new part as a card with a figure; the optional mods; why the low-voltage side floats; sources. */
@@ -723,7 +766,7 @@ td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:ta
       <div class="prose">
         <p>On a stock Silvia the switches and thermostats do the controlling themselves: each one sits in a mains wire and either completes a load's circuit or breaks it. Gaggiuino moves every decision into one place.</p>
         <p>The brew, hot water and steam switches stop carrying mains and become signals. A thermocouple and a pressure sensor report what's happening. The PCB reads all of it many times a second and decides what the element, pump and 3-way valve should do, switching the pump and valve itself and the element through a solid-state relay. The screen shows it and takes your settings.</p>
-        <p class="gg"><b>What stays:</b> the power switch still breaks mains, the 165 °C safety thermostat still sits in the element's supply, a pump thermal fuse stays if yours has one, and earth is bonded exactly as before. None of those depend on software.</p>
+        <p class="gg"><b>What stays:</b> <span data-when="!shelly">the power switch still breaks mains, </span>the 165 °C safety thermostat still sits in the element's supply, a pump thermal fuse stays if yours has one, and earth is bonded exactly as before. None of those depend on software.<span data-when="shelly"> With the Shelly, the power switch only signals it: off goes through the Shelly's firmware, and the app or a schedule can switch it back on. Unplug when it has to stay off.</span></p>
       </div>
       <figure class="gfig" id="g-blocks">
   <div class="mini-ctl" role="group" aria-label="Which machine"><button type="button" class="tgl" data-arch="stock" aria-pressed="false"><i></i>Stock Silvia</button><button type="button" class="tgl" data-arch="gg" aria-pressed="true"><i></i>With Gaggiuino</button></div>
@@ -1040,8 +1083,40 @@ td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:ta
     <article class="pc nofig" id="leds">
       <div class="ph"><h3>Switch lights</h3><span class="where">inside the three rockers</span></div>
       <div class="prose">
-        <p>Once the brew, hot water and steam switches are on low voltage, their mains lamps go dark. The LED mod replaces each lamp with a small orange LED and resistor powered from the 5 V screen line, wired across the switch's spare pole so the light follows the switch. The power switch keeps its stock lamp.</p>
+        <p>Once the brew, hot water and steam switches are on low voltage, their mains lamps go dark. The LED mod replaces each lamp with a small orange LED and resistor powered from the 5 V screen line, wired across the switch's spare pole so the light follows the switch. <span data-when="!shelly">The power switch keeps its stock lamp.</span><span data-when="shelly">With the Shelly, a lamp inside the power switch, or a power light fed from it, may stay dark, since its N pole is empty. gblur's drawing has a power LED on the screen's 5 V line instead, which lights whenever the PCB has power.</span></p>
         <p><a href="led-mod.html">The LED switch mod, step by step</a></p>
+      </div>
+    </article>
+
+    <article class="pc" id="shelly" data-when="shelly">
+      <div class="ph"><h3>Shelly smart relay</h3><span class="where">an unofficial add-on, outside the case</span></div>
+      <div class="prose">
+        <p>A Shelly 1PM, a small Wi-Fi relay, sits between the inlet and the machine and switches it on and off from your phone or a schedule. The power switch stays on the front, but it now only tells the Shelly what to do. Nothing about it is in the official docs. This site's wiring starts from gblur's Silvia V6 E drawing, which shows a Shelly 1; it draws the 1PM instead.</p>
+        <h3>How it works</h3>
+        <p>The Shelly powers itself from L and N. Its relay connects L to O, and O feeds what the power switch's line pole used to, so with the relay open the PCB, the SSR and the heating lamp get nothing. Neutral no longer goes through the power switch: the relay breaks line only, where the stock switch broke both. Its SW input sees mains while the power switch is on: in Switch mode, with output type Toggle Switch, the relay follows the M's rocker; in Button mode each press of the E's push button toggles it; and the app can switch it either way. It also measures the power the machine draws. The PCB doesn't know it's there; it simply powers up when the relay closes.</p>
+        <p>The <a href="part-guides.html#shl">Shelly guide</a> covers the part, where it goes and how to set it up.</p>
+      </div>
+      <figure class="gfig" id="g-shelly">
+  <svg viewBox="0 0 360 214" role="img" aria-label="Line from the inlet goes through the Shelly's relay, from L to O, and on to the machine. Neutral goes from the inlet to the machine without passing through the power switch, with a thin lead to power the Shelly. The power switch takes line and only feeds the Shelly's SW input.">
+    <rect x="128" y="10" width="92" height="28" rx="5" class="shbx"/><text x="174" y="29" class="cap" text-anchor="middle">power switch</text>
+    <rect x="8" y="70" width="64" height="120" rx="6" class="shbx"/><text x="40" y="100" class="cap" text-anchor="middle">L</text><text x="40" y="178" class="cap" text-anchor="middle">N</text><text x="40" y="208" class="cap" text-anchor="middle">inlet</text>
+    <rect x="118" y="70" width="112" height="70" rx="8" class="shbx"/><text x="174" y="130" class="cap" text-anchor="middle">Shelly</text>
+    <text x="134" y="114" class="cap" text-anchor="middle">L</text><text x="214" y="114" class="cap" text-anchor="middle">O</text>
+    <circle cx="148" cy="96" r="4" class="shdot"/><circle cx="200" cy="96" r="4" class="shdot"/><path d="M148,96 L194,82" class="shcon"/>
+    <rect x="276" y="70" width="76" height="120" rx="6" class="shbx"/><text x="314" y="117" class="cap" text-anchor="middle">SSR, PCB,</text><text x="314" y="131" class="cap" text-anchor="middle">heating</text><text x="314" y="145" class="cap" text-anchor="middle">lamp</text>
+    <path d="M72,96 H148" class="shln L"/><path d="M200,96 H276" class="shln L"/>
+    <path d="M72,174 H276" class="shln N"/><path d="M160,174 V140" class="shln N thin"/>
+    <path d="M96,96 V24 H128" class="shln L thin"/><path d="M200,38 V70" class="shln S thin"/><text x="206" y="58" class="cap">SW</text>
+  </svg>
+  <figcaption>Line runs through the Shelly's relay; neutral runs straight to the machine, no longer through the power switch, with a thin lead to power the Shelly. The power switch only signals it.</figcaption>
+</figure>
+    </article>
+
+    <article class="pc nofig" id="shelly-opt" data-when="!shelly">
+      <div class="ph"><h3>Shelly smart relay</h3><span class="where">optional and unofficial</span></div>
+      <div class="prose">
+        <p>Some builders add a Shelly smart relay, so the machine can be switched on from a phone or on a schedule. It isn't in the official docs. Turn it on under Extras in Your Silvia and its wiring, checks and steps are added to the pages.</p>
+        <p><button type="button" class="btn" data-setmachine="shelly:yes">Add the Shelly to my build</button></p>
       </div>
     </article>
 

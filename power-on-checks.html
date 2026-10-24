@@ -88,11 +88,15 @@
 }
 .swipe-hint{margin:6px 0 0;font:500 12.5px "Barlow",system-ui,sans-serif;color:var(--muted,#59616A);display:flex;align-items:center;gap:6px}
 .swipe-hint::before{content:"";width:18px;height:10px;background:linear-gradient(90deg,transparent 0 3px,currentColor 3px 15px,transparent 15px) center/100% 2px no-repeat;opacity:.7}
-</style></head><body><nav class="site-nav" aria-label="Site"><div class="in"><a class="brand" href="index.html">Silvia × Gaggiuino<small>unofficial</small></a><button type="button" class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="nav-links">Pages</button><div class="nav-links" id="nav-links"><span class="grp"><span class="gl">Learn</span><a href="conversion.html">The conversion</a><a href="how-silvia-works.html">How the Silvia works</a><a href="barista-school.html">Barista school</a><a href="how-gaggiuino-works.html">How Gaggiuino works</a><a href="glossary.html">Glossary</a></span><span class="grp"><span class="gl">Plan</span><a href="budget.html">Budget</a><a href="used-checklist.html">Used Silvia check</a><a href="which-silvia.html">Which Silvia</a><a href="parts-tracker.html">Parts tracker</a><a href="test-yourself.html">Test yourself</a></span><span class="grp"><span class="gl">Install</span><a href="runbook.html">Runbook</a><a href="part-guides.html">Part guides</a><a href="wiring.html">Wiring</a><a href="cut-list.html">Cut list</a><a href="wire-labels.html">Wire labels</a><a href="power-on-checks.html" aria-current="page">Power-on checks</a></span><span class="grp"><span class="gl">After</span><a href="troubleshooting.html">Troubleshooting</a><a href="led-mod.html">LED switch mod</a></span></div><button type="button" class="mchip" id="mchip" aria-expanded="false" aria-controls="mpanel" aria-label="Your Silvia: not set"><span class="mchip-k">Your Silvia</span><b id="mchip-l">Set it</b></button></div><div class="mpanel" id="mpanel" hidden><div class="in"><div class="mrow"><span class="mk">Version</span><div class="mseg" role="group" aria-label="Version"><button type="button" data-mv="V1" aria-pressed="false">V1</button><button type="button" data-mv="V2" aria-pressed="false">V2</button><button type="button" data-mv="V3" aria-pressed="false">V3</button><button type="button" data-mv="V4" aria-pressed="false">V4</button><button type="button" data-mv="V5" aria-pressed="false">V5</button><button type="button" data-mv="V6" aria-pressed="false">V6</button></div><label class="mh" id="m-early-w" hidden><input type="checkbox" id="m-early"> Boiler made before May 2000</label></div><div class="mrow"><span class="mk">Model</span><div class="mseg" role="group" aria-label="Model"><button type="button" data-mm="M" aria-pressed="false">M, manual off</button><button type="button" data-mm="E" aria-pressed="false">E, auto-off</button></div><span class="mh" id="m-model-hint">E and M only exist from V5 on.</span></div><div class="mrow"><span class="mk">Mains</span><div class="mseg" role="group" aria-label="Mains voltage"><button type="button" data-mvolt="120" aria-pressed="false">120 V</button><button type="button" data-mvolt="230" aria-pressed="false">230 V</button></div></div><p id="m-summary"></p><div class="mact"><a href="which-silvia.html">Not sure which you have? Identify your Silvia</a><button type="button" id="m-clear">Clear</button><button type="button" id="m-done">Done</button></div></div></div></nav><div class="nav-scrim" id="nav-scrim" hidden></div><script>(function(){var n=(performance.getEntriesByType&&performance.getEntriesByType('navigation')[0])||{};if(n.type==='back_forward')return;var moved=false;['wheel','touchstart','keydown'].forEach(function(t){addEventListener(t,function(){moved=true},{once:true,passive:true})});function go(){if(moved)return;try{var h=location.hash;if(h){var t=document.getElementById(decodeURIComponent(h.slice(1)));if(t&&t.scrollIntoView)t.scrollIntoView({block:'start'});return}window.scrollTo(0,0);var e=document.body&&document.body.firstElementChild;if(e&&e.scrollIntoView)e.scrollIntoView({block:'start'})}catch(x){}}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',go);else go();addEventListener('load',go)})();</script><script>(function(){var nav=document.querySelector('.site-nav');if(!nav)return;var root=document.documentElement,last=0,acc=0,ticking=false,hidden=false,hold=0,touched=false;function h(){return nav.offsetHeight}function fv(a){try{return a.matches(':focus-visible')}catch(e){return true}}function busy(){var t=document.getElementById('nav-toggle'),p=document.getElementById('mpanel'),a=document.activeElement;return (t&&t.getAttribute('aria-expanded')==='true')||(p&&!p.hidden)||(a&&a!==document.body&&nav.contains(a)&&fv(a))}function cover(){root.style.setProperty('--nav-cover',hidden?'0px':h()+'px')}function set(hide){hidden=hide;nav.classList.toggle('nav-hide',hide);cover()}function Y(){var y=window.pageYOffset||0,m=Math.max(0,root.scrollHeight-innerHeight);return y<0?0:y>m?m:y}function update(){ticking=false;var y=Y(),d=y-last;last=y;nav.classList.toggle('nav-float',y>2);if(y<=h()||busy()){acc=0;if(hidden)set(false);return}if(Date.now()<hold||Math.abs(d)>innerHeight*0.8){acc=0;if(!hidden)set(true);return}if((d>0)!==(acc>0))acc=0;acc+=d;if(acc>10&&!hidden)set(true);else if(acc<-24&&hidden)set(false)}function jump(){last=Y();acc=0;if(last>h()&&!busy())set(true)}addEventListener('scroll',function(){if(!ticking){ticking=true;requestAnimationFrame(update)}},{passive:true});addEventListener('hashchange',function(){hold=Date.now()+600;jump()});document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[href*="#"]');if(a&&a.hash&&a.pathname===location.pathname&&a.host===location.host){hold=Date.now()+600;setTimeout(jump,0)}},true);nav.addEventListener('focusin',function(e){if(hidden&&fv(e.target))set(false)});['wheel','touchstart','keydown'].forEach(function(t){addEventListener(t,function(){touched=true},{once:true,passive:true})});if(window.ResizeObserver)new ResizeObserver(function(){if(!hidden)cover()}).observe(nav);set(false);function init(){last=Y();if(location.hash&&last>h()&&!touched)set(true)}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();addEventListener('load',init)})();</script><script>/* Site-wide "your Silvia" profile: version, E/M model, mains voltage. Every field is optional.
+</style></head><body><nav class="site-nav" aria-label="Site"><div class="in"><a class="brand" href="index.html">Silvia × Gaggiuino<small>unofficial</small></a><button type="button" class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="nav-links">Pages</button><div class="nav-links" id="nav-links"><span class="grp"><span class="gl">Learn</span><a href="conversion.html">The conversion</a><a href="how-silvia-works.html">How the Silvia works</a><a href="barista-school.html">Barista school</a><a href="how-gaggiuino-works.html">How Gaggiuino works</a><a href="glossary.html">Glossary</a></span><span class="grp"><span class="gl">Plan</span><a href="budget.html">Budget</a><a href="used-checklist.html">Used Silvia check</a><a href="which-silvia.html">Which Silvia</a><a href="parts-tracker.html">Parts tracker</a><a href="test-yourself.html">Test yourself</a></span><span class="grp"><span class="gl">Install</span><a href="runbook.html">Runbook</a><a href="part-guides.html">Part guides</a><a href="wiring.html">Wiring</a><a href="cut-list.html">Cut list</a><a href="wire-labels.html">Wire labels</a><a href="power-on-checks.html" aria-current="page">Power-on checks</a></span><span class="grp"><span class="gl">After</span><a href="troubleshooting.html">Troubleshooting</a><a href="led-mod.html">LED switch mod</a></span></div><button type="button" class="mchip" id="mchip" aria-expanded="false" aria-controls="mpanel" aria-label="Your Silvia: not set"><span class="mchip-k">Your Silvia</span><b id="mchip-l">Set it</b></button></div><div class="mpanel" id="mpanel" hidden><div class="in"><div class="mrow"><span class="mk">Version</span><div class="mseg" role="group" aria-label="Version"><button type="button" data-mv="V1" aria-pressed="false">V1</button><button type="button" data-mv="V2" aria-pressed="false">V2</button><button type="button" data-mv="V3" aria-pressed="false">V3</button><button type="button" data-mv="V4" aria-pressed="false">V4</button><button type="button" data-mv="V5" aria-pressed="false">V5</button><button type="button" data-mv="V6" aria-pressed="false">V6</button></div><label class="mh" id="m-early-w" hidden><input type="checkbox" id="m-early"> Boiler made before May 2000</label></div><div class="mrow"><span class="mk">Model</span><div class="mseg" role="group" aria-label="Model"><button type="button" data-mm="M" aria-pressed="false">M, manual off</button><button type="button" data-mm="E" aria-pressed="false">E, auto-off</button></div><span class="mh" id="m-model-hint">E and M only exist from V5 on.</span></div><div class="mrow"><span class="mk">Mains</span><div class="mseg" role="group" aria-label="Mains voltage"><button type="button" data-mvolt="120" aria-pressed="false">120 V</button><button type="button" data-mvolt="230" aria-pressed="false">230 V</button></div></div><div class="mrow"><span class="mk">Extras</span><div class="mseg" role="group" aria-label="Add-ons"><button type="button" data-mshelly aria-pressed="false">Shelly smart relay</button></div><span class="mh">Optional and unofficial: switch the machine on and off from your phone. Adds its wires, checks and steps to the pages.</span></div><p id="m-summary"></p><div class="mact"><a href="which-silvia.html">Not sure which you have? Identify your Silvia</a><button type="button" id="m-clear">Clear</button><button type="button" id="m-done">Done</button></div></div></div></nav><div class="nav-scrim" id="nav-scrim" hidden></div><script>(function(){var n=(performance.getEntriesByType&&performance.getEntriesByType('navigation')[0])||{};if(n.type==='back_forward')return;var moved=false;['wheel','touchstart','keydown'].forEach(function(t){addEventListener(t,function(){moved=true},{once:true,passive:true})});function go(){if(moved)return;try{var h=location.hash;if(h){var t=document.getElementById(decodeURIComponent(h.slice(1)));if(t&&t.scrollIntoView)t.scrollIntoView({block:'start'});return}window.scrollTo(0,0);var e=document.body&&document.body.firstElementChild;if(e&&e.scrollIntoView)e.scrollIntoView({block:'start'})}catch(x){}}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',go);else go();addEventListener('load',go)})();</script><script>(function(){var nav=document.querySelector('.site-nav');if(!nav)return;var root=document.documentElement,last=0,acc=0,ticking=false,hidden=false,hold=0,touched=false;function h(){return nav.offsetHeight}function fv(a){try{return a.matches(':focus-visible')}catch(e){return true}}function busy(){var t=document.getElementById('nav-toggle'),p=document.getElementById('mpanel'),a=document.activeElement;return (t&&t.getAttribute('aria-expanded')==='true')||(p&&!p.hidden)||(a&&a!==document.body&&nav.contains(a)&&fv(a))}function cover(){root.style.setProperty('--nav-cover',hidden?'0px':h()+'px')}function set(hide){hidden=hide;nav.classList.toggle('nav-hide',hide);cover()}function Y(){var y=window.pageYOffset||0,m=Math.max(0,root.scrollHeight-innerHeight);return y<0?0:y>m?m:y}function update(){ticking=false;var y=Y(),d=y-last;last=y;nav.classList.toggle('nav-float',y>2);if(y<=h()||busy()){acc=0;if(hidden)set(false);return}if(Date.now()<hold||Math.abs(d)>innerHeight*0.8){acc=0;if(!hidden)set(true);return}if((d>0)!==(acc>0))acc=0;acc+=d;if(acc>10&&!hidden)set(true);else if(acc<-24&&hidden)set(false)}function jump(){last=Y();acc=0;if(last>h()&&!busy())set(true)}addEventListener('scroll',function(){if(!ticking){ticking=true;requestAnimationFrame(update)}},{passive:true});addEventListener('hashchange',function(){hold=Date.now()+600;jump()});document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[href*="#"]');if(a&&a.hash&&a.pathname===location.pathname&&a.host===location.host){hold=Date.now()+600;setTimeout(jump,0)}},true);nav.addEventListener('focusin',function(e){if(hidden&&fv(e.target))set(false)});['wheel','touchstart','keydown'].forEach(function(t){addEventListener(t,function(){touched=true},{once:true,passive:true})});if(window.ResizeObserver)new ResizeObserver(function(){if(!hidden)cover()}).observe(nav);set(false);function init(){last=Y();if(location.hash&&last>h()&&!touched)set(true)}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();addEventListener('load',init)})();</script><script>/* Site-wide "your Silvia" profile: version, E/M model, mains voltage, and the Shelly add-on. Every field is optional.
    Elements with data-when="ver:V5,V6;model:E;volts:230;early" show only when every condition matches.
    A field the user hasn't set never hides anything: with no version, every version's notes show; with no
    voltage, both voltages' notes show and the wording stays generic. Nothing is ever filled in for them.
-   Elements with data-mtext="gfci|outlet|volts" get voltage-specific wording. */
+   The one exception is shelly, the Shelly smart relay add-on (unofficial): its content shows only once the
+   reader chooses it, and "!shelly" marks what it replaces. "!key" is the opposite of key, once that field is set.
+   Elements with data-mtext="gfci|outlet|volts" get voltage-specific wording.
+   txt(x) turns text into what applies: a plain string as is, or a list of segments, each a string (always kept)
+   or [text, when] (kept only when the condition matches), joined with spaces. */
 (function(){
   var KEY='silvia-machine-v1',VERS=['V1','V2','V3','V4','V5','V6'];
   var TEXT={
@@ -106,8 +110,9 @@
     var ver=VERS.indexOf(s.ver)>=0?s.ver:null;
     var model=newer(ver)&&(s.model==='E'||s.model==='M')?s.model:null;
     var v=Number(s.volts),volts=v===230?230:v===120?120:null;
-    if(!ver&&!volts)return null;
-    return {ver:ver,model:model,volts:volts,early:ver==='V1'&&s.early===true};
+    var shelly=s.shelly===true;
+    if(!ver&&!volts&&!shelly)return null;
+    return {ver:ver,model:model,volts:volts,early:ver==='V1'&&s.early===true,shelly:shelly};
   }
   function read(){try{return clean(JSON.parse(localStorage.getItem(KEY)||'null'))}catch(e){return null}}
   var prof=read();
@@ -118,8 +123,15 @@
   }
   /* true unless the profile rules the element out; unknown fields never rule anything out */
   function matches(when){
-    if(!when||!prof)return true;
-    return conds(when).every(function(c){
+    if(!when)return true;
+    if(!prof)return conds(when).every(function(c){return c.k!=='shelly'});
+    return conds(when).every(one);
+  }
+  /* "!key" holds once the field is set and key doesn't; the Shelly is always set (off until chosen) */
+  function one(c){
+    if(c.k.charAt(0)==='!'){var inner={k:c.k.slice(1),vals:c.vals};return !decided(c.k.slice(1)+(c.vals.length?':'+c.vals.join(','):''))||!one(inner)}
+    return (function(c){
+      if(c.k==='shelly')return !!prof.shelly;
       if(c.k==='ver')return !prof.ver||c.vals.indexOf(prof.ver)>=0;
       if(c.k==='model'){
         if(!prof.ver)return true;
@@ -129,24 +141,35 @@
       if(c.k==='volts')return !prof.volts||c.vals.indexOf(String(prof.volts))>=0;
       if(c.k==='early')return !prof.ver||prof.early;
       return true;
-    });
+    })(c);
   }
   /* true when the profile pins down every field the condition depends on (so a "which machines" tag adds nothing) */
   function decided(when){
-    if(!prof)return false;
+    /* with nothing picked, the Shelly is still known: it's off until chosen */
+    if(!prof)return conds(when).every(function(c){return c.k==='shelly'||c.k==='!shelly'});
     return conds(when).every(function(c){
-      if(c.k==='ver'||c.k==='early')return !!prof.ver;
-      if(c.k==='model')return !!prof.ver&&(!newer(prof.ver)||!!prof.model);
-      if(c.k==='volts')return !!prof.volts;
+      var k=c.k.charAt(0)==='!'?c.k.slice(1):c.k;
+      if(k==='ver'||k==='early')return !!prof.ver;
+      if(k==='model')return !!prof.ver&&(!newer(prof.ver)||!!prof.model);
+      if(k==='volts')return !!prof.volts;
       return true;
     });
+  }
+  function txt(x){
+    if(x==null)return '';
+    if(!Array.isArray(x))return String(x);
+    /* a segment that starts with punctuation joins without a space before it */
+    return x.filter(function(seg){return typeof seg==='string'||matches(seg[1])}).map(function(seg){return typeof seg==='string'?seg:seg[0]}).join(' ').replace(/ ([,.;:])/g,'$1');
   }
   function text(key){var t=TEXT[key];if(!t)return '';return prof&&prof.volts?t[String(prof.volts)]:t['']}
   function label(p){
     p=p||prof;if(!p)return 'Set it';
     var a=[];if(p.ver)a.push(p.ver+(newer(p.ver)&&p.model?' '+p.model:''));if(p.volts)a.push(p.volts+' V');
+    if(p.shelly)a.push('Shelly');
     return a.join(', ');
   }
+  /* "For a V6 M, 120 V Silvia with the Shelly." for printed sheets; empty with nothing set */
+  function forText(p){p=p||prof;if(!p)return '';var b=label(Object.assign({},p,{shelly:false}));return 'For a '+(b?b+' ':'')+'Silvia'+(p.shelly?' with the Shelly':'')+'.'}
   function missing(p){
     p=p||prof;if(!p)return [];var m=[];
     if(!p.ver)m.push('version');else if(newer(p.ver)&&!p.model)m.push('model');
@@ -156,12 +179,17 @@
   function summary(p){
     p=p||prof;
     if(!p)return 'Pick your version and voltage. Until you do, every page shows all the version notes, each tagged with the machines it applies to.';
-    var m=missing(p);
-    return 'Pages now show the steps and notes for a '+label(p)+' Silvia.'+(m.length?' Add your '+m.join(' and ')+' to narrow them down; until then those notes all show.':'');
+    var m=missing(p),base=[];if(p.ver)base.push(p.ver+(newer(p.ver)&&p.model?' '+p.model:''));if(p.volts)base.push(p.volts+' V');
+    return 'Pages now show the steps and notes for a '+(base.length?base.join(', ')+' ':'')+'Silvia'+(p.shelly?' with the Shelly smart relay':'')+'.'+(m.length?' Add your '+m.join(' and ')+' to narrow them down; until then those notes all show.':'')+(p.shelly?' The Shelly\'s wires, checks and steps are added.':'');
   }
   function apply(root){
     root=root||document;
-    Array.prototype.forEach.call(root.querySelectorAll('[data-when]'),function(el){el.hidden=!matches(el.getAttribute('data-when'))});
+    Array.prototype.forEach.call(root.querySelectorAll('[data-when]'),function(el){
+      var hide=!matches(el.getAttribute('data-when'));
+      /* inside a drawing, hidden doesn't apply, so SVG elements get display="none" instead */
+      if(window.SVGElement&&el instanceof SVGElement){if(hide)el.setAttribute('display','none');else el.removeAttribute('display')}
+      else el.hidden=hide;
+    });
     Array.prototype.forEach.call(root.querySelectorAll('[data-mtext]'),function(el){var t=text(el.getAttribute('data-mtext'));if(t)el.textContent=t});
     var l=document.getElementById('mchip-l');if(l)l.textContent=label();
     var ch=document.getElementById('mchip');if(ch){ch.classList.toggle('set',!!prof);ch.setAttribute('aria-label','Your Silvia: '+(prof?label():'not set'))}
@@ -174,7 +202,7 @@
     try{window.dispatchEvent(new CustomEvent('silvia-machine',{detail:prof}))}catch(e){}
   }
   /* start from what's saved, never from guesses */
-  function current(){return Object.assign({ver:null,model:null,volts:null,early:false},prof||{})}
+  function current(){return Object.assign({ver:null,model:null,volts:null,early:false,shelly:false},prof||{})}
   /* ---- nav panel ---- */
   function syncPanel(){
     var pan=document.getElementById('mpanel');if(!pan)return;
@@ -182,6 +210,7 @@
     Array.prototype.forEach.call(pan.querySelectorAll('[data-mv]'),function(b){b.setAttribute('aria-pressed',String(b.getAttribute('data-mv')===p.ver))});
     Array.prototype.forEach.call(pan.querySelectorAll('[data-mm]'),function(b){b.disabled=!nw;b.setAttribute('aria-pressed',String(nw&&b.getAttribute('data-mm')===p.model))});
     Array.prototype.forEach.call(pan.querySelectorAll('[data-mvolt]'),function(b){b.setAttribute('aria-pressed',String(Number(b.getAttribute('data-mvolt'))===p.volts))});
+    Array.prototype.forEach.call(pan.querySelectorAll('[data-mshelly]'),function(b){b.setAttribute('aria-pressed',String(!!p.shelly))});
     var ew=document.getElementById('m-early-w');if(ew)ew.hidden=p.ver!=='V1';
     var ec=document.getElementById('m-early');if(ec)ec.checked=!!p.early;
     var mh=document.getElementById('m-model-hint');if(mh)mh.hidden=nw;
@@ -205,6 +234,7 @@
         if(b.hasAttribute('data-mv'))p.ver=b.getAttribute('data-mv');
         else if(b.hasAttribute('data-mm'))p.model=b.getAttribute('data-mm');
         else if(b.hasAttribute('data-mvolt'))p.volts=Number(b.getAttribute('data-mvolt'));
+        else if(b.hasAttribute('data-mshelly'))p.shelly=!p.shelly;
         else if(b.id==='m-clear'){set(null);return}
         else if(b.id==='m-done'){pan.hidden=true;chip.setAttribute('aria-expanded','false');sync();chip.focus();return}
         else return;
@@ -216,8 +246,12 @@
     }
     if(nt&&nl)nt.addEventListener('click',function(){var open=nt.getAttribute('aria-expanded')!=='true';nt.setAttribute('aria-expanded',String(open));nl.classList.toggle('open',open);if(open)closePanel();sync()});
     Array.prototype.forEach.call(document.querySelectorAll('[data-setmachine]'),function(b){
+      /* data-setmachine="V5" sets the version; "shelly:yes" (key:value pairs, ; between) sets those fields */
       b.addEventListener('click',function(){
-        var p=current();p.ver=b.getAttribute('data-setmachine');set(p);
+        var p=current(),v=b.getAttribute('data-setmachine');
+        if(v.indexOf(':')<0)p.ver=v;
+        else v.split(';').forEach(function(kv){var i=kv.indexOf(':'),k=kv.slice(0,i).trim(),x=kv.slice(i+1).trim();if(k==='ver')p.ver=x;else if(k==='model')p.model=x;else if(k==='volts')p.volts=Number(x);else if(k==='shelly')p.shelly=x==='yes'});
+        set(p);
       });
     });
     var inViewer=typeof window.claude!=='undefined';
@@ -234,7 +268,7 @@
       else if(!over&&h)h.remove();
     });
   }
-  window.SilviaMachine={get:function(){return prof},set:set,current:current,matches:matches,decided:decided,text:text,label:label,missing:missing,summary:summary,apply:apply};
+  window.SilviaMachine={get:function(){return prof},set:set,current:current,matches:matches,decided:decided,text:text,txt:txt,label:label,forText:forText,missing:missing,summary:summary,apply:apply,shelly:function(){return !!(prof&&prof.shelly)}};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',wire);else wire();
 })();
 </script>
@@ -407,10 +441,11 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
       <span class="rivet" aria-hidden="true"></span>
     </div>
     <h1>Silvia Power&#8209;On Checks</h1>
-    <p class="lede">Every check to pass before the rebuilt Silvia is plugged in for the first time. Type in what the meter shows and each check marks itself pass or fail. Run IDs like AC3 match the <a href="wiring.html">wiring reference</a>.</p>
+    <p class="lede">Every check to pass before the rebuilt Silvia is plugged in for the first time. Type in what the meter shows and each check marks itself pass or fail. Run IDs like AC4 match the <a href="wiring.html">wiring reference</a>.</p>
     <div class="warn" role="note">
       <strong>Unplugged for every step</strong>
       <p>Pull the cord from the wall and from the machine's inlet before you start, and keep it out until every check passes. A basic multimeter catches shorts, open circuits and wrong connections, but it can't test insulation under voltage. For first power-on, use a <span data-mtext="outlet">GFCI-protected outlet</span> and keep the covers on.</p>
+      <p data-when="shelly">With the Shelly, its own checks are added and the ones it replaces drop out. Once it's plugged in, the inlet, the Shelly, the power switch and their wires are live even with the machine off. The relay breaks line only, so the rest of the machine stays joined to the outlet's neutral, which a plug that fits either way round can make line, and the app or a schedule can switch it on at any time.</p>
     </div>
     <div class="hdr-actions"><button type="button" class="pbtn" data-print hidden>Print the checklist</button><span class="print-only" id="print-for"></span>
     </div>
@@ -452,7 +487,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
       <a href="wiring.html">Wiring reference</a>
       <a href="wire-labels.html">Wire labels</a>
     </div>
-    <p class="fine">Built from section 8 of the build plan, the official Gaggiuino custom wiring, PCB and grounding guides, and realNiche's Silvia diagram. Expected readings are what a sound circuit shows on a basic meter; when a reading looks odd but passes, trust the odd feeling and trace it.</p>
+    <p class="fine">Built from section 8 of the build plan, the official Gaggiuino custom wiring, PCB and grounding guides, and realNiche's Silvia diagram<span data-when="shelly">, and for the Shelly, gblur's Silvia V6 E drawing and Shelly's own docs</span>. Expected readings are what a sound circuit shows on a basic meter; when a reading looks odd but passes, trust the odd feeling and trace it.</p>
   </footer>
 </div>
 
@@ -480,28 +515,39 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
       {id:'c5',t:'Pump coil',how:'Across the pump\'s two terminals, leads off. Ulka pumps have a diode in series, so measure with the probes one way, then swapped, and enter the lower reading. OL one way is normal; press OL only if it reads OL both ways.',type:'coil',tags:['Leads off','Both ways'],fix:'OL both ways means an open coil or fuse; near zero means a shorted coil.'},
       {id:'c6',t:'Solenoid coil',how:'Across its two coil spades, leads off. Record the value.',type:'coil',tags:['Leads off'],fix:'OL means an open coil; near zero means a shorted coil.'},
       {id:'c7',t:'Thermocouple loop',how:'Across its two wires, unclamped from J4. A few ohms is normal.',type:'tc',tags:['J4 unclamped'],fix:'OL means a broken thermocouple or lead.'},
-      {id:'c8',t:'Element, pump and solenoid leads back on',how:'Every lead you took off for c1, c5 and c6 goes back on the spade it came from, as the wiring reference shows. Leave the boiler and valve ends untaped for now: e3 to e5 probe those terminals, and g1 is where the tape goes back on. The path checks in section e prove each lead is back.',type:'check'}
+      {id:'c8',t:'Element, pump and solenoid leads back on',how:['Every lead you took off for c1, c5 and c6 goes back on the spade it came from, as the wiring reference shows. Leave the boiler and valve ends untaped for now:',['e3 to e5','!shelly'],['e18, e4 and e5','shelly'],'probe those terminals, and g1 is where the tape goes back on. The path checks in section e prove each lead is back.'],type:'check'}
     ]},
-    {id:'d',name:'Shorts',intro:'With the power switch ON (still unplugged), mains must not reach earth or the 5 V side.',items:[
+    {id:'d',name:'Shorts',intro:['With the power switch ON (still unplugged), mains must not reach earth or the 5 V side.',['On an E that keeps its push button, Power ON means holding the button in for each reading: tape it down or have someone hold it.','model:E;shelly']],items:[
       {id:'d1',t:'Inlet L ↔ inlet earth',how:'Highest Ω range.',type:'open',tags:['Power ON'],fix:'Line touches earth somewhere. Look for a bare spade or crushed insulation against the frame.'},
       {id:'d2',t:'Inlet N ↔ inlet earth',how:'Highest Ω range.',type:'open',tags:['Power ON'],fix:'Neutral touches earth somewhere.'},
       {id:'d3',t:'Inlet L ↔ J7 GND (5 V side)',how:'Highest Ω range. f10 repeats this with the board out of the reading.',type:'open',tags:['Power ON'],fix:'Mains reaches the 5 V side. Don\'t power it. Check the switch wiring and anything near the PCB.'},
       {id:'d4',t:'Inlet N ↔ J7 GND (5 V side)',how:'Highest Ω range.',type:'open',tags:['Power ON'],fix:'Mains reaches the 5 V side. Don\'t power it.'},
       {id:'d5',t:'PCB J12 spade ↔ inlet earth',how:'The pump output, checked directly because the pump\'s diode can hide a fault on this side.',type:'open',fix:'The pump output or its wiring touches earth.'},
       {id:'d6',t:'PCB J13 spade ↔ inlet earth',how:'The solenoid output.',type:'open',fix:'The solenoid output or its wiring touches earth.'},
-      {id:'d7',t:'Inlet L ↔ inlet N',how:'May read OL, or a high value that climbs as the PCB\'s supply charges.',type:'notshort',tags:['Power ON'],fix:'Under 100 Ω means a short, or the element bypassing the SSR: a reading near the element\'s expected resistance (shown under Element power) means the SSR is passing current or the element is wired around it. Find it before plugging in.'}
+      {id:'d7',t:'Inlet L ↔ inlet N',how:[['May read OL, or a high value that climbs as the PCB\'s supply charges.','!shelly'],['May read OL, or a high value: with the Shelly in the way this reads the Shelly\'s own supply, so d10 checks the machine side.','shelly']],type:'notshort',tags:['Power ON'],fix:[['Under 100 Ω means a short, or the element bypassing the SSR: a reading near the element\'s expected resistance (shown under Element power) means the SSR is passing current or the element is wired around it. Find it before plugging in.','!shelly'],['Under 100 Ω: line before the Shelly (SH1, AC1, SH2 or the inlet\'s L spade) touches neutral, or a load is wired around the Shelly\'s relay. d10 checks the machine side. Find it before plugging in.','shelly']]},
+      {id:'d8',t:'Shelly O terminal ↔ inlet earth',how:'Highest Ω range. The switched line after the Shelly: SH3, SSR terminal 1, AC4 and J11. The inlet can\'t reach it through the Shelly\'s relay, which is open while the Shelly has no power, so d1 doesn\'t cover it.',type:'open',fix:'The switched line touches earth somewhere. Look for a bare spade or crushed insulation on SH3 or AC4, or at SSR terminal 1.',w:'shelly'},
+      {id:'d9',t:'Shelly O terminal ↔ J7 GND (5 V side)',how:'Highest Ω range. f11 repeats this with the board out of the reading.',type:'open',fix:'Mains on the switched side reaches the 5 V side. Don\'t power it.',w:'shelly'},
+      {id:'d10',t:'Shelly O terminal ↔ inlet N',how:'May read OL, or a high value that climbs as the PCB\'s supply charges. With the Shelly in the way, this is the reading that catches the element bypassing the SSR.',type:'notshort',fix:'Under 100 Ω means a short, or the element bypassing the SSR: a reading near the element\'s expected resistance (shown under Element power) means the SSR is passing current or the element is wired around it. Find it before plugging in.',w:'shelly'}
     ]},
-    {id:'e',name:'Path continuity',intro:'Each mains path is whole, every lead from the component checks is back on, and the power switch breaks both line and neutral.',items:[
-      {id:'e1',t:'Inlet L ↔ PCB J11 spade',how:'AC1, the switch, AC3, SSR terminal 1, AC4.',type:'low',tags:['Power ON'],fix:'Break in the line path. Check each spade on AC1, AC3 and AC4 and the shared fork at SSR terminal 1.'},
-      {id:'e2',t:'Inlet N ↔ PCB J10 spade',how:'AC2, the switch, then the neutral chain AC8, AC10, AC11, AC12.',type:'low',tags:['Power ON'],fix:'Break in the neutral chain. Check each doubled spade along it.'},
-      {id:'e3',t:'Inlet N ↔ element terminal 2',how:'AC2, the switch, AC9.',type:'low',tags:['Power ON'],fix:'Check AC9 and its boiler-end spade.'},
+    {id:'e',name:'Path continuity',intro:[['Each mains path is whole, every lead from the component checks is back on, and the power switch breaks both line and neutral.','!shelly'],['Each mains path is whole and every lead from the component checks is back on. With the Shelly, the power switch only signals the Shelly and its relay breaks line, so neutral stays connected. The relay is open while the Shelly has no power, so the line after it is checked from the Shelly\'s O terminal.','shelly']],items:[
+      {id:'e1',t:'Inlet L ↔ PCB J11 spade',how:'AC1, the switch, AC3, SSR terminal 1, AC4.',type:'low',tags:['Power ON'],fix:'Break in the line path. Check each spade on AC1, AC3 and AC4 and the shared fork at SSR terminal 1.',w:'!shelly'},
+      {id:'e11',t:'Inlet L ↔ Shelly L terminal',how:'SH1, on the inlet\'s L tab with AC1. Power switch off, so the reading can\'t come around through AC1, the switch and SH2.',type:'low',tags:['Power OFF'],fix:'Check the two-wire spade on the inlet\'s L tab and SH1\'s ferrule in the Shelly\'s L terminal, and that SH1 and SH2 aren\'t swapped at the Shelly.',w:'shelly'},
+      {id:'e12',t:'Shelly O terminal ↔ PCB J11 spade',how:'SH3, SSR terminal 1, AC4. The power switch isn\'t in this path any more.',type:'low',fix:'Break in the switched line. Check SH3\'s ferrule in O and the shared fork at SSR terminal 1.',w:'shelly'},
+      {id:'e13',t:'Inlet L ↔ PCB J11 spade, through the open relay',how:'Power switch on (a push button: hold it in). The Shelly\'s relay is open while it has no power, so nothing joins the inlet to J11 directly, whatever the switch does. The meter reads around through the Shelly\'s and the PCB\'s own supplies: OL, or a high value that climbs for a few seconds as they charge.',type:'notshort',tags:['Power ON'],fix:'Under 100 Ω means something bypasses the Shelly\'s relay: a wire from the inlet or the power switch landing on SSR terminal 1 or J11. Compare each end with the wiring reference.',w:'shelly'},
+      {id:'e14',t:'Inlet L ↔ Shelly SW terminal, power switch on',how:'AC1, the switch\'s L pole, SH2. A push button: hold it in.',type:'low',tags:['Power ON'],fix:'Check AC1 on the L pole\'s outer spade, SH2 on its center spade and SH2\'s ferrule in SW.',w:'shelly'},
+      {id:'e15',t:'Inlet L ↔ Shelly SW terminal, power switch off',how:'Same probes, power switch off, or the push button let go. The meter now reads through the Shelly\'s own input circuit: OL or a high value is fine.',type:'notshort',tags:['Power OFF'],fix:'Under 100 Ω means SW is fed whatever the switch does: AC1 and SH2 may share a spade, or sit on spades the switch doesn\'t break, or SH1 and SH2 are swapped at the Shelly.',w:'shelly'},
+      {id:'e16',t:'Inlet N ↔ Shelly N terminal',how:'SH4, on the inlet\'s N tab with AC2.',type:'low',fix:'Check the two-wire spade on the inlet\'s N tab and SH4\'s ferrule in the Shelly\'s N terminal.',w:'shelly'},
+      {id:'e2',t:'Inlet N ↔ PCB J10 spade',how:'AC2, the switch, then the neutral chain AC8, AC10, AC11, AC12.',type:'low',tags:['Power ON'],fix:'Break in the neutral chain. Check each doubled spade along it.',w:'!shelly'},
+      {id:'e17',t:'Inlet N ↔ PCB J10 spade, through the splice',how:'AC2, the neutral splice, then the neutral chain AC8, AC10, AC11, AC12. No switch in the way now.',type:'low',fix:'Break in the neutral chain. Check the splice and each doubled spade along the chain.',w:'shelly'},
+      {id:'e3',t:'Inlet N ↔ element terminal 2',how:'AC2, the switch, AC9.',type:'low',tags:['Power ON'],fix:'Check AC9 and its boiler-end spade.',w:'!shelly'},
+      {id:'e18',t:'Inlet N ↔ element terminal 2, through the splice',how:'AC2, the neutral splice, AC9.',type:'low',fix:'Check the splice and AC9\'s boiler-end spade.',w:'shelly'},
       {id:'e4',t:'SSR load terminal 2 ↔ element terminal 1',how:'AC5, the safety thermostat, AC6.',type:'low',fix:'Open safety thermostat or a bad crimp on AC5 or AC6. Never bridge the thermostat.'},
       {id:'e5',t:'PCB J13 ↔ solenoid coil spade',how:'AC13.',type:'low',fix:'Check AC13.'},
       {id:'e6',t:'PCB J12 ↔ pump coil terminal',how:'AC14.',type:'low',fix:'Check AC14.'},
       {id:'e7',t:'PCB J12 ↔ PCB J10, through the pump',how:'AC14, the pump coil and its thermal fuse, then AC11 and AC12. Probes one way, then swapped, as in c5; enter the lower reading, which should be close to c5\'s. It proves both pump leads are back on.',type:'coil',tags:['Both ways'],fix:'A pump lead from c5 isn\'t back on, or the thermal fuse is open. Check AC14 and the doubled AC10 and AC11 spade on the fuse.'},
       {id:'e8',t:'PCB J13 ↔ PCB J10, through the solenoid',how:'AC13, the solenoid coil, then AC12. It should read close to c6, and proves both solenoid leads are back on.',type:'coil',fix:'A solenoid lead from c6 isn\'t back on. Check AC13 and the doubled AC11 and AC12 spade on the solenoid.'},
-      {id:'e9',t:'Inlet L ↔ PCB J11 spade, switch off',how:'Same probes as e1, power switch off. Should now be open.',type:'open',tags:['Power OFF'],fix:'Line is getting around the switch: look for two runs on one spade (AC1 and AC3 together) or the inlet lead going straight to the SSR. Each pole takes the inlet on its outer spade and the load on its center spade.'},
-      {id:'e10',t:'Inlet N ↔ PCB J10 spade, switch off',how:'Same probes as e2, power switch off. Should now be open.',type:'open',tags:['Power OFF'],fix:'The switch isn\'t breaking neutral.'}
+      {id:'e9',t:'Inlet L ↔ PCB J11 spade, switch off',how:'Same probes as e1, power switch off. Should now be open.',type:'open',tags:['Power OFF'],fix:'Line is getting around the switch: look for two runs on one spade (AC1 and AC3 together) or the inlet lead going straight to the SSR. Each pole takes the inlet on its outer spade and the load on its center spade.',w:'!shelly'},
+      {id:'e10',t:'Inlet N ↔ PCB J10 spade, switch off',how:'Same probes as e2, power switch off. Should now be open.',type:'open',tags:['Power OFF'],fix:'The switch isn\'t breaking neutral.',w:'!shelly'}
     ]},
     {id:'f',name:'Low-voltage inputs',intro:'Unplug the J7, J5 and J9 plugs from the PCB and probe the plug pins, so the board itself isn\'t in the reading.',items:[
       {id:'f1',t:'Brew ON: J7 B ↔ J7 GND',how:'LV2 and the ground chain.',type:'low',tags:['Brew ON','Plugs off'],fix:'Check LV2, the brew switch ground pole and the ground chain.'},
@@ -513,11 +559,12 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
       {id:'f7',t:'J9 R1 pin ↔ SSR + terminal',how:'LV7.',type:'low',tags:['Plugs off'],fix:'R1 must go to the SSR\'s + control terminal.'},
       {id:'f8',t:'J9 GND pin ↔ SSR − terminal',how:'LV8.',type:'low',tags:['Plugs off'],fix:'GND must go to the SSR\'s − control terminal.'},
       {id:'f9',t:'Each switch signal pin ↔ chassis',how:'J7 S, J7 B and J5 B15 against bare metal. Enter the lowest reading.',type:'open',tags:['Plugs off'],fix:'A low-voltage wire touches the frame. Find the pinch.'},
-      {id:'f10',t:'J7 GND pin ↔ inlet L, then inlet N',how:'Power switch on, and brew, steam and hot water all on, so every signal wire joins the ground chain. Two readings test the whole switch harness against mains with the board out of the reading; enter the lower one.',type:'open',tags:['Power ON','Brew ON','Steam ON','Hot water ON','Plugs off'],fix:'A switch wire meets mains. Don\'t power it. Look for one on a power switch spade or pinched against a mains run.'}
+      {id:'f10',t:'J7 GND pin ↔ inlet L, then inlet N',how:['Power switch on, and brew, steam and hot water all on, so every signal wire joins the ground chain.',['On an E with its push button, hold the button in.','model:E;shelly'],'Two readings test the whole switch harness against mains with the board out of the reading; enter the lower one.'],type:'open',tags:['Power ON','Brew ON','Steam ON','Hot water ON','Plugs off'],fix:'A switch wire meets mains. Don\'t power it. Look for one on a power switch spade or pinched against a mains run.'},
+      {id:'f11',t:'J7 GND pin ↔ Shelly O terminal',how:'Switches as for f10, plugs still off. The switched line after the Shelly, which the inlet can\'t reach through its open relay.',type:'open',tags:['Brew ON','Steam ON','Hot water ON','Plugs off'],fix:'A switch wire meets the switched line. Don\'t power it. Look for one pinched against SH3 or AC4.',w:'shelly'}
     ]},
     {id:'g',name:'Look and pull',intro:'The checks a meter can\'t do.',items:[
       {id:'g1',t:'Every boiler and valve spade is uninsulated and wrapped in silicone tape',how:'Wrap any you left bare for the meter checks. No nylon-insulated spade within reach of the boiler; nylon is rated to 105 °C.',type:'check'},
-      {id:'g2',t:'Doubled terminals use spades sized for two 18 AWG wires',how:'Never two 18 AWG wires in a red spade. SSR terminal 1, the safety thermostat, the power switch neutral spade, the lamp, the pump, the solenoid and the boiler ground.',type:'check'},
+      {id:'g2',t:'Doubled terminals use spades sized for two 18 AWG wires',how:['Never two 18 AWG wires in a red spade. SSR terminal 1, the safety thermostat,',['the power switch neutral spade,','!shelly'],['the inlet\'s L and N tabs,','shelly'],'the lamp, the pump, the solenoid and the boiler ground.'],type:'check'},
       {id:'g3',t:'Every crimp survives a firm tug',how:'Redo any that move.',type:'check'},
       {id:'g4',t:'SSR: fork spades on all four terminals, screws tight',how:'Mounted on the left wall, clear of the pump.',type:'check'},
       {id:'g5',t:'Safety thermostat sits between the SSR and the element',how:'And the pump thermal fuse is still in the pump path.',type:'check'},
@@ -529,19 +576,33 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
       {id:'g11',t:'Plumbing snug and dry',how:'Loctite 55 on the tee and elbow threads only; the transducer seals on the flat O-ring pressed flush into its fitting, hand tight plus at most a quarter turn. Nothing kinked or resting on hot metal. The real leak test comes under pressure at first power-on.',type:'check'},
       {id:'g12',t:'Someone else traced the harness against the wiring reference',how:'A second set of eyes, run by run.',type:'check'},
       {id:'g13',t:'Everything plugged back in',how:'J4 thermocouple reclamped with the same + and − as on the bench, then J5, J7 and J9. Recheck J9 R1 to SSR + and GND to SSR − with the plug in.',type:'check'},
-      {id:'g15',t:'The power switch latches on and off by itself',how:'The harness relies on it breaking both line and neutral. The E model\'s push-button switch doesn\'t latch; it needs a double-pole rocker like the M model\'s.',type:'check'},
+      {id:'g15',t:'The power switch latches on and off by itself',how:'The harness relies on it breaking both line and neutral. The E model\'s push-button switch doesn\'t latch; it needs a double-pole rocker like the M model\'s.',type:'check',w:'!shelly'},
+      {id:'g16',t:'You know which Shelly input mode your power switch needs',how:'Switch, output type Toggle Switch, for a rocker that stays where you put it, like the M\'s; Button for a push button that springs back, like the E\'s. You set it at first power-on.',type:'check',w:'shelly'},
+      {id:'g17',t:'The Shelly sits where it stays under 40 °C',how:'Shelly rates it for 40 °C around it at most, and the inside of the case likely runs hotter than that once the boiler is hot. Outside the case, in a closed enclosure made for mains wiring and screwed down. Shelly warns that a confined space can warm it past its limit. The app shows the Shelly\'s own internal temperature, not the air around it: if that keeps climbing through a long heat-up and a steaming session, or the Shelly switches itself off, move it somewhere cooler.',type:'check',w:'shelly'},
+      {id:'g18',t:'Only SH1 to SH4 on the Shelly, each in a ferrule',how:'One wire each in L, N, SW and O; the 1PM Gen4\'s spare L and N terminals stay empty. Each ferrule fully in its terminal, screw tightened to 0.4 Nm at most, no copper showing. AC1 and AC2 stay on the inlet\'s tabs, so the machine\'s neutral never runs through the Shelly and nothing uses its terminals as a bridge.',type:'check',w:'shelly'},
+      {id:'g19',t:'Wires into the Shelly\'s enclosure protected and held',how:'The enclosure sits over the hole in the back panel, so the four wires go straight from the case into it and never run in the open: they\'re single-insulated mains wires. A grommet or cable gland where they pass the sheet metal, so no edge touches them, and a tie so nothing pulls on a terminal. A plastic enclosure; a metal one would need earthing.',type:'check',w:'shelly'},
+      {id:'g20',t:'Neutral splice crimped and covered',how:'AC2 on one side, its stripped end folded back so it fills the barrel, and AC8 and AC9 on the other. Each survives a firm tug, and silicone heat shrink covers the splice.',type:'check',w:'shelly'},
       {id:'g14',t:'Stop immediately if the temperature falls while heating',how:'At first power-on, the reading must rise while the heating light is on. If it falls, the thermocouple is reversed and the controller may keep heating. Switch off, unplug, swap the J4 wires.',type:'check'}
     ]},
-    {id:'h',name:'Covers on',intro:'After the top cover and panels are back on (runbook Phase 5), still unplugged. Closing up is where a wire gets pinched against the case, and the screen cable at the vent is the usual one.',items:[
+    {id:'h',name:'Covers on',intro:['After the top cover and panels are back on (runbook Phase 5), still unplugged. Closing up is where a wire gets pinched against the case, and the screen cable at the vent is the usual one.',['On an E that keeps its push button, Power ON means holding the button in for each reading.','model:E;shelly']],items:[
       {id:'h1',t:'Top cover and every panel back on, screws tight',how:'Watch the screen cable at the vent and any wire near a panel edge as each one goes on.',type:'check'},
       {id:'h2',t:'Inlet earth pin ↔ the top cover and each panel',how:'A bare spot on the top cover and on each panel itself, away from its screws. Skip the loose cup tray. Enter the highest reading.',type:'low',fix:'That part isn\'t reaching earth. Check its screws are in and tight.'},
       {id:'h3',t:'Inlet L ↔ inlet earth',how:'Highest Ω range, power switch on.',type:'open',tags:['Power ON'],fix:'Line touches earth since the covers went on: a wire is pinched or a spade is touching the case. Open it up and find it.'},
       {id:'h4',t:'Inlet N ↔ inlet earth',how:'Highest Ω range, power switch on. Probes one way, then swapped; enter the lower reading. The pump\'s diode can hide a pinched pump lead in one direction.',type:'open',tags:['Power ON','Both ways'],fix:'Neutral touches earth since the covers went on. Open it up and find the pinched wire.'},
       {id:'h5',t:'Inlet earth pin ↔ the screen cable\'s GND pin',how:'Open the screen housing, unplug the cable from the screen and probe the cable\'s GND pin; a pin pushed into its socket helps. Through the cable it\'s the PCB\'s 5 V ground, so this catches the screen cable or a sensor lead pinched against the case.',type:'open',fix:'The 5 V side touches earth since the covers went on. Open it up and find the pinched cable.'},
-      {id:'h6',t:'Inlet L, then inlet N ↔ the same GND pin',how:'Highest Ω range, power switch on. Two readings, both open; enter the lower one. Then plug the screen back in and close its housing.',type:'open',tags:['Power ON'],fix:'Mains reaches the 5 V side since the covers went on. Don\'t plug in: open it up and find the pinched wire.'}
+      {id:'h6',t:'Inlet L, then inlet N ↔ the same GND pin',how:[['Highest Ω range, power switch on. Two readings, both open; enter the lower one.','!shelly'],['Highest Ω range, power switch on. Three readings, all open: inlet L, inlet N and the Shelly\'s O terminal, which the inlet can\'t reach through the Shelly\'s open relay. Enter the lowest.','shelly'],'Then plug the screen back in and close its housing.'],type:'open',tags:['Power ON'],fix:'Mains reaches the 5 V side since the covers went on. Don\'t plug in: open it up and find the pinched wire.'},
+      {id:'h7',t:'Shelly O terminal ↔ inlet earth',how:'Highest Ω range, with the covers on and the Shelly\'s enclosure open. The inlet can\'t reach the switched side through the Shelly\'s open relay, so h3 doesn\'t cover it. Close the enclosure after.',type:'open',fix:'The switched line touches earth since the covers went on: SH3 or AC4 is pinched, or a spade at SSR terminal 1 is touching the case. Open it up and find it.',w:'shelly'}
     ]}
   ];
   var ITEMS={};SECTIONS.forEach(function(s){s.items.forEach(function(i){ITEMS[i.id]=i})});
+  /* w: which machines a check is for (see machine.js); the Shelly add-on's checks show only once it's chosen, and
+     the ones it replaces (w:'!shelly') hide then. Text may be a list of segments, [text, when] for the conditional ones. */
+  function vis(it){var m=window.SilviaMachine;return !it.w||(m?m.matches(it.w):!/(^|;)shelly/.test(it.w))}
+  function shown(s){return s.items.filter(vis)}
+  function T(x){
+    var m=window.SilviaMachine;if(!Array.isArray(x))return x==null?'':String(x);if(m)return m.txt(x);
+    return x.filter(function(g){return typeof g==='string'||!/(^|;)shelly/.test(g[1])}).map(function(g){return typeof g==='string'?g:g[0]}).join(' ').replace(/ ([,.;:])/g,'$1');
+  }
   /* Links into the wiring page's drawing; wiring.html reads them (applyHash there). A target is 'run:AC5' (| between
      alternatives), 'part:ssr', 'runs:AC1,AC3', 'short:J7' (every run whose name starts that way), 'layer:E', or ''
      for the whole harness; join two with ';'. o.label names a set of runs. The Silvia has one drawing, so the
@@ -561,7 +622,10 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     d3:'short:J7',d4:'short:J7',d5:'run:AC14',d6:'run:AC13',
     e1:'runs:AC1,AC3,AC4',e2:'runs:AC2,AC8,AC10,AC11,AC12',e3:'runs:AC2,AC9',e4:'runs:AC5,AC6',e5:'run:AC13',e6:'run:AC14',e7:'runs:AC14,AC11,AC12',e8:'runs:AC13,AC12',e9:'runs:AC1,AC3,AC4',e10:'runs:AC2,AC8,AC10,AC11,AC12',
     f1:'runs:LV2,LV4,LV5',f2:'runs:LV2,LV4,LV5',f3:'runs:LV1,LV4',f4:'runs:LV1,LV4',f5:'runs:LV3,LV4,LV5,LV6',f6:'runs:LV3,LV4,LV5,LV6',f7:'run:LV7',f8:'run:LV8',f9:SWL,f10:SWL,
-    g1:'part:boiler',g4:'part:ssr',g5:'runs:AC5,AC6',g6:'part:pcb',g7:'part:boiler',g8:'run:LV10',g9:'run:LV11',g12:'',g13:'part:pcb',g14:'run:LV10',g15:'part:pwr',h2:'layer:E'};
+    g1:'part:boiler',g4:'part:ssr',g5:'runs:AC5,AC6',g6:'part:pcb',g7:'part:boiler',g8:'run:LV10',g9:'run:LV11',g12:'',g13:'part:pcb',g14:'run:LV10',g15:'part:pwr',h2:'layer:E',
+    /* the Shelly add-on */
+    d8:'runs:SH3,AC4',d9:'runs:SH3,AC4',d10:'part:shelly',e11:'run:SH1',e12:'runs:SH3,AC4',e13:'runs:SH1,SH3,AC4',e14:'runs:AC1,SH2',e15:'runs:AC1,SH2',e16:'run:SH4',
+    e17:'runs:AC2,AC8,AC10,AC11,AC12',e18:'runs:AC2,AC9',f11:SWL,g16:'part:pwr',g17:'part:shelly',g18:'part:shelly',g19:'part:shelly',g20:'part:nsp',h7:'runs:SH3,AC4'};
 
   function mapLink(it){
     if(!(it.id in MAPS))return '';
@@ -663,11 +727,11 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
         '<span class="res '+(res||'')+'" data-res="'+it.id+'">'+(res==='pass'?'Pass':res==='fail'?'Fail':'—')+'</span>';
     }
     return '<div class="item" id="'+it.id+'" data-item="'+it.id+'" data-r="'+(res||'')+'">'+
-      '<div class="i-main"><div class="i-title"><span class="cid">'+it.id+'</span>'+esc(it.t)+'</div>'+(it.how?'<p class="i-how">'+esc(it.how)+'</p>':'')+
+      '<div class="i-main"><div class="i-title"><span class="cid">'+it.id+'</span>'+esc(it.t)+'</div>'+(it.how?'<p class="i-how">'+esc(T(it.how))+'</p>':'')+
       '<div class="i-tags">'+tags+(it.type!=='check'?'<span class="exp" data-exp="'+it.id+'">'+esc(expText(it,r))+'</span>':'')+mapLink(it)+'</div></div>'+
       '<div class="i-side">'+side+'</div>'+
       '<div class="pline print-only" data-pline="'+it.id+'">'+plineHtml(it,r)+'</div>'+
-      '<p class="fix" data-fix="'+it.id+'"'+(res==='fail'&&it.fix?'':' hidden')+'>'+esc(it.fix||'')+'</p></div>';
+      '<p class="fix" data-fix="'+it.id+'"'+(res==='fail'&&it.fix?'':' hidden')+'>'+esc(T(it.fix))+'</p></div>';
   }
   function renderAll(){
     var r=run();
@@ -678,15 +742,15 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     $('volts').value=r.volts!=null?r.volts:'';
     $('notes').value=r.notes||'';
     $('sections').innerHTML=SECTIONS.map(function(s){
-      return '<section class="sec" aria-labelledby="h-'+s.id+'"><div class="sec-h"><h2 id="h-'+s.id+'">'+esc(s.name)+'</h2><span class="sum" data-ssum="'+s.id+'"></span></div><p class="sec-intro">'+esc(s.intro)+'</p>'+s.items.map(function(it){return itemHtml(it,r)}).join('')+'</section>';
+      return '<section class="sec" aria-labelledby="h-'+s.id+'"><div class="sec-h"><h2 id="h-'+s.id+'">'+esc(s.name)+'</h2><span class="sum" data-ssum="'+s.id+'"></span></div><p class="sec-intro">'+esc(T(s.intro))+'</p>'+shown(s).map(function(it){return itemHtml(it,r)}).join('')+'</section>';
     }).join('');
     update();
   }
   function update(){
     var r=run(),p=0,f=0,t=0;
     SECTIONS.forEach(function(s){
-      var sp=0;
-      s.items.forEach(function(it){
+      var sp=0,its=shown(s);
+      its.forEach(function(it){
         t++;var res=result(it,r);
         if(res==='pass'){p++;sp++}else if(res==='fail')f++;
         var row=document.querySelector('[data-item="'+it.id+'"]');if(!row)return;
@@ -696,7 +760,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
         var ex=row.querySelector('[data-exp]');if(ex)ex.textContent=expText(it,r);
         var pl=row.querySelector('[data-pline]');if(pl)pl.innerHTML=plineHtml(it,r);
       });
-      var ss=document.querySelector('[data-ssum="'+s.id+'"]');if(ss)ss.textContent=sp+' of '+s.items.length;
+      var ss=document.querySelector('[data-ssum="'+s.id+'"]');if(ss)ss.textContent=sp+' of '+its.length;
     });
     var left=t-p-f;
     $('c-pass').textContent=p;$('c-fail').textContent=f;$('c-left').textContent=left;
@@ -706,9 +770,10 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     $('bar').innerHTML=[[p,'var(--good)'],[f,'var(--bad)']].map(function(x){return x[0]?'<span style="flex-grow:'+x[0]+';background:'+x[1]+'"></span>':''}).join('')+(left?'<span style="flex-grow:'+left+';background:transparent"></span>':'');
     var e=expectedR(r);$('watts-s').textContent=e?('Expected element resistance: about '+e.toFixed(1)+' Ω'+(r.volts?'':' at '+profVolts()+' V, from Your Silvia')+'.'):(r.watts?'Enter the rated voltage too; the expected resistance depends on it.':'Sets the expected element resistance.');
     var pv=profVolts();$('volts').placeholder=pv?String(pv):'120/230';
-    var pf=$('print-for');if(pf){var m=window.SilviaMachine;pf.textContent=(m&&m.get()?'For a '+m.label()+' Silvia. ':'')+'Run: '+run().label+(run().created?' · '+run().created:'')+'. Checked by: ______________'}
+    var pf=$('print-for');if(pf){var m=window.SilviaMachine;pf.textContent=(m&&m.get()?m.forText()+' ':'')+'Run: '+run().label+(run().created?' · '+run().created:'')+'. Checked by: ______________'}
   }
-  window.addEventListener('silvia-machine',function(){update()});
+  /* a new profile can add or drop checks (the Shelly), so draw the list again */
+  window.addEventListener('silvia-machine',function(){renderAll()});
 
   /* ---------- persistence ---------- */
   var state=defaults(),dbRef=null,mode='local',readOnly=false,saveTimer=null,chain=Promise.resolve();
