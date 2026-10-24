@@ -170,8 +170,9 @@ for _r in RUNS:
 # ---- The Shelly smart relay (an unofficial add-on, shown once it's chosen in Your Silvia) ----
 # From gblur's Silvia V6 E drawing (unofficial): the inlet's line feeds the Shelly, its O output feeds what the power
 # switch's line pole used to, and the power switch only signals the Shelly's SW input. Neutral is no longer switched:
-# AC2 ends in a splice by the power switch, where AC8 and AC9 now start. The Shelly gets its own leads, so no
-# machine current runs through its terminals (Shelly's docs warn against using them as a bridge).
+# AC2 ends in a splice by the power switch, where AC8 and AC9 now start. The Shelly gets its own leads, so nothing
+# uses its L and N terminals as a bridge (Shelly's docs warn against it); the machine's line current does run L, relay, O.
+# gblur's drawing shows a Shelly 1 (line on L and I); this site draws the 1PM, and the inlet spades and the splice are its own.
 FER = "Bootlace ferrule in the Shelly's {} terminal"
 SHELLY = dict(
     drop=["AC3"],

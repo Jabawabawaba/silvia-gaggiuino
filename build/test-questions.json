@@ -438,6 +438,10 @@
    [
     "tr",
     "It turns itself off after about 30 minutes"
+   ],
+   [
+    "tr",
+    "It turns itself off after a while"
    ]
   ],
   "w": "model:E",
@@ -466,7 +470,7 @@
     "g15"
    ]
   ],
-  "w": "model:E",
+  "w": "model:E;!shelly",
   "src": "which.tpl.html (#h-em): 'Gaggiuino's harness leaves the module out and needs a power switch that latches, breaking line and neutral. Plan on a double-pole rocker like the M's, and confirm the part on Discord.' checks.tpl.html g15: 'The E model's push-button switch doesn't latch; it needs a double-pole rocker like the M model's.' trouble-data.js: 'the push-button power switch doesn't latch without its energy-saver module.'",
   "g": "eswitch"
  },
@@ -568,7 +572,7 @@
     "e9"
    ]
   ],
-  "w": "model:M",
+  "w": "model:M;!shelly",
   "src": "learn-silvia-parts.html (part-panel): 'The power switch is double pole: it breaks line and neutral together.' which.tpl.html (#h-em, Silvia M): 'The custom harness keeps it on mains and runs line through one pole and neutral through the other.' checks e9/e10."
  },
  {
@@ -581,7 +585,7 @@
    "The steam thermostat, left in place",
    "The brew switch's second pole"
   ],
-  "why": "Gaggiuino keeps the power switch, the 165 °C safety thermostat, any pump thermal fuse and the earth bonding as they were, and none of them depend on software. The brew thermostat comes out and the steam thermostat no longer limits anything.",
+  "why": "Gaggiuino keeps the 165 °C safety thermostat, any pump thermal fuse and the earth bonding as they were, and none of them depend on software. The brew thermostat comes out and the steam thermostat no longer limits anything.",
   "r": [
    [
     "url",
@@ -1485,6 +1489,10 @@
     "p5b"
    ],
    [
+    "rb",
+    "p5s"
+   ],
+   [
     "gl",
     "t-gfci"
    ]
@@ -1626,7 +1634,7 @@
    "Move it to low voltage on J7 like the others",
    "Swap it for a push button with a built-in LED"
   ],
-  "why": "Only brew, steam and hot water run on low voltage. The power switch stays on mains, breaking line and neutral, so the mod doesn't touch it.",
+  "why": "Only brew, steam and hot water run on low voltage. The power switch stays on mains, so the mod doesn't touch it.",
   "r": [
    [
     "url",
@@ -1973,7 +1981,7 @@
    "Plugged in, with a flashlight while it heats",
    "Unplugged, once the covers are back on"
   ],
-  "why": "Switch off and unplug first, lift the top cover and touch a dry paper towel to each fitting. Then close it up and rerun h1 to h4 of the power-on checks before plugging back in.",
+  "why": "Switch off and unplug first, lift the top cover and touch a dry paper towel to each fitting. Then close it up and rerun the covers-on checks the runbook names before plugging back in.",
   "r": [
    [
     "rb",
@@ -2094,7 +2102,7 @@
     "E model: fit a latching rocker"
    ]
   ],
-  "w": "model:E",
+  "w": "model:E;!shelly",
   "src": "runbook-phases.js p2b1: 'The custom harness leaves the module out and needs a power switch that latches on and off by itself, so fit a double-pole rocker like the M model's. Confirm the part on Discord before buying.'",
   "g": "eswitch"
  },
@@ -2212,11 +2220,11 @@
    "The boiler's ground spade",
    "The PCB's J9 control header"
   ],
-  "why": "AC3 brings switched line to SSR terminal 1 on a fork shared with AC4, which powers the PCB through J11 and feeds its pump and valve outputs. Terminal 2 is the one that feeds the safety thermostat.",
+  "why": "Switched line arrives at SSR terminal 1 on a fork shared with AC4, which powers the PCB through J11 and feeds its pump and valve outputs. Terminal 2 is the one that feeds the safety thermostat.",
   "r": [
    [
     "map",
-    "runs=AC3,AC4",
+    "runs=AC3,SH3,AC4",
     "The line runs at SSR terminal 1 on the wiring drawing"
    ],
    [
@@ -2291,7 +2299,8 @@
     "Power switch: supply on the outer spades"
    ]
   ],
-  "src": "wiring-parts.js pwr: 'The power switch, still on mains: it breaks both line and neutral, one per pole. Supply goes on the outer spades, the loads come off the center ones.'"
+  "src": "wiring-parts.js pwr: 'The power switch, still on mains: it breaks both line and neutral, one per pole. Supply goes on the outer spades, the loads come off the center ones.'",
+  "w": "!shelly"
  },
  {
   "id": "wiring-08",
@@ -2871,7 +2880,8 @@
     "The SSR on the wiring drawing"
    ]
   ],
-  "src": "checks.tpl.html d7 how: 'May read OL, or a high value that climbs as the PCB's supply charges.' type notshort: 'Expect OL or over 100 Ω'. fix: 'a reading near the element's expected resistance (shown under Element power) means the SSR is passing current or the element is wired around it. Find it before plugging in.'"
+  "src": "checks.tpl.html d7 how: 'May read OL, or a high value that climbs as the PCB's supply charges.' type notshort: 'Expect OL or over 100 Ω'. fix: 'a reading near the element's expected resistance (shown under Element power) means the SSR is passing current or the element is wired around it. Find it before plugging in.'",
+  "w": "!shelly"
  },
  {
   "id": "checks-14",
@@ -2895,7 +2905,8 @@
     "The power switch on the wiring drawing"
    ]
   ],
-  "src": "checks.tpl.html e9 'Same probes as e1, power switch off. Should now be open.' fix: 'The switch isn't breaking line. Check that the inlet goes to the outer spades and the loads to the center spades.' e1 path: 'AC1, the switch, AC3, SSR terminal 1, AC4.' Section e intro: 'the power switch breaks both line and neutral.'"
+  "src": "checks.tpl.html e9 'Same probes as e1, power switch off. Should now be open.' fix: 'The switch isn't breaking line. Check that the inlet goes to the outer spades and the loads to the center spades.' e1 path: 'AC1, the switch, AC3, SSR terminal 1, AC4.' Section e intro: 'the power switch breaks both line and neutral.'",
+  "w": "!shelly"
  },
  {
   "id": "checks-15",
@@ -2918,7 +2929,7 @@
     "t-e-and-m"
    ]
   ],
-  "w": "model:E",
+  "w": "model:E;!shelly",
   "src": "checks.tpl.html g15: 'The power switch latches on and off by itself. The harness relies on it breaking both line and neutral. The E model's push-button switch doesn't latch; it needs a double-pole rocker like the M model's.' trouble-data.js: 'The custom harness leaves the module out entirely.'",
   "g": "eswitch"
  },
@@ -2966,7 +2977,7 @@
     "t-e-and-m"
    ]
   ],
-  "w": "model:E",
+  "w": "model:E;!shelly",
   "src": "trouble-data.js, power, w:'model:E': cause 'The E's energy-saver module is still in the circuit.' check 'The custom harness leaves the module out entirely. Trace the power switch: inlet to its outer spades, loads from its center spades, nothing to the module.' glossary t-e-and-m: 'the Silvia E (sold in Europe) has a push button with a 30-minute auto-off.'",
   "g": "eauto"
  },
@@ -3107,7 +3118,32 @@
     "d7"
    ]
   ],
-  "src": "trouble-data.js, heat, d:1 'It keeps heating past the target': causes 'A reversed thermocouple (see above), or one loose and out of contact so the reading lags.' 'The SSR failed closed.' 'The element wired around the SSR.' check 'Switch off and unplug.' 'Rerun [d7]'. The other three symptoms have no d flag."
+  "src": "trouble-data.js, heat, d:1 'It keeps heating past the target': causes 'A reversed thermocouple (see above), or one loose and out of contact so the reading lags.' 'The SSR failed closed.' 'The element wired around the SSR.' check 'Switch off and unplug.' 'Rerun [d7]'. The other three symptoms have no d flag.",
+  "w": "!shelly"
+ },
+ {
+  "id": "trouble-08s",
+  "k": "trouble",
+  "q": "Which of these symptoms means stop using the machine and unplug now?",
+  "a": [
+   "It keeps heating past the target",
+   "The pressure reading is noisy",
+   "The switch lights went dark",
+   "The tank level reads wrong"
+  ],
+  "why": "Heating past the target can come from a reversed or loose thermocouple, an SSR failed closed, or the element wired around the SSR. Switch off, unplug, and rerun d10.",
+  "r": [
+   [
+    "tr",
+    "It keeps heating past the target"
+   ],
+   [
+    "ck",
+    "d10"
+   ]
+  ],
+  "src": "trouble-data.js heating entry, Shelly check; checks.tpl.html d10.",
+  "w": "shelly"
  },
  {
   "id": "trouble-09",
@@ -3261,12 +3297,12 @@
   "w": "shelly",
   "q": "With the Shelly fitted and the machine switched off, what is still live while it's plugged in?",
   "a": [
-   "The inlet, the Shelly, the power switch and the wires between them",
-   "Nothing: the Shelly cuts everything",
-   "Only the inlet's pins",
-   "Only the PCB's 5 V side"
+   "Line up to the relay, and everything after it stays joined to neutral",
+   "Nothing: the relay cuts line and neutral, like the stock switch",
+   "Only the inlet's tabs, up to the power switch",
+   "Only the PCB's 5 V side, through its supply"
   ],
-  "why": "The Shelly's relay only cuts what comes after it. The inlet, the Shelly itself, the power switch and AC1 carry mains whenever the cord is in, and SH2 too while the switch is on, so unplug before you open anything.",
+  "why": "The relay breaks line only. The inlet, the Shelly, the power switch and AC1 carry line whenever the cord is in, and SH2 too while the switch is on. Everything after the relay stays joined to the outlet's neutral, which a plug that fits either way round makes line, and the app or a schedule can switch it on. Unplug before you open anything.",
   "r": [
    [
     "pg",
@@ -3279,7 +3315,7 @@
     "p0s3"
    ]
   ],
-  "src": "part-guides-data.js G.shl step 5; runbook p0s3; the Shelly's relay only switches O."
+  "src": "part-guides-data.js G.shl step 5; runbook p0s3; the Shelly's relay switches line only, on O."
  },
  {
   "id": "sh-02",
@@ -3465,7 +3501,7 @@
     "e12"
    ]
   ],
-  "src": "checks.tpl.html e12, e13; relay contact open without power (ESPHome Shelly 1 Gen4 config)."
+  "src": "checks.tpl.html e12, e13; the relay being open without power is an inference from the 1PM Gen4's one relay output on O (Shelly 1PM Gen4 doc)."
  },
  {
   "id": "sh-09",
@@ -3598,7 +3634,7 @@
   "r": [
    [
     "tr",
-    "It comes on by itself after a power cut"
+    "It comes on by itself"
    ]
   ],
   "src": "trouble-data.js Shelly entry; Shelly web interface guide."

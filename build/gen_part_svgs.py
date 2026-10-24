@@ -439,6 +439,9 @@ def switches():
     s.append(f'<g data-k="pbE" data-when="model:E"><rect class="wallbg" x="{pw - 6}" y="58" width="{W + 12}" height="190" rx="10"/><rect class="swbody" x="{pw}" y="66" width="{W}" height="140" rx="10"/>'
              f'<circle class="pbtn" cx="{pw + 44}" cy="112" r="24"/><g data-k="pbEm"><rect class="blkh" x="{pw + 10}" y="150" width="{W - 20}" height="34" rx="4"/>'
              f'<text class="cap" x="{pw + 44}" y="171" text-anchor="middle" fill="#E7E9EB">module</text></g><text class="cap" x="{pw + 44}" y="240" text-anchor="middle">E: push button</text></g>')
+    # with the Shelly the E's push button can stay: its label replaces "Power" once the module is out
+    s.append(f'<g data-k="pbEk" data-when="model:E;shelly"><rect class="wallbg" x="{pw - 6}" y="228" width="{W + 12}" height="18"/>'
+             f'<text class="lbl" x="{pw + 44}" y="240" text-anchor="middle">Push button</text></g>')
     s.append('</g>')
     s.append(meters("swm", ("0.3 Ω", "brew ON:", "J7 B to GND"), ("OL", "brew OFF:", "J7 B to GND"), "unplugged, J7 and J5 plugs off, probes on their pins"))
     s.append('</svg>')

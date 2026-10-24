@@ -22,7 +22,7 @@
     <article class="pc nofig" id="leds">
       <div class="ph"><h3>Switch lights</h3><span class="where">inside the three rockers</span></div>
       <div class="prose">
-        <p>Once the brew, hot water and steam switches are on low voltage, their mains lamps go dark. The LED mod replaces each lamp with a small orange LED and resistor powered from the 5 V screen line, wired across the switch's spare pole so the light follows the switch. <span data-when="!shelly">The power switch keeps its stock lamp.</span><span data-when="shelly">With the Shelly, a lamp inside the power switch may stay dark, since its N pole is empty.</span></p>
+        <p>Once the brew, hot water and steam switches are on low voltage, their mains lamps go dark. The LED mod replaces each lamp with a small orange LED and resistor powered from the 5 V screen line, wired across the switch's spare pole so the light follows the switch. <span data-when="!shelly">The power switch keeps its stock lamp.</span><span data-when="shelly">With the Shelly, a lamp inside the power switch, or a power light fed from it, may stay dark, since its N pole is empty. gblur's drawing has a power LED on the screen's 5 V line instead, which lights whenever the PCB has power.</span></p>
         <p><a href="led-mod.html">The LED switch mod, step by step</a></p>
       </div>
     </article>
@@ -30,7 +30,7 @@
     <article class="pc" id="shelly" data-when="shelly">
       <div class="ph"><h3>Shelly smart relay</h3><span class="where">an unofficial add-on, outside the case</span></div>
       <div class="prose">
-        <p>A Shelly 1PM, a small Wi-Fi relay, sits between the inlet and the machine and switches it on and off from your phone or a schedule. The power switch stays on the front, but it now only tells the Shelly what to do. Nothing about it is in the official docs; this site follows gblur's Silvia V6 E build.</p>
+        <p>A Shelly 1PM, a small Wi-Fi relay, sits between the inlet and the machine and switches it on and off from your phone or a schedule. The power switch stays on the front, but it now only tells the Shelly what to do. Nothing about it is in the official docs. This site's wiring starts from gblur's Silvia V6 E drawing, which shows a Shelly 1; it draws the 1PM instead.</p>
         <h3>How it works</h3>
         <p>The Shelly powers itself from L and N. Its relay connects L to O, and O feeds what the power switch's line pole used to, so with the relay open the PCB, the SSR and the heating lamp get nothing. Neutral no longer goes through the power switch: the relay breaks line only, where the stock switch broke both. Its SW input sees mains while the power switch is on: in Switch mode, with output type Toggle Switch, the relay follows the M's rocker; in Button mode each press of the E's push button toggles it; and the app can switch it either way. It also measures the power the machine draws. The PCB doesn't know it's there; it simply powers up when the relay closes.</p>
         <p>The <a href="part-guides.html#shl">Shelly guide</a> covers the part, where it goes and how to set it up.</p>

@@ -174,7 +174,7 @@
     $('conn').innerHTML=rows.map(function(x){
       var buy=x.n+Math.max(2,Math.ceil(x.n*0.2));
       return '<tr><td>'+esc(x.name)+'<div class="note">'+esc(x.uses.filter(function(u){return !/× $/.test(u)}).join(' · '))+'</div></td><td class="num">'+x.n+'</td><td class="num big">'+buy+'</td></tr>';
-    }).join('')+(bare?'<tr><td>Self-fusing silicone tape<div class="note">Over each bare spade at the boiler and valve</div></td><td class="num">'+bare+' spades</td><td class="num big">1 roll</td></tr>':'')+(cnt.bn2?'<tr><td>Silicone heat shrink<div class="note">Over the neutral splice</div></td><td class="num">'+cnt.bn2+' splice</td><td class="num big">10 cm</td></tr>':'');
+    }).join('')+(bare?'<tr><td>Self-fusing silicone tape<div class="note">Over each bare spade at the boiler and valve</div></td><td class="num">'+bare+' spades</td><td class="num big">1 roll</td></tr>':'')+(cnt.bn2?'<tr><td>Silicone heat shrink<div class="note">Over the neutral splice</div></td><td class="num">'+cnt.bn2+' splice</td><td class="num big">100 mm</td></tr>':'');
     $('conn-note').textContent='"Buy" adds a few spares for crimps you redo. Bare spades need an open-barrel crimper; the rest take an insulated-terminal crimper.'+(cnt.fer?' Ferrules take a ferrule crimper.':'');
     /* cut table */
     var groups=[['L','Line'],['H','Heater line'],['N','Neutral'],['E','Earth'],['LV','Switch signals'],['LVG','Switch ground'],['S','SSR control and sensors'],['OPT','LED switch mod']];

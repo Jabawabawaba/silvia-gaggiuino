@@ -37,7 +37,7 @@ Every page is a single self-contained HTML file. Ticks, readings and prices are 
 
 **Your Silvia.** Set your version (V1 to V6), model (E or M, V5 and V6 only) and mains voltage from "Your Silvia" in the top bar or on the home page. The runbook, checks, wiring and troubleshooting pages then show only the steps and notes for your machine, and use RCD or GFCI wording to match your voltage. With nothing set, every note shows with a tag saying which machines it's for.
 
-**Shelly smart relay (optional, unofficial).** Under Extras in Your Silvia you can add a Shelly 1PM, a Wi-Fi relay that switches the machine on and off from a phone or a schedule, with the power switch as its input. It follows gblur's Silvia V6 E build, with the Shelly on its own leads from the inlet. Its wires, map, checks, runbook steps, part guide, parts and questions show only once you add it. Nothing about it is in the official docs.
+**Shelly smart relay (optional, unofficial).** Under Extras in Your Silvia you can add a Shelly 1PM, a Wi-Fi relay that switches the machine on and off from a phone or a schedule, with the power switch as its input. Its wiring starts from gblur's Silvia V6 E drawing, which shows a Shelly 1; this site draws the 1PM, on its own leads from the inlet. Its wires, map, checks, runbook steps, part guide, parts and questions show only once you add it. Nothing about it is in the official docs.
 
 **Printing.** The runbook prints every phase as one checklist with your settings and blank lines for notes. The power-on checks print with a reading blank and pass or fail boxes on every item, or with your recorded readings if you've entered them. The cut list prints as a shopping and cutting sheet. Use your browser's print command on the published site.
 

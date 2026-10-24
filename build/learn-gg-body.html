@@ -5,7 +5,7 @@
       <div class="prose">
         <p>On a stock Silvia the switches and thermostats do the controlling themselves: each one sits in a mains wire and either completes a load's circuit or breaks it. Gaggiuino moves every decision into one place.</p>
         <p>The brew, hot water and steam switches stop carrying mains and become signals. A thermocouple and a pressure sensor report what's happening. The PCB reads all of it many times a second and decides what the element, pump and 3-way valve should do, switching the pump and valve itself and the element through a solid-state relay. The screen shows it and takes your settings.</p>
-        <p class="gg"><b>What stays:</b> the power switch still breaks mains, the 165 °C safety thermostat still sits in the element's supply, a pump thermal fuse stays if yours has one, and earth is bonded exactly as before. None of those depend on software.</p>
+        <p class="gg"><b>What stays:</b> <span data-when="!shelly">the power switch still breaks mains, </span>the 165 °C safety thermostat still sits in the element's supply, a pump thermal fuse stays if yours has one, and earth is bonded exactly as before. None of those depend on software.<span data-when="shelly"> With the Shelly, the power switch only signals it: off goes through the Shelly's firmware, and the app or a schedule can switch it back on. Unplug when it has to stay off.</span></p>
       </div>
       %%FIG:blocks%%
     </div>

@@ -131,7 +131,7 @@
         <div><h3>What it means for the build</h3><ul class="build">
           <li>Lift the boiler insulation to reach the thermostats, and refit it after.</li>
           <li>Trace the heating LED's wires before you cut. The new harness puts it across the element, so it lights while the SSR heats. If it has more than two wires, or the E's energy-saver module drives it, ask on Discord first.</li>
-          <li>An E needs a latching power switch. See below.</li>
+          <li>An E needs a latching power switch<span data-when="shelly">, or with the Shelly can keep its push button</span>. See below.</li>
         </ul></div>
         <div class="vact"><button type="button" class="btn primary" data-setmachine="V5">This is mine</button><span class="isyours" data-yours="V5" hidden>Set as your Silvia</span></div>
       </div>
@@ -163,13 +163,13 @@
         <p>Sold in Europe from about winter 2015 to meet energy rules. It switches the machine off 30 minutes after the last coffee or hot water.</p>
         <ul>
           <li>The power switch is a push button that works with a GICAR energy-saver module instead of a plain on/off rocker.</li>
-          <li>Gaggiuino's harness leaves the module out and needs a power switch that latches, breaking line and neutral. Plan on a double-pole rocker like the M's, and confirm the part on Discord.</li>
+          <li data-when="!shelly">Gaggiuino's harness leaves the module out and needs a power switch that latches, breaking line and neutral. Plan on a double-pole rocker like the M's, and confirm the part on Discord.</li><li data-when="shelly">Gaggiuino's harness leaves the module out. With the Shelly, the push button can stay, set to Button in the Shelly app, if its body says 250 V; otherwise fit a latching double-pole rocker like the M's. That's this site's suggestion, not an official one.</li>
           <li>Set "E" in Your Silvia (top of the page) to see the extra steps.</li>
         </ul>
       </div>
       <div class="panel">
         <h3>Silvia M and older machines</h3>
-        <p>A plain latching double-pole power switch. The custom harness keeps it on mains and runs line through one pole and neutral through the other. Every machine before V5 works this way.</p>
+        <p>A plain latching double-pole power switch. The custom harness keeps it on mains and runs line through one pole and neutral through the other<span data-when="shelly">; with the Shelly it only signals the Shelly, and its neutral pole stays empty</span>. Every machine before V5 works this way.</p>
         <h3 style="margin-top:8px">120 V or 230 V</h3>
         <p>Read the rating plate. The harness is the same at both voltages (realNiche's diagram covers 110 to 240 V). The element's resistance is about three times higher on a 230 V machine, and the circuit protection is an RCD rather than a GFCI. The power-on checks work out the expected element resistance from the plate.</p>
       </div>

@@ -154,7 +154,7 @@ def gaggia():
     s.extend(sc)
     s.append(scene_ferrule())
     s.append(scene_meters((("0.3 Ω", "e30: inlet L", "to Shelly L"), ("0.4 Ω", "e31: Shelly O", "to J11"), ("OL", "e32: inlet L", "to J11")),
-                          "unplugged: the relay is open, so e32 reads OL"))
+                          "unplugged, the relay is open: e32 reads OL or a high value"))
     s.append(scene_app())
     s.append('</svg>')
     return "".join(s)
