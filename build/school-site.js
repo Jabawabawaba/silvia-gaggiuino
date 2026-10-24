@@ -57,7 +57,7 @@
         medium:{name:'Medium',T:[92,94],ratio:[1.8,2.3,2],time:[25,31],EY:[18.5,22],TDS:[8,11.5],grind:10,grindWord:'Middle',aim:'Sweet and balanced'},
         dark:{name:'Dark',T:[90,93],ratio:[1.5,2,1.8],time:[22,28],EY:[17,20.5],TDS:[9,12.5],grind:12,grindWord:'Coarser',aim:'Rich and sweet, not ashy'}
       },
-      descaler:{fillLabel:'Empty the tank, add a mild citric acid mix (8 to 12 g per litre), top up',ml:2000},
+      descaler:{fillLabel:'Empty the tank, add a mild citric acid mix (8 to 12 g per liter), top up',ml:2000},
       controls:function(){
         return {
           pwr:['Power',newer()?(K.e?'The push button in the middle, beside the lights. Switches the machine on; the green light shows power.':'The switch in the middle, beside the lights. Switches the machine on; the green light shows power.'):'The switch in the middle, beside the heating light. It lights while the machine is on.'],
@@ -92,7 +92,7 @@
       return w;
     };
     X.tempAdvice=function(dir,roast){
-      if(dir==='cool')return roast==='light'?'For a hotter shot: when the heating light goes out, flush only until the hissing stops and brew straight away (about 94 °C on a Scace).':roast==='dark'?'For a hotter shot: give it a few seconds after the heating light comes on, while the element heats, before you brew.':'For a hotter shot: start sooner after the flush, or flush only until the hissing stops and brew straight away.';
+      if(dir==='cool')return roast==='light'?'For a hotter shot: when the heating light goes out, flush only until the hissing stops and brew straight away (about 94 °C on a Scace).':roast==='dark'?'For a hotter shot: give it a few seconds after the heating light comes on, while the element heats, before you brew.':'For a hotter shot: flush a little less, about 8 s instead of 12: Whole Latte Love found a shorter flush gives a hotter shot.';
       return roast==='dark'?'For a cooler shot: brew at the bottom of the wave: wait for the heating light to come on, then lock in and brew at once.':'For a cooler shot: when the heating light goes out, flush about 12 s and wait about 20 s before brewing (Whole Latte Love\'s routine, about 93 °C).';
     };
     X.onShotStart=function(s,c,slip){
@@ -124,8 +124,8 @@
       {id:'wll',roast:'medium',name:'Light out, flush, wait',tag:'Medium, everyday',lesson:'medium',
         why:'The measured Silvia routine: it throws away the overheated water and lets the group settle before the shot.',
         steps:['Warm up 25 minutes or more with the empty portafilter locked in.','Dose and tamp while you wait for the heating light to go out.','When it goes out, take the portafilter out and flush '+S0.wllFlush+' s.','Wait about '+S0.wllWait+' s, lock in and start the shot.','For the next shot, wait for the light to go out again and repeat.'],
-        wave:'The flush drags the boiler down off its overshoot and brings the element on; the wait lets the hot group even out the water.',
-        src:'Whole Latte Love\'s Silvia V6 review: ten shots at 91.4 to 95.6 °C, about 93 °C on average.'},
+        wave:'The flush drags the boiler water down off its overshoot, close to where the element comes back on; in the wait it settles a little further before the shot.',
+        src:'Whole Latte Love\'s Silvia V6 review: ten shots at 91.4 to 95.6 °C, about 93 °C on average. For a hotter shot, they say, flush less.'},
       {id:'bottom',roast:'dark',name:'Bottom of the wave',tag:'Dark',lesson:'dark',
         why:'Dark roasts give up their flavour easily and turn ashy in hot water. The coolest water the Silvia gives is at the bottom of its cycle, just as the heating light comes back on.',
         steps:['Dose and tamp first, and leave the machine alone: no flush.','Wait for the heating light to come on: the boiler has coasted down to the brew thermostat\'s cut-in.','Lock in and brew at once; stop around 1:1.8.','If it is still harsh, grind a step coarser.'],
@@ -146,11 +146,11 @@
     };
 
     /* under the recipe table: what the temperatures mean and where the bands come from */
-    X.recipeNote='Temperatures are for the water reaching the coffee, as a Scace thermometer in the portafilter reads it: the number the coach grades. The bands are Kaffeemacher\'s espresso temperature table, its medium-light row for medium. Complete Home Barista\'s figures sit inside them; Clive\'s dark-roast figure is about a degree higher. On a stock Silvia you reach them by surfing, not by a setting.';
+    X.recipeNote='Temperatures are for the water reaching the coffee, as a Scace thermometer in the portafilter reads it: the number the coach grades. The bands are Kaffeemacher\'s espresso temperature table, read here as the temperature at the coffee, with its medium-light row for medium. Complete Home Barista\'s figures sit inside them; Clive\'s dark-roast figure is about a degree higher. On a stock Silvia you reach them by surfing, not by a setting.';
 
     /* ---------- the dial-in cards ---------- */
     X.dial=[
-      {h:'Sour, thin, short finish',ul:['Under-extracted: the water didn\'t take enough out.','Grind finer first, one step at a time, keeping the yield the same.','Then try a longer ratio (stop a few grams later).','Then surf hotter: a shorter wait after the flush (in this page\'s simulation, brewing straight after it is about a degree hotter).']},
+      {h:'Sour, thin, short finish',ul:['Under-extracted: the water didn\'t take enough out.','Grind finer first, one step at a time, keeping the yield the same.','Then try a longer ratio (stop a few grams later).','Then surf hotter: a shorter flush (Whole Latte Love).']},
       {h:'Bitter, dry, ashy or hollow',ul:['Over-extracted, or too hot for the roast.','Grind a step coarser, or stop a few grams sooner.','Then surf cooler: never brew as the light goes out without a flush, and for dark beans brew at the bottom of the wave.']},
       {h:'Sour and bitter at once, inconsistent',ul:['Channeling: water found a path through the puck.','Fix the puck, not the recipe: break up clumps (a needle tool), level it, tamp level and firm.','Don\'t knock the portafilter after tamping.']},
       {h:'One change at a time',ul:['Weigh the dose to 0.1 g and keep it fixed.','Grind is the main control; ratio next; temperature last.','On a stock machine, temperature means the surf: where in the cycle you brew, and how you flush.','Expect three or four shots to dial in a new bag.']},
@@ -202,7 +202,7 @@
           {t:'Watch the boiler line keep rising after the light goes out: the element sits in the water and keeps heating it for a moment.',done:function(c){return c.phase==='coast'||c.phase==='peak'}},
           {t:'Check yourself.',quiz:{id:'lamp',q:'The heating light just went out. What is the element doing?',opts:['Heating','Off: the brew thermostat has opened','Making steam'],a:1,yes:'Right: light out means the element just stopped.',no:'Not quite: the light is on while the element heats and goes out when it stops.'},done:function(c){return c.has('quiz-ok',function(d){return d==='lamp'})}},
           {t:'Take the portafilter out and run a 3 s flush. Watch the boiler line drop and the light come back on.',done:function(c){var f=c.ev('flush',function(d){return d.secs>=2});return !!f},hint:'Tap the portafilter to take it out, then coffee on and off.'},
-          {t:'Check yourself.',quiz:{id:'first',q:'The light has just gone out. How hot is the water in the boiler?',opts:['About 93 °C, just right for a shot','About 99 °C: it has overshot, so a shot now runs far too hot'],a:1,yes:'Right: Whole Latte Love clocked it at about 99 °C.',no:'Not quite: the water overshoots after the light goes out, so the first water is far too hot.'},done:function(c){return c.has('quiz-ok',function(d){return d==='first'})}}
+          {t:'Check yourself.',quiz:{id:'first',q:'The light has just gone out. How hot is the water in the boiler?',opts:['About 93 °C, just right for a shot','About 99 °C, far too hot for a shot'],a:1,yes:'Right: Whole Latte Love clocked it at about 99 °C, and it keeps rising for a moment after the light goes out.',no:'Not quite: Whole Latte Love clocked it at about 99 °C, and it keeps rising for a moment after the light goes out: far too hot for a shot.'},done:function(c){return c.has('quiz-ok',function(d){return d==='first'})}}
         ],
         score:function(){return {stars:3,text:'You can read the wave. Everything after this builds on it.'}}},
       {id:'medium',track:'Espresso by roast',title:'Medium roast: light out, flush, wait',time:'4 min',sub:'Whole Latte Love\'s measured routine.',
@@ -285,7 +285,7 @@
         steps:[
           {t:'Take the portafilter out and knock out the puck (tap the basket).',done:function(c){return c.has('knock')}},
           {t:'Flush the group with the portafilter out for a few seconds to rinse it.',done:function(c){return c.has('flush',function(d){return !d.pfIn&&d.secs>=2.5})}},
-          {t:'Purge the steam wand into the drip tray: steam on, open the knob 2 s, close it.',done:function(c){return c.has('purge')},hint:'The wand has milk inside it from the last jug.'},
+          {t:'Purge the steam wand into the drip tray: steam on, wait for the heating light to go out, then open the knob 2 s and close it.',done:function(c){return c.has('purge')},hint:'The wand has milk inside it from the last jug; with the boiler below steam temperature little comes out.'},
           {t:'Wipe the wand with a damp cloth (Milk or Cleaning tab).',done:function(c){return c.has('wipe')}},
           {t:'Empty the drip tray, lock the empty portafilter back in, and switch off (steam off first).',done:function(c){return c.has('act',function(d){return d==='tray'})&&!c.s.pwr&&c.s.pf.in&&!c.s.steam}}
         ],
@@ -333,11 +333,11 @@
       {id:'tank',group:'Daily',title:'Fresh water in the tank',src:'Rancilio manual',when:'Every day you use it.',every:1,
         steps:['Fresh, cold water each time; Rancilio asks for soft water, about 5 °dKH (89 ppm), with a filter if yours is harder.','Never switch on with an empty tank, and never let it run dry while the pump runs.']},
       {id:'milk',group:'Daily',title:'Clean the steam wand inside',src:'Rancilio manuals (2018, 2024: daily)',when:'Rancilio says daily; weekly is common home practice.',every:function(){return 7},
-        steps:['Dip the wand in milk-system cleaner and heat it with steam, then leave it as the package says (Rancilio\'s 2018 manual: at least 10 minutes, and no aluminium container).','Then dip it in fresh water, steam it hot, and wipe it with a damp cloth.']},
+        steps:['Dip the wand in milk-system cleaner and heat it with steam, then leave it as the package says (Rancilio\'s 2018 manual: at least 10 minutes, and no aluminum container).','Then dip it in fresh water, steam it hot, and wipe it with a damp cloth.']},
       {id:'soak',group:'Weekly',title:'Soak the baskets and portafilter',src:'Rancilio manual (2012: daily)',when:'Rancilio\'s 2012 manual lists it with the daily cleaning; weekly is common home practice.',every:7,
         steps:['With the machine cold, soak the portafilter and baskets in detergent solution for at least 20 minutes, in a glass or stainless steel container (Rancilio).','Rinse well.']},
-      {id:'descale',group:'If your water is hard',title:'Descale',src:'Community method; not in Rancilio\'s current manuals',when:function(w){return w==='tap'?'Every 1 to 3 months on hard water, Seattle Coffee Gear says. Better: filter the water.':'Rarely or never on soft, filtered water: Rancilio\'s current manuals rely on water at about 89 ppm instead.'},every:function(w){return w==='tap'?60:null},
-        steps:['Citric acid at 8 to 12 g per litre (home-barista\'s mild mix). Portafilter out.','Run it through the wand (hot water switch, knob open) and the group, a minute at a time with a minute\'s rest for the pump.','Let it sit 20 minutes, then run the rest through.','Rinse with two or more tanks of fresh water, through the wand and the group.','Don\'t drink anything that comes out until the rinse is done.'],lesson:'descale'},
+      {id:'descale',group:'If your water is hard',title:'Descale',src:'Community method; not in Rancilio\'s current manuals',when:function(w){return w==='tap'?'Every 1 to 3 months depending on the minerals in your water, an older Seattle Coffee Gear guide says. Better: filter the water.':'Rarely or never on soft, filtered water: Rancilio\'s current manuals rely on water at about 89 ppm instead.'},every:function(w){return w==='tap'?60:null},
+        steps:['Citric acid at 8 to 12 g per liter (home-barista\'s mild mix). Portafilter out.','Run it through the wand (hot water switch, knob open) and the group, a minute at a time with a minute\'s rest for the pump.','Let it sit 20 minutes, then run the rest through.','Rinse with two or more tanks of fresh water, through the wand and the group.','Don\'t drink anything that comes out until the rinse is done.'],lesson:'descale'},
       {id:'gasket',group:'Yearly',title:'New group gasket and screen',src:'Seattle Coffee Gear (once a year); Whole Latte Love (the steps)',when:'About once a year, Seattle Coffee Gear says, or sooner if it leaks or the handle locks further round than it used to.',every:365,
         steps:['Signs: water around the rim during a shot, the handle locking past 6 o\'clock, a flat, cracked or shiny gasket.','Unplug it and let it cool completely. Undo the screen\'s centre screw, pry out the old gasket with a pick, and press the new one into the groove with your fingers.','Check the thickness for your Silvia: listings run 8 to 8.5 mm, and some sellers advise rubber over silicone.']},
       {id:'idle',group:'After a break',title:'After a break, or a new machine',src:'Rancilio manuals (2018, 2024)',when:'Before the first coffee.',every:null,
