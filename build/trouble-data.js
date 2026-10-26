@@ -20,7 +20,7 @@
      check:['In the Shelly app, set Action on power on to Turn OFF, leave Auto on and Auto recovery off, and check its schedules.'],src:'Shelly web interface guide'},
     {c:'power',w:'shelly',s:'The Shelly runs hot or switches off by itself',map:'part:shelly',
      causes:['It sits somewhere warmer than its 40 °C rating, or shut in with no air around it: Shelly warns that a confined space can push it past its limits.','A loose wire in one of its terminals, heating under load.'],
-     check:['Watch its temperature in the app through a heat-up and a steaming session. That\'s its own internal temperature, not the air around it: what matters is whether it keeps climbing.','Unplugged, check each ferrule is fully in and its screw tight, 0.4 Nm at most.','Move it somewhere cooler, or into a roomier enclosure.'],src:'Shelly docs'},
+     check:['Watch its temperature in the app through a heat-up and a steaming session. That\'s its own internal temperature, not the air around it: what matters is whether it keeps climbing.','Unplugged, check each ferrule is fully in and its screw tight, 0.4 Nm at most.','Move it somewhere cooler, or into a roomier enclosure.',[['On an E with it in the GICAR box, move it to an enclosure outside the back panel, this site\'s default.','model:E']]],src:'Shelly docs'},
     {c:'power',w:'model:E;!shelly',s:'It turns itself off after about 30 minutes',
      causes:['The E\'s energy-saver module is still in the circuit.'],
      check:['The custom harness leaves the module out entirely. Trace the power switch: inlet to its outer spades, loads from its center spades, nothing to the module.'],src:'Wikipedia · Auber Silvia E note'},

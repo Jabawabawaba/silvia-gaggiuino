@@ -41,7 +41,7 @@
         return {w:'The power switch, still on mains: it breaks both line and neutral, one per pole. Supply goes on the outer spades, the loads come off the center ones.',
           p:'The PCB has no input from it: it simply powers up with the machine.'};
       case 'shelly':
-        return {w:'The Shelly smart relay, an unofficial add-on: it switches line to the machine from its O terminal (SH3, to SSR terminal 1), powered from the inlet by SH1 and SH4, and the power switch tells it when through SW (SH2). Its place on the drawing is only schematic: it goes outside the case, in an enclosure, where it stays under 40 °C.',
+        return {w:'The Shelly smart relay, an unofficial add-on: it switches line to the machine from its O terminal (SH3, to SSR terminal 1), powered from the inlet by SH1 and SH4, and the power switch tells it when through SW (SH2). Its place on the drawing is only schematic: it goes outside the case, in an enclosure, where it stays under 40 °C.'+(window.SilviaMachine&&window.SilviaMachine.matches('model:E')?' On an E, the emptied GICAR box inside the case is an unofficial second choice; see the Shelly guide.':''),
           p:'The PCB doesn\'t know it\'s there: it powers up when the Shelly switches on, from the app, a schedule or the power switch.'};
       case 'nsp':
         return {w:'A BN2 butt splice by the power switch, with the Shelly: inlet neutral (AC2) on one side, the neutral chain (AC8) and the element\'s neutral (AC9) on the other. Neutral isn\'t switched any more.',

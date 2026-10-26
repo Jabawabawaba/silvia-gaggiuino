@@ -177,7 +177,7 @@
       tof:['Above the water tank, under the lid, on its cable from J2 on the back of the PCB.'],
       fw:['Over Wi-Fi from a phone or computer, with the machine closed up; by wire only as a fallback.'],
       scl:['Under the drip tray, on a load cell mount made for the Silvia, with the boards and the cable to J8 inside.'],
-      shl:['Outside the case, in a closed enclosure on the back panel. Its four wires reach the inlet, the power switch and SSR terminal 1 through a grommet.']};
+      shl:['Outside the case, in a closed enclosure on the back panel. Its four wires reach the inlet, the power switch and SSR terminal 1 through a grommet.',['On an E, the emptied GICAR box inside the case is an unofficial second choice.','model:E']]};
     for(var k in w){var e=$('pg-'+k+'-where');if(e)e.textContent=T(w[k])}
   }
 

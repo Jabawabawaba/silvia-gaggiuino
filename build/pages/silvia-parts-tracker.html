@@ -262,7 +262,7 @@ h2{font:600 22px/1.1 var(--f-display);letter-spacing:.05em;text-transform:upperc
         src:[['Illustrated guide','https://claude.ai/artifact/YammPPcWMq2CmaBdT3L1km']],
         subs:[['leds','3 orange 5 mm LEDs (a pack one builder used for a good color match)','https://www.aliexpress.com/item/1005005708360014.html'],['res','3 resistors, 1k to 3k ohms, 1/4 W','https://www.aliexpress.com/item/1005006179541054.html'],['splice','BN1.25 butt splice to tap the 5 V line','https://www.aliexpress.com/item/3256801144001097.html'],['melf','Optional: 0 ohm 0407 MELFs in place of the studs, if you’d rather not just remove them','https://www.digikey.com/en/products/detail/vishay/MMB02070Z0000ZB200/2177496']]},
       /* the Shelly add-on: listed only once it's chosen in Your Silvia (when, see machine.js) */
-      {id:'shelly',when:'shelly',wtag:'Shelly add-on',name:'Shelly smart relay and its enclosure',use:'Switches the machine on and off from your phone or on a schedule; the power switch becomes its input. An unofficial add-on.',spec:'A Shelly 1PM Gen4: it switches 16 A and reports the power the machine draws. In North America, the UL-certified version, rated 15 A. Not a Mini, which switches 8 A. It goes outside the case, in a closed enclosure made for mains wiring: Shelly rates it for 40 °C around it at most. Rough total.',lo:50,hi:85,req:false,def:'need',
+      {id:'shelly',when:'shelly',wtag:'Shelly add-on',name:'Shelly smart relay and its enclosure',use:'Switches the machine on and off from your phone or on a schedule; the power switch becomes its input. An unofficial add-on.',spec:['A Shelly 1PM Gen4: it switches 16 A and reports the power the machine draws. In North America, the UL-certified version, rated 15 A. Not a Mini, which switches 8 A. It goes outside the case, in a closed enclosure made for mains wiring: Shelly rates it for 40 °C around it at most. Rough total.',['On an E, the emptied GICAR box can stand in for the enclosure and grommet: an unofficial second choice, inside the case. See the Shelly guide.','model:E']],lo:50,hi:85,req:false,def:'need',
         src:[['Shelly 1PM Gen4 specs','https://www.shelly.com/blogs/documentation/shelly-1pm-gen4']],
         subs:[['relay','Shelly 1PM Gen4, UL-certified in North America ($32.99 from Shelly US)','https://us.shelly.com/products/shelly-1pm-gen4-ul-certified-list'],['encl','A closed enclosure made for mains wiring, with room for air around the Shelly and screws to fix it to the back panel'],['grom','A rubber grommet for where its wires pass the back panel'],['ferr','Insulated bootlace ferrules, 0.75 mm² (18 AWG), with 6 mm sleeves, and a ferrule crimper'],['spl','Two blue spades for two wires each, for the inlet\'s L and N tabs, a BN2 butt splice and silicone heat shrink']]}
     ]}
@@ -305,6 +305,7 @@ h2{font:600 22px/1.1 var(--f-display);letter-spacing:.05em;text-transform:upperc
     out.updatedAt=typeof s.updatedAt==='number'?s.updatedAt:0;
     return out;
   }
+  function specT(x){if(!Array.isArray(x))return x;var m=window.SilviaMachine;if(m)return m.txt(x);return x.filter(function(s){return typeof s==='string'}).join(' ')}
   function okw(w){var m=window.SilviaMachine;if(!w)return true;if(!m)return !/(^|;)shelly/.test(w);return m.matches(w)}
   function allParts(){
     var list=[];GROUPS.forEach(function(g){g.parts.forEach(function(p){if(okw(p.when))list.push(p)})});
@@ -356,7 +357,7 @@ h2{font:600 22px/1.1 var(--f-display);letter-spacing:.05em;text-transform:upperc
       '<span class="money p-paid"><label for="paid-'+p.id+'"><span class="pl">Paid </span><span>$</span></label><input id="paid-'+p.id+'" data-paid="'+p.id+'" aria-label="Price paid for '+esc(p.name)+'" type="number" inputmode="decimal" min="0" step="0.01" placeholder="—" value="'+(s.paid!=null?s.paid:'')+'"></span>'+
       '<div class="p-body" id="pb-'+p.id+'"'+(open?'':' hidden')+'>'+
         (p.use?'<div><div class="flabel" style="margin-bottom:2px">What it\'s for</div><p class="p-use">'+esc(p.use)+'</p></div>':'')+
-        (p.spec?'<p class="p-spec">'+esc(p.spec)+'</p>':'')+src+subs+
+        (p.spec?'<p class="p-spec">'+esc(specT(p.spec))+'</p>':'')+src+subs+
         '<div><label class="flabel" for="note-'+p.id+'">Notes</label><textarea class="textarea" id="note-'+p.id+'" data-note="'+p.id+'" rows="2" placeholder="Vendor, order number, tracking, what fits">'+esc(s.note)+'</textarea></div>'+
         (p.custom?'<div><button class="linkbtn danger" type="button" data-remove="'+p.id+'">Remove this part</button></div>':'')+
       '</div>'+

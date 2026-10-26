@@ -3423,6 +3423,37 @@
   "src": "Shelly 1PM Gen4 doc: ambient -20 to 40 C; Plus 1PM UL: confined space can raise the ambient temperature above the allowed limits."
  },
  {
+  "id": "sh-15",
+  "k": "plan",
+  "g": "sh-gicar",
+  "w": "model:E;shelly",
+  "q": "On a Silvia E, youngmacaroni on Discord mounted his Shelly in the emptied GICAR box. What's the catch?",
+  "a": [
+   "It's inside the case and shut in a box, likely past Shelly's 40 °C rating, so you watch its temperature in the app and the outside enclosure stays the default",
+   "None: the box was made for the E's electronics, so any relay suits it",
+   "It only works if the energy-saver board stays in the box",
+   "The Shelly has to switch neutral instead of line"
+  ],
+  "why": "Shelly rates it for 40 °C around it and warns that a confined space can push it past that. The box saves cutting a hole in the back panel, but it sits inside the warm case. If you use it, watch the Shelly's temperature in the app from the first power-on, and take h6's O reading and h7 before the last panel goes on.",
+  "r": [
+   [
+    "rb",
+    "p0s2"
+   ],
+   [
+    "pg",
+    "shl",
+    null,
+    "Plan where it goes"
+   ],
+   [
+    "ck",
+    "h7"
+   ]
+  ],
+  "src": "youngmacaroni, Gaggiuino Discord, Oct 2026 (V6 E, box beside the pump, no issues noticed, no temperatures); Shelly 1PM Gen4 doc: ambient -20 to 40 C; Plus 1PM UL doc: a confined space may raise the ambient temperature above the allowed limits."
+ },
+ {
   "id": "sh-06",
   "k": "wiring",
   "g": "sh-sw",
