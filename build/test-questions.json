@@ -3429,12 +3429,12 @@
   "w": "model:E;shelly",
   "q": "On a Silvia E, youngmacaroni on Discord mounted his Shelly in the emptied GICAR box. What's the catch?",
   "a": [
-   "It's inside the case and shut in a box, likely past Shelly's 40 °C rating, so you watch its temperature in the app and the outside enclosure stays the default",
-   "None: the box was made for the E's electronics, so any relay suits it",
-   "It only works if the energy-saver board stays in the box",
-   "The Shelly has to switch neutral instead of line"
+   "It's inside the warm case and shut in, likely past Shelly's 40 °C rating",
+   "None: the box was made for the E's electronics",
+   "It only works with the energy-saver board left in",
+   "The Shelly would have to switch neutral instead"
   ],
-  "why": "Shelly rates it for 40 °C around it and warns that a confined space can push it past that. The box saves cutting a hole in the back panel, but it sits inside the warm case. If you use it, watch the Shelly's temperature in the app from the first power-on, and take h6's O reading and h7 before the last panel goes on.",
+  "why": "Shelly rates it for 40 °C around it, and its Plus 1PM page warns that a confined space can push it past that. The box saves cutting a hole in the back panel, but it sits inside the warm case, so the outside enclosure stays the default. If you use it, watch the Shelly's temperature in the app from the first power-on, and start Covers on with h6's O reading and h7, before the panel you remove to reach the box goes on.",
   "r": [
    [
     "rb",
