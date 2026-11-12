@@ -264,3 +264,24 @@
 #mini-tstat .tb-mk circle{fill:var(--ink)}
 #mini-tstat .tb-mk text{font:700 7px var(--f-mono);fill:var(--bg)}
 #mini-tstat svg > .tb-mk text{font-size:7.5px}
+
+/* brew (and hot water) switch, pump and 3-way valve */
+#mini-panel .sw-blade.br,#mini-panel .sw-blade.wt{transform-box:fill-box;transform-origin:0% 50%;transform:rotate(-30deg)}
+#mini-panel.brewon .sw-blade.br,#mini-panel.wateron .sw-blade.wt{transform:rotate(0)}
+#mini-panel .sw-blade.nc{transform-box:fill-box;transform-origin:0% 50%}
+#mini-panel.steam .sw-blade.nc{transform:rotate(-30deg)}
+#mini-panel .sw-load rect{fill:var(--surface);stroke:var(--ink);stroke-width:1.6;transition:fill .15s}
+#mini-panel .sw-load text{font:600 10.5px var(--f-mono);fill:var(--ink)}
+#mini-panel .sw-load.on rect{fill:var(--blue-soft);stroke:var(--blue)}
+#mini-panel.brewon .sw-fr[data-fr="brew"] .rk-a,#mini-panel.wateron .sw-fr[data-fr="water"] .rk-a{fill:#15181B}
+#mini-panel.brewon .sw-fr[data-fr="brew"] .rk-b,#mini-panel.wateron .sw-fr[data-fr="water"] .rk-b{fill:#3A3F44}
+#mini-panel.brewon .sw-fr.lit[data-fr="brew"] .rk-a{fill:#2E100C}
+#mini-panel.brewon .sw-fr.lit[data-fr="brew"] .rk-b{fill:#4A1A14}
+#mini-panel.brewon .sw-fr.lit.glow[data-fr="brew"] .rk-a{fill:#B8301F}
+#mini-panel.brewon .sw-fr.lit.glow[data-fr="brew"] .rk-b{fill:#E0402E}
+#mini-panel.brewon .f-sil .sw-fr.lit[data-fr="brew"] .rk-a,#mini-panel.wateron .f-sil .sw-fr.lit[data-fr="water"] .rk-a,#mini-panel.steam .f-sil .sw-fr.lit[data-fr="steam"] .rk-a{fill:#2E1A0A}
+#mini-panel.brewon .f-sil .sw-fr.lit[data-fr="brew"] .rk-b,#mini-panel.wateron .f-sil .sw-fr.lit[data-fr="water"] .rk-b,#mini-panel.steam .f-sil .sw-fr.lit[data-fr="steam"] .rk-b{fill:#4A2A12}
+#mini-panel.brewon .f-sil .sw-fr.lit.glow[data-fr="brew"] .rk-a,#mini-panel.wateron .f-sil .sw-fr.lit.glow[data-fr="water"] .rk-a,#mini-panel.steam .f-sil .sw-fr.lit.glow[data-fr="steam"] .rk-a{fill:#C96F1E}
+#mini-panel.brewon .f-sil .sw-fr.lit.glow[data-fr="brew"] .rk-b,#mini-panel.wateron .f-sil .sw-fr.lit.glow[data-fr="water"] .rk-b,#mini-panel.steam .f-sil .sw-fr.lit.glow[data-fr="steam"] .rk-b{fill:#F08A2A}
+#mini-panel .sw-n2 .mini-note:empty{display:none}
+#mini-panel .sw-n2{padding-top:0}

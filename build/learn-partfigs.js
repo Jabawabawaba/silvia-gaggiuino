@@ -190,14 +190,15 @@
     draw();
   })();
 
-  /* switches and lamps: the power switch, the steam switch and both thermostats, with the boiler's temperature picked
-     by hand. A lamp across a closed contact is shorted out; once the contact opens, the lamp and the element share the
+  /* switches and lamps: the power, brew and steam switches (and the Silvia's hot water switch) and both thermostats,
+     with the boiler's temperature picked by hand. A lamp across a closed contact is shorted out; once the contact opens, the lamp and the element share the
      voltage, and the lamp, drawing almost nothing, takes nearly all of it. The steam switch is wired around the brew
      thermostat, so with it on heating carries on to the steam thermostat. The Silvia's heating light is the other way
      round: it's across the safety and the element, so it's lit while the thermostats are calling for heat. */
   (function(){
     var fig=$('mini-panel');if(!fig)return;
     var bp=fig.querySelector('[data-sw="pwr"]'),bst=fig.querySelector('[data-sw="steam"]'),bs=fig.querySelector('[data-sw="safe"]'),note=fig.querySelector('[data-sw-note]'),tb=qa('[data-temp]',fig);
+    var bbr=fig.querySelector('[data-sw="brew"]'),bwt=fig.querySelector('[data-sw="water"]'),note2=fig.querySelector('[data-sw-note2]'),brew=false,water=false,ld=[];
     var on=false,steam=false,temp='cold',tripped=false,kind='pro',ctl=false;   /* ctl: the power button works through an Eco board or the E's controller */
     /* off isn't dead: a single-pole switch may break neutral, and the inlet side of any switch stays live */
     var OFF_2P='Off: both poles are open, so nothing past the switch has power. The inlet and the switch\'s input spades stay live while it\'s plugged in.',
@@ -206,7 +207,8 @@
         OFF_CTL_E='Off, as drawn. On the E the button works through its controller, whose switching isn\'t documented: treat its wires as mains even when it\'s off.',
         ON_TO_STEAM='Heating on to steam temperature: the steam switch bypasses the open brew thermostat, so the element keeps heating until the steam thermostat opens.',
         STEAM_EARLY=' With steam on, heating won\'t stop at brew temperature.';
-    function flows(list){qa('.sw-f',fig).forEach(function(p){p.classList.toggle('on',list.indexOf(p.id)>=0)})}
+    function flows(list){list=list.concat(ld);qa('.sw-f',fig).forEach(function(p){p.classList.toggle('on',list.indexOf(p.id)>=0)})}
+    function loadOn(k,v){qa('[data-ld="'+k+'"]',fig).forEach(function(e){e.classList.toggle('on',!!v)})}
     function glow(sel,v){qa('[data-lp="'+sel+'"]',fig).forEach(function(e){e.classList.toggle('glow',!!v)})}
     function upd(){
       /* bC, sC: the brew and steam thermostats closed. The brew position conducts through its thermostat or the steam switch. */
@@ -218,6 +220,20 @@
       tb.forEach(function(b){b.setAttribute('aria-pressed',String(b.getAttribute('data-temp')===temp))});
       if(bs){bs.setAttribute('aria-pressed',String(tripped));bs.textContent=tripped?'Safety tripped':'Safety OK'}
       glow('pwr',on);
+      /* the pump and the 3-way valve. Gaggia: the brew switch feeds both, the valve through the steam switch's other pole.
+         Silvia: the hot water switch and one brew pole feed the pump; the other brew pole feeds the valve. */
+      var sil=kind==='silvia',g=kind==='gc'?'g':'',pump=on&&(brew||(sil&&water)),valve=on&&brew&&(sil||!steam);
+      fig.classList.toggle('brewon',brew);fig.classList.toggle('wateron',water);
+      if(bbr){bbr.setAttribute('aria-pressed',String(brew));bbr.textContent=brew?'Brew switch on':'Brew switch off'}
+      if(bwt){bwt.setAttribute('aria-pressed',String(water));bwt.textContent=water?'Hot water switch on':'Hot water switch off'}
+      loadOn('pump',pump);loadOn('valve',valve);glow('rkb',on&&brew);glow('rkw',on&&water);
+      ld=sil?(on&&water?['sw-fw']:[]).concat(on&&brew?['sw-fb','sw-fv']:[]):(pump?['sw-fpu'+g]:[]).concat(valve?['sw-fv'+g]:[]);
+      if(note2)note2.textContent=!(brew||water)?'':
+        !on?'With the power off, the '+(brew&&water?'brew and hot water switches do':brew?'brew switch does':'hot water switch does')+' nothing.':
+        sil?(brew?'Brew on: one pole runs the pump and the other opens the 3-way valve to the group.'+(water?' The hot water switch feeds the pump too, which changes nothing.':'')
+                 :'Hot water on: the pump runs, but only the brew switch opens the 3-way valve, so it stays shut. With the steam knob open, the water leaves through the wand.'):
+        valve?'Brew on: the pump runs and the 3-way valve opens to the group.':
+        'Brew and steam on: the pump runs, but the steam switch\'s other pole has opened, so the 3-way valve stays shut. With the steam knob open, the water leaves through the wand.';
       var heat;
       if(kind==='silvia'){
         var call=on&&sC&&pass;heat=call&&!tripped;
@@ -252,7 +268,12 @@
     }
     function tPower(){on=!on;upd()}
     function tSteam(){steam=!steam;upd()}
+    function tBrew(){brew=!brew;upd()}
+    function tWater(){water=!water;upd()}
     bp.addEventListener('click',tPower);bst.addEventListener('click',tSteam);
+    if(bbr)bbr.addEventListener('click',tBrew);if(bwt)bwt.addEventListener('click',tWater);
+    qa('[data-fr="brew"]',fig).forEach(function(e){e.addEventListener('click',tBrew)});
+    qa('[data-fr="water"]',fig).forEach(function(e){e.addEventListener('click',tWater)});
     tb.forEach(function(b){b.addEventListener('click',function(){temp=b.getAttribute('data-temp');upd()})});
     if(bs)bs.addEventListener('click',function(){tripped=!tripped;upd()});
     qa('[data-fr="pwr"],#sw-rock',fig).forEach(function(e){e.addEventListener('click',tPower)});
