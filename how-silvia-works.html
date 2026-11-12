@@ -842,6 +842,27 @@ td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:ta
 #mini-tstat .tb-mk text{font:700 7px var(--f-mono);fill:var(--bg)}
 #mini-tstat svg > .tb-mk text{font-size:7.5px}
 
+/* brew (and hot water) switch, pump and 3-way valve */
+#mini-panel .sw-blade.br,#mini-panel .sw-blade.wt{transform-box:fill-box;transform-origin:0% 50%;transform:rotate(-30deg)}
+#mini-panel.brewon .sw-blade.br,#mini-panel.wateron .sw-blade.wt{transform:rotate(0)}
+#mini-panel .sw-blade.nc{transform-box:fill-box;transform-origin:0% 50%}
+#mini-panel.steam .sw-blade.nc{transform:rotate(-30deg)}
+#mini-panel .sw-load rect{fill:var(--surface);stroke:var(--ink);stroke-width:1.6;transition:fill .15s}
+#mini-panel .sw-load text{font:600 10.5px var(--f-mono);fill:var(--ink)}
+#mini-panel .sw-load.on rect{fill:var(--blue-soft);stroke:var(--blue)}
+#mini-panel.brewon .sw-fr[data-fr="brew"] .rk-a,#mini-panel.wateron .sw-fr[data-fr="water"] .rk-a{fill:#15181B}
+#mini-panel.brewon .sw-fr[data-fr="brew"] .rk-b,#mini-panel.wateron .sw-fr[data-fr="water"] .rk-b{fill:#3A3F44}
+#mini-panel.brewon .sw-fr.lit[data-fr="brew"] .rk-a{fill:#2E100C}
+#mini-panel.brewon .sw-fr.lit[data-fr="brew"] .rk-b{fill:#4A1A14}
+#mini-panel.brewon .sw-fr.lit.glow[data-fr="brew"] .rk-a{fill:#B8301F}
+#mini-panel.brewon .sw-fr.lit.glow[data-fr="brew"] .rk-b{fill:#E0402E}
+#mini-panel.brewon .f-sil .sw-fr.lit[data-fr="brew"] .rk-a,#mini-panel.wateron .f-sil .sw-fr.lit[data-fr="water"] .rk-a,#mini-panel.steam .f-sil .sw-fr.lit[data-fr="steam"] .rk-a{fill:#2E1A0A}
+#mini-panel.brewon .f-sil .sw-fr.lit[data-fr="brew"] .rk-b,#mini-panel.wateron .f-sil .sw-fr.lit[data-fr="water"] .rk-b,#mini-panel.steam .f-sil .sw-fr.lit[data-fr="steam"] .rk-b{fill:#4A2A12}
+#mini-panel.brewon .f-sil .sw-fr.lit.glow[data-fr="brew"] .rk-a,#mini-panel.wateron .f-sil .sw-fr.lit.glow[data-fr="water"] .rk-a,#mini-panel.steam .f-sil .sw-fr.lit.glow[data-fr="steam"] .rk-a{fill:#C96F1E}
+#mini-panel.brewon .f-sil .sw-fr.lit.glow[data-fr="brew"] .rk-b,#mini-panel.wateron .f-sil .sw-fr.lit.glow[data-fr="water"] .rk-b,#mini-panel.steam .f-sil .sw-fr.lit.glow[data-fr="steam"] .rk-b{fill:#F08A2A}
+#mini-panel .sw-n2 .mini-note:empty{display:none}
+#mini-panel .sw-n2{padding-top:0}
+
 /* stock circuit ladder */
 .lad{border:1px solid var(--line);border-radius:14px;background:var(--surface);overflow:hidden}
 .lad-ctl{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;padding:14px 16px;border-bottom:1px solid var(--line)}
@@ -2194,10 +2215,11 @@ td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:ta
         </div>
         <!-- SWITCHES AND LAMPS: what's inside a rocker, and why a ready lamp lights when its thermostat opens -->
 <figure class="mini" id="mini-panel">
-  <div class="mini-ctl"><button type="button" class="btn" data-sw="pwr" aria-pressed="false">Power switch off</button><button type="button" class="btn" data-sw="steam" aria-pressed="false">Steam switch off</button><button type="button" class="btn" data-sw="safe" aria-pressed="false">Safety OK</button></div>
+  <div class="mini-ctl"><button type="button" class="btn" data-sw="pwr" aria-pressed="false">Power switch off</button><button type="button" class="btn" data-sw="brew" aria-pressed="false">Brew switch off</button><button type="button" class="btn" data-sw="water" aria-pressed="false">Hot water switch off</button><button type="button" class="btn" data-sw="steam" aria-pressed="false">Steam switch off</button><button type="button" class="btn" data-sw="safe" aria-pressed="false">Safety OK</button></div>
   <div class="mini-ctl"><span class="mini-note" id="sw-tl">Boiler:</span><span class="mini-seg" role="group" aria-labelledby="sw-tl"><button type="button" class="chip" data-temp="cold" aria-pressed="true">Cold</button><button type="button" class="chip" data-temp="brew" aria-pressed="false">At brew temperature</button><button type="button" class="chip" data-temp="steam" aria-pressed="false">At steam temperature</button></span></div>
   <div class="mini-ctl"><span class="mini-note" data-sw-note>Flip the switches and pick a boiler temperature to see what has power.</span></div>
-  <svg viewBox="0 0 360 330" role="img" aria-label="Top left, a rocker switch cut open: the rocker tips a spring-loaded plunger from one side to the other, and the plunger rocks a contact arm onto or off a fixed contact. Top right, the front: brew, hot water and steam rockers, the power switch and the lights. Below, the heating circuit: the power switch feeds the safety thermostat, the element and then the steam and brew thermostats, with the steam switch wired around the brew thermostat, so with steam on, heating carries on to the steam thermostat. The heating light is wired across the safety and the element, so it lights whenever the thermostats are calling for heat, even if the safety has tripped and the element is cold.">
+  <div class="mini-ctl sw-n2"><span class="mini-note" data-sw-note2></span></div>
+  <svg viewBox="0 0 360 454" role="img" aria-label="Top left, a rocker switch cut open: the rocker tips a spring-loaded plunger from one side to the other, and the plunger rocks a contact arm onto or off a fixed contact. Top right, the front: brew, hot water and steam rockers, the power switch and the lights. Below, the heating circuit: the power switch feeds the safety thermostat, the element and then the steam and brew thermostats, with the steam switch wired around the brew thermostat, so with steam on, heating carries on to the steam thermostat. The heating light is wired across the safety and the element, so it lights whenever the thermostats are calling for heat, even if the safety has tripped and the element is cold. Below that, the hot water switch and one pole of the brew switch each feed the pump, and the brew switch's other pole feeds the 3-way valve.">
     <g class="sw-cut">
       <rect x="28" y="40" width="100" height="56" rx="6" class="sw-house"/>
       <rect x="40" y="82" width="8" height="4" class="sw-stop"/>
@@ -2213,8 +2235,8 @@ td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:ta
     </g>
     <g class="f-sil">
       <rect x="190" y="8" width="164" height="114" rx="8" class="sw-face"/>
-      <g class="sw-fr lit" transform="translate(212 32)"><rect x="-13" y="-17" width="26" height="34" rx="4" class="sw-bez"/><rect x="-10" y="-14" width="20" height="14" rx="2.5" class="rk-a"/><rect x="-10" y="0" width="20" height="14" rx="2.5" class="rk-b"/></g>
-      <g class="sw-fr lit" transform="translate(212 66)"><rect x="-13" y="-17" width="26" height="34" rx="4" class="sw-bez"/><rect x="-10" y="-14" width="20" height="14" rx="2.5" class="rk-a"/><rect x="-10" y="0" width="20" height="14" rx="2.5" class="rk-b"/></g>
+      <g class="sw-fr lit" data-fr="brew" data-lp="rkb" transform="translate(212 32)"><rect x="-13" y="-17" width="26" height="34" rx="4" class="sw-bez"/><rect x="-10" y="-14" width="20" height="14" rx="2.5" class="rk-a"/><rect x="-10" y="0" width="20" height="14" rx="2.5" class="rk-b"/></g>
+      <g class="sw-fr lit" data-fr="water" data-lp="rkw" transform="translate(212 66)"><rect x="-13" y="-17" width="26" height="34" rx="4" class="sw-bez"/><rect x="-10" y="-14" width="20" height="14" rx="2.5" class="rk-a"/><rect x="-10" y="0" width="20" height="14" rx="2.5" class="rk-b"/></g>
       <g class="sw-fr lit" data-fr="steam" data-lp="stm" transform="translate(212 100)"><rect x="-13" y="-17" width="26" height="34" rx="4" class="sw-bez"/><rect x="-10" y="-14" width="20" height="14" rx="2.5" class="rk-a"/><rect x="-10" y="0" width="20" height="14" rx="2.5" class="rk-b"/></g>
       <text x="230" y="36" class="cap">brew</text><text x="230" y="70" class="cap">water</text><text x="230" y="104" class="cap">steam</text>
       <g class="sw-fr m-pwr" data-fr="pwr" data-lp="rk" transform="translate(290 46)"><rect x="-15" y="-25" width="30" height="50" rx="5" class="sw-bez"/><rect x="-12" y="-22" width="24" height="22" rx="3" class="rk-a"/><rect x="-12" y="0" width="24" height="22" rx="3" class="rk-b"/></g>
@@ -2246,14 +2268,24 @@ td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:ta
       <text x="94" y="152" class="cap" text-anchor="middle">heating light</text>
       <text x="234" y="284" class="cap" text-anchor="middle">steam switch</text>
       <text x="167" y="322" class="cap" text-anchor="middle">power light</text>
+      <path d="M52,300 V428 H76 M52,356 H76 M104,356 H146 M222,356 H282 V300 M52,392 H76 M104,392 H130 V356 M104,428 H146 M222,428 H282 V356" class="sw-w"/>
+      <path d="M90,399 V421" class="sw-link"/>
+      <circle cx="76" cy="356" r="2.5" class="sw-pin"/><circle cx="104" cy="356" r="2.5" class="sw-pin"/><line x1="76" y1="356" x2="104" y2="356" class="sw-blade wt" id="sw-wt"/><circle cx="76" cy="392" r="2.5" class="sw-pin"/><circle cx="104" cy="392" r="2.5" class="sw-pin"/><line x1="76" y1="392" x2="104" y2="392" class="sw-blade br" id="sw-br"/><circle cx="76" cy="428" r="2.5" class="sw-pin"/><circle cx="104" cy="428" r="2.5" class="sw-pin"/><line x1="76" y1="428" x2="104" y2="428" class="sw-blade br" id="sw-br2"/>
+      
+      <circle cx="52" cy="300" r="2.6" class="sw-node"/><circle cx="52" cy="356" r="2.6" class="sw-node"/><circle cx="52" cy="392" r="2.6" class="sw-node"/><circle cx="282" cy="300" r="2.6" class="sw-node"/><circle cx="282" cy="356" r="2.6" class="sw-node"/><circle cx="130" cy="356" r="2.6" class="sw-node"/>
+      <text x="58" y="342" class="cap sm" text-anchor="start">hot water switch</text><text x="52" y="447" class="cap sm" text-anchor="start">brew switch, both poles</text>
       <path d="M16,204 H340" class="sw-f big" id="sw-fh"/>
       <path d="M16,204 H200 V262 H270 V204 H340" class="sw-f big" id="sw-fhs"/>
       <path d="M16,204 H52 V170 H136 V204 H340" class="sw-f" id="sw-fl"/>
       <path d="M16,204 H52 V170 H136 V204 H200 V262 H270 V204 H340" class="sw-f" id="sw-fls"/>
       <path d="M16,204 H52 V300 H282 V204 H340" class="sw-f" id="sw-fp"/>
+      <path d="M16,204 H52 V356 H282 V204 H340" class="sw-f" id="sw-fw"/>
+      <path d="M16,204 H52 V392 H130 V356 H282 V204 H340" class="sw-f" id="sw-fb"/>
+      <path d="M16,204 H52 V428 H282 V204 H340" class="sw-f" id="sw-fv"/>
+      <g class="sw-load" data-ld="pump"><rect x="146" y="344" width="76" height="24" rx="4"/><text x="184" y="359.8" text-anchor="middle">pump</text></g><g class="sw-load" data-ld="valve"><rect x="146" y="416" width="76" height="24" rx="4"/><text x="184" y="431.8" text-anchor="middle">3-way valve</text></g>
       </g>
   </svg>
-  <figcaption>Simplified: the power switch's two poles break line and neutral together. The steam switch is wired around the brew thermostat, so with it on, heating carries on past brew temperature to the steam thermostat. In the usual stock wiring, from community drawings of the harness, the heating light sits across the safety and the element, not across the thermostats, so it lights whenever they're calling for heat, even if the safety has tripped and the element is cold. Trace yours before relying on it. The brew switch runs the pump and the 3-way valve, and the hot water switch runs the pump only; those are covered with their parts. While the machine is plugged in, treat every wire as live.<span data-when="ver:V5,V6"> From the V5 the power and heating lights are LEDs, green and orange.</span><span data-when="ver:V5,V6;model:E"> On the E the power button works through the auto-off controller, drawn here as a plain switch, and the controller may drive the lights; treat its wires as mains even when it's off.</span></figcaption>
+  <figcaption>Simplified: the power switch's two poles break line and neutral together. The steam switch is wired around the brew thermostat, so with it on, heating carries on past brew temperature to the steam thermostat. In the usual stock wiring, from community drawings of the harness, the heating light sits across the safety and the element, not across the thermostats, so it lights whenever they're calling for heat, even if the safety has tripped and the element is cold. Trace yours before relying on it. The brew switch has two poles: one runs the pump and the other opens the 3-way valve to the group. The hot water switch runs the pump only, so the valve stays shut and, with the steam knob open, the water leaves through the wand. While the machine is plugged in, treat every wire as live.<span data-when="ver:V5,V6"> From the V5 the power and heating lights are LEDs, green and orange.</span><span data-when="ver:V5,V6;model:E"> On the E the power button works through the auto-off controller, drawn here as a plain switch, and the controller may drive the lights; treat its wires as mains even when it's off.</span></figcaption>
 </figure>
       </article>
 
@@ -2816,14 +2848,15 @@ td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:ta
     draw();
   })();
 
-  /* switches and lamps: the power switch, the steam switch and both thermostats, with the boiler's temperature picked
-     by hand. A lamp across a closed contact is shorted out; once the contact opens, the lamp and the element share the
+  /* switches and lamps: the power, brew and steam switches (and the Silvia's hot water switch) and both thermostats,
+     with the boiler's temperature picked by hand. A lamp across a closed contact is shorted out; once the contact opens, the lamp and the element share the
      voltage, and the lamp, drawing almost nothing, takes nearly all of it. The steam switch is wired around the brew
      thermostat, so with it on heating carries on to the steam thermostat. The Silvia's heating light is the other way
      round: it's across the safety and the element, so it's lit while the thermostats are calling for heat. */
   (function(){
     var fig=$('mini-panel');if(!fig)return;
     var bp=fig.querySelector('[data-sw="pwr"]'),bst=fig.querySelector('[data-sw="steam"]'),bs=fig.querySelector('[data-sw="safe"]'),note=fig.querySelector('[data-sw-note]'),tb=qa('[data-temp]',fig);
+    var bbr=fig.querySelector('[data-sw="brew"]'),bwt=fig.querySelector('[data-sw="water"]'),note2=fig.querySelector('[data-sw-note2]'),brew=false,water=false,ld=[];
     var on=false,steam=false,temp='cold',tripped=false,kind='pro',ctl=false;   /* ctl: the power button works through an Eco board or the E's controller */
     /* off isn't dead: a single-pole switch may break neutral, and the inlet side of any switch stays live */
     var OFF_2P='Off: both poles are open, so nothing past the switch has power. The inlet and the switch\'s input spades stay live while it\'s plugged in.',
@@ -2832,7 +2865,8 @@ td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:ta
         OFF_CTL_E='Off, as drawn. On the E the button works through its controller, whose switching isn\'t documented: treat its wires as mains even when it\'s off.',
         ON_TO_STEAM='Heating on to steam temperature: the steam switch bypasses the open brew thermostat, so the element keeps heating until the steam thermostat opens.',
         STEAM_EARLY=' With steam on, heating won\'t stop at brew temperature.';
-    function flows(list){qa('.sw-f',fig).forEach(function(p){p.classList.toggle('on',list.indexOf(p.id)>=0)})}
+    function flows(list){list=list.concat(ld);qa('.sw-f',fig).forEach(function(p){p.classList.toggle('on',list.indexOf(p.id)>=0)})}
+    function loadOn(k,v){qa('[data-ld="'+k+'"]',fig).forEach(function(e){e.classList.toggle('on',!!v)})}
     function glow(sel,v){qa('[data-lp="'+sel+'"]',fig).forEach(function(e){e.classList.toggle('glow',!!v)})}
     function upd(){
       /* bC, sC: the brew and steam thermostats closed. The brew position conducts through its thermostat or the steam switch. */
@@ -2844,6 +2878,20 @@ td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:ta
       tb.forEach(function(b){b.setAttribute('aria-pressed',String(b.getAttribute('data-temp')===temp))});
       if(bs){bs.setAttribute('aria-pressed',String(tripped));bs.textContent=tripped?'Safety tripped':'Safety OK'}
       glow('pwr',on);
+      /* the pump and the 3-way valve. Gaggia: the brew switch feeds both, the valve through the steam switch's other pole.
+         Silvia: the hot water switch and one brew pole feed the pump; the other brew pole feeds the valve. */
+      var sil=kind==='silvia',g=kind==='gc'?'g':'',pump=on&&(brew||(sil&&water)),valve=on&&brew&&(sil||!steam);
+      fig.classList.toggle('brewon',brew);fig.classList.toggle('wateron',water);
+      if(bbr){bbr.setAttribute('aria-pressed',String(brew));bbr.textContent=brew?'Brew switch on':'Brew switch off'}
+      if(bwt){bwt.setAttribute('aria-pressed',String(water));bwt.textContent=water?'Hot water switch on':'Hot water switch off'}
+      loadOn('pump',pump);loadOn('valve',valve);glow('rkb',on&&brew);glow('rkw',on&&water);
+      ld=sil?(on&&water?['sw-fw']:[]).concat(on&&brew?['sw-fb','sw-fv']:[]):(pump?['sw-fpu'+g]:[]).concat(valve?['sw-fv'+g]:[]);
+      if(note2)note2.textContent=!(brew||water)?'':
+        !on?'With the power off, the '+(brew&&water?'brew and hot water switches do':brew?'brew switch does':'hot water switch does')+' nothing.':
+        sil?(brew?'Brew on: one pole runs the pump and the other opens the 3-way valve to the group.'+(water?' The hot water switch feeds the pump too, which changes nothing.':'')
+                 :'Hot water on: the pump runs, but only the brew switch opens the 3-way valve, so it stays shut. With the steam knob open, the water leaves through the wand.'):
+        valve?'Brew on: the pump runs and the 3-way valve opens to the group.':
+        'Brew and steam on: the pump runs, but the steam switch\'s other pole has opened, so the 3-way valve stays shut. With the steam knob open, the water leaves through the wand.';
       var heat;
       if(kind==='silvia'){
         var call=on&&sC&&pass;heat=call&&!tripped;
@@ -2878,7 +2926,12 @@ td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:ta
     }
     function tPower(){on=!on;upd()}
     function tSteam(){steam=!steam;upd()}
+    function tBrew(){brew=!brew;upd()}
+    function tWater(){water=!water;upd()}
     bp.addEventListener('click',tPower);bst.addEventListener('click',tSteam);
+    if(bbr)bbr.addEventListener('click',tBrew);if(bwt)bwt.addEventListener('click',tWater);
+    qa('[data-fr="brew"]',fig).forEach(function(e){e.addEventListener('click',tBrew)});
+    qa('[data-fr="water"]',fig).forEach(function(e){e.addEventListener('click',tWater)});
     tb.forEach(function(b){b.addEventListener('click',function(){temp=b.getAttribute('data-temp');upd()})});
     if(bs)bs.addEventListener('click',function(){tripped=!tripped;upd()});
     qa('[data-fr="pwr"],#sw-rock',fig).forEach(function(e){e.addEventListener('click',tPower)});
