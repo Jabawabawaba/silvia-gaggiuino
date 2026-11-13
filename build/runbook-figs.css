@@ -1,0 +1,189 @@
+/* Runbook figures (runbook-figs.js): part guide players, the runbook's own diagrams, official photo thumbnails and viewer,
+   power badges. Shared by the Gaggia and Silvia runbooks. The part guides' drawing styles come from part-guides.css. */
+.rfigs{display:grid;gap:12px;justify-items:start}
+.rfig{width:100%;max-width:560px}
+.rfig-art{aspect-ratio:var(--ar,480/300);width:100%}
+.rfig-art:not(:empty){aspect-ratio:auto}
+.rfig-art>svg{display:block;width:100%;height:auto;padding:8px 8px 2px}
+.rfig-cap{padding:8px 12px 10px;font-size:14.5px;line-height:1.45;border-top:1px solid var(--line)}
+.rfig-cap b{font-weight:600}
+.rfig-h{display:block;font:600 11px/1.3 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent-ink);margin-bottom:3px}
+.rfig-cap a{white-space:nowrap}
+.rfig .pg-ctl button[hidden]{display:none}
+.rfig .pg-ctl .pg-pos{white-space:nowrap;font-size:12.5px}
+.rdia{margin:0;width:100%;max-width:560px;border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:10px 12px 12px}
+.rdia.wide{max-width:none}
+.rdia-p{display:grid;grid-template-columns:repeat(auto-fit,minmax(var(--pmin,150px),1fr));gap:10px 14px;align-items:start}
+.rdp{min-width:0}
+.rdia figcaption{margin-top:8px;font-size:14px;line-height:1.45;color:var(--muted);max-width:70ch}
+/* diagram drawing */
+.rd{display:block;width:100%;height:auto;max-height:440px;font-family:var(--f-body);overflow:visible}
+.rd text{fill:var(--ink);font-size:12.5px}
+.rd .rd-tb{font-weight:600}
+.rd .rd-s{font-size:11.5px;fill:var(--muted)}
+.rd .rd-m{fill:var(--muted)}
+.rd .rd-tm{font:500 11.5px var(--f-mono)}
+.rd .rd-pn{font:600 11.5px var(--f-mono)}
+.rd .rd-on{fill:#E7E9EB;font:600 11px var(--f-mono)}
+.rd .rd-ln{fill:none;stroke:var(--muted);stroke-width:1.2}
+/* the PCB */
+.rd .pcb-b{fill:#25303A;stroke:#59616A;stroke-width:1}
+.rd .pcb-hd{fill:#EFE8D8;stroke:#B8AE96;stroke-width:.8}
+.rd .pcb-pin{fill:#3A3F45}
+.rd .pcb-pl{font:500 8.5px var(--f-mono);fill:#C9D1D9}
+.rd .pcb-jn{font:700 10.5px var(--f-mono);fill:#F2F4F5}
+.rd .pcb-jn.on{fill:#FFC163}
+.rd .pcb-hl{fill:rgba(242,163,58,.16);stroke:#F2A33A;stroke-width:2.2}
+.rd .pcb-x{fill:rgba(236,112,100,.1);stroke:#EC7064;stroke-width:1.6;stroke-dasharray:4 3}
+.rd .pcb-tb{fill:#2F8A57;stroke:#1C5B38}
+.rd .pcb-sc{fill:#C9CFD4;stroke:#6B737B}
+.rd .pcb-scl{fill:none;stroke:#4A5158;stroke-width:1.4}
+.rd .pcb-pm{font:700 11px var(--f-mono);fill:#F2F4F5}
+.rd .pcb-lead{fill:none;stroke:#C9CFD4;stroke-width:2}
+.rd .pcb-usb{fill:#AEB6BD;stroke:#6B737B}
+.rd .pcb-j2{fill:none;stroke:#C9D1D9;stroke-dasharray:3 2}
+.rd .pcb-sp{fill:#D3D8DC;stroke:#7C858D}
+.rd .pcb-pill{stroke-width:1.2}
+.rd .pcb-pill.on{fill:var(--accent);stroke:var(--accent)}
+.rd .pcb-pill.x{fill:var(--bad-soft);stroke:var(--bad)}
+.rd .pcb-pill.mut{fill:var(--surface-2);stroke:var(--line)}
+.rd .pcb-pt{font:700 11px var(--f-mono)}
+.rd .pcb-pt.on{fill:var(--on-accent)}
+.rd .pcb-pt.x{fill:var(--bad)}
+.rd .pcb-pt.mut{fill:var(--muted)}
+/* the PCB's socket list, beside the board on wide screens and under it on phones */
+.pcbl{list-style:none;margin:0;padding:4px 0 0;display:grid;gap:8px;font-size:15px;line-height:1.3}
+.pcbl li{display:grid;grid-template-columns:minmax(64px,max-content) minmax(0,1fr);gap:10px;align-items:start}
+.pcbl .pill{white-space:nowrap;font:700 12px/1 var(--f-mono);text-align:center;padding:5px 6px;border-radius:999px;border:1px solid var(--line);background:var(--surface-2);color:var(--muted)}
+.pcbl li.on .pill{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.pcbl li.x .pill{background:var(--bad-soft);border-color:var(--bad);color:var(--bad)}
+.pcbl li.x>span:last-child,.pcbl li.mut>span:last-child{color:var(--muted)}
+/* wires, colored as the official drawings color them */
+.rd .w{fill:none;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}
+.rd .w.must{stroke-width:4.4}
+.rd .w-r{stroke:#D7322B}
+.rd .w-k{stroke:#1B1D20}
+.rd .w-y{stroke:#E5BE12}
+.rd .w-b{stroke:#2C5BD8}
+.rd .w-o{stroke:#E37A1C}
+/* J4 */
+.rd .j4-ins{fill:none;stroke:#8D959C;stroke-width:9;stroke-linecap:round}
+.rd .j4-cu{fill:none;stroke:#C77A45;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+/* front switches */
+.rd .sw-b{fill:#2B3036;stroke:#15181B}
+.rd .sw-r{fill:#59616A;stroke:#15181B}
+.rd .sw-r.on{fill:#E8E2D2}
+/* the meter */
+.rd .mt-b{fill:#F2C230;stroke:#8A6D10;stroke-width:1.2}
+.rd .mt-lcd{fill:#C9D6C0;stroke:#5B6B52}
+.rd .mt-num{font:700 22px var(--f-mono);fill:#1B1D20}
+.rd .mt-u{font:700 12px var(--f-mono);fill:#1B1D20}
+.rd .mt-bw{fill:none;stroke:#1B1D20;stroke-width:1.6;stroke-linecap:round}
+.rd .mt-dial{fill:#2B3036;stroke:#15181B}
+.rd .mt-ptr{stroke:#F2F4F5;stroke-width:3;stroke-linecap:round}
+.rd .mt-dl{font:700 10px var(--f-mono);fill:#1B1D20}
+.rd .mt-jk{fill:#1B1D20}
+.rd .mt-jk.mt-jr{fill:#B13A2F}
+.rd .mt-lead{fill:none;stroke-width:3}
+.rd .mt-lead.k,.rd .mt-probe.k{stroke:#1B1D20}
+.rd .mt-lead.r,.rd .mt-probe.r{stroke:#C8392C}
+.rd .mt-probe{fill:none;stroke-width:5.5;stroke-linecap:round}
+.rd .mt-wire{fill:none;stroke:#B87333;stroke-width:3}
+.rd .mt-term{fill:#C9CFD4;stroke:#6B737B}
+/* the SSR */
+.rd .ssr-b{fill:#2B3036;stroke:#15181B}
+.rd .ssr-tw{fill:#3A4048;stroke:#15181B}
+.rd .ssr-sc{fill:#C9CFD4;stroke:#6B737B}
+.rd .ssr-ledc{fill:#5A2A26}
+.rd .ssr-led.on .ssr-ledc,.rd .ssr-led.blink .ssr-ledc{fill:#FF4A3D}
+.rd .ssr-led.blink{animation:rbblink 1s steps(2,jump-none) infinite}
+/* the Flush button */
+.rd .fl-b{fill:#C8642A;stroke:#8A3F14}
+.rd .fl-c{stroke:#2B1A10;stroke-width:1.5}
+.rd .fl-c.g{fill:#5B6168}
+.rd .fl-c.gr{fill:#3BD16F}
+.rd .fl-c.bl{fill:#3A8DFF}
+.rd .fl-t{font:600 14px var(--f-body);fill:#FFFFFF}
+/* the pressure dial */
+.rd .g-arc{fill:none;stroke:var(--surface-2);stroke-width:14}
+.rd .g-band{fill:none;stroke:var(--good);stroke-width:14}
+.rd .g-tick{stroke:var(--muted);stroke-width:1.4}
+.rd .g-needle{stroke:var(--bad);stroke-width:3.5;stroke-linecap:round}
+.rd .g-hub{fill:var(--ink)}
+/* Wi-Fi cards */
+.rd .wf-b{fill:var(--bg);stroke:var(--line)}
+.rd .wf-n{fill:var(--accent)}
+.rd .wf-nt{font:700 13px var(--f-mono);fill:var(--on-accent)}
+.rd .wf-row{fill:var(--surface);stroke:var(--line)}
+.rd .wf-row.on{fill:var(--accent-soft);stroke:var(--accent)}
+.rd .wf-ic{fill:none;stroke:var(--ink);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+/* boot */
+.rd .bt-s{fill:#0F1215;stroke:#3A3F45}
+.rd .bt-t{font:600 13px var(--f-body);fill:#E7E9EB}
+.rd .bt-t2{font:500 12px var(--f-body);fill:#9BA2AA}
+.rd .bt-ledc{fill:#FF3B30}
+.rd .bt-led{animation:rbglow 1.8s ease-in-out infinite}
+.rd .bt-l{font:600 11px var(--f-mono);fill:#FF8A80}
+/* temperature */
+.rd .tp-ax{fill:none;stroke:var(--muted);stroke-width:1.4}
+.rd .tp-tgt{fill:none;stroke:var(--accent);stroke-dasharray:5 4;stroke-width:1.5}
+.rd .tp-ok{fill:none;stroke:var(--good);stroke-width:3.2;stroke-linecap:round}
+.rd .tp-bad{fill:none;stroke:var(--bad);stroke-width:2.6;stroke-dasharray:6 5;stroke-linecap:round}
+.rd .tp-okt{fill:var(--good);font-weight:600}
+.rd .tp-badt{fill:var(--bad);font-weight:600;font-size:11.5px}
+/* label flag */
+.rd .fg-w{fill:none;stroke:#C8392C;stroke-width:9;stroke-linecap:round}
+.rd .fg-w.s{stroke-width:18}
+.rd .fg-fold{fill:none;stroke:#B8C0C7;stroke-width:1;stroke-dasharray:3 3}
+.rd .fg-sp{fill:#C9CFD4;stroke:#6B737B}
+.rd .fg-l{fill:#FFFFFF;stroke:#8D959C;stroke-width:1.2}
+.rd .fg-l2{fill:#E9ECEE;stroke:#8D959C;stroke-width:1.2}
+.rd .fg-t{font:700 18px var(--f-mono);fill:#16191C}
+.rd .fg-mk{font:700 13px var(--f-mono);fill:#FFFFFF}
+/* temperature limits */
+.rd .lm-tube{fill:var(--surface-2);stroke:var(--line)}
+.rd .lm-bulb{fill:var(--bad)}
+.rd .lm-m{stroke:var(--ink);stroke-width:1.5}
+.rd .lm-m.set{stroke:var(--accent);stroke-width:2.6}
+.rd .lm-m.stop{stroke:var(--bad);stroke-width:2.6}
+.rd .lm-stop{fill:var(--bad);font-weight:600}
+:root[data-theme="dark"] .rd .w-k,:root[data-theme="dark"] .rd .mt-lead.k{filter:drop-shadow(0 0 1.2px #C9D1D9)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .rd .w-k,:root:not([data-theme="light"]) .rd .mt-lead.k{filter:drop-shadow(0 0 1.2px #C9D1D9)}}
+@keyframes rbblink{0%{opacity:1}50%{opacity:.15}100%{opacity:1}}
+@keyframes rbglow{0%,100%{opacity:.55}50%{opacity:1}}
+@media (prefers-reduced-motion:reduce){.rd .ssr-led.blink,.rd .bt-led{animation:none}}
+/* official photos */
+.rph{display:grid;gap:6px;min-width:0;justify-items:start}
+.rph .rph-strip{justify-self:stretch}
+.rph-strip{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 8px;scroll-snap-type:x proximity;overscroll-behavior-x:contain}
+.rph-t{appearance:none;border:1px solid var(--line);background:var(--bg);border-radius:9px;padding:0;width:136px;flex:none;cursor:zoom-in;display:grid;grid-template-rows:90px auto;text-align:left;overflow:hidden;scroll-snap-align:start;color:var(--ink)}
+.rph-t img{width:100%;height:90px;object-fit:cover;display:block;background:var(--surface-2)}
+.rph-t span{font-size:12.5px;line-height:1.3;padding:5px 7px 7px}
+.rph-t.bad{grid-template-rows:auto;cursor:pointer}
+.rph-t.bad img{display:none}
+.rph-t.bad span::before{content:"Didn't load here: tap for the link. ";color:var(--muted)}
+.rph-c{margin:0;font-size:12.5px;color:var(--muted)}
+.rbx{border:0;padding:0;background:transparent;width:min(96vw,1100px);max-width:none;max-height:96vh;color:var(--ink)}
+.rbx::backdrop{background:rgba(8,10,12,.84)}
+.rbx-in{display:grid;grid-template-rows:minmax(0,1fr) auto;max-height:94vh;background:var(--surface);border-radius:12px;overflow:hidden}
+.rbx-img{display:grid;place-items:center;background:#0D0F11;min-height:180px;overflow:auto}
+.rbx-img img{max-width:100%;max-height:calc(94vh - 92px);object-fit:contain;display:block}
+.rbx-bad{color:#E7E9EB;padding:24px;text-align:center;margin:0}
+.rbx-bar{display:flex;align-items:center;gap:8px;padding:8px 10px;border-top:1px solid var(--line)}
+.rbx-cap{flex:1;min-width:0;margin:0;font-size:14.5px;line-height:1.35}
+.rbx-cap .n,.rbx-cap .cr{color:var(--muted);font-size:13px}
+.rbx-b{appearance:none;border:1px solid var(--line);background:var(--bg);border-radius:10px;min-width:44px;min-height:44px;display:inline-grid;place-items:center;cursor:pointer;color:var(--ink);flex:none}
+.rbx-b[hidden]{display:none}
+.rbx-b svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+/* power badges */
+.pw{display:inline-flex;align-items:center;gap:4px;font:600 10.5px/1 var(--f-mono);letter-spacing:.05em;text-transform:uppercase;padding:4px 8px 4px 6px;border-radius:999px;vertical-align:2px;margin-left:8px;white-space:nowrap;border:1px solid currentColor}
+.pw .pwi{width:13px;height:13px;flex:none;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.pw-off{color:var(--good);background:var(--good-soft)}
+.pw-usb{color:var(--blue);background:var(--blue-soft)}
+.pw-on{color:var(--bad);background:var(--bad-soft)}
+.pw-hot{color:#FFFFFF;background:var(--bad);border-color:var(--bad)}
+.pwlegend{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;margin:-10px 0 20px;font-size:13.5px;color:var(--muted)}
+.pwlegend .k{font:600 11px var(--f-mono);letter-spacing:.1em;text-transform:uppercase}
+.pwl{display:inline-flex;align-items:center;gap:6px}
+.pwl .pw{margin-left:0}
+@media print{.rfigs,.rph,.pwlegend,.rbx{display:none!important}}

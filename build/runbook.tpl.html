@@ -8,7 +8,7 @@
 :root{
   --bg:#ECEEF0; --surface:#F9FAFA; --surface-2:#E2E5E8; --ink:#16191C; --muted:#59616A; --line:#CBD0D5;
   --accent:#D98400; --accent-ink:#965300; --accent-soft:#F4E1C0; --on-accent:#1A1206;
-  --good:#2D7A4C; --good-soft:#DCEFE3; --bad:#B13A2F; --bad-soft:#F6DEDB;
+  --good:#2D7A4C; --good-soft:#DCEFE3; --bad:#B13A2F; --bad-soft:#F6DEDB; --blue:#2F6F98; --blue-soft:#DCE9F2; --w-l:#B03A2E; --w-lv:#7046B8;
   --f-display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
   --f-body:"Barlow",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   --f-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
@@ -17,14 +17,14 @@
   :root:not([data-theme="light"]){
     --bg:#111316; --surface:#1A1D21; --surface-2:#252A30; --ink:#E7E9EB; --muted:#9BA2AA; --line:#30363D;
     --accent:#F2A33A; --accent-ink:#F5B566; --accent-soft:#3B2B13; --on-accent:#1A1206;
-    --good:#63C08A; --good-soft:#17301F; --bad:#EC7064; --bad-soft:#3A1D1A;
+    --good:#63C08A; --good-soft:#17301F; --bad:#EC7064; --bad-soft:#3A1D1A; --blue:#6AAED6; --blue-soft:#16293A; --w-l:#F0735F; --w-lv:#B595F2;
     color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
   --bg:#111316; --surface:#1A1D21; --surface-2:#252A30; --ink:#E7E9EB; --muted:#9BA2AA; --line:#30363D;
   --accent:#F2A33A; --accent-ink:#F5B566; --accent-soft:#3B2B13; --on-accent:#1A1206;
-  --good:#63C08A; --good-soft:#17301F; --bad:#EC7064; --bad-soft:#3A1D1A;
+  --good:#63C08A; --good-soft:#17301F; --bad:#EC7064; --bad-soft:#3A1D1A; --blue:#6AAED6; --blue-soft:#16293A; --w-l:#F0735F; --w-lv:#B595F2;
   color-scheme:dark;
 }
 *{box-sizing:border-box}
@@ -34,11 +34,11 @@ button,textarea{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .wrap{max-width:900px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 64px}
 .top{display:grid;gap:14px;margin-bottom:20px}
-.plate{display:inline-flex;align-items:center;flex-wrap:wrap;gap:6px 12px;justify-self:start;max-width:100%;border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:7px 12px;font:500 11.5px/1.3 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-.plate .rivet{width:6px;height:6px;border-radius:50%;background:var(--line);box-shadow:inset 0 0 0 1px var(--muted);opacity:.7}
-.plate b{color:var(--ink);font-weight:600}
+.top .plate{display:inline-flex;align-items:center;flex-wrap:wrap;gap:6px 12px;justify-self:start;max-width:100%;border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:7px 12px;font:500 11.5px/1.3 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.top .plate .rivet{width:6px;height:6px;border-radius:50%;background:var(--line);box-shadow:inset 0 0 0 1px var(--muted);opacity:.7}
+.top .plate b{color:var(--ink);font-weight:600}
 /* rivets pinned to the plate's ends so a wrapped plate never leaves one on a line of its own */
-.plate{position:relative;padding:7px 26px}.plate .rivet{position:absolute;top:calc(50% - 3px);left:10px}.plate .rivet:last-child{left:auto;right:10px}
+.top .plate{position:relative;padding:7px 26px}.top .plate .rivet{position:absolute;top:calc(50% - 3px);left:10px}.top .plate .rivet:last-child{left:auto;right:10px}
 h1{font:700 clamp(36px,6.4vw,56px)/.95 var(--f-display);letter-spacing:.01em;margin:0;text-transform:uppercase;text-wrap:balance}
 h2{font:700 clamp(28px,4.4vw,38px)/1 var(--f-display);letter-spacing:.02em;text-transform:uppercase;margin:0;text-wrap:balance}
 .lede{margin:0;color:var(--muted);max-width:64ch}
@@ -47,8 +47,8 @@ h2{font:700 clamp(28px,4.4vw,38px)/1 var(--f-display);letter-spacing:.02em;text-
 .prog .k{font:600 11px var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
 .prog .v{font:600 22px/1.15 var(--f-mono);font-variant-numeric:tabular-nums}
 .prog .s{font-size:14px;color:var(--muted)}
-.meter{grid-column:1 / -1;height:8px;border-radius:3px;background:var(--surface-2);overflow:hidden}
-.meter span{display:block;height:100%;background:var(--accent);transition:width .25s}
+.prog .meter{grid-column:1 / -1;height:8px;border-radius:3px;background:var(--surface-2);overflow:hidden}
+.prog .meter span{display:block;height:100%;background:var(--accent);transition:width .25s}
 .status{font:500 12px var(--f-mono);color:var(--muted);display:inline-flex;align-items:center;gap:7px;justify-self:end}
 .lamp{width:8px;height:8px;border-radius:50%;background:var(--line)}
 .status.ok .lamp{background:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
@@ -93,24 +93,30 @@ h2{font:700 clamp(28px,4.4vw,38px)/1 var(--f-display);letter-spacing:.02em;text-
 .when{font:500 12.5px var(--f-mono);color:var(--good)}
 .step.done .st-t{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--line)}
 /* step by step: what you need, a careful note, the numbered steps, how to check, the official photos. Open on steps still to do, folded on done ones. */
-.how{grid-column:2;margin-top:8px;border:1px solid var(--line);border-radius:10px;background:var(--surface);max-width:70ch;min-width:0}
+.how{grid-column:2;margin-top:8px;border:1px solid var(--line);border-radius:10px;background:var(--surface);min-width:0}
+.how .hb>p,.how .hb>ol{max-width:70ch}
 .how>summary{cursor:pointer;list-style:none;padding:10px 12px;font:600 12px/1.2 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent-ink);display:flex;align-items:center;gap:9px;min-height:40px;border-radius:10px}
 .how>summary::-webkit-details-marker{display:none}
 .how>summary::before{content:"";flex:none;width:7px;height:7px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(-45deg);transition:transform .15s}
 .how[open]>summary::before{transform:rotate(45deg) translate(-1px,-1px)}
 .how>summary .n{color:var(--muted);font-weight:500}
+/* each phase tab shows what's powered in it; the first power-on phase gets a red edge */
+.ph .phpw{display:inline-flex;gap:3px;vertical-align:-2px;margin-left:5px}
+.ph .phpw .pwi{width:13px;height:13px;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.ph .phpw .off{stroke:var(--good)}.ph .phpw .usb{stroke:var(--blue)}.ph .phpw .on,.ph .phpw .hot{stroke:var(--bad)}
+.ph.firston{border-top:3px solid var(--bad)}
+.st-t .pw{vertical-align:3px}
 .how .hb{padding:0 14px 14px;display:grid;gap:11px}
 .how ol{margin:0;padding-left:26px;display:grid;gap:8px;font-size:16px;line-height:1.5}
 .how ol>li{padding-left:3px}
 .how ol>li::marker{font:600 14px var(--f-mono);color:var(--accent-ink)}
 .how p{margin:0;font-size:15.5px;line-height:1.5}
-.lbl{display:inline-block;font:600 10.5px/1 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;padding:4px 6px;border-radius:4px;margin-right:7px;vertical-align:1px;white-space:nowrap}
-.need .lbl{background:var(--surface-2);color:var(--muted)}
-.ok .lbl{background:var(--good-soft);color:var(--good)}
+.rlbl{display:inline-block;font:600 10.5px/1 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;padding:4px 6px;border-radius:4px;margin-right:7px;vertical-align:1px;white-space:nowrap}
+.need .rlbl{background:var(--surface-2);color:var(--muted)}
+.ok .rlbl{background:var(--good-soft);color:var(--good)}
 .warn{border-left:3px solid var(--bad);background:var(--bad-soft);padding:8px 11px;border-radius:6px}
-.warn .lbl{background:transparent;color:var(--bad);padding-left:0;padding-right:0}
-.pics .lbl{background:var(--surface-2);color:var(--muted)}
-.pics a{overflow-wrap:anywhere}
+.warn .rlbl{background:transparent;color:var(--bad);padding-left:0;padding-right:0}
+.rph .rlbl{background:var(--surface-2);color:var(--muted)}
 .itag{display:inline-block;max-width:100%;font:600 10px/1.25 var(--f-mono);letter-spacing:.05em;text-transform:uppercase;padding:3px 5px;border-radius:4px;background:var(--accent-soft);color:var(--accent-ink);vertical-align:2px;margin-right:4px}
 .how b{font-weight:600;color:var(--ink)}
 /* your screen: a runbook-only choice, since the bench and screen steps differ between the three interfaces */
@@ -149,7 +155,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
   .prog,.scrpick,.phases,#phase,.foot,.top .lede:not(.print-only),.hdr-actions,[data-print]{display:none!important}
   .print-only{display:block}
   .top{gap:6px;margin-bottom:6mm}
-  .plate{border:.6pt solid #000;color:#000}
+  .top .plate{border:.6pt solid #000;color:#000}
   h1{font-size:24pt}
   #print-for{font-size:10pt;color:#000}
   .pp{margin-top:6mm}
@@ -175,8 +181,12 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
   .pp-note{white-space:pre-wrap;border:.5pt solid #888;padding:2mm;margin-top:1mm}
   .pp-lines{height:14mm;margin-top:1mm;background:repeating-linear-gradient(to bottom,transparent 0,transparent 6.6mm,#999 6.6mm,#999 6.9mm)}
 }
+%%INCLUDE:part-guides.css%%
+%%INCLUDE:runbook-figs.css%%
 </style>
+%%INCLUDE:part-defs.svg.html%%
 
+<div hidden id="rb-drawings"><template id="rbt-pg-fwo">%%INCLUDE:part-fwo.svg.html%%</template><template id="rbt-pg-fww">%%INCLUDE:part-fww.svg.html%%</template><template id="rbt-pg-ps">%%INCLUDE:part-ps.svg.html%%</template><template id="rbt-pg-scl">%%INCLUDE:part-scl.svg.html%%</template><template id="rbt-pg-scr">%%INCLUDE:part-scr.svg.html%%</template><template id="rbt-pg-shl">%%INCLUDE:part-shl.svg.html%%</template><template id="rbt-pg-ssr">%%INCLUDE:part-ssr.svg.html%%</template><template id="rbt-pg-sw">%%INCLUDE:part-sw.svg.html%%</template><template id="rbt-pg-tc">%%INCLUDE:part-tc.svg.html%%</template><template id="rbt-pg-tof">%%INCLUDE:part-tof.svg.html%%</template><template id="rbt-pg-wire">%%INCLUDE:part-wire.svg.html%%</template></div>
 <div class="wrap">
   <header class="top">
     <div class="plate" aria-label="Build spec">
@@ -185,7 +195,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
       <span class="rivet" aria-hidden="true"></span>
     </div>
     <h1>Silvia Install Runbook</h1>
-    <p class="lede">The whole Gaggiuino install in eight phases, from photos of the stock machine to the first calibrated shot, written out step by step so you can follow it with only this page open. Each step says what you need, what to do in order, and how to check it worked. Tick a step when it's done and its instructions fold away; your place is saved, so you can put the tablet down and pick up where you left off. Set Your Silvia in the top bar and your screen below, and you'll only see the steps for your build. Before you open the machine, check you're ready with <a href="%%LINK_TEST%%">Test yourself</a>.</p>
+    <p class="lede">The whole Gaggiuino install in eight phases, from photos of the stock machine to the first calibrated shot, written out step by step so you can follow it with only this page open. Each step says what you need, what to do in order and how to check it worked, with drawings and official photos where they help, and a badge for what's powered while you do it. Tick a step when it's done and its instructions fold away; your place is saved, so you can put the tablet down and pick up where you left off. Set Your Silvia in the top bar and your screen below, and you'll only see the steps for your build. Before you open the machine, check you're ready with <a href="%%LINK_TEST%%">Test yourself</a>.</p>
     <p class="lede print-only" id="print-for"></p>
     <div class="hdr-actions"><button type="button" class="btn" data-print hidden>Print the whole runbook</button></div>
   </header>
@@ -207,6 +217,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
   </section>
 
   <nav class="phases" id="phases" aria-label="Phases"></nav>
+  <div id="pwleg"></div>
 
   <main id="phase"></main>
   <section class="print-only" id="print-all"></section>
@@ -221,7 +232,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
       <a href="%%LINK_LED%%" target="_blank" rel="noopener">LED switch mod</a>
       <a href="%%LINK_TRACKER%%" target="_blank" rel="noopener">Parts tracker</a>
     </div>
-    <p class="fine">Steps come from the build plan's install phases, the official Gaggiuino PCB, custom wiring, screen, flashing and Gen 3 manual pages (read November 2026), and the Discord Silvia thread. Tags show where each one comes from: Official, Discord or Plan. The official guides are written for Gaggias: where a step-by-step instruction is from the Discord, a Silvia source or this site's own advice, it says so.<span data-when="shelly"> The Shelly's steps are tagged Community (gblur's build, not the official docs), Shelly docs, or Plan.</span></p>
+    <p class="fine">Steps come from the build plan's install phases, the official Gaggiuino PCB, custom wiring, screen, flashing and Gen 3 manual pages (read November 2026), and the Discord Silvia thread. Tags show where each one comes from: Official, Discord or Plan. The official guides are written for Gaggias: where a step-by-step instruction is from the Discord, a Silvia source or this site's own advice, it says so.<span data-when="shelly"> The Shelly's steps are tagged Community (gblur's build, not the official docs), Shelly docs, or Plan.</span> The drawings are this site's own, from its part guides and diagrams; the official photos and screenshots are shown from the official docs' own addresses, credited, and stay theirs.</p>
     <button type="button" class="linkbtn" id="reset">Clear all ticks</button>
   </footer>
 </div>
@@ -231,10 +242,16 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
   var L={wiring:'%%LINK_WIRING%%',labels:'%%LINK_LABELS%%',checks:'%%LINK_CHECKS%%',led:'%%LINK_LED%%',which:'%%LINK_WHICH%%',cut:'%%LINK_CUTLIST%%',trouble:'%%LINK_TROUBLE%%',tracker:'%%LINK_TRACKER%%',test:'%%LINK_TEST%%',guides:'%%LINK_GUIDES%%',gtc:'%%LINK_GUIDES%%#tc',gps:'%%LINK_GUIDES%%#ps',gwire:'%%LINK_GUIDES%%#wire',gssr:'%%LINK_GUIDES%%#ssr',gsw:'%%LINK_GUIDES%%#sw',gscr:'%%LINK_GUIDES%%#scr',gtof:'%%LINK_GUIDES%%#tof',gfw:'%%LINK_GUIDES%%#fw',gscl:'%%LINK_GUIDES%%#scl',gshl:'%%LINK_GUIDES%%#shl',shdoc:'https://www.shelly.com/blogs/documentation/shelly-1pm-gen4-web-interface-guide'};
 %%INCLUDE:runbook-phases.js%%
 %%INCLUDE:runbook-how.js%%
+  /* the part guides' drawings and moves, for the figures in each step (part-guides-data.js needs GM, prof() and famOf()) */
+  var PGD=(function(){var GM=window.SilviaMachine;function prof(){return (GM&&GM.get())||{}}function famOf(){return null}
+  %%INCLUDE:part-guides-data.js%%
+  return {G:G,prof:prof,famOf:famOf}})();
+  %%INCLUDE:runbook-figs.js%%
   var SETTINGS=[['Steam Temperature','150 °C','Settings, Boiler'],['DreamSteam','Off','Settings, Boiler'],['Brew Delta','Off','Settings, Boiler'],['Temperature Offset','5','Settings, Boiler'],['HPWR','100','Boiler, Advanced'],['Main Divider','5','Boiler, Advanced'],['Brew Divider','3','Boiler, Advanced']];
   /* the step-by-step text lives in runbook-how.js, keyed by step id, so the pages that only need the steps' ids and titles (the wiring map's back-links, Test yourself) stay light */
-  var ALL=[];PHASES.forEach(function(p,i){p.steps.forEach(function(s){s.phase=i;var h=HOW[s.id];if(h)Object.keys(h).forEach(function(k){s[k]=h[k]});ALL.push(s)})});
+  var ALL=[];PHASES.forEach(function(p,i){p.steps.forEach(function(s){s.phase=i;var h=HOW[s.id];if(h)Object.keys(h).forEach(function(k){s[k]=h[k]});s.figs=FIG[s.id]||null;s.pw=PWS.hasOwnProperty(s.id)?PWS[s.id]:(PWD[p.id]||null);ALL.push(s)})});
   var KEY='silvia-install-runbook-v1';
+  var FIRSTON=-1;PHASES.forEach(function(p,i){if(FIRSTON<0&&p.steps.some(function(s){return s.pw==='on'||s.pw==='hot'}))FIRSTON=i});
   function $(id){return document.getElementById(id)}
   function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
   function fmtDate(ts){try{return new Date(ts).toLocaleDateString('en-US',{month:'short',day:'numeric'})}catch(e){return ''}}
@@ -269,16 +286,19 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     }).filter(function(x){return x&&fill(x.t)});
   }
   function itag(w){var t=w&&!decidedW(w)?wl(w):'';return t?'<span class="itag">'+esc(t)+'</span>':''}
+  /* the Step by step panel: what you need, a careful note, the drawings, the numbered steps, how to check, the official photos */
   function howHtml(s,open){
-    var items=howItems(s),need=fill(s.need),warn=fill(s.warn),okt=fill(s.ok),pics=(s.pics||[]).filter(function(p){return ok(p[2])});
-    if(!items.length&&!need&&!warn&&!okt&&!pics.length)return '';
-    var h='<details class="how"'+(open?' open':'')+'><summary>Step by step'+(items.length?' <span class="n">· '+items.length+(items.length===1?' step':' steps')+'</span>':'')+'</summary><div class="hb">';
-    if(need)h+='<p class="need"><span class="lbl">You need</span>'+rich(s.need)+'</p>';
-    if(warn)h+='<p class="warn" role="note"><span class="lbl">Careful:</span> '+rich(s.warn)+'</p>';
+    var items=howItems(s),need=fill(s.need),warn=fill(s.warn),okt=fill(s.ok),figs=RBF.figs(s.figs),pics=RBF.pics(s.pics);
+    if(!items.length&&!need&&!warn&&!okt&&!pics&&!figs)return '';
+    var nf=(figs.match(/<figure/g)||[]).length,np=(pics.match(/class="rph-t"/g)||[]).length,cnt=[];
+    if(items.length)cnt.push(items.length+(items.length===1?' step':' steps'));if(nf)cnt.push(nf+(nf===1?' drawing':' drawings'));if(np)cnt.push(np+(np===1?' photo':' photos'));
+    var h='<details class="how"'+(open?' open':'')+'><summary>'+(items.length?'Step by step':nf?'Drawing':'Official photos')+(cnt.length?' <span class="n">· '+cnt.join(' · ')+'</span>':'')+'</summary><div class="hb">';
+    if(need)h+='<p class="need"><span class="rlbl">You need</span>'+rich(s.need)+'</p>';
+    if(warn)h+='<p class="warn" role="note"><span class="rlbl">Careful:</span> '+rich(s.warn)+'</p>';
+    h+=figs;
     if(items.length)h+='<ol>'+items.map(function(x){return '<li>'+itag(x.w)+rich(x.t)+'</li>'}).join('')+'</ol>';
-    if(okt)h+='<p class="ok"><span class="lbl">Check</span>'+rich(s.ok)+'</p>';
-    if(pics.length)h+='<p class="pics"><span class="lbl">Official photos</span>'+pics.map(function(p){return '<a href="'+esc(p[1])+'" target="_blank" rel="noopener">'+esc(p[0])+'</a>'}).join(' · ')+'</p>';
-    return h+'</div></details>';
+    if(okt)h+='<p class="ok"><span class="rlbl">Check</span>'+rich(s.ok)+'</p>';
+    return h+pics+'</div></details>';
   }
   function howPrint(s){
     var items=howItems(s),h='';
@@ -298,6 +318,12 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
   }
   function wtag(s){var m=M();if(!s.w||(m&&m.decided&&m.decided(s.w)))return '';return '<span class="vtag">'+esc(wlabel(s.w))+'</span>'}
 
+  /* the figures follow Your Silvia and this page's screen; the Shelly's pieces show only once it's chosen */
+  function okg(w){var m=M();if(!w)return true;if(!m)return !/(^|;)shelly/.test(w);return m.matches(w)}
+  RBF.init({G:PGD.G,ok:ok,m:okg,
+    T:function(x){if(x==null)return '';if(typeof x==='string')return x;var m=M();return m&&m.txt?m.txt(x):x.filter(function(t){return typeof t==='string'||okg(t[1])}).map(function(t){return typeof t==='string'?t:t[0]}).join(' ').replace(/ ([,.;:])/g,'$1')},
+    famOf:PGD.famOf,prof:PGD.prof,dv:function(){return false},screen:function(){return state.screen},guides:L.guides,variant:function(){return null}});
+
   /* ---------- state ---------- */
   function defaults(){return {done:{},notes:{},phase:0,screen:null,updatedAt:0}}
   function normalize(s){
@@ -316,11 +342,14 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
   function renderNav(){
     $('phases').innerHTML=PHASES.map(function(p,i){
       var c=phaseCount(i),pct=c[1]?Math.round(100*c[0]/c[1]):0;
-      return '<button type="button" class="ph'+(c[0]===c[1]?' done':'')+'" data-ph="'+i+'"'+(i===state.phase?' aria-current="step"':'')+' aria-label="'+esc(p.n+', '+p.name+', '+c[0]+' of '+c[1]+' done')+'"><span class="n">Phase '+i+' · '+c[0]+'/'+c[1]+'</span><span class="nm">'+esc(p.name)+'</span><span class="pb"><span style="width:'+pct+'%"></span></span></button>';
+      var pws=[];stepsOf(i).forEach(function(s){if(s.pw&&pws.indexOf(s.pw)<0)pws.push(s.pw)});
+      var pwh=pws.length?'<span class="phpw" aria-hidden="true">'+pws.map(function(k){return RBF.icon(k).replace('class="pwi"','class="pwi '+k+'"')}).join('')+'</span>':'';
+      var first=i===FIRSTON;
+      return '<button type="button" class="ph'+(c[0]===c[1]?' done':'')+(first?' firston':'')+'" data-ph="'+i+'"'+(i===state.phase?' aria-current="step"':'')+' aria-label="'+esc(p.n+', '+p.name+', '+c[0]+' of '+c[1]+' done'+(pws.length?'. Power: '+pws.map(RBF.name).join(', '):'')+(first?'. Stop point: the power-on checks come first':''))+'"><span class="n">Phase '+i+' · '+c[0]+'/'+c[1]+pwh+'</span><span class="nm">'+esc(p.name)+'</span><span class="pb"><span style="width:'+pct+'%"></span></span></button>';
     }).join('');
   }
   function renderPhase(){
-    var i=state.phase,p=PHASES[i],h='';
+    var i=state.phase,p=PHASES[i],h='';RBF.reset();
     h+='<div class="phase-h"><span class="eyebrow">'+esc(p.n)+' of 7</span><h2 id="ph-title" tabindex="-1">'+esc(p.name)+'</h2><p class="goal">'+esc(p.goal)+'</p></div>';
     if(p.stop)h+='<div class="stop" role="note"><strong>Stop point</strong><p>'+esc(p.stop)+' <a href="'+esc(L.checks)+'" target="_blank" rel="noopener">Open the power-on checks</a></p></div>';
     if(p.settings){
@@ -329,13 +358,14 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     h+='<ol class="steps">'+stepsOf(i).map(function(s){
       var d=state.done[s.id];
       var link=siteLinks(s)+mapLinks(s);
-      return '<li class="step'+(d?' done':'')+(s.stop?' stopstep':'')+'" data-step="'+s.id+'"><input type="checkbox" id="c-'+s.id+'" data-tick="'+s.id+'"'+(d?' checked':'')+' aria-label="Done: '+esc(plain(s.t))+'"><label for="c-'+s.id+'"><span class="st-t">'+esc(fill(s.t))+wtag(s)+'</span><span class="st-d">'+esc(fill(s.d))+'</span></label>'+
+      return '<li class="step'+(d?' done':'')+(s.stop?' stopstep':'')+'" data-step="'+s.id+'"><input type="checkbox" id="c-'+s.id+'" data-tick="'+s.id+'"'+(d?' checked':'')+' aria-label="Done: '+esc(plain(s.t))+'"><label for="c-'+s.id+'"><span class="st-t">'+esc(fill(s.t))+wtag(s)+RBF.badge(s.pw)+'</span><span class="st-d">'+esc(fill(s.d))+'</span></label>'+
         howHtml(s,!d)+
         '<div class="st-meta"><span class="src">'+esc(s.src)+'</span>'+link+'<span class="when" data-done="'+s.id+'">'+(d?'Done '+fmtDate(d):'')+'</span></div></li>';
     }).join('')+'</ol>';
     h+='<div class="notes"><label class="k" for="notes">Notes for '+esc(p.n)+'</label><textarea class="textarea" id="notes" placeholder="Readings, part numbers, what you changed">'+esc(state.notes[p.id]||'')+'</textarea></div>';
     h+='<div class="nav"><button type="button" class="btn" id="prev"'+(i===0?' disabled':'')+'>Previous phase</button><button type="button" class="btn" id="nextopen">Next open step</button><button type="button" class="btn primary" id="next"'+(i===PHASES.length-1?' disabled':'')+'>Next phase</button></div>';
     $('phase').innerHTML=h;
+    RBF.mount($('phase'));
     markNext();
   }
   function markNext(){
@@ -357,7 +387,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
       var h='<section class="pp"><div class="pp-h"><span class="pp-n">'+esc(p.n)+'</span><h2>'+esc(p.name)+'</h2></div><p class="pp-goal">'+esc(p.goal)+'</p>';
       if(p.stop)h+='<p class="pp-stop"><b>Stop point.</b> '+esc(p.stop)+'</p>';
       if(p.settings)h+='<table class="pp-set"><thead><tr><th>Setting</th><th>Start at</th><th>Where</th><th>Set to</th></tr></thead><tbody>'+SETTINGS.map(function(r){return '<tr><td>'+esc(r[0])+'</td><td>'+esc(r[1])+'</td><td>'+esc(r[2])+'</td><td></td></tr>'}).join('')+'</tbody></table>';
-      h+=stepsOf(i).map(function(s){var d=state.done[s.id];return '<div class="pstep"><span class="pbox">'+(d?'✓':'')+'</span><div><b>'+esc(fill(s.t))+'</b>'+(s.w&&!decidedW(s.w)&&wlabel(s.w)?' <span class="pp-tag">'+esc(wlabel(s.w))+'</span>':'')+'<div class="pp-d">'+esc(fill(s.d))+'</div>'+howPrint(s)+'<div class="pp-src">'+esc(s.src)+(d?' · done '+fmtDate(d):'')+'</div></div></div>'}).join('');
+      h+=stepsOf(i).map(function(s){var d=state.done[s.id];return '<div class="pstep"><span class="pbox">'+(d?'✓':'')+'</span><div><b>'+esc(fill(s.t))+'</b>'+(s.pw?' <span class="pp-tag">'+esc(RBF.name(s.pw))+'</span>':'')+(s.w&&!decidedW(s.w)&&wlabel(s.w)?' <span class="pp-tag">'+esc(wlabel(s.w))+'</span>':'')+'<div class="pp-d">'+esc(fill(s.d))+'</div>'+howPrint(s)+'<div class="pp-src">'+esc(s.src)+(d?' · done '+fmtDate(d):'')+'</div></div></div>'}).join('');
       var note=state.notes[p.id];
       h+='<div class="pp-notes"><b>Notes</b>'+(note?'<div class="pp-note">'+esc(note)+'</div>':'<div class="pp-lines"></div>')+'</div></section>';
       return h;
@@ -450,6 +480,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     el.scrollIntoView({block:'start'});el.classList.add('hit');setTimeout(function(){el.classList.remove('hit')},2600);
   }
   state=loadLocal()||defaults();
+  $('pwleg').innerHTML=RBF.legend();
   renderAll();setStatus('loading');
   fromHash();window.addEventListener('hashchange',fromHash);
   connect();

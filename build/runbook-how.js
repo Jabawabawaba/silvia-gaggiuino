@@ -8,6 +8,10 @@
      firmware, Wi-Fi, utility profiles and settings steps follow them; the machine steps follow realNiche's harness, the Discord
      Silvia threads and this site's part guides, and the text says where an instruction is this site's own advice. */
   var PIC={
+    uiHome:"https://gaggiuino.github.io/manual/gen3/mbed/001_000_home.png",
+    uiSystem:"https://gaggiuino.github.io/manual/gen3/mbed/003_002_settings_system.png",
+    uiBoiler:"https://gaggiuino.github.io/manual/gen3/mbed/003_000_settings_boiler.png",
+    uiDescale:"https://gaggiuino.github.io/manual/gen3/mbed/001_004_descale.png",
     labels:"https://gaggiuino.github.io/schematics/stm32_pcbv3_1_board_labels.png",
     lvGCP:"https://gaggiuino.github.io/schematics/stm32-lv/GCP_g3_5_PCBv4_LV.png",
     bench:"https://github.com/user-attachments/assets/5ea67541-0cf4-4064-9f87-19ad900bef8b",
@@ -214,7 +218,8 @@
         "The reading should climb a few degrees. If it falls instead, the two wires are swapped: loosen J4's screws, swap them, retighten and try again.",
         "Write down which lead color ended up on + in the notes at the bottom of this phase. It goes back the same way in the machine."
       ],
-      ok:"Warm the tip and the number goes up."
+      ok:"Warm the tip and the number goes up.",
+      pics:[["Home screen, labeled (official manual)", "uiHome"]]
     },
     p1h:{
       how:[
@@ -224,7 +229,8 @@
         "If you built hardware scales, you can test them now too, and even calibrate them (Phase 6 shows how)."
       ],
       ok:"SSR LED on, pressure a steady 0.0 bar, brew temperature as the target.",
-      links:[["Troubleshooting","trouble"]]
+      links:[["Troubleshooting","trouble"]],
+      pics:[["Home screen, labeled (official manual)", "uiHome"]]
     },
     p1j:{
       need:"A phone or laptop with Wi-Fi, and your home Wi-Fi password.",
@@ -237,7 +243,7 @@
         "Once it's on your network, open http://gaggiuino.local from any device on that network. If a phone won't open it, try a laptop: some phones can't open .local addresses (this site's tip, not the official guide's)."
       ],
       ok:"The web UI opens at gaggiuino.local. On your home network, it also gets the right time for shot history.",
-      pics:[["The Gaggiuino AP in a Wi-Fi list","AP"]]
+      pics:[["The Gaggiuino AP in a Wi-Fi list","AP"],["Settings, System: the Wi-Fi panel", "uiSystem"]]
     },
     p1i:{
       how:[
@@ -547,7 +553,8 @@
         "Close the steam knob, and let it run on until water has come from the group for 5 seconds or more.",
         "Brew off, then tap Flush again to leave flush mode."
       ],
-      ok:"Steady water from the wand, then 5 seconds or more from the group: the boiler is full."
+      ok:"Steady water from the wand, then 5 seconds or more from the group: the boiler is full.",
+      pics:[["Home screen: Flush is at the bottom right", "uiHome"]]
     },
     p5d2:{
       how:[
@@ -562,7 +569,8 @@
         "Settings (the gear icon), then Boiler: enter the values in the table above. HPWR, Main Divider and Brew Divider are under Advanced.",
         "They're starting values from the Discord thread, not official defaults: the manual's defaults are for Gaggias.",
         "Tap the save icon once when they're all in: \"Settings persisted\" confirms it."
-      ]
+      ],
+      pics:[["Settings, Boiler (its numbers are only an example)", "uiBoiler"]]
     },
     p5e:{
       how:[
@@ -616,7 +624,8 @@
         "Follow the instructions in the profile.",
         "The result is Pump Zero: how much water your pump moves per pulse at 0 bar. It's under Settings, System.",
         "Later, with hardware or Bluetooth scales, you can refine it: compare pump flow with weight flow during a steady shot above 4 bar and 1 ml/s (the manual's tip)."
-      ]
+      ],
+      pics:[["Settings, System: Pump Zero", "uiSystem"]]
     },
     p6b:{
       how:[
@@ -644,7 +653,8 @@
         "Settings, Boiler: Steam Temperature to 150 °C.",
         "Tap the save icon: \"Settings persisted\".",
         "With the steam thermostat off the heater line, this setting and the 165 °C safety thermostat are the only limits on steam."
-      ]
+      ],
+      pics:[["Settings, Boiler (its numbers are only an example)", "uiBoiler"]]
     },
     p6f:{
       how:[
@@ -655,7 +665,8 @@
         ["The official low-voltage drawing shows the slot on the back of the headless board.","scr:hl"],
         ["The official drawing doesn't show where the Gen 3 screen's slot is: ask in your help thread if you can't find it.","scr:s3"],
         "After changing settings, tap the save icon once: \"Settings persisted\" confirms it."
-      ]
+      ],
+      pics:[["Settings, System: Timezone offset", "uiSystem"]]
     },
     /* ---------------- Phase 7 ---------------- */
     p7a:{
@@ -672,7 +683,8 @@
         "Dial in by the profile's targets, not a stock shot time.",
         "Profiles with pre-infusion and soak need a finer grind than stock to reach the same pressure.",
         "With stop-on-weight, the shot stops a little early on purpose: the last of it is still on its way to the cup."
-      ]
+      ],
+      pics:[["Home screen: profiles and shot weight", "uiHome"]]
     },
     p7h:{
       how:[
@@ -688,7 +700,8 @@
         "**Descale, part 2:** tap Descale (its circle turns green) and turn brew on. It runs until the tank is empty, about 30 minutes. With a ToF board it stops by itself.",
         "**Descale, part 3:** brew off. Clean the tank, fill it with fresh water to the max line, and run the cycle again with the brew switch until the tank is empty.",
         "These are the Gaggiuino manual's routines; it gives no Silvia-specific version."
-      ]
+      ],
+      pics:[["The descale screen", "uiDescale"]]
     },
     p7b:{
       how:[
@@ -713,3 +726,60 @@
   /* photo keys in pics resolve to the addresses above */
   var PICL={};Object.keys(PIC).forEach(function(k){PICL[k.toLowerCase()]=PIC[k]});
   Object.keys(HOW).forEach(function(k){var h=HOW[k];if(h.pics)h.pics=h.pics.map(function(p){var u=PICL[String(p[1]).toLowerCase()];return u?[p[0],u,p[2]]:p})});
+
+  /* Visuals per step, drawn by runbook-figs.js. ['g', part guide, variant, guide step titles, when] plays that guide's
+     drawing for just those steps (a title can be [title, when]). ['d', diagram, options, when] draws one of the
+     runbook's own diagrams. */
+  var FIG={
+    p0f:[['g','wire',null,['Insulated spades and forks','Bare spades at the boiler']]],
+    p0g:[['d','flag']],
+    p0s:[['g','shl',null,['Pick the Shelly']]],
+    p0s2:[['g','shl',null,['Plan where it goes']]],
+    p1b:[['d','pcbw',{on:['J4','J6','J1','J9','J2'],x:['J7','J5','MAINS'],note:{J2:'ToF board, if you have one: on the back',J7:'Leave it empty: its wires come in Phase 4',J5:'Leave it empty: the hot water switch, Phase 4',MAINS:'The mains tabs stay empty on the bench'}}],['d','ssr',{}]],
+    p1c:[['d','j4']],
+    p1d:[['d','scrpins']],
+    p1e:[['d','pcbw',{on:['USB'],x:['MAINS'],note:{USB:'A USB-C cable to a charger or a computer',MAINS:'Nothing on the mains tabs'}}]],
+    p1f:[['d','boot']],
+    p1g:[['d','temp']],
+    p1h:[['d','ssrled']],
+    p1j:[['d','wifi']],
+    p1i:[['g','fw','ota','all']],
+    p2b:[['d','flag']],
+    p2b1:[['g','sw',null,['E model: fit a latching rocker']]],
+    p2s1:[['g','sw',null,['E model: keep the push button for the Shelly']]],
+    p3a0:[['g','tc',null,['Fold back the insulation']]],
+    p2c:[['g','tc',null,['Unplug the brew thermostat','Undo its clamp and lift it off']]],
+    p2e:[['g','wire',null,['Cut and label','Strip about 6 mm']]],
+    p2f:[['g','wire',null,['Bare spades at the boiler']]],
+    p2g:[['g','wire',null,['Two wires on one terminal','Butt splices in the ground chain']]],
+    p2s:[['g','shl',null,['Ferrules in the screw terminals']]],
+    p2h:[['g','wire',null,['Insulated spades and forks']]],
+    p2i:[['g','wire',null,['Pull-test every crimp']]],
+    p3a:[['g','tc',null,['Paste on the thread','Screw it in, finger tight only','Route the lead']]],
+    p3a2:[['g','tc',null,['Refit the insulation']]],
+    p3b:[['g','ps',null,['O-ring into the elbow','Sensor in: hand tight, then at most a quarter turn','Thread cord on the tapered threads','Tee in at the OPV, elbow into the tee','Let it hang clear']]],
+    p3c:[['g','ssr',null,['Find its spot','Screw it to the wall']]],
+    p3s:[['g','shl',null,['Plan where it goes']]],
+    p3e:[['g','scr',null,['A longer cable',['Wire it first','scr:s3'],'Cable through the back, then plug in',['Screen onto the upper posts first','scr:s3'],['Front cover: top edge first','scr:s3'],'The mount','Cable into the machine, sleeved'],'!scr:hl']],
+    p4a:[['g','sw',null,['Power switch: supply on the outer spades','Loads on the center spades']],['g','ssr',null,['Load terminal 1: two wires, one fork','Load terminal 2: to the safety thermostat']],['d','pcbw',{on:['MAINS'],note:{MAINS:'N on J10, L on J11, pump on J12, solenoid on J13'},cap:'The PCB\'s four mains tabs, from the official board drawing: N (J10), L (J11), P for the pump (J12) and 3 for the 3-way valve\'s solenoid (J13).'}]],
+    p4s:[['g','shl',null,["Line: inlet L to the Shelly's L","Neutral: inlet N to the Shelly's N, and a splice","Switch: the L pole's center spade to SW",'Output: O to SSR terminal 1','Ferrules in the screw terminals','Check it with the meter']]],
+    p4b:[['g','sw',null,['Signal wires on the center spades','Ground chain on the outer spades','Check them']],['d','pcbw',{on:['J7','J5'],note:{J7:'S to steam, B to brew, GND to the ground chain',J5:'B15 to the hot water switch, not A12'},cap:'The low-voltage switch wires end at J7 and J5. Check each pin against the names printed beside the socket.'}]],
+    p4e:[['g','tc',null,['Check it, then clamp it in J4']],['g','ssr',null,['Control wires: + and −']],['d','pcbw',{on:['J4','J6','J9','J1','J7','J5','J2'],note:{J9:'SSR control: R1 to +, GND to −',J7:'Switch wires: S, B and GND',J5:'Hot water switch on B15',J2:'ToF board, if you have one'}}]],
+    p4c:[['g','tc',null,['Route the lead']]],
+    p4z:[['d','meter']],
+    p5a0:[['g','scr',null,['Covers on, then the checks'],'!scr:hl']],
+    p5d:[['d','flush']],
+    p5d2:[['d','temp',{mode:'heat'}]],
+    p5e:[['g','ps',null,['Fill it and test it']]],
+    p5f:[['d','opv']],
+    p5h:[['d','switches',{kind:'three'}]],
+    p6b:[['g','scl',null,['Calibrate: find each cell','Calibrate: weigh something known']]],
+    p6c:[['g','tof',null,['Core firmware to match its LED','Set the ranges for the deeper tank','The light, under the lid','Check the level']]],
+    p6e:[['d','limits',{marks:[[93,"Brew target: your profile's",'',true],[150,'Steam Temperature setting','set'],[165,'Safety thermostat opens','stop']],cap:'With the steam thermostat out of the heater line, two things limit the boiler: the Steam Temperature setting, and the 165 °C safety thermostat in the heater line, which cuts the heater and has a reset button. Not to scale.'}]],
+    p7g:[['d','flush']]
+  };
+  /* what's powered while you do a step (runbook-figs.js badges): by phase, then step by step where it differs */
+  var PWD={p1:'usb',p2:'off',p3:'off',p4:'off',p5:'off',p6:'on'};
+  var PWS={p1a:'off',p1b:'off',p1c:'off',p1d:'off',
+    p5b:'on',p5s:'on',p5s2:'on',p5s3:'on',p5d:'on',p5d2:'hot',p5c:'on',p5e:'hot',p5f:'hot',p5g:'off',p5h:'hot',p5i:'hot',
+    p6a:'hot',p7a:'off',p7f:'hot',p7g:'hot'};

@@ -14,5 +14,6 @@ To change a page:
 - Every page is built from `build/`. The install pages, cut list, troubleshooting, which Silvia and the home page are templates there; harness runs live in `runs.py`; the budget, used checklist, parts tracker and LED mod pages are in `build/pages/`. Edit the source, run `python3 site.py` in `build/`, and send the source change with the rebuilt pages.
 - Don't edit the built `.html` files at the repo root by hand; the next build overwrites them.
 - Keep the mains-voltage warnings. Keep the "unofficial" labeling. Don't present anything as validated unless the Gaggiuino project has reviewed it.
+- Don't copy text, photos or schematics from the official docs into this repository; summarize and link instead. The runbook may show an official photo inline from its official address, credited, but never a saved copy.
 
 Everything contributed is published under CC BY-NC-SA 4.0 with credit to you by whatever name you give.
