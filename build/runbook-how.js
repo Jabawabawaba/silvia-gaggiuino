@@ -98,6 +98,7 @@
       how:[
         "**A multimeter** that reads resistance (Ω) and beeps for continuity: the power-on checks need one, because they prove the wiring is safe before the first plug-in.",
         "**Crimpers:** an open-barrel crimper for the bare spades at the boiler, and a ratcheting crimper for insulated terminals (its dies are color-coded red and blue, like the spades), forks and butt splices.",
+        "**A JST-PH (2 mm) crimper** for the pins in the low-voltage plugs (J5, J7 and J9), unless you buy pre-crimped leads: the insulated-terminal crimper can't do them.",
         "**Wire strippers** and side cutters.",
         "**Screwdrivers:** Phillips and a small flat one, plus a tiny flat one for the PCB's thermocouple clamp.",
         "**Spanners** for the pressure sensor's tee and elbow.",
@@ -112,8 +113,9 @@
     p0k:{
       how:[
         "**Electronics:** PCB v4 and the 4.3\" screen (or the headless board) from an approved supplier, with the screen cable, the SSR-40DA, the pressure sensor (0 to 1.2 MPa, G1/4) and an **M3** ungrounded K-type thermocouple. The official parts list's M4 thermocouple is for Gaggias.",
-        "**Wire and terminals:** 18 AWG silicone wire rated to 200 °C for mains (a Silvia harness takes about a meter more than a Gaggia one), 22 AWG for low voltage, bare 6.3 mm spades for the boiler, insulated 6.3 mm spades (red for one 18 AWG wire, blue for two), fork spades for the SSR, red butt splices, and self-fusing silicone tape.",
-        "**Pressure sensor plumbing (OPV tee):** a 1/8\" FFM tee, a 1/4\"F to 1/8\"M elbow, the flat white O-ring (about 11 mm across) and Loctite 55.",
+        "**Wire and terminals:** 18 AWG silicone wire rated to 200 °C for mains (a Silvia harness takes about a meter more than a Gaggia one), 22 AWG for low voltage, bare 6.3 mm spades for the boiler (and bare ones sized for 16 to 14 AWG for the three shared boiler-end terminals), insulated 6.3 mm spades (red for one 18 AWG wire, blue for two), fork spades for the SSR, red butt splices, and self-fusing silicone tape.",
+        "**Low-voltage plugs:** JST-PH (2 mm) crimp pins and 3-pin housings for J5, J7 and J9, or pre-crimped leads.",
+        "**Pressure sensor plumbing (OPV tee):** a 1/8\" BSP FFM tee, a G1/4 (BSPP) female to 1/8\" BSP male elbow, the flat white O-ring (about 11 mm across) and Loctite 55. BSP, not NPT: an NPT part won't seal to the G1/4 sensor.",
         "**SSR mounting:** a screw, washers and a nut, or a small bracket.",
         "**Screen cable** long enough for your mount (the open questions step above).",
         "**Prints:** a PCB housing (Printables 894339, or any box), and the screen housing and mount.",
@@ -152,7 +154,7 @@
       warn:"Keep the boards off anything metal while they're powered: a stray screw under the PCB can short it."
     },
     p1b:{
-      need:["The PCB, the thermocouple, the pressure sensor, the SSR and its control wires,",["the screen and its cable,","scr:p4,s3"],["the headless board and its cable,","scr:hl"],"the ToF board if you have one, and a tiny flat screwdriver."],
+      need:["The PCB, the thermocouple, the pressure sensor, the SSR and a lead from J9 to it (LV7 and LV8 on the cut list: JST-PH pins in a 3-pin plug at J9, forks at the SSR; make those two now if your PCB came without one),",["the screen and its cable,","scr:p4,s3"],["the headless board and its cable,","scr:hl"],"the ToF board if you have one, and a tiny flat screwdriver."],
       how:[
         "Find the sockets on the PCB; each is labeled on the board: J1 (screen, 4 pins), J4 (thermocouple, two small screw clamps marked − and +), J6 (pressure sensor, 3 pins), J9 (SSR, 3 pins), J7 (switches), J5 (extra inputs, for the hot water switch later) and J2 (ToF, a tiny socket on the back). The four large tabs, J10 to J13, are for mains: leave them empty.",
         "**Thermocouple into J4:** the next step shows how to clamp its two bare wires.",
@@ -198,9 +200,9 @@
     p1f:{
       how:[
         ["The screen lights and shows \"Initialization in progress\" for a few seconds, then it clears.","scr:p4,s3"],
-        ["Headless: you'll see these messages in the web UI once you've joined its Wi-Fi (two steps down). Come back and tick this one then.","scr:hl"],
+        ["Headless: you'll see these messages in the web UI, so join its Wi-Fi first (the Wi-Fi step below), then come back to this step and the next two.","scr:hl"],
         "A few seconds after boot, \"Filling boiler\" shows, and a red LED on the underside of the PCB lights at the same moment. On the bench that's expected: there's no boiler to fill.",
-        "Stuck on \"Initialization in progress\"? Recheck J1 pin by pin (previous step). If the ToF is turned on in the software but not plugged in, it won't start either. Then see the firmware step at the end of this phase: the core and screen firmware may be from different releases."
+        "Stuck on \"Initialization in progress\"? Recheck J1 pin by pin (the screen cable step above), then see the firmware step at the end of this phase: the core and screen firmware may be from different releases."
       ],
       ok:"Initialization clears, Filling boiler shows, and the red LED under the PCB is on.",
       links:[["Troubleshooting","trouble"]]
@@ -242,13 +244,14 @@
         "Settings, About (the gear icon on the screen, or Settings in the web UI). Note the build numbers for Core, Mbed (the screen or headless board) and Web.",
         "Compare them with each other and with the latest release on the [Gaggiuino releases page](https://github.com/Zer0-bit/gaggiuino/releases/latest). If all three match the release, you're done.",
         "If your About page has an **Update All** button, you can use it instead, with Gaggiuino on your home Wi-Fi: the official firmware reset page uses it to bring every part up to date. Older firmware may not have it.",
-        "Otherwise update by hand: from the latest release, download the core file for PCB v4 (performance, pcb, then pca or ncp to match a ToF board's LED chip; without one either works) and the two screen files (ui-embedded and ui-web; headless uses ui-headless and ui-web).",
+        "Otherwise update by hand: from the latest release, download the core file for PCB v4 (performance, pcb, then pca or ncp to match a ToF board's LED chip; without one either works) and the two screen files (ui-embedded and ui-web; headless uses ui-headless and ui-web). If the release lists more than one ui-embedded file, take the one for your screen: the official web flasher uses different builds for the Gen 3 (ESP32-S3) and Gen 3.5 (ESP32-P4) screens.",
+        "Firmware older than February 16, 2025 (unlikely on a new board) needs [breaking update 616ea70](https://github.com/Zer0-bit/gaggiuino/releases/tag/dev-616ea70) first, then the latest: the official guide's warning.",
         "In the web UI, Settings, OTA Update: choose **Core Upgrade Package**, SELECT FILE, pick the core file, then UPLOAD. The screen goes black while it flashes and reboots.",
         "Then START OVER, choose **LCD Upgrade Package** and upload ui-embedded (or ui-headless); START OVER again for ui-web. The order is core, then ui-embedded, then ui-web, unless the release notes say otherwise. Refresh the browser after ui-web.",
         "Back in About, all three build numbers should now match.",
         "Bench test done: unplug the USB cable, then unplug each part from the PCB and loosen J4's screws to free the thermocouple. Each part goes into the machine on its own, and everything plugs back into the PCB in Phase 4."
       ],
-      warn:"Don't power off during an update. A failed or cancelled one falls back to the old firmware by itself. If updates keep failing on your home network, join Gaggiuino AP directly and try again.",
+      warn:"Don't power off during an update. A failed or cancelled one falls back to the old firmware by itself. If updates keep failing on your home network, disconnect Gaggiuino from that network, then join Gaggiuino AP directly and try again, as the official guide says.",
       pics:[["About page","ABOUT"],["OTA Update section","OTA1"],["Choosing the package","OTA2"],["START OVER","OTA3"]]
     },
     /* ---------------- Phase 2 ---------------- */
@@ -270,7 +273,7 @@
         "Work one wire at a time: label it with the part and terminal it's on (for example: brew switch, center spade), then pull it off by its connector, never by the wire.",
         "At the inlet, note which pin is line, which is neutral and which is earth: on some machines line and neutral are swapped.",
         "As each wire comes off, tick it against your photos.",
-        "The stock harness comes out completely: the new harness replaces every wire. Keep the old one in a bag, labels on, in case you ever go back to stock.",
+        "The stock harness comes out: the new harness replaces it. The inlet leads (AC1, AC2 and the earth lead G1) can be reused if they're sound, so set those aside; keep the rest in a bag, labels on, in case you ever go back to stock.",
         "Leave the parts in place: the switches, the lamp, the pump and its thermal fuse, the 3-way valve, the 165 °C safety thermostat and the element all stay. The brew thermostat comes out a few steps on."
       ],
       ok:"Every stock wire labeled and out, and the parts still in place."
@@ -340,10 +343,11 @@
     },
     p2g:{
       how:[
-        "Where two 18 AWG runs share a terminal, they go into one spade or fork sized for two: blue, never red, or a bare spade sized for 16 to 14 AWG at the boiler.",
-        "Strip both wires, lay them side by side in the barrel, and crimp them together in the matching die.",
-        {t:["The shared terminals: SSR terminal 1, the safety thermostat,",["the power switch's neutral spade,","!shelly"],["the inlet's L and N tabs,","shelly"],"the lamp, the pump, the solenoid and the boiler ground. The cut list marks each one."]},
-        "Never two 18 AWG wires in a red spade (check g2)."
+        "Where two 18 AWG runs share a terminal, they go into one spade or fork sized for two, never a red one (check g2).",
+        {t:["**Blue insulated spades:**",["the power switch's neutral spade,","!shelly"],["the inlet's L and N tabs,","shelly"],"the lamp's neutral spade and the pump."]},
+        "**A fork sized for two:** SSR terminal 1.",
+        "**Bare spades sized for 16 to 14 AWG,** crimped with the open-barrel crimper: the safety thermostat, the solenoid's neutral and the boiler ground. Those sit at the boiler or the hot group, where nylon insulation melts.",
+        "Strip both wires, lay them side by side in the barrel, and crimp them together in the matching die. The cut list marks each shared end."
       ]
     },
     p2s:{links:[["Part guide: Shelly","gshl"]]},
@@ -387,7 +391,7 @@
       ]
     },
     p3b:{
-      need:"The pressure sensor, the flat white O-ring (about 11 mm across), a 1/8\" FFM tee, a 1/4\"F to 1/8\"M elbow, Loctite 55, two spanners and a towel.",
+      need:"The pressure sensor, the flat white O-ring (about 11 mm across), a 1/8\" BSP FFM tee, a G1/4 (BSPP) female to 1/8\" BSP male elbow, Loctite 55, two spanners and a towel. BSP, not NPT: an NPT part won't seal to the G1/4 sensor.",
       warn:"Machine unplugged and cold, with the water tank out: water runs out when the fitting comes off the OPV.",
       how:[
         "Going on the 3-way valve's bottom port instead? Follow the parts list from your help thread: these steps are for the OPV tee.",
@@ -433,7 +437,7 @@
         ["Front cover on: top edge first, the side with the thinner bezel. Check no wire is in the way, then snap the bottom edge on. To take it off later, use the fingernail slots.","scr:s3"],
         ["Plug the cable into the headless board, then slide the board into its housing until it's fully seated: the cover can't close if it isn't. Close the cover.","scr:hl"],
         ["The mount: the official housing's three mounts (front, funnel and rear) are designed for Gaggias. Talon used the funnel mount on his Silvia. The front mount holds by magnets: check one sticks where it will go, or use double-sided tape rated for 80 °C.","scr:p4,s3"],
-        ["Fix the headless housing with its vent clips or magnets, wherever its cable reaches.","scr:hl"],
+        ["Fix the headless housing with magnets glued to its back, which the official parts list recommends for machines other than Gaggias (check one sticks to your case), or with double-sided tape rated for 80 °C. Its vent clips are made for a Gaggia's vents.","scr:hl"],
         "Where the cable passes the vent into the machine, slide the heat shrink over it and leave it unshrunk: a sleeve, so the sharp edge can't cut it (check g9).",
         "Tape the cable down where it runs outside, with Kapton or another high-temperature tape."
       ],
@@ -475,7 +479,7 @@
       how:[
         "Thermocouple into J4: folded ends, and + and − the way they passed the warm-hand test on the bench.",
         "Pressure sensor into J6, the SSR control into J9 (R1 to the SSR's +, GND to its −), and the screen cable into J1 if it isn't in already.",
-        "J7 and J5 from the last step, and the ToF into J2 if you have one.",
+        "Plug in the J7 and J5 plugs you made in the last step, and the ToF into J2 if you have one.",
         "Leave a little slack on each lead, so the PCB can come out without pulling anything."
       ],
       ok:"Everything plugged in, as check a3 expects."
@@ -491,6 +495,7 @@
     p4d:{
       how:[
         "At the SSR: tie its wires down near it, so a pull on a wire never reaches a screw terminal.",
+        "Close the SSR's clear terminal cover over its screws, if it came with one: treat the load screws as live whenever the machine is plugged in.",
         "Where the screen cable leaves the machine: a tie or Kapton tape inside the vent, so a tug on the screen can't pull on J1."
       ]
     },
@@ -498,9 +503,9 @@
       how:[
         "Open [Power-on checks](checks) with Your Silvia set, on a phone or tablet beside the machine: it shows only your checks.",
         "Cord out of the wall and out of the machine for every check in this phase.",
-        "Set the meter to its lowest Ω range, or continuity. Touch the probes together and enter that reading where the page asks.",
+        "Start the meter on its lowest Ω range, or continuity. Touch the probes together and enter that reading where the page asks. Switch to the highest range where a check says so.",
         "Work through each section in order up to Covers on. Type each reading in and the page marks it pass or fail.",
-        "Some checks ask you to unclamp the thermocouple from J4, take a lead off a part, or unplug J7, J5 and J9 for a reading. Put each back as it was straight after.",
+        "Some checks ask you to unclamp the thermocouple from J4, take a lead off a part, or unplug J7, J5 and J9 for a reading. Put each back as it was straight after. b6 and c7 both need the thermocouple out of J4: take them one after the other, then clamp it back once.",
         "A fail: use the hint under that check to fix it, then measure again. Don't skip past a fail.",
         "Have someone else trace the harness against the wiring reference too: a second pair of eyes catches what you've stopped seeing (check g12).",
         "Covers on, the last section, waits for Phase 5."
@@ -581,7 +586,7 @@
     },
     p5g:{
       how:[
-        "Switch off and unplug from the wall first.",
+        "Switch off, unplug from the wall, and let it cool: the boiler top and the thermocouple stay hot for a long time.",
         "Lift the top cover and touch a dry paper towel to the tee, the elbow, the sensor and the thermocouple: a damp spot is a leak.",
         "Snug that joint, unplugged. Never more than a quarter turn past hand tight on the sensor.",
         {t:["Close it up and rerun h1 to h4 of the power-on checks before you plug back in, and h5 and h6 too if the screen cable moved.",["With the Shelly, h7 too.","shelly"],["With the Shelly in the E's GICAR box, take h7 (and h6's O reading) first.","model:E;shelly"]]}
@@ -682,7 +687,7 @@
         "**Descale, part 1:** empty the drip tray. Fill the tank to the max line with descaling solution (water and citric acid). Lock in the blind basket, put a 2 L container under the steam wand, and open the steam knob a quarter turn.",
         "**Descale, part 2:** tap Descale (its circle turns green) and turn brew on. It runs until the tank is empty, about 30 minutes. With a ToF board it stops by itself.",
         "**Descale, part 3:** brew off. Clean the tank, fill it with fresh water to the max line, and run the cycle again with the brew switch until the tank is empty.",
-        "These are the Gaggiuino manual's routines, written for any machine it runs."
+        "These are the Gaggiuino manual's routines; it gives no Silvia-specific version."
       ]
     },
     p7b:{

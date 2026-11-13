@@ -231,7 +231,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
   var L={wiring:'%%LINK_WIRING%%',labels:'%%LINK_LABELS%%',checks:'%%LINK_CHECKS%%',led:'%%LINK_LED%%',which:'%%LINK_WHICH%%',cut:'%%LINK_CUTLIST%%',trouble:'%%LINK_TROUBLE%%',tracker:'%%LINK_TRACKER%%',test:'%%LINK_TEST%%',guides:'%%LINK_GUIDES%%',gtc:'%%LINK_GUIDES%%#tc',gps:'%%LINK_GUIDES%%#ps',gwire:'%%LINK_GUIDES%%#wire',gssr:'%%LINK_GUIDES%%#ssr',gsw:'%%LINK_GUIDES%%#sw',gscr:'%%LINK_GUIDES%%#scr',gtof:'%%LINK_GUIDES%%#tof',gfw:'%%LINK_GUIDES%%#fw',gscl:'%%LINK_GUIDES%%#scl',gshl:'%%LINK_GUIDES%%#shl',shdoc:'https://www.shelly.com/blogs/documentation/shelly-1pm-gen4-web-interface-guide'};
 %%INCLUDE:runbook-phases.js%%
 %%INCLUDE:runbook-how.js%%
-  var SETTINGS=[['DreamSteam','Off','Settings, Boiler'],['Brew Delta','Off','Settings, Boiler'],['Temperature Offset','5','Settings, Boiler'],['HPWR','100','Boiler, Advanced'],['Main Divider','5','Boiler, Advanced'],['Brew Divider','3','Boiler, Advanced']];
+  var SETTINGS=[['Steam Temperature','150 °C','Settings, Boiler'],['DreamSteam','Off','Settings, Boiler'],['Brew Delta','Off','Settings, Boiler'],['Temperature Offset','5','Settings, Boiler'],['HPWR','100','Boiler, Advanced'],['Main Divider','5','Boiler, Advanced'],['Brew Divider','3','Boiler, Advanced']];
   /* the step-by-step text lives in runbook-how.js, keyed by step id, so the pages that only need the steps' ids and titles (the wiring map's back-links, Test yourself) stay light */
   var ALL=[];PHASES.forEach(function(p,i){p.steps.forEach(function(s){s.phase=i;var h=HOW[s.id];if(h)Object.keys(h).forEach(function(k){s[k]=h[k]});ALL.push(s)})});
   var KEY='silvia-install-runbook-v1';
