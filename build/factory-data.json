@@ -1,10 +1,15 @@
 {
- "_about": "The Silvia's stock circuit for the wiring page's Out of the box view (fac_silvia.py). There's no official drawing of the Silvia's stock wiring, from Rancilio or from the Gaggiuino docs, so this follows GaggiMate's Silvia installation diagram, a community project's, cross-checked against wesleye's Silvia wiring page and this site's own ladder diagram on the Learn page. Those drawings show what connects to what and the wire colors, not how the factory chains its wires from spade to spade, so where several wires meet, the chaining here is this site's simplification. Ends name the map's terminals: switch poles (line and neutral, each with an in and out spade), the heating lamp's two spades, the power switch's L and N poles, the safety thermostat (sf), the element (el), the brew and steam thermostats (bt, st), the boiler's ground spade, the valve, the pump and the inlet. sys: L line, H heater circuit, N neutral, E earth.",
+ "_about": "The Silvia's stock circuit for the wiring page's Out of the box view (fac_silvia.py). There's no official drawing of the Silvia's stock wiring, from Rancilio or from the Gaggiuino docs, so this follows GaggiMate's Silvia installation diagram, a community project's, cross-checked against wesleye's Silvia wiring page and this site's own ladder diagram on the Learn page. Those drawings show what connects to what and the wire colors, not how the factory chains its wires from spade to spade, so where several wires meet, the chaining here is this site's simplification. Ends name the map's terminals: switch poles (line and neutral, each with an in and out spade), the heating lamp's two spades, the power switch's L and N poles, the safety thermostat (sf), the element (el), the brew and steam thermostats (bt, st), the boiler's ground spade, the valve, the pump and the inlet. sys: L line, H heater circuit, N neutral, E earth. reuse: stock leads the new harness can keep if they're sound (runs.py says so for AC1, AC2 and G1), each with the run it becomes.",
  "name": "Rancilio Silvia, as it leaves the factory",
  "src": "https://docs.gaggimate.eu/docs/installation-silvia",
  "srcname": "GaggiMate's Silvia installation diagram",
  "src2": "https://wesleye.github.io/Rancilio_Silvia/Silvia_Wiring",
  "src2name": "wesleye's Silvia wiring page",
+ "reuse": {
+  "F1": "AC1",
+  "F2": "AC2",
+  "F3": "G1"
+ },
  "runs": [
   {"id": "F1", "a": "inlet:L", "b": "pwr:Lin", "color": "brown", "sys": "L", "what": "Line from the inlet to the power switch"},
   {"id": "F2", "a": "inlet:N", "b": "pwr:Nin", "color": "blue", "sys": "N", "what": "Neutral from the inlet to the power switch"},

@@ -562,7 +562,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     Array.prototype.forEach.call(document.querySelectorAll('[data-mview]'),function(b){b.setAttribute('aria-pressed',String(b.getAttribute('data-mview')===view&&!A))});
     $('m-play').hidden=!box||!!A;
     var n=$('mview-note');
-    if(box)n.innerHTML='As it leaves the factory: the stock circuit, '+Object.keys(FAC.runs).length+' connections, after <a href="'+esc(FAC.src)+'" target="_blank" rel="noopener">'+esc(FAC.srcname)+'</a>, a community drawing, checked against <a href="'+esc(FAC.src2)+'" target="_blank" rel="noopener">'+esc(FAC.src2name)+'</a>. Neither is Rancilio\'s, and colors and runs vary by version, so trace your own before you cut. Show the change swaps all of it for the new harness.';
+    if(box)n.innerHTML='As it leaves the factory: the stock circuit, '+Object.keys(FAC.runs).length+' connections, after <a href="'+esc(FAC.src)+'" target="_blank" rel="noopener">'+esc(FAC.srcname)+'</a>, a community drawing, checked against <a href="'+esc(FAC.src2)+'" target="_blank" rel="noopener">'+esc(FAC.src2name)+'</a>. Neither is Rancilio\'s, and colors and runs vary by version, so trace your own before you cut. Show the change swaps it for the new harness, which can keep the inlet\'s leads if they\'re sound.';
     else n.textContent='Out of the box shows how the Silvia is wired before the install, and plays the change.';
     var lg=$('mlegend'),fc=$('mfigcap');if(legend0==null){legend0=lg.innerHTML;cap0=fc.innerHTML}
     if(box&&!A){
@@ -609,7 +609,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     d.innerHTML='<div class="d-head"><span class="d-id">'+esc(fsel.id)+'</span><span class="d-route">'+esc(r.frm)+' → '+esc(r.to)+'</span><button type="button" class="chip" id="fclear" style="margin-left:auto">Show everything</button></div>'+
       '<div class="d-grid"><div><span class="k">Circuit</span><span><span class="sysdot" style="background:'+(SYSCOLOR[r.sys]||'var(--muted)')+'"></span>'+esc(FSYS[r.sys]||r.sys)+'</span></div>'+
       '<div><span class="k">Stock color</span><span><span class="swc" style="background:'+(COLHEX[r.color]||'var(--muted)')+'"></span>'+esc(CNAME[r.color]||r.color)+'</span></div>'+
-      '<div><span class="k">With the new harness</span><span>Comes out: the harness replaces it</span></div></div>'+
+      '<div><span class="k">With the new harness</span><span>'+(FAC.reuse&&FAC.reuse[fsel.id]?'Can stay: if it\'s sound, the harness reuses it as '+esc(FAC.reuse[fsel.id]):'Comes out: the harness replaces it')+'</span></div></div>'+
       (r.what?'<p class="d-note">'+esc(r.what)+'.</p>':'');
   }
   function reduced(){try{return window.matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){return false}}

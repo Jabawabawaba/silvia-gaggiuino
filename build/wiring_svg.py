@@ -156,7 +156,10 @@ def part_svgs(sh=False, factory=False):
     machine as it leaves the factory: no Gaggiuino parts, the poles named for what the stock wiring puts on them, and
     the brew and steam thermostats on the boiler."""
     P = []
-    P.append(("cap", text(45, 18, "Switches viewed from the back · top row = center spades, bottom row = outer spades · order drawn for clarity", "cap", "start")))
+    if factory:
+        P.append(("cap", text(45, 18, "Switches viewed from the back · order drawn for clarity · power switch: top row = center spades, bottom row = outer · on the others the top row is the supply side; which spade is which isn't known", "cap", "start")))
+    else:
+        P.append(("cap", text(45, 18, "Switches viewed from the back · top row = center spades, bottom row = outer spades · order drawn for clarity", "cap", "start")))
     for pid, cx, name in (("hw", 100, "Hot water"), ("brew", 260, "Brew"), ("steam", 420, "Steam")):
         if factory:
             lab = text(cx - 27, 64, "neutral", "tiny") + text(cx + 27, 64, "line", "tiny")

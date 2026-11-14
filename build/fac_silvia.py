@@ -210,7 +210,7 @@ def d_of(pts):
 # ---------- the parts ----------
 NAMES = {"hw": "Hot water switch", "brew": "Brew switch", "steam": "Steam switch", "lamp": "Heating lamp",
          "pwr": "Power switch", "boiler": "Boiler: element, safety thermostat and ground", "sol": "3-way solenoid valve",
-         "pump": "Pump and its thermal fuse", "inlet": "Power inlet", "bt": "Brew thermostat", "st": "Steam thermostat",
+         "pump": "Pump", "inlet": "Power inlet", "bt": "Brew thermostat", "st": "Steam thermostat",
          "cap": "Caption"}
 NOTES = {
     "hw": "Hot water on joins its line pole, sending line to the pump alone, so the 3-way valve stays shut. Its neutral pole only feeds its own lamp.",
@@ -222,7 +222,7 @@ NOTES = {
     "sol": "Fed with the pump while brewing; its return runs through the brew switch's neutral pole.",
     "pump": "Fed from the brew or hot water switch. Its return runs through a thermal fuse on some models.",
     "inlet": "Line, neutral and earth come in here.",
-    "bt": "In series after the steam thermostat, on the neutral side: it holds brew temperature. Out on every Gaggiuino install: the thermocouple goes in its hole and the PCB takes over.",
+    "bt": "In series after the steam thermostat, on the neutral side: it holds brew temperature. Out on every Gaggiuino install: the PCB takes over, reading a thermocouple screwed into one of the boiler-top holes a thermostat's clamp used.",
     "st": "In series between the element and the brew thermostat. The new harness doesn't wire it, so it can stay in the boiler unwired or come out.",
 }
 
@@ -340,17 +340,19 @@ def build():
              "el:1": "Element, terminal 1", "el:2": "Element, terminal 2", "gnd": "Boiler ground spade",
              "bt:a": "Brew thermostat", "bt:b": "Brew thermostat", "st:a": "Steam thermostat", "st:b": "Steam thermostat",
              "sol:gnd": "3-way valve, ground spade", "sol:N": "3-way valve, N spade", "sol:coil": "3-way valve, coil spade",
-             "pump:N": "Pump, thermal-fuse terminal", "pump:L": "Pump, coil terminal"}
+             "pump:N": "Pump, return terminal", "pump:L": "Pump, coil terminal"}
     for pid, nm in (("hw", "Hot water switch"), ("brew", "Brew switch"), ("steam", "Steam switch")):
-        names[pid + ":Lin"] = nm + ", line pole center spade"
-        names[pid + ":Lout"] = nm + ", line pole outer spade"
-        names[pid + ":Nin"] = nm + ", neutral pole center spade"
-        names[pid + ":Nout"] = nm + ", neutral pole outer spade"
+        # neither source shows which spade is which on these three, so the names say supply and load, not center and outer
+        names[pid + ":Lin"] = nm + ", line pole, supply side"
+        names[pid + ":Lout"] = nm + ", line pole, load side"
+        names[pid + ":Nin"] = nm + ", neutral pole, supply side"
+        names[pid + ":Nout"] = nm + ", neutral pole, load side"
     meta = {r["id"]: {"color": r["color"], "sys": r["sys"], "what": r["what"], "frm": names[r["a"]], "to": names[r["b"]]} for r in runs}
     ends = {r["id"]: [pof[r["a"]], pof[r["b"]]] for r in runs}
     return {"svg": "".join(o), "runs": meta, "ends": ends,
             "parts": {pid: {"name": NAMES[pid], "note": NOTES.get(pid, "")} for pid in boxes},
             "name": fd["name"], "src": fd["src"], "srcname": fd["srcname"], "src2": fd["src2"], "src2name": fd["src2name"],
+            "reuse": fd.get("reuse", {}),
             "out": ["bt", "st"]}
 
 
