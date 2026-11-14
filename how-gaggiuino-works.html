@@ -796,7 +796,7 @@ td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:ta
     </g>
     <!-- gaggiuino: everything reports to the PCB -->
     <g class="arch gg">
-      <rect x="140" y="4" width="80" height="44" rx="7" class="brain"/><text x="180" y="25" class="bt sm">Screen</text><text x="180" y="40" class="bs">ESP32-S3</text>
+      <rect x="140" y="4" width="80" height="44" rx="7" class="brain"/><text x="180" y="25" class="bt sm">Screen</text><text x="180" y="40" class="bs">ESP32-P4/S3</text>
       <rect x="140" y="66" width="80" height="104" rx="10" class="brain"/>
       <text x="180" y="98" class="bt">PCB</text><text x="180" y="118" class="bs">STM32</text><text x="180" y="136" class="bs">reads all,</text><text x="180" y="151" class="bs">drives all</text>
       <path class="cw lv" d="M180,48 V66"/>
@@ -991,7 +991,7 @@ td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:ta
     <article class="pc nofig" id="screen">
       <div class="ph"><h3>Screen</h3><span class="where">on top, to J1</span></div>
       <div class="prose">
-        <p>The 4.3" touch screen is a small computer of its own, built on an ESP32-S3 Wi-Fi chip. It draws the interface, stores your profiles and settings, runs the Gaggiuino Wi-Fi network and the web page at gaggiuino.local, and installs updates for itself and the board. It talks to the PCB over a serial link on J1, which also powers it. The <a href="wiring.html#map?run=LV11">wiring map</a> shows the cable.</p>
+        <p>The 4.3" touch screen is a small computer of its own: the Gen 3.5 screen, the official standard since November 2026, is built on an ESP32-P4, and the Gen 3 screen on an ESP32-S3. It draws the interface, stores your profiles and settings, runs the Gaggiuino Wi-Fi network and the web page at gaggiuino.local, and installs updates for itself and the board. It talks to the PCB over a serial link on J1, which also powers it. The <a href="wiring.html#map?run=LV11">wiring map</a> shows the cable.</p>
         <p>The cable is wired by pin, not by color: blue and yellow swap between cable revisions. With a funnel mount on a Silvia it needs a longer cable than a Gaggia's front mount.</p>
       </div>
     </article>

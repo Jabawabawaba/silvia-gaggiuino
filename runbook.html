@@ -1048,7 +1048,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
       <a href="led-mod.html">LED switch mod</a>
       <a href="parts-tracker.html">Parts tracker</a>
     </div>
-    <p class="fine">Steps come from the build plan's install phases, the official Gaggiuino PCB, custom wiring, screen, flashing and Gen 3 manual pages (read November 2026), and the Discord Silvia thread. Tags show where each one comes from: Official, Discord or Plan. The official guides are written for Gaggias: where a step-by-step instruction is from the Discord, a Silvia source or this site's own advice, it says so.<span data-when="shelly"> The Shelly's steps are tagged Community (gblur's build, not the official docs), Shelly docs, or Plan.</span> The drawings are this site's own, from its part guides and diagrams; the official photos and screenshots are shown from the official docs' own addresses, credited, and stay theirs.</p>
+    <p class="fine">Steps come from the build plan's install phases, the official Gaggiuino PCB, Plug-and-Play/custom wiring, screen, flashing and Gen 3 manual pages (read November 2026), and the Discord Silvia thread. Tags show where each one comes from: Official, Discord or Plan. The official guides are written for Gaggias: where a step-by-step instruction is from the Discord, a Silvia source or this site's own advice, it says so.<span data-when="shelly"> The Shelly's steps are tagged Community (gblur's build, not the official docs), Shelly docs, or Plan.</span> The drawings are this site's own, from its part guides and diagrams; the official photos and screenshots are shown from the official docs' own addresses, credited, and stay theirs.</p>
     <button type="button" class="linkbtn" id="reset">Clear all ticks</button>
   </footer>
 </div>
@@ -2085,7 +2085,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     ]}};
   /* ---------------- the screen, the ToFnLED, firmware and the hardware scales (official guides: Interface: Screen,
      Accessory: ToFnLED, MCU Flashing, Accessory: Hardware Scales; read October 2026) ---------------- */
-  var SP={ov:'https://github.com/user-attachments/assets/888b31f2-d0e5-48d8-af31-7133bd122f70',fMag:'https://github.com/user-attachments/assets/ead5c319-6b55-48c7-8b6b-0f29e8354e0f',fGap:'https://github.com/user-attachments/assets/588d2c45-c75d-4f03-a2a2-f3a7fb753912',fPlug:'https://github.com/user-attachments/assets/028e9195-825e-48e4-b37b-14276b37e91b',
+  var SP={ov:'https://gaggiuino.github.io/media/screen_mounts_g_3.webp',fMag:'https://github.com/user-attachments/assets/ead5c319-6b55-48c7-8b6b-0f29e8354e0f',fGap:'https://github.com/user-attachments/assets/588d2c45-c75d-4f03-a2a2-f3a7fb753912',fPlug:'https://github.com/user-attachments/assets/028e9195-825e-48e4-b37b-14276b37e91b',
     uLid:'https://github.com/user-attachments/assets/99be6c31-095a-4fbf-ba57-a0f48e4b8bd4',uIns:'https://github.com/user-attachments/assets/6b5498d2-14ce-473d-86b5-116dd9999caa',uVent:'https://github.com/user-attachments/assets/8c1e694a-89a4-4cce-9641-f92db90aab87',uPlug:'https://github.com/user-attachments/assets/99454a58-6f10-4422-9010-ad2a61bfa8cc',
     rVent:'https://github.com/user-attachments/assets/1ecfdfb7-cd2e-49c0-895f-76fc201f7e7c',rPlug:'https://github.com/user-attachments/assets/8724315e-99c0-4e59-8242-e98b0531ee6c',posts:'https://github.com/user-attachments/assets/2d059c58-a688-409c-9bd9-183443854bc7',cover:'https://github.com/user-attachments/assets/fc37622f-ee69-4ec3-af85-874e8c00d273',
     fClip:'https://github.com/user-attachments/assets/343d150b-3509-481a-80a5-b4e811b0ea3c',fOn:'https://github.com/user-attachments/assets/2a1c65f7-1ec7-46a0-bfa5-59710317190d',fTop:'https://github.com/user-attachments/assets/44cd4587-2e95-4c72-bc0c-595ed9d91755',
@@ -2369,7 +2369,7 @@ var RBF=(function(){
     /* which pieces show: variants, conditions, family and mains voltage, as on the part guides page */
     var d=p.d,v=p.v;
     Array.prototype.forEach.call(svg.querySelectorAll('[data-when]'),function(e){e.style.display=(!C.m||C.m(e.getAttribute('data-when')))?'':'none'});
-    Array.prototype.forEach.call(svg.querySelectorAll('[data-v]'),function(e){var dv=e.getAttribute('data-v');e.style.display=(d.vars?dv===v:(C.dv?C.dv(dv):false))?'':'none'});
+    Array.prototype.forEach.call(svg.querySelectorAll('[data-v]'),function(e){var dv=e.getAttribute('data-v');e.style.display=(d.vars?dv===v:(C.dv?(C.dv(dv)&&(dv==='SI'||!C.dv('SI'))):false))?'':'none'});
     var fam=(C.famOf&&C.famOf())||'GCP';
     Array.prototype.forEach.call(svg.querySelectorAll('[data-fam]'),function(e){e.style.display=e.getAttribute('data-fam')===fam?'':'none'});
     var volts=(C.prof&&C.prof().volts)||120;
@@ -2516,7 +2516,7 @@ var RBF=(function(){
     return S(292,Y2+148,b,'Screen cable from J1 to the Gen 3 screen: J1 5V and GND to the socket marked GND, RXD, TXD, 5V; J1 TX to IO18 and RX to IO17 on the socket marked UART1.');
   }
   D.scrpins=function(o){var k=o.scr||(C.screen&&C.screen())||null,list=k?[k]:['p4','s3','hl'];
-    return {panels:list.map(scrPanel),wide:!k,min:230,cap:'Colors as the official drawing shows them. Yours may differ: blue and yellow have been swapped between cable batches, so go by the names beside the pins.'+(k?'':' Pick your screen at the top of the page to see only yours.')}};
+    return {panels:list.map(scrPanel),wide:!k,min:230,cap:'Colors as the official drawing shows them. Yours may differ: blue and yellow have been swapped between cable batches, so go by the names beside the pins.'+(k||!C.screen?'':' Pick your screen at the top of the page to see only yours.')}};
 
   /* a multimeter: the zero reading, a connection, and no connection (OL) */
   function meterPanel(mode){

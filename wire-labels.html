@@ -361,6 +361,223 @@ ol.steps li::before{content:counter(s);font:600 13px/26px var(--f-mono);text-ali
 .links{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:15px}
 .fine{margin:0;font-size:14px;color:var(--muted);max-width:80ch}
 a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
+/* Runbook figures (runbook-figs.js): part guide players, the runbook's own diagrams, official photo thumbnails and viewer,
+   power badges. Shared by the Gaggia and Silvia runbooks. The part guides' drawing styles come from part-guides.css. */
+.rfigs{display:grid;gap:12px;justify-items:start}
+.rfig{width:100%;max-width:560px}
+.rfig-art{aspect-ratio:var(--ar,480/300);width:100%}
+.rfig-art:not(:empty){aspect-ratio:auto}
+.rfig-art>svg{display:block;width:100%;height:auto;padding:8px 8px 2px}
+.rfig-cap{padding:8px 12px 10px;font-size:14.5px;line-height:1.45;border-top:1px solid var(--line)}
+.rfig-cap b{font-weight:600}
+.rfig-h{display:block;font:600 11px/1.3 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent-ink);margin-bottom:3px}
+.rfig-cap a{white-space:nowrap}
+.rfig .pg-ctl button[hidden]{display:none}
+.rfig .pg-ctl .pg-pos{white-space:nowrap;font-size:12.5px;min-width:0}
+.rfig,.rdia,.rfigs{min-width:0}
+@media (max-width:400px){.rfig .pg-ctl{gap:4px;padding:6px}.rfig .pg-ctl button{min-width:40px}.rfig .pg-ctl .pg-pos{white-space:normal;font-size:12px}.rdia{padding:8px 8px 10px}}
+.rdia{margin:0;width:100%;max-width:560px;border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:10px 12px 12px}
+.rdia.wide{max-width:none}
+.rdia-p{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(var(--pmin,150px),100%),1fr));gap:10px 14px;align-items:start}
+.rdp{min-width:0}
+.rdia figcaption{margin-top:8px;font-size:14px;line-height:1.45;color:var(--muted);max-width:70ch}
+/* diagram drawing */
+.rd{display:block;width:100%;height:auto;max-height:440px;font-family:var(--f-body);overflow:visible}
+.rd text{fill:var(--ink);font-size:12.5px}
+.rd .rd-tb{font-weight:600}
+.rd .rd-s{font-size:11.5px;fill:var(--muted)}
+.rd .rd-m{fill:var(--muted)}
+.rd .rd-tm{font:500 11.5px var(--f-mono)}
+.rd .rd-pn{font:600 11.5px var(--f-mono)}
+.rd .rd-on{fill:#E7E9EB;font:600 11px var(--f-mono)}
+.rd .rd-ln{fill:none;stroke:var(--muted);stroke-width:1.2}
+/* the PCB */
+.rd .pcb-b{fill:#25303A;stroke:#59616A;stroke-width:1}
+.rd .pcb-hd{fill:#EFE8D8;stroke:#B8AE96;stroke-width:.8}
+.rd .pcb-pin{fill:#3A3F45}
+.rd .pcb-pl{font:500 8.5px var(--f-mono);fill:#C9D1D9}
+.rd .pcb-jn{font:700 10.5px var(--f-mono);fill:#F2F4F5}
+.rd .pcb-jn.on{fill:#FFC163}
+.rd .pcb-hl{fill:rgba(242,163,58,.16);stroke:#F2A33A;stroke-width:2.2}
+.rd .pcb-x{fill:rgba(236,112,100,.1);stroke:#EC7064;stroke-width:1.6;stroke-dasharray:4 3}
+.rd .pcb-tb{fill:#2F8A57;stroke:#1C5B38}
+.rd .pcb-sc{fill:#C9CFD4;stroke:#6B737B}
+.rd .pcb-scl{fill:none;stroke:#4A5158;stroke-width:1.4}
+.rd .pcb-pm{font:700 11px var(--f-mono);fill:#F2F4F5}
+.rd .pcb-lead{fill:none;stroke:#C9CFD4;stroke-width:2}
+.rd .pcb-usb{fill:#AEB6BD;stroke:#6B737B}
+.rd .pcb-j2{fill:none;stroke:#C9D1D9;stroke-dasharray:3 2}
+.rd .pcb-sp{fill:#D3D8DC;stroke:#7C858D}
+.rd .pcb-pill{stroke-width:1.2}
+.rd .pcb-pill.on{fill:var(--accent);stroke:var(--accent)}
+.rd .pcb-pill.x{fill:var(--bad-soft);stroke:var(--bad)}
+.rd .pcb-pill.mut{fill:var(--surface-2);stroke:var(--line)}
+.rd .pcb-pt{font:700 11px var(--f-mono)}
+.rd .pcb-pt.on{fill:var(--on-accent)}
+.rd .pcb-pt.x{fill:var(--bad)}
+.rd .pcb-pt.mut{fill:var(--muted)}
+/* the PCB's socket list, beside the board on wide screens and under it on phones */
+.pcbl{list-style:none;margin:0;padding:4px 0 0;display:grid;gap:8px;font-size:15px;line-height:1.3}
+.pcbl li{display:grid;grid-template-columns:minmax(64px,max-content) minmax(0,1fr);gap:10px;align-items:start}
+.pcbl .pill{white-space:nowrap;font:700 12px/1 var(--f-mono);text-align:center;padding:5px 6px;border-radius:999px;border:1px solid var(--line);background:var(--surface-2);color:var(--muted)}
+.pcbl li.on .pill{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.pcbl li.x .pill{background:var(--bad-soft);border-color:var(--bad);color:var(--bad)}
+.pcbl li.x>span:last-child,.pcbl li.mut>span:last-child{color:var(--muted)}
+/* wires, colored as the official drawings color them */
+.rd .w{fill:none;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}
+.rd .w.must{stroke-width:4.4}
+.rd .w-r{stroke:#D7322B}
+.rd .w-k{stroke:#1B1D20}
+.rd .w-y{stroke:#E5BE12}
+.rd .w-b{stroke:#2C5BD8}
+.rd .w-o{stroke:#E37A1C}
+/* J4 */
+.rd .j4-ins{fill:none;stroke:#8D959C;stroke-width:9;stroke-linecap:round}
+.rd .j4-cu{fill:none;stroke:#C77A45;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+/* front switches */
+.rd .sw-b{fill:#2B3036;stroke:#15181B}
+.rd .sw-r{fill:#59616A;stroke:#15181B}
+.rd .sw-r.on{fill:#E8E2D2}
+/* cord and outlet */
+.rd .cd-wall{fill:#E9E4D8;stroke:#9C9384}
+.rd .cd-sock{fill:#F8F6F0;stroke:#9C9384}
+.rd .cd-slot{fill:none;stroke:#3A3F45;stroke-width:3;stroke-linecap:round}
+.rd .cd-gnd{fill:none;stroke:#3A3F45;stroke-width:2.6;stroke-linecap:round}
+.rd .cd-slot2{fill:none;stroke:#C9CFD4;stroke-width:3;stroke-linecap:round}
+.rd .cd-mach{fill:#C3CAD0;stroke:#6B737B}
+.rd .cd-iec{fill:#2B3036;stroke:#15181B}
+.rd .cd-cord{fill:none;stroke:#2B3036;stroke-width:6;stroke-linecap:round}
+.rd .cd-plug{fill:#2B3036;stroke:#15181B}
+.rd .cd-pin{fill:none;stroke:#C9CFD4;stroke-width:3}
+.rd .cd-arr{fill:none;stroke:var(--accent);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+/* the bench */
+.rd .bn-mat{fill:#C9A877;stroke:#8C6F45}
+.rd .bn-box{fill:#3A3F45;stroke:#15181B}
+.rd .bn-cloth{fill:#DCE9F2;stroke:#8DA9C0}
+.rd .bn-scr{fill:#0F1215;stroke:#3A3F45}
+.rd .bn-screw{fill:#C9CFD4;stroke:#59616A}
+.rd .bn-x{fill:none;stroke:#B13A2F;stroke-width:3.5;stroke-linecap:round}
+.rd text.bn-t{fill:#2B2118;font-size:11.5px;font-weight:500}
+/* the meter */
+.rd .mt-b{fill:#F2C230;stroke:#8A6D10;stroke-width:1.2}
+.rd .mt-lcd{fill:#C9D6C0;stroke:#5B6B52}
+.rd .mt-num{font:700 22px var(--f-mono);fill:#1B1D20}
+.rd .mt-u{font:700 12px var(--f-mono);fill:#1B1D20}
+.rd .mt-bw{fill:none;stroke:#1B1D20;stroke-width:1.6;stroke-linecap:round}
+.rd .mt-dial{fill:#2B3036;stroke:#15181B}
+.rd .mt-ptr{stroke:#F2F4F5;stroke-width:3;stroke-linecap:round}
+.rd .mt-dl{font:700 10px var(--f-mono);fill:#1B1D20}
+.rd .mt-jk{fill:#1B1D20}
+.rd .mt-jk.mt-jr{fill:#B13A2F}
+.rd .mt-lead{fill:none;stroke-width:3}
+.rd .mt-lead.k,.rd .mt-probe.k{stroke:#1B1D20}
+.rd .mt-lead.r,.rd .mt-probe.r{stroke:#C8392C}
+.rd .mt-probe{fill:none;stroke-width:5.5;stroke-linecap:round}
+.rd .mt-wire{fill:none;stroke:#B87333;stroke-width:3}
+.rd .mt-term{fill:#C9CFD4;stroke:#6B737B}
+/* the SSR */
+.rd .ssr-b{fill:#2B3036;stroke:#15181B}
+.rd .ssr-tw{fill:#3A4048;stroke:#15181B}
+.rd .ssr-sc{fill:#C9CFD4;stroke:#6B737B}
+.rd .ssr-ledc{fill:#5A2A26}
+.rd .ssr-led.on .ssr-ledc,.rd .ssr-led.blink .ssr-ledc{fill:#FF4A3D}
+.rd .ssr-led.blink{animation:rbblink 1s steps(2,jump-none) infinite}
+/* the Flush button */
+.rd .fl-b{fill:#C8642A;stroke:#8A3F14}
+.rd .fl-c{stroke:#2B1A10;stroke-width:1.5}
+.rd .fl-c.g{fill:#5B6168}
+.rd .fl-c.gr{fill:#3BD16F}
+.rd .fl-c.bl{fill:#3A8DFF}
+.rd .fl-t{font:600 14px var(--f-body);fill:#FFFFFF}
+/* the pressure dial */
+.rd .g-arc{fill:none;stroke:var(--surface-2);stroke-width:14}
+.rd .g-band{fill:none;stroke:var(--good);stroke-width:14}
+.rd .g-tick{stroke:var(--muted);stroke-width:1.4}
+.rd .g-needle{stroke:var(--bad);stroke-width:3.5;stroke-linecap:round}
+.rd .g-hub{fill:var(--ink)}
+/* Wi-Fi cards */
+.rd .wf-b{fill:var(--bg);stroke:var(--line)}
+.rd .wf-n{fill:var(--accent)}
+.rd .wf-nt{font:700 13px var(--f-mono);fill:var(--on-accent)}
+.rd .wf-row{fill:var(--surface);stroke:var(--line)}
+.rd .wf-row.on{fill:var(--accent-soft);stroke:var(--accent)}
+.rd .wf-ic{fill:none;stroke:var(--ink);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+/* boot */
+.rd .bt-s{fill:#0F1215;stroke:#3A3F45}
+.rd .bt-t{font:600 13px var(--f-body);fill:#E7E9EB}
+.rd .bt-t2{font:500 12px var(--f-body);fill:#9BA2AA}
+.rd .bt-ledc{fill:#FF3B30}
+.rd .bt-led{animation:rbglow 1.8s ease-in-out infinite}
+.rd .bt-l{font:600 11px var(--f-mono);fill:#FF8A80}
+/* temperature */
+.rd .tp-ax{fill:none;stroke:var(--muted);stroke-width:1.4}
+.rd .tp-tgt{fill:none;stroke:var(--accent);stroke-dasharray:5 4;stroke-width:1.5}
+.rd .tp-ok{fill:none;stroke:var(--good);stroke-width:3.2;stroke-linecap:round}
+.rd .tp-bad{fill:none;stroke:var(--bad);stroke-width:2.6;stroke-dasharray:6 5;stroke-linecap:round}
+.rd .tp-okt{fill:var(--good);font-weight:600}
+.rd .tp-badt{fill:var(--bad);font-weight:600;font-size:11.5px}
+/* label flag */
+.rd .fg-w{fill:none;stroke:#C8392C;stroke-width:9;stroke-linecap:round}
+.rd .fg-w.k{stroke:#2B3036}
+.rd .fg-w.n{stroke:#7C858D}
+.rd .fg-w.s{stroke-width:18}
+.rd .fg-fold{fill:none;stroke:#B8C0C7;stroke-width:1;stroke-dasharray:3 3}
+.rd .fg-sp{fill:#C9CFD4;stroke:#6B737B}
+.rd .fg-l{fill:#FFFFFF;stroke:#8D959C;stroke-width:1.2}
+.rd .fg-l2{fill:#E9ECEE;stroke:#8D959C;stroke-width:1.2}
+.rd .fg-t{font:700 18px var(--f-mono);fill:#16191C}
+.rd .fg-t.sm{font-size:13px}
+.rd .fg-mk{font:700 13px var(--f-mono);fill:#FFFFFF}
+/* temperature limits */
+.rd .lm-tube{fill:var(--surface-2);stroke:var(--line)}
+.rd .lm-bulb{fill:var(--bad)}
+.rd .lm-m{stroke:var(--ink);stroke-width:1.5}
+.rd .lm-m.set{stroke:var(--accent);stroke-width:2.6}
+.rd .lm-m.stop{stroke:var(--bad);stroke-width:2.6}
+.rd .lm-stop{fill:var(--bad);font-weight:600}
+:root[data-theme="dark"] .rd .w-k,:root[data-theme="dark"] .rd .mt-lead.k,:root[data-theme="dark"] .rd .mt-probe.k,:root[data-theme="dark"] .rd .cd-cord,:root[data-theme="dark"] .rd .cd-plug,:root[data-theme="dark"] .rd .fg-w.k{filter:drop-shadow(0 0 1.2px #C9D1D9)}
+:root[data-theme="dark"] .pw-hot{color:#1A1206}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .rd .w-k,:root:not([data-theme="light"]) .rd .mt-lead.k,:root:not([data-theme="light"]) .rd .mt-probe.k,:root:not([data-theme="light"]) .rd .cd-cord,:root:not([data-theme="light"]) .rd .cd-plug,:root:not([data-theme="light"]) .rd .fg-w.k{filter:drop-shadow(0 0 1.2px #C9D1D9)}:root:not([data-theme="light"]) .pw-hot{color:#1A1206}}
+@keyframes rbblink{0%{opacity:1}50%{opacity:.15}100%{opacity:1}}
+@keyframes rbglow{0%,100%{opacity:.55}50%{opacity:1}}
+@media (prefers-reduced-motion:reduce){.rd .ssr-led.blink,.rd .bt-led{animation:none}}
+/* official photos */
+.rph{display:grid;gap:6px;min-width:0;justify-items:start}
+.rph .rph-strip{justify-self:stretch}
+.rph-strip{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 8px;scroll-snap-type:x proximity;overscroll-behavior-x:contain}
+.rph-t{appearance:none;border:1px solid var(--line);background:var(--bg);border-radius:9px;padding:0;width:136px;flex:none;cursor:zoom-in;display:grid;grid-template-rows:90px auto;text-align:left;overflow:hidden;scroll-snap-align:start;color:var(--ink)}
+.rph-t img{width:100%;height:90px;object-fit:cover;display:block;background:var(--surface-2)}
+.rph-t span{font-size:12.5px;line-height:1.3;padding:5px 7px 7px}
+.rph-t.bad{grid-template-rows:auto;cursor:pointer}
+.rph-t.bad img{display:none}
+.rph-t.bad span::before{content:"Didn't load here: tap for the link. ";color:var(--muted)}
+.rph-c{margin:0;font-size:12.5px;color:var(--muted)}
+.rbx{border:0;padding:0;background:transparent;width:min(96vw,1100px);max-width:none;max-height:96vh;color:var(--ink)}
+.rbx::backdrop{background:rgba(8,10,12,.84)}
+.rbx-in{display:grid;grid-template-rows:minmax(0,1fr) auto;max-height:94vh;background:var(--surface);border-radius:12px;overflow:hidden}
+.rbx-img{display:grid;place-items:center;background:#0D0F11;min-height:180px;overflow:auto}
+.rbx-img img{max-width:100%;max-height:calc(94vh - 92px);object-fit:contain;display:block}
+.rbx-bad{color:#E7E9EB;padding:24px;text-align:center;margin:0}
+.rbx-bar{display:flex;align-items:center;gap:8px;padding:8px 10px;border-top:1px solid var(--line)}
+.rbx-cap{flex:1;min-width:0;margin:0;font-size:14.5px;line-height:1.35}
+.rbx-cap .n,.rbx-cap .cr{color:var(--muted);font-size:13px}
+.rbx-b{appearance:none;border:1px solid var(--line);background:var(--bg);border-radius:10px;min-width:44px;min-height:44px;display:inline-grid;place-items:center;cursor:pointer;color:var(--ink);flex:none}
+.rbx-b[hidden]{display:none}
+.rbx-b svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+/* power badges */
+.pw{display:inline-flex;align-items:center;gap:4px;font:600 10.5px/1 var(--f-mono);letter-spacing:.05em;text-transform:uppercase;padding:4px 8px 4px 6px;border-radius:999px;vertical-align:2px;margin-left:8px;white-space:nowrap;border:1px solid currentColor}
+.pw .pwi{width:13px;height:13px;flex:none;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.pw-off{color:var(--good);background:var(--good-soft)}
+.pw-usb{color:var(--blue);background:var(--blue-soft)}
+.pw-on{color:var(--bad);background:var(--bad-soft)}
+.pw-hot{color:#FFFFFF;background:var(--bad);border-color:var(--bad)}
+.pwlegend{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;margin:-10px 0 20px;font-size:13.5px;color:var(--muted)}
+.pwlegend .k{font:600 11px var(--f-mono);letter-spacing:.1em;text-transform:uppercase}
+.pwl{display:inline-flex;align-items:center;gap:6px}
+.pwl .pw{margin-left:0}
+@media print{.rfigs,.rph,.pwlegend,.rbx{display:none!important}}
+
+.howfig .rfigs{margin-top:22px}
 </style>
 
 <div class="wrap">
@@ -411,6 +628,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
       <p class="note">These ends sit on the boiler, where paper and tape adhesive won't last. Write the ID on the silicone jacket with an oil-based permanent marker, which the official guide recommends for silicone.</p>
     </div>
   </section>
+  <div class="howfig" id="howfig"></div>
 
   <section class="sheets" id="sheets" aria-label="Sheet preview"></section>
 
@@ -503,6 +721,435 @@ var LabelCore=(function(){
 if(typeof module!=='undefined'&&module.exports)module.exports=LabelCore;
 
 (function(){
+  /* Runbook figures, shared by the Gaggia and Silvia runbooks (the same file on both sites).
+   - Part guide players: a part guide's drawing (part-*.svg.html, moves from part-guides-data.js) shown inside a runbook step,
+     stepping through just the guide steps that match it. Spec ['g', guide, variant, [guide step titles], when].
+     variant: null for guides without variants, a variant key ('ptb'), or '@name' to ask the page (cfg.variant).
+   - Diagrams drawn here: ['d', name, options, when]. Each is one or more small SVG panels with a caption.
+   - Official photos: thumbnails that open in a viewer, loaded from the official docs' own addresses, with credit.
+   - Power badges: what's powered while you do a step (unplugged, USB only, mains on, hot).
+   The page calls RBF.init(cfg) once with its conditions and data, RBF.figs(step) and RBF.pics(step) while it builds a
+   step's Step by step panel, and RBF.mount(root) after it puts the phase on the page. */
+var RBF=(function(){
+  var C={},RM=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches,REG=[],UID=0,IO=null,EASE='cubic-bezier(.45,0,.2,1)';
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+  function ok(w){return !w||!C.ok||C.ok(w)}
+  function init(cfg){C=cfg||{}}
+
+  /* ---------- power badges ---------- */
+  var PW={off:['Unplugged','Mains cord out of the wall. Nothing in the machine is powered.'],
+    usb:['USB power only','The PCB runs from a USB-C cable. Mains cord out.'],
+    on:['Mains on','Plugged in and switched on. Covers stay on; hands stay out of the machine.'],
+    hot:['Mains on, hot','Plugged in and hot: the boiler, group, steam and wand can burn.']};
+  var PWI={off:'<path d="M5 3l14 18M9 7V3M15 7V3M7 7h10v4a5 5 0 0 1-2 4M12 16v5"/>',
+    usb:'<path d="M12 3v14M8 7l4-4 4 4M12 13l-4-2V9M12 11l4-2V7M12 17a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/>',
+    on:'<path d="M13 2L5 13h6l-1 9 8-11h-6z"/>',
+    hot:'<path d="M12 21c-4 0-6-3-6-6 0-4 4-6 4-10 3 2 4 4 4 6 1-1 2-2 2-3 2 2 2 4 2 7 0 3-2 6-6 6z"/>'};
+  function icon(k){return '<svg class="pwi" viewBox="0 0 24 24" aria-hidden="true">'+PWI[k]+'</svg>'}
+  function badge(k){if(!PW[k])return '';return '<span class="pw pw-'+k+'" title="'+esc(PW[k][1])+'">'+icon(k)+esc(PW[k][0])+'</span>'}
+  var PWS={off:'cord out of the wall',usb:'bench, PCB on USB-C',on:'covers on, hands out',hot:'can burn'};
+  function legend(){return '<div class="pwlegend" aria-label="What the power badges mean"><span class="k">Power badges</span>'+['off','usb','on','hot'].map(function(k){return '<span class="pwl">'+badge(k)+'<span>'+esc(PWS[k])+'</span></span>'}).join('')+'</div>'}
+
+  /* ---------- official photos ---------- */
+  function pics(list){
+    list=(list||[]).filter(function(p){return ok(p[2])});if(!list.length)return '';
+    var id=REG.length;REG.push({pics:list});
+    return '<div class="rph"><span class="rlbl">Official images</span><div class="rph-strip" data-rph="'+id+'">'+list.map(function(p,i){
+      return '<button type="button" class="rph-t" data-i="'+i+'" aria-label="'+esc('Open the official image: '+p[0])+'"><img src="'+esc(p[1])+'" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.parentNode.classList.add(\'bad\')"><span>'+esc(p[0])+'</span></button>'}).join('')+'</div>'
+      +'<p class="rph-c">From the official Gaggiuino docs, loaded from their site. Tap one to see it larger.</p></div>';
+  }
+  var DLG=null,DL=null,DI=0;
+  function viewer(list,i){
+    if(!DLG){
+      DLG=document.createElement('dialog');DLG.className='rbx';DLG.setAttribute('aria-label','Official image');
+      DLG.innerHTML='<div class="rbx-in"><div class="rbx-img"><img alt=""><p class="rbx-bad" hidden>This image didn\'t load here. Open it on the official site with the link below.</p></div>'
+        +'<div class="rbx-bar"><button type="button" class="rbx-b" data-x="p" aria-label="Previous image"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>'
+        +'<p class="rbx-cap" aria-live="polite"></p><button type="button" class="rbx-b" data-x="n" aria-label="Next image"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>'
+        +'<button type="button" class="rbx-b rbx-x" data-x="x" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div></div>';
+      document.body.appendChild(DLG);
+      var img=DLG.querySelector('img');
+      img.addEventListener('error',function(){img.hidden=true;DLG.querySelector('.rbx-bad').hidden=false});
+      DLG.addEventListener('click',function(e){var b=e.target.closest('[data-x]');
+        if(b){var x=b.getAttribute('data-x');if(x==='x')DLG.close();else show(DI+(x==='n'?1:-1));return}
+        if(e.target===DLG)DLG.close()});
+      DLG.addEventListener('keydown',function(e){if(e.key==='ArrowRight'){e.preventDefault();show(DI+1)}else if(e.key==='ArrowLeft'){e.preventDefault();show(DI-1)}});
+    }
+    DL=list;show(i);
+    if(!DLG.open){try{DLG.showModal()}catch(e){DLG.setAttribute('open','')}}
+  }
+  function show(i){
+    var n=DL.length;DI=(i+n)%n;var p=DL[DI],img=DLG.querySelector('img');
+    img.hidden=false;DLG.querySelector('.rbx-bad').hidden=true;img.referrerPolicy='no-referrer';img.src=p[1];img.alt=p[0];
+    DLG.querySelector('.rbx-cap').innerHTML='<b>'+esc(p[0])+'</b> '+(n>1?'<span class="n">'+(DI+1)+' of '+n+'</span> ':'')+'<span class="cr">From the official Gaggiuino docs · <a href="'+esc(p[1])+'" target="_blank" rel="noopener">open the original</a></span>';
+    Array.prototype.forEach.call(DLG.querySelectorAll('[data-x="p"],[data-x="n"]'),function(b){b.hidden=n<2});
+  }
+
+  /* ---------- figures in a step ---------- */
+  function figs(list){
+    list=(list||[]).filter(function(f){return ok(f[4]||(f[0]==='d'?f[3]:null))});
+    var h='';
+    list.forEach(function(f){
+      if(f[0]==='g'){
+        var p=gPlan(f);if(!p)return;
+        var id=REG.length;REG.push(p);
+        h+='<figure class="pg-fig rfig" data-rf="'+id+'" style="--ar:'+p.ar+'"><div class="rfig-art" role="img" aria-label="'+esc(p.label)+'"></div>'
+          +'<div class="pg-ctl"><button type="button" class="pg-prev" aria-label="Previous drawing"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button><span class="pg-pos" aria-live="polite"></span><button type="button" class="pg-next" aria-label="Next drawing"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button><button type="button" class="pg-again" aria-label="Play this drawing again"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg></button></div>'
+          +'<figcaption class="rfig-cap"></figcaption></figure>';
+      }else if(f[0]==='d'&&D[f[1]]){
+        var o=D[f[1]](f[2]||{});if(!o)return;
+        h+='<figure class="rdia'+(o.wide?' wide':'')+'"'+(o.min?' style="--pmin:'+o.min+'px"':'')+'><div class="rdia-p">'+o.panels.map(function(p){return '<div class="rdp">'+p+'</div>'}).join('')+'</div>'+(o.cap?'<figcaption>'+o.cap+'</figcaption>':'')+'</figure>';
+      }
+    });
+    return h?'<div class="rfigs">'+h+'</div>':'';
+  }
+
+  /* a guide player's plan: which drawing, which of its steps */
+  function gPlan(f){
+    var G=C.G||{},d=G[f[1]];if(!d)return null;
+    var v=f[2]||null;
+    var head=f[5]||'';if(v&&v.charAt(0)==='@'){var vk=v.slice(1);v=C.variant?C.variant(vk,d):null;if(!head&&C.variantHead)head=C.variantHead(vk)||''}
+    if(d.vars){if(!v||!d.vars.some(function(x){return x.k===v}))v=d.def?d.def():d.vars[0].k}else v='all';
+    var all=(d.steps[v]||d.steps.all||[]).filter(function(s){return C.m?C.m(s.when):true});
+    /* titles: 'all', a list (an entry can be [title, when]), or a list per variant */
+    var want=f[3]==='all'?all.map(function(s){return s.t}):Array.isArray(f[3])?f[3]:(f[3]&&f[3][v])||[];
+    var sel=[];want.forEach(function(t){if(Array.isArray(t)){if(!ok(t[1]))return;t=t[0]}for(var i=0;i<all.length;i++)if(all[i].t===t){if(sel.indexOf(i)<0)sel.push(i);break}});
+    if(!sel.length)return null;sel.sort(function(a,b){return a-b});
+    var svgId=d.svgs?d.svgs[v]:d.svg,tpl=document.getElementById('rbt-'+svgId);if(!tpl)return null;
+    var vb=/viewBox="([\d.\s-]+)"/.exec(tpl.innerHTML),ar='480/300';if(vb){var a=vb[1].trim().split(/\s+/);ar=a[2]+'/'+a[3]}
+    return {g:f[1],d:d,v:v,all:all,sel:sel,svgId:svgId,ar:ar,head:head,label:(head?head+'. ':'')+'Drawing from the part guides: '+sel.map(function(i){return all[i].t}).join(', ')};
+  }
+
+  /* ---------- the player (the part guides' own engine, cut down) ---------- */
+  function num(v,dv){return v==null?dv:v}
+  function tf(s){return 'translate('+num(s.x,0)+'px,'+num(s.y,0)+'px) rotate('+num(s.r,0)+'deg) scale('+num(s.sx,num(s.s,1))+','+num(s.sy,num(s.s,1))+')'}
+  function clone(o){var r={};for(var k in o){r[k]={};for(var p in o[k])r[k][p]=o[k][p]}return r}
+  function merge(st,k,props){if(!st[k])st[k]={};for(var p in props)st[k][p]=props[p]}
+  var CH={x:'t',y:'t',r:'t',s:'t',sx:'t',sy:'t',o:'o',d:'d'};
+  function chanVal(s,c){s=s||{};return c==='t'?tf(s):c==='o'?String(num(s.o,1)):String(num(s.d,0))}
+  function prop(c){return c==='t'?'transform':c==='o'?'opacity':'strokeDashoffset'}
+
+  function Player(fig,p){
+    this.fig=fig;this.p=p;this.k=0;this.anims=[];this.timers=[];this.played=false;
+    var tpl=document.getElementById('rbt-'+p.svgId),self=this,u='-r'+(++UID);
+    var box=fig.querySelector('.rfig-art');box.innerHTML=tpl.innerHTML;
+    var svg=this.svg=box.querySelector('svg');
+    /* ids made unique per copy, so a step can show the same drawing twice */
+    var map={};Array.prototype.forEach.call(svg.querySelectorAll('[id]'),function(e){var o=e.id;map[o]=o+u;e.id=o+u});
+    svg.removeAttribute('id');svg.setAttribute('aria-hidden','true');svg.removeAttribute('role');svg.removeAttribute('aria-labelledby');
+    Array.prototype.forEach.call(svg.querySelectorAll('*'),function(e){['clip-path','mask','fill','stroke','filter'].forEach(function(a){var v=e.getAttribute(a);if(v&&v.indexOf('url(#')>=0)e.setAttribute(a,v.replace(/url\(#([^)]+)\)/g,function(_,i){return 'url(#'+(map[i]||i)+')'}))})});
+    /* which pieces show: variants, conditions, family and mains voltage, as on the part guides page */
+    var d=p.d,v=p.v;
+    Array.prototype.forEach.call(svg.querySelectorAll('[data-when]'),function(e){e.style.display=(!C.m||C.m(e.getAttribute('data-when')))?'':'none'});
+    Array.prototype.forEach.call(svg.querySelectorAll('[data-v]'),function(e){var dv=e.getAttribute('data-v');e.style.display=(d.vars?dv===v:(C.dv?(C.dv(dv)&&(dv==='SI'||!C.dv('SI'))):false))?'':'none'});
+    var fam=(C.famOf&&C.famOf())||'GCP';
+    Array.prototype.forEach.call(svg.querySelectorAll('[data-fam]'),function(e){e.style.display=e.getAttribute('data-fam')===fam?'':'none'});
+    var volts=(C.prof&&C.prof().volts)||120;
+    Array.prototype.forEach.call(svg.querySelectorAll('[data-volts]'),function(e){e.style.display=Number(e.getAttribute('data-volts'))===volts?'':'none'});
+    function hidden(e){for(var q=e;q&&q!==svg;q=q.parentNode){if(q.style&&q.style.display==='none')return true}return false}
+    this.el={};
+    Array.prototype.forEach.call(svg.querySelectorAll('[data-k]'),function(e){var k=e.getAttribute('data-k');if(hidden(e)&&self.el[k])return;self.el[k]=e;
+      e.style.transformBox=e.getAttribute('data-box')==='view'?'view-box':'fill-box';e.style.transformOrigin=e.getAttribute('data-origin')||'center'});
+    this.base=d.base[v]||d.base;this.states=[];var st=clone(this.base);
+    p.all.forEach(function(s){(s.a||[]).forEach(function(op){merge(st,op[0],op[1])});self.states.push(clone(st))});
+    var q=function(s){return fig.querySelector(s)};
+    q('.pg-prev').addEventListener('click',function(){self.go(self.k-1,true)});
+    q('.pg-next').addEventListener('click',function(){self.go(self.k+1,true)});
+    q('.pg-again').addEventListener('click',function(){self.go(self.k,true)});
+    fig.addEventListener('keydown',function(e){if((e.key==='ArrowRight'||e.key==='ArrowLeft')&&e.target.closest('.pg-ctl')){e.preventDefault();self.go(self.k+(e.key==='ArrowRight'?1:-1),true)}});
+    this.go(0,false);
+  }
+  Player.prototype.stop=function(){
+    this.anims.forEach(function(a){try{a.cancel()}catch(e){}});this.anims=[];
+    this.timers.forEach(function(t){clearTimeout(t);cancelAnimationFrame(t)});this.timers=[];
+    Array.prototype.forEach.call(this.svg.querySelectorAll('[data-loop]'),function(e){e.classList.remove('run')});
+    Array.prototype.forEach.call(this.svg.querySelectorAll('[data-run]'),function(e){e.classList.remove('on')});
+  };
+  Player.prototype.apply=function(st){
+    for(var k in this.el){var e=this.el[k],s=st[k]||{};
+      e.style.transform=tf(s);e.style.opacity=String(num(s.o,1));
+      if(e.classList.contains('draw')){e.style.strokeDashoffset=String(num(s.d,0));if(num(s.d,0)>=1)e.style.opacity='0'}}
+  };
+  Player.prototype.go=function(k,anim){
+    var p=this.p;if(k<0||k>=p.sel.length)return;
+    this.stop();this.k=k;var i=p.sel[k],step=p.all[i],before=i>0?this.states[i-1]:this.base,after=this.states[i],self=this;
+    this.apply(after);
+    if(anim){this.played=true;if(!RM&&this.svg.animate){
+      var cur=clone(before),lines={};
+      (step.a||[]).forEach(function(op){
+        var key=op[0],e=self.el[key];if(!e)return;
+        var nxt=clone(cur);merge(nxt,key,op[1]);var chans={};for(var pp in op[1])chans[CH[pp]]=1;
+        for(var c in chans){if(c==='d'&&!e.classList.contains('draw'))continue;
+          var lk=key+'|'+c;if(!lines[lk])lines[lk]={e:e,c:c,pts:[[0,chanVal(cur[key],c)]]};
+          lines[lk].pts.push([op[2],chanVal(cur[key],c)],[op[2]+op[3],chanVal(nxt[key],c)])}
+        cur=nxt});
+      for(var lk in lines){var L=lines[lk],end=L.pts[L.pts.length-1][0]||1,kf=[];
+        L.pts.forEach(function(pt){var fr={offset:Math.min(1,pt[0]/end)};fr[prop(L.c)]=pt[1];fr.easing=EASE;if(kf.length&&fr.offset<kf[kf.length-1].offset)fr.offset=kf[kf.length-1].offset;kf.push(fr)});
+        try{this.anims.push(L.e.animate(kf,{duration:end,fill:'both'}))}catch(err){}
+        if(L.c==='d'&&L.pts[0][1]==='1'&&L.pts.length>1){var t0=L.pts[1][0];try{this.anims.push(L.e.animate([{opacity:0,offset:0},{opacity:0,offset:Math.min(1,t0/end)},{opacity:1,offset:Math.min(1,t0/end)},{opacity:1,offset:1}],{duration:end,fill:'both'}))}catch(err){}}
+      }}}
+    /* loops and readouts */
+    (step.loop||[]).forEach(function(n){Array.prototype.forEach.call(self.svg.querySelectorAll('[data-loop="'+n+'"]'),function(e){e.classList.add('run')});Array.prototype.forEach.call(self.svg.querySelectorAll('[data-run="'+n+'"]'),function(e){e.classList.add('on')})});
+    if(step.count){var c=step.count,el=this.svg.querySelector('[data-k="'+c[0]+'"]');if(el){
+      if(!anim||RM)el.textContent=c[2]+c[3];
+      else{el.textContent=c[1]+c[3];var s0=null,tick=function(ts){if(s0===null)s0=ts;var pr=Math.min(1,Math.max(0,(ts-s0-c[4])/c[5]));el.textContent=(c[1]+(c[2]-c[1])*(1-Math.pow(1-pr,2))).toFixed(1).replace(/\.0$/,'')+c[3];if(pr<1)self.timers.push(requestAnimationFrame(tick))};self.timers.push(requestAnimationFrame(tick))}}}
+    /* controls and caption */
+    var n=p.sel.length,f=this.fig;
+    f.querySelector('.pg-pos').textContent=n>1?'Drawing '+(k+1)+' of '+n:'Drawing';
+    f.querySelector('.pg-prev').disabled=k<=0;f.querySelector('.pg-next').disabled=k>=n-1;
+    f.querySelector('.pg-prev').hidden=f.querySelector('.pg-next').hidden=n<2;
+    var dtx=C.T?C.T(step.d):(typeof step.d==='string'?step.d:'');
+    var href=(C.guides||'part-guides.html')+'#'+p.g+(p.d.vars?'/'+p.v:'')+'/'+(i+1);
+    f.querySelector('.rfig-cap').innerHTML=(p.head?'<span class="rfig-h">'+esc(p.head)+'</span>':'')+'<b>'+esc(step.t)+'</b> '+esc(dtx)+' <a href="'+esc(href)+'" target="_blank" rel="noopener">Part guide, step '+(i+1)+'</a>';
+  };
+
+  /* lazy: a drawing goes in when its figure nears the screen, and plays once when it's mostly in view */
+  function mount(root){
+    Array.prototype.forEach.call(root.querySelectorAll('.rph-strip'),function(s){
+      s.addEventListener('click',function(e){var b=e.target.closest('.rph-t');if(!b)return;var r=REG[+s.getAttribute('data-rph')];if(r)viewer(r.pics,+b.getAttribute('data-i'))})});
+    var figsEl=root.querySelectorAll('.rfig[data-rf]');if(!figsEl.length)return;
+    function make(f){if(f._pl)return f._pl;var p=REG[+f.getAttribute('data-rf')];if(!p)return null;try{f._pl=new Player(f,p)}catch(e){f.hidden=true}return f._pl}
+    if(!('IntersectionObserver' in window)){Array.prototype.forEach.call(figsEl,make);return}
+    var near=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){make(e.target);near.unobserve(e.target)}})},{rootMargin:'300px 0px'});
+    var seen=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){var pl=make(e.target);if(pl&&!pl.played)pl.go(pl.k,true);seen.unobserve(e.target)}})},{threshold:.5});
+    Array.prototype.forEach.call(figsEl,function(f){near.observe(f);seen.observe(f)});
+  }
+  function reset(){REG=[]}
+
+  /* ---------- diagrams drawn for the runbook ---------- */
+  function T(x,y,s,c,a){return '<text x="'+x+'" y="'+y+'"'+(c?' class="'+c+'"':'')+(a?' text-anchor="'+a+'"':'')+'>'+esc(s)+'</text>'}
+  function TL(x,y,s,c,a,lh){return String(s).split('\n').map(function(t,i){return T(x,y+i*(lh||14),t,c,a)}).join('')}
+  function R(x,y,w,h,c,rx){return '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'"'+(rx?' rx="'+rx+'"':'')+(c?' class="'+c+'"':'')+'/>'}
+  function P(d,c){return '<path d="'+d+'"'+(c?' class="'+c+'"':'')+'/>'}
+  function Ci(x,y,r,c){return '<circle cx="'+x+'" cy="'+y+'" r="'+r+'"'+(c?' class="'+c+'"':'')+'/>'}
+  /* a panel: drawn in its own units, never shown more than a third larger than that */
+  function S(w,h,body,label){return '<svg class="rd" viewBox="0 0 '+w+' '+h+'" style="max-width:'+Math.round(w*1.35)+'px" role="img" aria-label="'+esc(label)+'">'+body+'</svg>'}
+  var D={};
+
+  /* the PCB, top view, laid out like the official board label drawing (PCB v3.1 and v4) */
+  var HD={J6:[78,30,['5V','GND','P'],'l'],J7:[78,88,['GND','S','B'],'r'],J8:[38,104,['D2','5V','GND','CLK','D1'],'l'],J5:[78,146,['GND','B15','A12'],'r'],J1:[38,193,['GND','TX','RX','5V'],'l'],J9:[78,204,['GND','R1','R2'],'r']};
+  function box(on,x,y,w,h){return on?R(x,y,w,h,on==='x'?'pcb-x':'pcb-hl',4):''}
+  function hdr(k,on){var a=HD[k],X=a[0],Y=a[1],n=a[2].length,h=n*11+6,s=box(on,X-3,Y-17,20,h+20);
+    s+=R(X,Y,14,h,'pcb-hd',2);
+    a[2].forEach(function(t,i){var y=Y+8.5+i*11;s+=Ci(X+7,y,2.6,'pcb-pin')+T(a[3]==='l'?X-6:X+20,y+3,t,'pcb-pl',a[3]==='l'?'end':'start')});
+    return s+T(X+7,Y-5,k,'pcb-jn'+(on==='on'?' on':''),'middle');}
+  var PCBROW={J1:['J1','Screen cable'],J2:['J2','ToFnLED, on the back'],J4:['J4','Thermocouple: − and +'],J6:['J6','Pressure sensor'],J7:['J7','Brew and steam switches'],J8:['J8','Hardware scales'],J9:['J9','SSR control: + and −'],J5:['J5','Extra IO, unused'],J27:['J27','Programming, unused'],USB:['USB-C','USB power, bench only'],MAINS:['J10 to J13','Mains: N, L, pump, valve']};
+  D.pcb=function(o){
+    var on=o.on||[],x=o.x||[],note=o.note||{},b='';
+    function st(k){return on.indexOf(k)>=0?'on':x.indexOf(k)>=0?'x':''}
+    b+=R(6,6,176,358,'pcb-b',8);
+    ['J6','J7','J8','J5','J1','J9'].forEach(function(k){b+=hdr(k,st(k))});
+    b+=T(66,258,'JST-PH 2 mm','pcb-pl','middle');
+    var s27=st('J27');b+=box(s27,104,10,40,48)+R(108,24,32,9,'pcb-hd',1.5)+P('M113,33v14M119,33v14M125,33v14M131,33v14','pcb-lead')+T(124,19,'J27','pcb-jn','middle');
+    var s4=st('J4');b+=box(s4,144,6,36,60)+R(148,24,28,20,'pcb-tb',2)+Ci(155,34,4.2,'pcb-sc')+Ci(169,34,4.2,'pcb-sc')+P('M152,34h6M166,34h6M169,31v6','pcb-scl')+T(155,56,'−','pcb-pm','middle')+T(169,56,'+','pcb-pm','middle')+T(162,19,'J4','pcb-jn'+(s4==='on'?' on':''),'middle');
+    /* USB-C, and J2 on the underside (dashed) */
+    var su=st('USB');b+=box(su,110,238,44,32)+R(116,255,32,9,'pcb-usb',4.5)+T(132,250,'USB-C','pcb-jn'+(su==='on'?' on':''),'middle');
+    var s2=st('J2');b+=box(s2,146,192,34,42)+R(152,212,24,8,'pcb-j2',1.5)+T(164,206,'J2','pcb-jn'+(s2==='on'?' on':''),'middle')+T(164,230,'back','pcb-pl','middle');
+    var sm=st('MAINS');b+=box(sm,18,280,86,78);
+    [['3','J13'],['P','J12'],['L','J11'],['N','J10']].forEach(function(t,i){var y=290+i*17;b+=R(26,y,22,6,'pcb-sp',1.5)+T(56,y+6.5,t[0],'pcb-jn','start')+T(70,y+6.5,t[1],'pcb-pl','start')});
+    var rows=(o.rows||on.concat(x)).filter(function(k){return PCBROW[k]});
+    var list='<ul class="pcbl">'+rows.map(function(k){var s=st(k),c=s==='on'?'on':s==='x'?'x':'mut';return '<li class="'+c+'"><span class="pill">'+esc(PCBROW[k][0])+'</span><span>'+esc(String(note[k]||PCBROW[k][1]).replace(/\n/g,' '))+'</span></li>'}).join('')+'</ul>';
+    return [S(188,370,b,'The Gaggiuino PCB seen from above. '+rows.map(function(k){return PCBROW[k][0]+': '+String(note[k]||PCBROW[k][1]).replace(/\n/g,' ')}).join('; ')),list];
+  };
+  D.pcbw=function(o){return {panels:D.pcb(o),min:200,cap:o.cap||'The PCB seen from above, laid out and named as the official board label drawing shows it (PCB v3.1 and v4), with J2 on the underside. The J10 to J13 numbers for the mains tabs come from the official low-voltage drawing.'}};
+
+  /* the thermocouple's two bare wires in J4's clamps */
+  D.j4=function(){
+    var b=R(100,18,120,66,'pcb-tb',6)+Ci(135,40,9,'pcb-sc')+Ci(185,40,9,'pcb-sc')+P('M129,40h12M179,40h12M185,34v12','pcb-scl')+T(135,72,'−','pcb-pm','middle')+T(185,72,'+','pcb-pm','middle')+T(160,12,'J4','rd-tb','middle');
+    [135,185].forEach(function(x){b+=P('M'+x+',196V118','j4-ins')+P('M'+(x-2)+',118V88 Q'+x+',82 '+(x+2)+',88V112','j4-cu')});
+    b+=P('M196,100H232','rd-ln')+T(238,96,'bare end,','rd-s')+T(238,110,'folded back','rd-s');
+    b+=P('M196,124H232','rd-ln')+T(238,128,'insulation','rd-s')+T(238,142,'stays out','rd-s');
+    b+=T(12,110,'Which wire','rd-s')+T(12,124,'on + and −:','rd-s')+T(12,138,'the warm-hand','rd-s')+T(12,152,'test decides','rd-s');
+    return {panels:[S(320,200,b,'The thermocouple in J4: each bare end folded back on itself and clamped, the insulation kept out of the clamp.')],cap:'Only folded bare wire goes under each clamp. Lead colors vary between makers, so the warm-hand test later in this phase (Warm the thermocouple) decides which goes on +.'};
+  };
+
+  /* the screen cable, end to end, by pin name (colors as the official drawing; batches vary) */
+  var WC={GND:'w-k',TX:'w-b',RX:'w-y','5V':'w-r'};
+  function scrPanel(kind){
+    var b='',L=['GND','TX','RX','5V'],y0=46,X=206,lab=kind==='p4'?'Gen 3.5 screen':kind==='hl'?'Headless board':'Gen 3 screen';
+    function pin(x,y){return Ci(x,y,3,'pcb-pin')}
+    function wire(p,y1,y2){return P('M'+65+','+y1+' C125,'+y1+' 150,'+y2+' '+(X-8)+','+y2+' H'+(X+5),'w '+WC[p]+(p==='5V'||p==='GND'?' must':''))}
+    b+=T(56,24,'J1 on the PCB','rd-tb','middle')+R(50,y0-8,18,86,'pcb-hd',2);
+    L.forEach(function(p,i){var y=y0+4+i*20;b+=pin(59,y)+T(44,y+4,p,'rd-pn','end')});
+    if(kind!=='s3'){
+      var sock=kind==='p4'?[['5V','5V'],['IO28','RX'],['IO27','TX'],['GND','GND']]:[['5V','5V'],['TX','RX'],['RX','TX'],['GND','GND']];
+      b+=T(X+9,24,lab,'rd-tb','middle')+T(X+9,36,'back, its socket','rd-s','middle')+R(X,y0-8,18,86,'pcb-hd',2);
+      L.forEach(function(p,i){var j=0;sock.forEach(function(s,k){if(s[1]===p)j=k});b+=wire(p,y0+4+i*20,y0+4+j*20)});
+      sock.forEach(function(s,i){var y=y0+4+i*20;b+=pin(X+9,y)+T(X+24,y+4,s[0],'rd-pn')});
+      b+=TL(8,y0+108,'5V must land on 5V and GND on GND.\nThe other two wires are the data pair.','rd-s');
+      return S(272,y0+130,b,'Screen cable from J1 to the '+lab+': 5V to 5V and GND to GND; the other two wires are the data pair, '+(kind==='p4'?'RX to IO28 and TX to IO27.':'RX to TX and TX to RX.'));
+    }
+    var A=['GND','RXD','TXD','5V'],U=['IO17','IO18','IO19','IO20'],Y2=y0+118;
+    b+=T(X+9,24,lab,'rd-tb','middle')+T(X+9,36,'back, two sockets','rd-s','middle')+R(X,y0-8,18,86,'pcb-hd',2)+T(X+9,Y2-14,'UART1','rd-tm','middle')+R(X,Y2-8,18,86,'pcb-hd',2);
+    [['GND',y0+4],['5V',y0+64],['RX',Y2+4],['TX',Y2+24]].forEach(function(r){b+=wire(r[0],y0+4+L.indexOf(r[0])*20,r[1])});
+    A.forEach(function(t,i){var y=y0+4+i*20;b+=pin(X+9,y)+T(X+24,y+4,t,'rd-pn')});
+    U.forEach(function(t,i){var y=Y2+4+i*20;b+=pin(X+9,y)+T(X+24,y+4,t,'rd-pn'+(i>1?' rd-m':''))+(i>1?T(X+60,y+4,'USB','rd-s'):'')});
+    b+=TL(8,Y2+108,'5V and GND land on the socket marked\nGND, RXD, TXD, 5V. TX goes to IO18 and\nRX to IO17 on UART1.','rd-s');
+    return S(292,Y2+148,b,'Screen cable from J1 to the Gen 3 screen: J1 5V and GND to the socket marked GND, RXD, TXD, 5V; J1 TX to IO18 and RX to IO17 on the socket marked UART1.');
+  }
+  D.scrpins=function(o){var k=o.scr||(C.screen&&C.screen())||null,list=k?[k]:['p4','s3','hl'];
+    return {panels:list.map(scrPanel),wide:!k,min:230,cap:'Colors as the official drawing shows them. Yours may differ: blue and yellow have been swapped between cable batches, so go by the names beside the pins.'+(k||!C.screen?'':' Pick your screen at the top of the page to see only yours.')}};
+
+  /* a multimeter: the zero reading, a connection, and no connection (OL) */
+  function meterPanel(mode){
+    var b='',lcd=mode==='open'?'OL':mode==='zero'?'0.2':'0.4',t=mode==='zero'?['1. Probes touching','A small number: your zero']:mode==='ok'?['2. Across a good wire','Near your zero; beeps on continuity']:['3. Nothing connects them','OL: open, no connection'];
+    b+=T(10,18,t[0],'rd-tb')+T(10,35,t[1],'rd-s');
+    var g='';
+    g+=R(12,14,92,150,'mt-b',10)+R(22,24,72,34,'mt-lcd',4)+T(88,50,lcd,'mt-num','end');
+    if(mode!=='open')g+=T(26,37,'Ω','mt-u')+P('M28,44c2,1.5 2,4.5 0,6M32,42c3.5,3 3.5,8 0,11','mt-bw');
+    g+=Ci(58,100,22,'mt-dial')+P('M58,100L42,86','mt-ptr')+T(34,80,'Ω','mt-dl','middle')+T(24,100,'·)))','mt-dl','middle')+T(82,80,'V','mt-dl','middle')+T(88,104,'A','mt-dl','middle');
+    g+=Ci(36,146,5,'mt-jk')+Ci(80,146,5,'mt-jk mt-jr');
+    var tip=mode==='zero'?[[178,96],[182,99]]:mode==='ok'?[[150,96],[212,96]]:[[150,96],[212,124]],k0=tip[0],k1=tip[1];
+    if(mode==='ok')g+=P('M150,96 H212','mt-wire')+R(144,91,10,10,'mt-term',2)+R(208,91,10,10,'mt-term',2);
+    if(mode==='open')g+=P('M150,96 H186','mt-wire')+R(144,91,12,10,'mt-term',2)+P('M212,124 H232','mt-wire')+R(206,119,12,10,'mt-term',2);
+    g+=P('M36,151 C36,190 120,176 '+(k0[0]-14)+','+(k0[1]+22),'mt-lead k')+P('M80,151 C84,186 150,190 '+(k1[0]+10)+','+(k1[1]+22),'mt-lead r');
+    g+=P('M'+(k0[0]-14)+','+(k0[1]+22)+'L'+k0[0]+','+k0[1],'mt-probe k')+P('M'+(k1[0]+10)+','+(k1[1]+22)+'L'+k1[0]+','+k1[1],'mt-probe r');
+    return S(240,240,b+'<g transform="translate(0,40)">'+g+'</g>',t[0]+': '+t[1]);
+  }
+  D.meter=function(){return {panels:['zero','ok','open'].map(meterPanel),wide:true,min:190,cap:'Set the dial to the lowest Ω range, or continuity (the beep symbol). Touch the probes together first and note that small reading: it\'s the meter\'s own leads. OL on the display means open: no connection at all.'}};
+
+  /* the SSR's control side on J9 */
+  D.ssr=function(o){
+    var b='',bench=o.bench!==false;
+    b+=R(150,20,150,170,'ssr-b',8)+R(166,28,46,40,'ssr-tw',4)+R(238,28,46,40,'ssr-tw',4)+Ci(189,48,12,'ssr-sc')+Ci(261,48,12,'ssr-sc')+T(189,84,'3  +','rd-on','middle')+T(261,84,'4  −','rd-on','middle')+T(206,102,'DC control','rd-on','middle');
+    b+=R(166,142,46,40,'ssr-tw',4)+R(238,142,46,40,'ssr-tw',4)+Ci(189,162,12,'ssr-sc')+Ci(261,162,12,'ssr-sc')+T(189,136,'1','rd-on','middle')+T(261,136,'2','rd-on','middle')+T(206,124,'AC load','rd-on','middle');
+    b+='<g class="ssr-led'+(o.led?' '+o.led:'')+'">'+Ci(286,113,5,'ssr-ledc')+'</g>'+T(276,117,'LED','rd-on','end');
+    b+=R(20,40,18,40,'pcb-hd',2)+Ci(29,48,3,'pcb-pin')+Ci(29,60,3,'pcb-pin')+Ci(29,72,3,'pcb-pin')+T(16,52,'GND','rd-pn','end')+T(16,64,'R1','rd-pn','end')+T(16,76,'R2','rd-pn','end')+T(29,30,'J9','rd-tb','middle');
+    b+=P('M36,60 C90,60 110,48 177,48 H189','w w-o')+P('M36,48 C80,48 90,8 150,8 H246 C258,8 261,16 261,40','w w-k')+T(92,98,'R1 to +','rd-s','middle')+T(92,112,'GND to −','rd-s','middle')+T(92,126,'R2: nothing','rd-s','middle');
+    if(bench)b+=T(225,208,'On the bench, 1 and 2 stay empty','rd-s','middle');
+    return {panels:[S(320,216,b,'J9 to the SSR: R1 to terminal 3, plus, and GND to terminal 4, minus, on the DC control side.'+(bench?' The AC load side, 1 and 2, stays empty on the bench.':''))],cap:'Terminal numbers as most SSR-40DA relays print them: go by the + and − marks on yours. The official drawing shows the same, J9\'s R1 on the SSR\'s + and its GND on −.'};
+  };
+  D.ssrled=function(){
+    function p(mode,t1,t2){var b=R(14,10,92,62,'ssr-b',6)+'<g class="ssr-led '+mode+'">'+Ci(60,41,9,'ssr-ledc')+'</g>'+T(60,92,t1,'rd-tb','middle')+T(60,108,t2,'rd-s','middle');return S(120,114,b,t1+': '+t2)}
+    return {min:105,panels:[p('on','Steady on','calling for heat'),p('blink','Flashing','close to the target')],cap:'The SSR\'s small LED, as the official bench test describes it: on while the temperature is below the target, flashing near it. With the probe at room temperature it\'s on.'};
+  };
+
+  /* the Flush button's circle: grey, green, blue (official user manual) */
+  D.flush=function(){
+    function p(c,t1,t2){var b=R(10,10,100,64,'fl-b',6)+Ci(60,30,7,'fl-c '+c)+T(60,60,'Flush','fl-t','middle')+T(60,94,t1,'rd-tb','middle')+T(60,110,t2,'rd-s','middle');return S(120,116,b,'Flush button, '+t1+': '+t2)}
+    return {min:105,panels:[p('g','Grey','flush mode off'),p('gr','Green','brew switch flushes'),p('bl','Blue','hold: one 5 s flush')],cap:'From the official user manual: tap Flush and its grey circle turns green, so the brew switch runs the pump to flush; tap again to leave flush mode. Tap and hold for a single 5 second flush (blue).'};
+  };
+
+  /* the pressure for [UT] Test OPV as a dial: the peak has to land in the band */
+  D.opv=function(o){
+    var lo=o.lo||10.5,hi=o.hi||13,max=16,cx=150,cy=140,r=104,b='';
+    function a(v){return Math.PI*(1-v/max)}
+    function pt(v,rr){return [cx+rr*Math.cos(a(v)),cy-rr*Math.sin(a(v))]}
+    function f(n){return n.toFixed(1)}
+    function arc(v1,v2,rr){var p1=pt(v1,rr),p2=pt(v2,rr);return 'M'+f(p1[0])+','+f(p1[1])+' A'+rr+','+rr+' 0 0 1 '+f(p2[0])+','+f(p2[1])}
+    b+=P(arc(0,max,r),'g-arc')+P(arc(lo,hi,r),'g-band');
+    for(var v=0;v<=max;v++){var p1=pt(v,r-(v%2?6:10)),p2=pt(v,r+2);b+=P('M'+f(p1[0])+','+f(p1[1])+'L'+f(p2[0])+','+f(p2[1]),'g-tick');if(v%2===0){var q=pt(v,r-22);b+=T(f(q[0]),f(q[1]+4),String(v),'rd-tm','middle')}}
+    var n=pt(o.peak||11.6,r-18);b+=P('M'+cx+','+cy+'L'+f(n[0])+','+f(n[1]),'g-needle')+Ci(cx,cy,6,'g-hub');
+    var lp=pt(lo,r+14),hp=pt(hi,r+14);b+=T(f(lp[0]-2),f(lp[1]),String(lo),'rd-tb','end')+T(f(hp[0]+4),f(hp[1]+4),String(hi),'rd-tb','start');
+    b+=T(cx,cy-36,'bar','rd-s','middle')+T(cx,cy+26,'Peak between '+lo+' and '+hi+' bar','rd-tb','middle');
+    return {panels:[S(300,176,b,'Pressure dial, 0 to 16 bar: the peak during [UT] Test OPV must land in the band from '+lo+' to '+hi+' bar.')],cap:o.cap||'The pressure during [UT] Test OPV with a blank basket, drawn as a dial. The highest reading is the one that counts.'};
+  };
+
+  /* joining Wi-Fi, in four moves */
+  D.wifi=function(){
+    function card(n,t1,body,t2){return S(170,150,R(4,4,162,142,'wf-b',10)+Ci(24,24,12,'wf-n')+T(24,29,n,'wf-nt','middle')+T(44,29,t1,'rd-tb')+body+(t2?T(85,138,t2,'rd-s','middle'):''),n+'. '+t1)}
+    var c1=card('1','Join its Wi-Fi',R(16,44,138,26,'wf-row on',5)+P('M26,62a8,8 0 0 1 12,0M29,59a4,4 0 0 1 6,0','wf-ic')+T(46,61,'Gaggiuino AP','rd-tm')+R(16,76,138,24,'wf-row',5)+T(26,92,'or ESP_xxxxxx','rd-tm rd-m')+T(18,116,'Password','rd-s')+T(76,116,'Gaggiuin0AP','rd-pn'),'a zero for the o');
+    var c2=card('2','Open the web UI',R(16,48,138,30,'wf-row',15)+T(85,67,'gaggiuino.local','rd-tm','middle')+T(85,100,'in a browser: the same','rd-s','middle')+T(85,114,'controls as the screen','rd-s','middle'),'');
+    var c3=card('3','Join your network',T(18,58,'Settings, then System,','rd-s')+T(18,74,'then Connect','rd-s')+R(16,86,138,26,'wf-row on',5)+T(85,104,'Home, 2.4 GHz','rd-tm','middle'),'then its password');
+    var c4=card('4','From any device',P('M30,96h44v-36h-44zM24,100h56','wf-ic')+R(104,58,26,44,'wf-ic',4)+T(85,124,'gaggiuino.local','rd-tm','middle'),'on your network');
+    return {panels:[c1,c2,c3,c4],min:150,cap:'From the official user manual. Gaggiuino makes its own Wi-Fi until it joins yours. Shot history shows the right date and time only once it\'s on a network with internet access and the time zone offset is set (Phase 6).'};
+  };
+
+  /* the boot on the bench */
+  D.boot=function(o){
+    var hl=o.scr==='hl'||(C.screen&&C.screen()==='hl');
+    function scr(t1,t2){return R(14,14,132,80,'bt-s',6)+T(80,52,t1,'bt-t','middle')+(t2?T(80,70,t2,'bt-t2','middle'):'')}
+    var p1=S(160,140,scr('Initialization','in progress')+T(80,118,'A few seconds,','rd-tb','middle')+T(80,133,'then it clears','rd-s','middle'),'Initialization in progress, for a few seconds');
+    var p2=S(160,140,scr('Filling boiler','')+T(80,118,'Then Filling boiler','rd-tb','middle')+T(80,133,'expected on the bench','rd-s','middle'),'Filling boiler shows a few seconds after boot');
+    var p3=S(160,140,R(18,40,124,46,'pcb-b',6)+T(80,30,'PCB, underside','rd-s','middle')+'<g class="bt-led">'+Ci(58,63,7,'bt-ledc')+'</g>'+T(72,67,'red LED','bt-l')+T(80,118,'The red LED lights','rd-tb','middle')+T(80,133,'at the same moment','rd-s','middle'),'A red LED on the underside of the PCB lights at the same moment');
+    return {panels:[p1,p2,p3],min:140,cap:(hl?'Headless: these messages show in the web UI once you\'ve joined its Wi-Fi. ':'')+'The official bench test: the message clears, Filling boiler shows, and the red LED under the PCB comes on with it.'};
+  };
+
+  /* the thermocouple's direction: warm it and the number goes up */
+  D.temp=function(o){
+    var heat=o.mode==='heat',b='';
+    b+=P('M40,20V150H300','tp-ax')+T(36,26,'°C','rd-s','end')+T(300,168,heat?'minutes':'seconds','rd-s','end');
+    if(heat)b+=P('M40,60H300','tp-tgt')+T(296,52,'brew target','rd-s','end')+P('M40,140 C90,138 130,70 170,62 S240,60 300,60','tp-ok')+P('M40,140 C80,141 110,146 150,150','tp-bad')+T(158,146,'falling: unplug','tp-badt')+T(180,92,'climbs, then holds','tp-okt');
+    else b+=P('M40,120 H90 C120,120 150,80 210,72 S280,70 300,70','tp-ok')+P('M90,120 C130,122 170,134 220,140','tp-bad')+T(226,142,'falls: swap','tp-badt')+T(46,140,'warm the tip','rd-s')+T(232,60,'goes up','tp-okt','middle');
+    return {panels:[S(320,176,b,heat?'With the boiler full the temperature climbs and holds at the target; if it falls, switch off and unplug.':'Warm the thermocouple tip and the reading goes up; if it falls, the two wires are swapped in J4.')],
+      cap:heat?'If the reading ever falls while the machine heats, the thermocouple is in J4 the wrong way round: switch off and unplug at once, then swap its wires.':'A K-type thermocouple only reads the right way with its wires on the right sides of J4. Warm the tip in your fingers: up means right, down means swap them.'};
+  };
+
+  /* a wire label wrapped into a flag */
+  D.flag=function(o){
+    var t1=o.t1||'L',t2=o.t2||'J',c1=o.c1||'r',c2=o.c2||'r';
+    var b=P('M14,112H226','fg-w '+c1)+R(226,104,48,16,'fg-sp',2)+T(250,138,'end','rd-s','middle');
+    b+=R(140,22,58,84,'fg-l',4)+P('M140,106 C140,118 198,118 198,106','fg-l2')+P('M169,26V102','fg-fold')+T(169,74,t1,'fg-t'+(t1.length>2?' sm':''),'middle');
+    b+=P('M169,124V140M226,124V140M169,132H226','rd-ln')+T(198,156,'about 30 mm','rd-s','middle');
+    b+=TL(128,40,'Wrapped round\nthe wire, the\ntwo halves stuck\ntogether, text\noutward','rd-s','end',14);
+    var b2=P('M14,40H212','fg-w s '+c2)+R(212,31,48,18,'fg-sp',2)+T(112,45,t2,'fg-mk','middle')+TL(12,80,'At the boiler: the name in\noil-based marker on the\nsilicone jacket, no paper','rd-s','start',14);
+    return {min:230,panels:[S(290,166,b,'A paper label, '+t1+', wrapped around the wire about 30 mm from its end, the two halves stuck together with the text outward.'),S(270,124,b2,'An end at the boiler, '+t2+', gets its name written on the silicone jacket in oil-based marker instead.')],cap:o.cap||'Label each wire at both ends as you make it, and each stock connector before you move it.'};
+  };
+
+  /* the two front switches, and what each does on the first power-on */
+  D.switches=function(o){
+    var three=o.kind==='three',names=three?['brew','steam','water']:['brew','steam'];
+    function sw(x,on,lab){return R(x,18,34,58,'sw-b',5)+R(x+5,on?24:44,24,26,'sw-r'+(on?' on':''),3)+T(x+17,92,lab,'rd-tm','middle')+T(x+17,106,on?'on':'off','rd-s','middle')}
+    function p(on,t1,t2,t3){var x0=three?24:40,dx=three?62:56;return S(three?210:170,170,names.map(function(n,i){return sw(x0+i*dx,on.indexOf(n)>=0,n)}).join('')+T(three?105:85,128,t1,'rd-tb','middle')+T(three?105:85,144,t2,'rd-s','middle')+(t3?T(three?105:85,158,t3,'rd-s','middle'):''),t1+': '+t2+' '+(t3||''))}
+    if(three)return {min:170,panels:[p(['brew'],'Brew','the pump runs: water','through the group'),p(['steam'],'Steam','the target switches','to the steam temperature'),p(['water'],'Hot water','steam knob open,','over a jug')],cap:'What each switch does at the first power-on. Steam, the wand and the group head can burn.'};
+    return {min:130,panels:[p(['brew'],'Brew','the pump runs: water','through the group'),p(['steam'],'Steam','steam target; the ring','pulses above 120 °C'),p(['brew','steam'],'Both','hot water mode,','from the wand')],cap:'From the official user manual: brew and steam together is hot water mode, and the ring pulses above 120 °C as a warning. Steam, hot water, the wand and the group head can burn at any working temperature. For hot water, open the steam knob over a cup under the wand (this site\'s advice).'};
+  };
+
+  /* the mains cord: out at both ends before opening up, in at the machine first at power-on */
+  function sock(x,y){return R(x+16,y,32,30,'cd-sock',6)+P('M'+(x+26)+','+(y+7)+'v10M'+(x+38)+','+(y+7)+'v10','cd-slot')+P('M'+(x+29)+','+(y+25)+'a3,3 0 0 1 6,0','cd-gnd')}
+  function outlet(x,y){return R(x,y,64,92,'cd-wall',8)+sock(x,y+10)+sock(x,y+50)}
+  function inlet(x,y){return R(x,y,70,92,'cd-mach',8)+P('M'+(x+19)+','+(y+30)+'h32v18l-6,8h-20l-6,-8z','cd-iec')+P('M'+(x+27)+','+(y+44)+'v6M'+(x+43)+','+(y+44)+'v6M'+(x+35)+','+(y+35)+'v6','cd-slot2')+T(x+35,y+80,'machine','rd-s','middle')}
+  function plug(x,y){return R(x,y,22,16,'cd-plug',3)+P('M'+(x+22)+','+(y+4)+'h10M'+(x+22)+','+(y+12)+'h10','cd-pin')}
+  D.cord=function(o){
+    var outl=C.fill?C.fill('{outlet}'):'GFCI-protected outlet',b1,b2;
+    if(o.mode==='in'){
+      b1=inlet(96,12)+P('M10,58 H84','cd-cord')+R(84,50,32,16,'cd-plug',3)+P('M60,40l14,10-14,10','cd-arr')+T(10,128,'1. Cord into the machine first','rd-tb');
+      b2=outlet(110,12)+P('M10,58 H66','cd-cord')+plug(66,50)+P('M100,30l8,8-8,8','cd-arr')+T(10,128,'2. Then into the wall','rd-tb');
+      return {min:180,panels:[S(190,150,b1,'Plug the cord into the machine first.'),S(190,150,b2,'Then plug it into the wall outlet.')],cap:'The wall end goes into a '+esc(outl)+'. Stay within reach of the plug for the whole first session: at any smell, smoke, crackle, a tripped breaker or an odd noise, unplug at the wall first.'};
+    }
+    b1=outlet(110,12)+P('M10,58 H46','cd-cord')+plug(46,50)+P('M100,38l-12,10 12,10','cd-arr')+T(10,128,o.mode==='wall'?'Unplug at the wall':'1. Out of the wall','rd-tb');
+    if(o.mode==='wall')return {panels:[S(190,150,b1,'Pull the plug out of the wall.')],cap:o.cap||''};
+    b2=inlet(96,12)+P('M10,58 H40','cd-cord')+R(40,50,32,16,'cd-plug',3)+P('M86,40l-14,10 14,10','cd-arr')+T(10,128,'2. Out of the machine too','rd-tb');
+    return {min:180,panels:[S(190,150,b1,'Pull the plug out of the wall.'),S(190,150,b2,'Then pull the cord out of the machine too.')],cap:o.cap||'With the cord out at both ends, nothing in the machine can be live. Let it cool first if it\'s been on.'};
+  };
+
+  /* the bench: everything on something that doesn't conduct */
+  D.bench=function(o){
+    var b=R(8,40,304,128,'bn-mat',12)+T(160,32,'Wooden board, cardboard or a silicone mat','rd-s','middle');
+    b+=R(24,64,92,62,'bn-box',8)+R(36,76,68,38,'pcb-b',4)+T(70,144,'PCB in its housing','bn-t','middle');
+    if(o.screen!==false&&!(C.screen&&C.screen()==='hl'))b+=R(134,68,100,60,'bn-cloth',10)+R(144,78,80,40,'bn-scr',4)+T(184,144,'screen face up','bn-t','middle')+T(184,158,'on a cloth','bn-t','middle');
+    b+='<g transform="translate(274,98)">'+P('M-10,-4h16v8h-16zM6,-2h8v4h-8z','bn-screw')+P('M-14,-12L14,12M14,-12L-14,12','bn-x')+'</g>'+T(274,136,'no loose','bn-t','middle')+T(274,150,'metal','bn-t','middle');
+    return {panels:[S(320,176,b,'The bench: a wooden board, cardboard or silicone mat, the PCB in its housing, the screen face up on a cloth, and no screws or wire offcuts underneath.')],cap:'Nothing metal under or around the boards while they\'re powered: a stray screw can short the PCB.'};
+  };
+
+  /* the temperatures that limit the boiler */
+  D.limits=function(o){
+    var b='',y=function(t){return 172-(t-80)*1.6};
+    b+=R(52,16,16,166,'lm-tube',8)+Ci(60,186,12,'lm-bulb');
+    (o.marks||[]).forEach(function(m){var yy=y(m[0]);b+=P('M70,'+yy+'H106','lm-m '+(m[2]||''))+T(112,yy+4,(m[3]?'':m[0]+' °C  ')+m[1],'rd-t'+(m[2]==='stop'?' lm-stop':''))});
+    return {panels:[S(340,204,b,(o.marks||[]).map(function(m){return (m[3]?'':m[0]+' °C ')+m[1]}).join('; '))],cap:o.cap||''};
+  };
+
+  return {init:init,badge:badge,legend:legend,name:function(k){return PW[k]?PW[k][0]:''},icon:icon,figs:figs,pics:pics,mount:mount,reset:reset,D:D};
+})();
+
+    /* The runbook's figures (runbook-figs.js) on another page: PF() returns the settings for RBF.init, with drawings
+     and their text following Your Silvia; nothing unknown ever hides anything. A page that plays part guide drawings
+     defines PGD first (the part guides' data, as the runbook wraps it). */
+  function PF(){
+    function SM(){return window.SilviaMachine||null}
+    function m(w){var s=SM();return !w||!s||s.matches(w)}
+    function T(x){
+      if(x==null)return '';if(!Array.isArray(x))return String(x);var s=SM();
+      return s&&s.txt?s.txt(x):x.filter(function(t){return typeof t==='string'||m(t[1])}).map(function(t){return typeof t==='string'?t:t[0]}).join(' ').replace(/ ([,.;:])/g,'$1');
+    }
+    function fill(t){var s=SM();return String(t==null?'':t).replace(/\{(outlet|gfci|volts)\}/g,function(_,k){return s&&s.text?s.text(k):''})}
+    return {G:(typeof PGD!=='undefined'&&PGD)?PGD.G:null,ok:m,m:m,T:T,fill:fill,famOf:function(){return null},
+      prof:function(){var s=SM();return (s&&s.get())||{}},dv:function(){return false},guides:'part-guides.html'};
+  }
+
+  RBF.init(PF());
+  /* how a label goes on: a paper flag at one end, marker on silicone at the boiler */
+  document.getElementById('howfig').innerHTML=RBF.figs([['d','flag',{t1:'AC1',c1:'n',t2:'AC5',c2:'n'}]]);
   /* the harness as drawn, and with the Shelly add-on once it's chosen in Your Silvia */
   var RUNS0=[{"id": "AC1", "sys": "L", "short": "Inlet L → Power sw L", "frm": "Power inlet, L pin", "to": "Power switch, L pole outer spade", "gauge": "18 AWG", "mm": null, "lenNote": "Reuse the stock lead if it is sound, or measure", "ends": ["6.3 mm female spade", "6.3 mm female spade"], "src": "realNiche", "note": "Supply goes on the outer spades of the power switch; the loads come off the center spades.", "k": ["f", "f"], "color": "red", "hot": ""}, {"id": "AC3", "sys": "L", "short": "Power sw L → SSR 1", "frm": "Power switch, L pole center spade", "to": "SSR load terminal 1", "gauge": "18 AWG", "mm": 350, "ends": ["6.3 mm female spade", "Fork spade sized for two 18 AWG wires, shared with AC4"], "src": "Talon / RS lengths", "note": "Switched line into the SSR. The same SSR terminal also feeds the PCB through AC4.", "k": ["f", "fk2:SSR1"], "color": "red", "lenNote": "", "hot": ""}, {"id": "AC4", "sys": "L", "short": "SSR 1 → J11 Line", "frm": "SSR load terminal 1", "to": "PCB J11 (AC Line)", "gauge": "18 AWG", "mm": 200, "ends": ["Shared fork with AC3", "6.3 mm female spade"], "src": "Talon / RS lengths", "note": "Powers the PCB and feeds its pump and solenoid outputs.", "k": ["fk2:SSR1", "f"], "color": "red", "lenNote": "", "hot": ""}, {"id": "AC13", "sys": "L", "short": "J13 → Solenoid coil", "frm": "PCB J13 (Solenoid)", "to": "Solenoid, coil spade", "gauge": "18 AWG", "mm": 120, "ends": ["6.3 mm female spade", "Uninsulated 6.3 mm spade (open-barrel crimp) + self-fusing silicone tape"], "src": "RS lengths", "note": "PCB-switched line to the 3-way valve coil. The valve sits on the hot group, so bare spades and silicone tape are the safer choice there.", "k": ["f", "b"], "color": "red", "lenNote": "", "hot": ""}, {"id": "AC14", "sys": "L", "short": "J12 → Pump coil", "frm": "PCB J12 (Pump)", "to": "Pump, coil terminal", "gauge": "18 AWG", "mm": null, "lenNote": "Not in the reference lengths; measure", "ends": ["6.3 mm female spade", "6.3 mm female spade"], "src": "realNiche", "note": "PCB-switched line to the pump. Neutral reaches the pump's other terminal through its thermal fuse.", "k": ["f", "f"], "color": "red", "hot": ""}, {"id": "AC5", "sys": "H", "short": "SSR 2 → Safety tstat", "frm": "SSR load terminal 2", "to": "Safety thermostat (165 C), terminal 1", "gauge": "18 AWG", "mm": 350, "ends": ["Fork spade", "Uninsulated 6.3 mm spade (open-barrel crimp) + self-fusing silicone tape"], "hot": "b", "src": "RS lengths (thermostat to SSR)", "note": "The 165 C safety thermostat stays in the heater line. Never bypass it.", "k": ["fk", "b"], "color": "orange", "lenNote": ""}, {"id": "AC6", "sys": "H", "short": "Safety tstat → Element", "frm": "Safety thermostat, terminal 2", "to": "Boiler element, terminal 1", "gauge": "18 AWG", "mm": 250, "ends": ["Uninsulated 6.3 mm spade sized for two 18 AWG wires + self-fusing silicone tape, shared with AC7", "Uninsulated 6.3 mm spade (open-barrel crimp) + self-fusing silicone tape"], "hot": "both", "src": "Talon", "note": "Talon doubled the spade at the safety thermostat. The alternative is doubling at the element terminal, with both leads 250 mm.", "k": ["b2:TST2", "b"], "color": "orange", "lenNote": ""}, {"id": "AC7", "sys": "H", "short": "Safety tstat → Lamp L", "frm": "Safety thermostat, terminal 2", "to": "Heating lamp, L spade", "gauge": "18 AWG", "mm": 100, "lenNote": "100 mm doubled at the thermostat (Talon); 250 mm if doubled at the element", "ends": ["Shared with AC6", "6.3 mm female spade"], "hot": "a", "src": "Talon", "note": "The heating lamp sits across the element, so it lights whenever the SSR is heating.", "k": ["b2:TST2", "f"], "color": "orange"}, {"id": "AC2", "sys": "N", "short": "Inlet N → Power sw N", "frm": "Power inlet, N pin", "to": "Power switch, N pole outer spade", "gauge": "18 AWG", "mm": null, "lenNote": "Reuse the stock lead if it is sound, or measure", "ends": ["6.3 mm female spade", "6.3 mm female spade"], "src": "realNiche", "note": "The power switch breaks both line and neutral, one per pole.", "k": ["f", "f"], "color": "blue", "hot": ""}, {"id": "AC8", "sys": "N", "short": "Power sw N → Lamp N", "frm": "Power switch, N pole center spade", "to": "Heating lamp, N spade", "gauge": "18 AWG", "mm": 100, "ends": ["6.3 mm female spade sized for two 18 AWG wires (blue), shared with AC9", "6.3 mm female spade sized for two 18 AWG wires (blue), shared with AC10"], "src": "Talon", "note": "Start of the neutral daisy chain.", "k": ["f2:SWN", "f2:LAMPN"], "color": "blue", "lenNote": "", "hot": ""}, {"id": "AC9", "sys": "N", "short": "Power sw N → Element", "frm": "Power switch, N pole center spade", "to": "Boiler element, terminal 2", "gauge": "18 AWG", "mm": 300, "ends": ["Shared with AC8", "Uninsulated 6.3 mm spade (open-barrel crimp) + self-fusing silicone tape"], "hot": "b", "src": "Talon", "note": "Talon left this one long for cable management.", "k": ["f2:SWN", "b"], "color": "blue", "lenNote": ""}, {"id": "AC10", "sys": "N", "short": "Lamp N → Pump N", "frm": "Heating lamp, N spade", "to": "Pump, thermal-fuse terminal", "gauge": "18 AWG", "mm": 400, "ends": ["Shared with AC8", "6.3 mm female spade sized for two 18 AWG wires (blue), shared with AC11"], "src": "Talon / RS lengths", "note": "The pump's thermal fuse (110 C on realNiche's diagram) stays in circuit. If your pump has none, this run goes to the pump terminal.", "k": ["f2:LAMPN", "f2:PUMPN"], "color": "blue", "lenNote": "", "hot": ""}, {"id": "AC11", "sys": "N", "short": "Pump N → Solenoid N", "frm": "Pump, thermal-fuse terminal", "to": "Solenoid, N spade", "gauge": "18 AWG", "mm": 350, "ends": ["Shared with AC10", "Uninsulated 6.3 mm spade sized for two 18 AWG wires + self-fusing silicone tape, shared with AC12"], "src": "Talon / RS lengths", "note": "", "k": ["f2:PUMPN", "b2:SOLN"], "color": "blue", "lenNote": "", "hot": ""}, {"id": "AC12", "sys": "N", "short": "Solenoid N → J10 Neutral", "frm": "Solenoid, N spade", "to": "PCB J10 (AC Neutral)", "gauge": "18 AWG", "mm": 120, "ends": ["Shared with AC11", "6.3 mm female spade"], "src": "Talon / RS lengths", "note": "End of the neutral chain.", "k": ["b2:SOLN", "f"], "color": "blue", "lenNote": "", "hot": ""}, {"id": "G1", "sys": "E", "short": "Inlet earth → Boiler gnd", "frm": "Power inlet, earth pin", "to": "Boiler ground spade", "gauge": "18 AWG green", "mm": null, "lenNote": "Reuse the stock earth lead if it is sound, or measure", "ends": ["6.3 mm female spade", "Uninsulated 6.3 mm spade sized for two 18 AWG wires + self-fusing silicone tape, shared with G2"], "hot": "b", "src": "realNiche", "note": "Earth never connects to the PCB's 5 V ground (official warning).", "k": ["f", "b2:BGND"], "color": "green"}, {"id": "G2", "sys": "E", "short": "Solenoid gnd → Boiler gnd", "frm": "Solenoid ground spade", "to": "Boiler ground spade", "gauge": "18 AWG green", "mm": 200, "ends": ["Uninsulated 6.3 mm spade (open-barrel crimp) + self-fusing silicone tape", "Shared with G1"], "hot": "b", "src": "RS lengths", "note": "", "k": ["b", "b2:BGND"], "color": "green", "lenNote": ""}, {"id": "LV1", "sys": "LV", "short": "J7 S → Steam sw", "frm": "PCB J7 S", "to": "Steam switch, ground pole center spade", "gauge": "22 AWG", "mm": 320, "ends": ["JST-PH 2 mm crimp in the connector housing", "6.3 mm female spade (red)"], "src": "realNiche / RS lengths", "note": "Signal on the center spade, ground on the outer spade of the same pole.", "k": ["jst", "lv"], "color": "white", "hdr": "J7", "lenNote": "", "hot": ""}, {"id": "LV2", "sys": "LV", "short": "J7 B → Brew sw", "frm": "PCB J7 B", "to": "Brew switch, ground pole center spade", "gauge": "22 AWG", "mm": 320, "ends": ["JST-PH 2 mm crimp in the connector housing", "6.3 mm female spade (red)"], "src": "realNiche / RS lengths", "note": "", "k": ["jst", "lv"], "color": "white", "hdr": "J7", "lenNote": "", "hot": ""}, {"id": "LV3", "sys": "LV", "short": "J5 B15 → Hot water sw", "frm": "PCB J5 B15", "to": "Hot water switch, ground pole center spade", "gauge": "22 AWG", "mm": 400, "ends": ["JST-PH 2 mm crimp in the connector housing", "6.3 mm female spade (red)"], "src": "realNiche / RS lengths", "note": "B15, not A12: PCB firmware reads the hot water switch on B15. Keep hot water on low voltage.", "k": ["jst", "lv"], "color": "white", "hdr": "J5", "lenNote": "", "hot": ""}, {"id": "LV4", "sys": "LVG", "short": "J7 GND → Steam sw gnd", "frm": "PCB J7 GND", "to": "Steam switch, ground pole outer spade", "gauge": "22 AWG", "mm": 470, "ends": ["JST-PH 2 mm crimp in the connector housing", "6.3 mm female spade (red)"], "src": "RS lengths / Talon", "note": "Start of the switch ground chain. Talon brings it into the lowest switch first and chains up; start at whichever switch is nearest.", "k": ["jst", "lv2:STG"], "color": "black", "hdr": "J7", "lenNote": "", "hot": ""}, {"id": "LV5", "sys": "LVG", "short": "Steam sw gnd → Brew sw gnd", "frm": "Steam switch, ground pole outer spade", "to": "Brew switch, ground pole outer spade", "gauge": "22 AWG", "mm": null, "lenNote": "Short jumper; measure (about 100 mm)", "ends": ["Shared spade or red butt splice", "6.3 mm female spade (red)"], "src": "Talon / LED notes", "note": "", "k": ["lv2:STG", "lv2:BRG"], "color": "black", "hot": ""}, {"id": "LV6", "sys": "LVG", "short": "Brew sw gnd → Hot water gnd", "frm": "Brew switch, ground pole outer spade", "to": "Hot water switch, ground pole outer spade", "gauge": "22 AWG", "mm": null, "lenNote": "Short jumper; measure (about 100 mm)", "ends": ["Shared spade or red butt splice", "6.3 mm female spade (red)"], "src": "Talon / LED notes", "note": "", "k": ["lv2:BRG", "lv"], "color": "black", "hot": ""}, {"id": "LV7", "sys": "S", "short": "J9 R1 → SSR +", "frm": "PCB J9 R1", "to": "SSR control +", "gauge": "22 AWG", "mm": null, "lenNote": "Measure", "ends": ["JST-PH 2 mm crimp in the connector housing", "Fork spade"], "src": "realNiche / official LV schematic", "note": "Polarity matters: R1 to +, GND to −.", "k": ["jst", "fks"], "color": "red", "hdr": "J9", "hot": ""}, {"id": "LV8", "sys": "S", "short": "J9 GND → SSR −", "frm": "PCB J9 GND", "to": "SSR control −", "gauge": "22 AWG", "mm": null, "lenNote": "Measure", "ends": ["JST-PH 2 mm crimp in the connector housing", "Fork spade"], "src": "realNiche / official LV schematic", "note": "", "k": ["jst", "fks"], "color": "black", "hdr": "J9", "hot": ""}, {"id": "LV9", "sys": "S", "short": "J6 → Pressure sensor", "frm": "PCB J6 (5V, GND, P)", "to": "Pressure transducer", "gauge": "Sensor lead", "mm": null, "lenNote": "Sensor's own lead; extend with 22 AWG if short", "ends": ["JST-PH 3-pin", "Transducer pigtail"], "src": "realNiche", "note": "Three wires: 5V, GND and P (signal).", "k": ["jst3", "pig"], "color": "", "hdr": "J6", "hot": ""}, {"id": "LV10", "sys": "S", "short": "J4 → Thermocouple", "frm": "PCB J4 (+, −)", "to": "Thermocouple, brew thermostat position", "gauge": "TC lead", "mm": null, "lenNote": "Thermocouple's own lead", "ends": ["Screw terminal; fold the bare wire over, don't clamp insulation", "M3 thermocouple"], "src": "Official PCB guide / Discord", "note": "Ungrounded K-type. Route it around the front of the boiler. If the bench test shows temperature falling when you warm it, swap the two leads.", "k": ["tc", "pig"], "color": "", "hot": ""}, {"id": "LV11", "sys": "S", "short": "J1 → Screen", "frm": "PCB J1 (GND, TX, RX, 5V)", "to": "4.3 in Gen 3.5 screen", "gauge": "Screen cable", "mm": 600, "lenNote": "DIY-EFI cable is 60 cm and Peak Coffee's 45 cm. The older diagram used 650 mm for a front mount; a funnel mount needs more (open question)", "ends": ["JST-PH 4-pin", "Screen connector"], "src": "DIY-EFI / RS lengths / Talon", "note": "Check connection points, not colors: blue and yellow can be swapped between cable revisions. Don't take pre-made cables apart.", "k": ["pre", "pre"], "color": "", "hot": ""}, {"id": "OP1", "sys": "OPT", "short": "J8 → Scales board", "frm": "PCB J8 (D2, 5V, GND, CLK, D1)", "to": "Scales board (optional)", "gauge": "5-pin cable", "mm": null, "lenNote": "5P JST XH to PH cable", "ends": ["JST-PH 5-pin", "JST-XH 5-pin"], "src": "Official BOM / Discord", "note": "Only if you fit hardware scales.", "k": ["pre", "pre"], "color": "", "hot": ""}, {"id": "OP2", "sys": "OPT", "short": "J2 → ToF sensor", "frm": "PCB J2, backside (JST-SH)", "to": "ToF sensor (optional)", "gauge": "Qwiic cable", "mm": 250, "lenNote": "250 mm or longer, JST SH 1.0 opposite direction", "ends": ["JST-SH 4-pin", "JST-SH 4-pin"], "src": "Official BOM / Discord", "note": "Only if you fit the ToF tank sensor.", "k": ["pre", "pre"], "color": "", "hot": ""}, {"id": "OP3", "sys": "OPT", "short": "5V splice → 1st sw LED", "frm": "Screen 5V line (BN1.25 butt splice)", "to": "First switch, LED pole outer spade", "gauge": "22 AWG", "mm": 320, "ends": ["BN1.25 butt splice", "6.3 mm female spade (red)"], "src": "Discord LED notes", "note": "LED switch mod only. See the LED guide for which pole gets 5 V.", "k": ["bn", "lv2:LED1"], "color": "yellow", "lenNote": "", "hot": ""}, {"id": "OP4", "sys": "OPT", "short": "1st sw LED → 2nd sw LED", "frm": "First switch, LED pole outer spade", "to": "Second switch, LED pole outer spade", "gauge": "22 AWG", "mm": 100, "ends": ["Shared spade", "6.3 mm female spade (red)"], "src": "Discord LED notes", "note": "LED switch mod only.", "k": ["lv2:LED1", "lv2:LED2"], "color": "yellow", "lenNote": "", "hot": ""}, {"id": "OP5", "sys": "OPT", "short": "2nd sw LED → 3rd sw LED", "frm": "Second switch, LED pole outer spade", "to": "Third switch, LED pole outer spade", "gauge": "22 AWG", "mm": 100, "ends": ["Shared spade", "6.3 mm female spade (red)"], "src": "Discord LED notes", "note": "LED switch mod only.", "k": ["lv2:LED2", "lv"], "color": "yellow", "lenNote": "", "hot": ""}],RUNS1=[{"id": "AC1", "sys": "L", "short": "Inlet L → Power sw L", "frm": "Power inlet, L pin", "to": "Power switch, L pole outer spade", "gauge": "18 AWG", "mm": null, "lenNote": "Reuse the stock lead with a new two-wire spade at the inlet end, or measure", "ends": ["6.3 mm female spade sized for two 18 AWG wires (blue), shared with SH1", "6.3 mm female spade"], "src": "realNiche", "note": "With the Shelly the power switch only signals the Shelly: AC1 brings line to the L pole's outer spade, and SH2 takes it from the center spade to SW.", "k": ["f2:INL", "f"], "color": "red", "sh": "chg", "hot": ""}, {"id": "SH1", "sys": "L", "short": "Inlet L → Shelly L", "frm": "Power inlet, L pin", "to": "Shelly, L terminal", "gauge": "18 AWG", "mm": null, "lenNote": "Measure: it depends on where the Shelly sits", "ends": ["6.3 mm female spade sized for two 18 AWG wires (blue), shared with AC1", "Bootlace ferrule in the Shelly's L terminal"], "k": ["f2:INL", "fer"], "src": "gblur's V6 E drawing", "note": "The Shelly's supply, and the line its relay switches.", "sh": "new", "color": "red", "hot": ""}, {"id": "SH2", "sys": "L", "short": "Power sw L → Shelly SW", "frm": "Power switch, L pole center spade", "to": "Shelly, SW terminal", "gauge": "18 AWG", "mm": null, "lenNote": "Measure: from the power switch to where the Shelly sits", "ends": ["6.3 mm female spade", "Bootlace ferrule in the Shelly's SW terminal"], "k": ["f", "fer"], "src": "gblur's V6 E drawing", "note": "Tells the Shelly the switch is on. It carries mains from AC1 through the switch, so treat it as a mains wire.", "sh": "new", "color": "red", "hot": ""}, {"id": "SH3", "sys": "L", "short": "Shelly O → SSR 1", "frm": "Shelly, O terminal", "to": "SSR load terminal 1", "gauge": "18 AWG", "mm": null, "lenNote": "Measure: from where the Shelly sits to the SSR", "ends": ["Bootlace ferrule in the Shelly's O terminal", "Fork spade sized for two 18 AWG wires, shared with AC4"], "k": ["fer", "fk2:SSR1"], "src": "gblur's V6 E drawing", "note": "The switched line, where AC3 used to come from the power switch. With the Shelly off, the SSR, the PCB and the heating lamp get nothing.", "sh": "new", "color": "red", "hot": ""}, {"id": "AC4", "sys": "L", "short": "SSR 1 → J11 Line", "frm": "SSR load terminal 1", "to": "PCB J11 (AC Line)", "gauge": "18 AWG", "mm": 200, "ends": ["Shared fork with SH3", "6.3 mm female spade"], "src": "Talon / RS lengths", "note": "Powers the PCB and feeds its pump and solenoid outputs.", "k": ["fk2:SSR1", "f"], "color": "red", "lenNote": "", "hot": ""}, {"id": "AC13", "sys": "L", "short": "J13 → Solenoid coil", "frm": "PCB J13 (Solenoid)", "to": "Solenoid, coil spade", "gauge": "18 AWG", "mm": 120, "ends": ["6.3 mm female spade", "Uninsulated 6.3 mm spade (open-barrel crimp) + self-fusing silicone tape"], "src": "RS lengths", "note": "PCB-switched line to the 3-way valve coil. The valve sits on the hot group, so bare spades and silicone tape are the safer choice there.", "k": ["f", "b"], "color": "red", "lenNote": "", "hot": ""}, {"id": "AC14", "sys": "L", "short": "J12 → Pump coil", "frm": "PCB J12 (Pump)", "to": "Pump, coil terminal", "gauge": "18 AWG", "mm": null, "lenNote": "Not in the reference lengths; measure", "ends": ["6.3 mm female spade", "6.3 mm female spade"], "src": "realNiche", "note": "PCB-switched line to the pump. Neutral reaches the pump's other terminal through its thermal fuse.", "k": ["f", "f"], "color": "red", "hot": ""}, {"id": "AC5", "sys": "H", "short": "SSR 2 → Safety tstat", "frm": "SSR load terminal 2", "to": "Safety thermostat (165 C), terminal 1", "gauge": "18 AWG", "mm": 350, "ends": ["Fork spade", "Uninsulated 6.3 mm spade (open-barrel crimp) + self-fusing silicone tape"], "hot": "b", "src": "RS lengths (thermostat to SSR)", "note": "The 165 C safety thermostat stays in the heater line. Never bypass it.", "k": ["fk", "b"], "color": "orange", "lenNote": ""}, {"id": "AC6", "sys": "H", "short": "Safety tstat → Element", "frm": "Safety thermostat, terminal 2", "to": "Boiler element, terminal 1", "gauge": "18 AWG", "mm": 250, "ends": ["Uninsulated 6.3 mm spade sized for two 18 AWG wires + self-fusing silicone tape, shared with AC7", "Uninsulated 6.3 mm spade (open-barrel crimp) + self-fusing silicone tape"], "hot": "both", "src": "Talon", "note": "Talon doubled the spade at the safety thermostat. The alternative is doubling at the element terminal, with both leads 250 mm.", "k": ["b2:TST2", "b"], "color": "orange", "lenNote": ""}, {"id": "AC7", "sys": "H", "short": "Safety tstat → Lamp L", "frm": "Safety thermostat, terminal 2", "to": "Heating lamp, L spade", "gauge": "18 AWG", "mm": 100, "lenNote": "100 mm doubled at the thermostat (Talon); 250 mm if doubled at the element", "ends": ["Shared with AC6", "6.3 mm female spade"], "hot": "a", "src": "Talon", "note": "The heating lamp sits across the element, so it lights whenever the SSR is heating.", "k": ["b2:TST2", "f"], "color": "orange"}, {"id": "AC2", "sys": "N", "short": "Inlet N → BN2 neutral splice", "frm": "Power inlet, N pin", "to": "BN2 neutral splice, by the power switch", "gauge": "18 AWG", "mm": null, "lenNote": "Reuse the stock lead with a new two-wire spade at the inlet end, or measure", "ends": ["6.3 mm female spade sized for two 18 AWG wires (blue), shared with SH4", "BN2 butt splice, with AC8 and AC9 on its other side"], "src": "realNiche", "note": "With the Shelly the power switch no longer breaks neutral: AC2 ends in a splice by the switch, where AC8 and AC9 start. The splice sits where the N pole was, so the lengths hold.", "k": ["f2:INN", "bn2:NSP"], "color": "blue", "sh": "chg", "hot": ""}, {"id": "SH4", "sys": "N", "short": "Inlet N → Shelly N", "frm": "Power inlet, N pin", "to": "Shelly, N terminal", "gauge": "18 AWG", "mm": null, "lenNote": "Measure: it depends on where the Shelly sits", "ends": ["6.3 mm female spade sized for two 18 AWG wires (blue), shared with AC2", "Bootlace ferrule in the Shelly's N terminal"], "k": ["f2:INN", "fer"], "src": "gblur's V6 E drawing / this site", "note": "Powers the Shelly itself. The machine's neutral (AC2) shares the inlet's N spade and never runs through the Shelly: Shelly's own docs warn that using its L and N terminals as a bridge doubles the current through them and can overheat it.", "sh": "new", "color": "blue", "hot": ""}, {"id": "AC8", "sys": "N", "short": "BN2 splice → Lamp N", "frm": "BN2 neutral splice, by the power switch", "to": "Heating lamp, N spade", "gauge": "18 AWG", "mm": 100, "ends": ["BN2 butt splice, with AC9", "6.3 mm female spade sized for two 18 AWG wires (blue), shared with AC10"], "src": "Talon", "note": "Start of the neutral daisy chain, now from the splice with AC2 instead of the power switch.", "k": ["bn2:NSP", "f2:LAMPN"], "color": "blue", "sh": "chg", "lenNote": "", "hot": ""}, {"id": "AC9", "sys": "N", "short": "BN2 splice → Element", "frm": "BN2 neutral splice, by the power switch", "to": "Boiler element, terminal 2", "gauge": "18 AWG", "mm": 300, "ends": ["BN2 butt splice, with AC8", "Uninsulated 6.3 mm spade (open-barrel crimp) + self-fusing silicone tape"], "hot": "b", "src": "Talon", "note": "Talon left this one long for cable management.", "k": ["bn2:NSP", "b"], "color": "blue", "sh": "chg", "lenNote": ""}, {"id": "AC10", "sys": "N", "short": "Lamp N → Pump N", "frm": "Heating lamp, N spade", "to": "Pump, thermal-fuse terminal", "gauge": "18 AWG", "mm": 400, "ends": ["Shared with AC8", "6.3 mm female spade sized for two 18 AWG wires (blue), shared with AC11"], "src": "Talon / RS lengths", "note": "The pump's thermal fuse (110 C on realNiche's diagram) stays in circuit. If your pump has none, this run goes to the pump terminal.", "k": ["f2:LAMPN", "f2:PUMPN"], "color": "blue", "lenNote": "", "hot": ""}, {"id": "AC11", "sys": "N", "short": "Pump N → Solenoid N", "frm": "Pump, thermal-fuse terminal", "to": "Solenoid, N spade", "gauge": "18 AWG", "mm": 350, "ends": ["Shared with AC10", "Uninsulated 6.3 mm spade sized for two 18 AWG wires + self-fusing silicone tape, shared with AC12"], "src": "Talon / RS lengths", "note": "", "k": ["f2:PUMPN", "b2:SOLN"], "color": "blue", "lenNote": "", "hot": ""}, {"id": "AC12", "sys": "N", "short": "Solenoid N → J10 Neutral", "frm": "Solenoid, N spade", "to": "PCB J10 (AC Neutral)", "gauge": "18 AWG", "mm": 120, "ends": ["Shared with AC11", "6.3 mm female spade"], "src": "Talon / RS lengths", "note": "End of the neutral chain.", "k": ["b2:SOLN", "f"], "color": "blue", "lenNote": "", "hot": ""}, {"id": "G1", "sys": "E", "short": "Inlet earth → Boiler gnd", "frm": "Power inlet, earth pin", "to": "Boiler ground spade", "gauge": "18 AWG green", "mm": null, "lenNote": "Reuse the stock earth lead if it is sound, or measure", "ends": ["6.3 mm female spade", "Uninsulated 6.3 mm spade sized for two 18 AWG wires + self-fusing silicone tape, shared with G2"], "hot": "b", "src": "realNiche", "note": "Earth never connects to the PCB's 5 V ground (official warning).", "k": ["f", "b2:BGND"], "color": "green"}, {"id": "G2", "sys": "E", "short": "Solenoid gnd → Boiler gnd", "frm": "Solenoid ground spade", "to": "Boiler ground spade", "gauge": "18 AWG green", "mm": 200, "ends": ["Uninsulated 6.3 mm spade (open-barrel crimp) + self-fusing silicone tape", "Shared with G1"], "hot": "b", "src": "RS lengths", "note": "", "k": ["b", "b2:BGND"], "color": "green", "lenNote": ""}, {"id": "LV1", "sys": "LV", "short": "J7 S → Steam sw", "frm": "PCB J7 S", "to": "Steam switch, ground pole center spade", "gauge": "22 AWG", "mm": 320, "ends": ["JST-PH 2 mm crimp in the connector housing", "6.3 mm female spade (red)"], "src": "realNiche / RS lengths", "note": "Signal on the center spade, ground on the outer spade of the same pole.", "k": ["jst", "lv"], "color": "white", "hdr": "J7", "lenNote": "", "hot": ""}, {"id": "LV2", "sys": "LV", "short": "J7 B → Brew sw", "frm": "PCB J7 B", "to": "Brew switch, ground pole center spade", "gauge": "22 AWG", "mm": 320, "ends": ["JST-PH 2 mm crimp in the connector housing", "6.3 mm female spade (red)"], "src": "realNiche / RS lengths", "note": "", "k": ["jst", "lv"], "color": "white", "hdr": "J7", "lenNote": "", "hot": ""}, {"id": "LV3", "sys": "LV", "short": "J5 B15 → Hot water sw", "frm": "PCB J5 B15", "to": "Hot water switch, ground pole center spade", "gauge": "22 AWG", "mm": 400, "ends": ["JST-PH 2 mm crimp in the connector housing", "6.3 mm female spade (red)"], "src": "realNiche / RS lengths", "note": "B15, not A12: PCB firmware reads the hot water switch on B15. Keep hot water on low voltage.", "k": ["jst", "lv"], "color": "white", "hdr": "J5", "lenNote": "", "hot": ""}, {"id": "LV4", "sys": "LVG", "short": "J7 GND → Steam sw gnd", "frm": "PCB J7 GND", "to": "Steam switch, ground pole outer spade", "gauge": "22 AWG", "mm": 470, "ends": ["JST-PH 2 mm crimp in the connector housing", "6.3 mm female spade (red)"], "src": "RS lengths / Talon", "note": "Start of the switch ground chain. Talon brings it into the lowest switch first and chains up; start at whichever switch is nearest.", "k": ["jst", "lv2:STG"], "color": "black", "hdr": "J7", "lenNote": "", "hot": ""}, {"id": "LV5", "sys": "LVG", "short": "Steam sw gnd → Brew sw gnd", "frm": "Steam switch, ground pole outer spade", "to": "Brew switch, ground pole outer spade", "gauge": "22 AWG", "mm": null, "lenNote": "Short jumper; measure (about 100 mm)", "ends": ["Shared spade or red butt splice", "6.3 mm female spade (red)"], "src": "Talon / LED notes", "note": "", "k": ["lv2:STG", "lv2:BRG"], "color": "black", "hot": ""}, {"id": "LV6", "sys": "LVG", "short": "Brew sw gnd → Hot water gnd", "frm": "Brew switch, ground pole outer spade", "to": "Hot water switch, ground pole outer spade", "gauge": "22 AWG", "mm": null, "lenNote": "Short jumper; measure (about 100 mm)", "ends": ["Shared spade or red butt splice", "6.3 mm female spade (red)"], "src": "Talon / LED notes", "note": "", "k": ["lv2:BRG", "lv"], "color": "black", "hot": ""}, {"id": "LV7", "sys": "S", "short": "J9 R1 → SSR +", "frm": "PCB J9 R1", "to": "SSR control +", "gauge": "22 AWG", "mm": null, "lenNote": "Measure", "ends": ["JST-PH 2 mm crimp in the connector housing", "Fork spade"], "src": "realNiche / official LV schematic", "note": "Polarity matters: R1 to +, GND to −.", "k": ["jst", "fks"], "color": "red", "hdr": "J9", "hot": ""}, {"id": "LV8", "sys": "S", "short": "J9 GND → SSR −", "frm": "PCB J9 GND", "to": "SSR control −", "gauge": "22 AWG", "mm": null, "lenNote": "Measure", "ends": ["JST-PH 2 mm crimp in the connector housing", "Fork spade"], "src": "realNiche / official LV schematic", "note": "", "k": ["jst", "fks"], "color": "black", "hdr": "J9", "hot": ""}, {"id": "LV9", "sys": "S", "short": "J6 → Pressure sensor", "frm": "PCB J6 (5V, GND, P)", "to": "Pressure transducer", "gauge": "Sensor lead", "mm": null, "lenNote": "Sensor's own lead; extend with 22 AWG if short", "ends": ["JST-PH 3-pin", "Transducer pigtail"], "src": "realNiche", "note": "Three wires: 5V, GND and P (signal).", "k": ["jst3", "pig"], "color": "", "hdr": "J6", "hot": ""}, {"id": "LV10", "sys": "S", "short": "J4 → Thermocouple", "frm": "PCB J4 (+, −)", "to": "Thermocouple, brew thermostat position", "gauge": "TC lead", "mm": null, "lenNote": "Thermocouple's own lead", "ends": ["Screw terminal; fold the bare wire over, don't clamp insulation", "M3 thermocouple"], "src": "Official PCB guide / Discord", "note": "Ungrounded K-type. Route it around the front of the boiler. If the bench test shows temperature falling when you warm it, swap the two leads.", "k": ["tc", "pig"], "color": "", "hot": ""}, {"id": "LV11", "sys": "S", "short": "J1 → Screen", "frm": "PCB J1 (GND, TX, RX, 5V)", "to": "4.3 in Gen 3.5 screen", "gauge": "Screen cable", "mm": 600, "lenNote": "DIY-EFI cable is 60 cm and Peak Coffee's 45 cm. The older diagram used 650 mm for a front mount; a funnel mount needs more (open question)", "ends": ["JST-PH 4-pin", "Screen connector"], "src": "DIY-EFI / RS lengths / Talon", "note": "Check connection points, not colors: blue and yellow can be swapped between cable revisions. Don't take pre-made cables apart.", "k": ["pre", "pre"], "color": "", "hot": ""}, {"id": "OP1", "sys": "OPT", "short": "J8 → Scales board", "frm": "PCB J8 (D2, 5V, GND, CLK, D1)", "to": "Scales board (optional)", "gauge": "5-pin cable", "mm": null, "lenNote": "5P JST XH to PH cable", "ends": ["JST-PH 5-pin", "JST-XH 5-pin"], "src": "Official BOM / Discord", "note": "Only if you fit hardware scales.", "k": ["pre", "pre"], "color": "", "hot": ""}, {"id": "OP2", "sys": "OPT", "short": "J2 → ToF sensor", "frm": "PCB J2, backside (JST-SH)", "to": "ToF sensor (optional)", "gauge": "Qwiic cable", "mm": 250, "lenNote": "250 mm or longer, JST SH 1.0 opposite direction", "ends": ["JST-SH 4-pin", "JST-SH 4-pin"], "src": "Official BOM / Discord", "note": "Only if you fit the ToF tank sensor.", "k": ["pre", "pre"], "color": "", "hot": ""}, {"id": "OP3", "sys": "OPT", "short": "5V splice → 1st sw LED", "frm": "Screen 5V line (BN1.25 butt splice)", "to": "First switch, LED pole outer spade", "gauge": "22 AWG", "mm": 320, "ends": ["BN1.25 butt splice", "6.3 mm female spade (red)"], "src": "Discord LED notes", "note": "LED switch mod only. See the LED guide for which pole gets 5 V.", "k": ["bn", "lv2:LED1"], "color": "yellow", "lenNote": "", "hot": ""}, {"id": "OP4", "sys": "OPT", "short": "1st sw LED → 2nd sw LED", "frm": "First switch, LED pole outer spade", "to": "Second switch, LED pole outer spade", "gauge": "22 AWG", "mm": 100, "ends": ["Shared spade", "6.3 mm female spade (red)"], "src": "Discord LED notes", "note": "LED switch mod only.", "k": ["lv2:LED1", "lv2:LED2"], "color": "yellow", "lenNote": "", "hot": ""}, {"id": "OP5", "sys": "OPT", "short": "2nd sw LED → 3rd sw LED", "frm": "Second switch, LED pole outer spade", "to": "Third switch, LED pole outer spade", "gauge": "22 AWG", "mm": 100, "ends": ["Shared spade", "6.3 mm female spade (red)"], "src": "Discord LED notes", "note": "LED switch mod only.", "k": ["lv2:LED2", "lv"], "color": "yellow", "lenNote": "", "hot": ""}],RUNS=RUNS0;
   function shOn(){var m=window.SilviaMachine;return !!(m&&m.shelly&&m.shelly())}
