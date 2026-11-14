@@ -31,17 +31,17 @@ var RBF=(function(){
   function pics(list){
     list=(list||[]).filter(function(p){return ok(p[2])});if(!list.length)return '';
     var id=REG.length;REG.push({pics:list});
-    return '<div class="rph"><span class="rlbl">Official photos</span><div class="rph-strip" data-rph="'+id+'">'+list.map(function(p,i){
-      return '<button type="button" class="rph-t" data-i="'+i+'" aria-label="'+esc('Open the official photo: '+p[0])+'"><img src="'+esc(p[1])+'" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.parentNode.classList.add(\'bad\')"><span>'+esc(p[0])+'</span></button>'}).join('')+'</div>'
+    return '<div class="rph"><span class="rlbl">Official images</span><div class="rph-strip" data-rph="'+id+'">'+list.map(function(p,i){
+      return '<button type="button" class="rph-t" data-i="'+i+'" aria-label="'+esc('Open the official image: '+p[0])+'"><img src="'+esc(p[1])+'" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.parentNode.classList.add(\'bad\')"><span>'+esc(p[0])+'</span></button>'}).join('')+'</div>'
       +'<p class="rph-c">From the official Gaggiuino docs, loaded from their site. Tap one to see it larger.</p></div>';
   }
   var DLG=null,DL=null,DI=0;
   function viewer(list,i){
     if(!DLG){
-      DLG=document.createElement('dialog');DLG.className='rbx';DLG.setAttribute('aria-label','Official photo');
-      DLG.innerHTML='<div class="rbx-in"><div class="rbx-img"><img alt=""><p class="rbx-bad" hidden>This photo didn\'t load here. Open it on the official site with the link below.</p></div>'
-        +'<div class="rbx-bar"><button type="button" class="rbx-b" data-x="p" aria-label="Previous photo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>'
-        +'<p class="rbx-cap" aria-live="polite"></p><button type="button" class="rbx-b" data-x="n" aria-label="Next photo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>'
+      DLG=document.createElement('dialog');DLG.className='rbx';DLG.setAttribute('aria-label','Official image');
+      DLG.innerHTML='<div class="rbx-in"><div class="rbx-img"><img alt=""><p class="rbx-bad" hidden>This image didn\'t load here. Open it on the official site with the link below.</p></div>'
+        +'<div class="rbx-bar"><button type="button" class="rbx-b" data-x="p" aria-label="Previous image"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>'
+        +'<p class="rbx-cap" aria-live="polite"></p><button type="button" class="rbx-b" data-x="n" aria-label="Next image"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>'
         +'<button type="button" class="rbx-b rbx-x" data-x="x" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div></div>';
       document.body.appendChild(DLG);
       var img=DLG.querySelector('img');
@@ -57,7 +57,7 @@ var RBF=(function(){
   function show(i){
     var n=DL.length;DI=(i+n)%n;var p=DL[DI],img=DLG.querySelector('img');
     img.hidden=false;DLG.querySelector('.rbx-bad').hidden=true;img.referrerPolicy='no-referrer';img.src=p[1];img.alt=p[0];
-    DLG.querySelector('.rbx-cap').innerHTML='<b>'+esc(p[0])+'</b> '+(n>1?'<span class="n">'+(DI+1)+' of '+n+'</span> ':'')+'<span class="cr">Official Gaggiuino photo · <a href="'+esc(p[1])+'" target="_blank" rel="noopener">open the original</a></span>';
+    DLG.querySelector('.rbx-cap').innerHTML='<b>'+esc(p[0])+'</b> '+(n>1?'<span class="n">'+(DI+1)+' of '+n+'</span> ':'')+'<span class="cr">From the official Gaggiuino docs · <a href="'+esc(p[1])+'" target="_blank" rel="noopener">open the original</a></span>';
     Array.prototype.forEach.call(DLG.querySelectorAll('[data-x="p"],[data-x="n"]'),function(b){b.hidden=n<2});
   }
 
@@ -84,7 +84,7 @@ var RBF=(function(){
   function gPlan(f){
     var G=C.G||{},d=G[f[1]];if(!d)return null;
     var v=f[2]||null;
-    if(v&&v.charAt(0)==='@')v=C.variant?C.variant(v.slice(1),d):null;
+    var head=f[5]||'';if(v&&v.charAt(0)==='@'){var vk=v.slice(1);v=C.variant?C.variant(vk,d):null;if(!head&&C.variantHead)head=C.variantHead(vk)||''}
     if(d.vars){if(!v||!d.vars.some(function(x){return x.k===v}))v=d.def?d.def():d.vars[0].k}else v='all';
     var all=(d.steps[v]||d.steps.all||[]).filter(function(s){return C.m?C.m(s.when):true});
     /* titles: 'all', a list (an entry can be [title, when]), or a list per variant */
@@ -93,7 +93,7 @@ var RBF=(function(){
     if(!sel.length)return null;sel.sort(function(a,b){return a-b});
     var svgId=d.svgs?d.svgs[v]:d.svg,tpl=document.getElementById('rbt-'+svgId);if(!tpl)return null;
     var vb=/viewBox="([\d.\s-]+)"/.exec(tpl.innerHTML),ar='480/300';if(vb){var a=vb[1].trim().split(/\s+/);ar=a[2]+'/'+a[3]}
-    return {g:f[1],d:d,v:v,all:all,sel:sel,svgId:svgId,ar:ar,head:f[5]||'',label:(f[5]?f[5]+'. ':'')+'Drawing from the part guides: '+sel.map(function(i){return all[i].t}).join(', ')};
+    return {g:f[1],d:d,v:v,all:all,sel:sel,svgId:svgId,ar:ar,head:head,label:(head?head+'. ':'')+'Drawing from the part guides: '+sel.map(function(i){return all[i].t}).join(', ')};
   }
 
   /* ---------- the player (the part guides' own engine, cut down) ---------- */
@@ -227,7 +227,7 @@ var RBF=(function(){
     var list='<ul class="pcbl">'+rows.map(function(k){var s=st(k),c=s==='on'?'on':s==='x'?'x':'mut';return '<li class="'+c+'"><span class="pill">'+esc(PCBROW[k][0])+'</span><span>'+esc(String(note[k]||PCBROW[k][1]).replace(/\n/g,' '))+'</span></li>'}).join('')+'</ul>';
     return [S(188,370,b,'The Gaggiuino PCB seen from above. '+rows.map(function(k){return PCBROW[k][0]+': '+String(note[k]||PCBROW[k][1]).replace(/\n/g,' ')}).join('; ')),list];
   };
-  D.pcbw=function(o){return {panels:D.pcb(o),min:200,cap:o.cap||'The PCB seen from above, laid out as the official board drawing shows it (PCB v3.1 and v4). Each socket\'s name is printed on the board beside it. J2 is on the underside.'}};
+  D.pcbw=function(o){return {panels:D.pcb(o),min:200,cap:o.cap||'The PCB seen from above, laid out and named as the official board label drawing shows it (PCB v3.1 and v4), with J2 on the underside. The J10 to J13 numbers for the mains tabs come from the official low-voltage drawing.'}};
 
   /* the thermocouple's two bare wires in J4's clamps */
   D.j4=function(){
@@ -236,7 +236,7 @@ var RBF=(function(){
     b+=P('M196,100H232','rd-ln')+T(238,96,'bare end,','rd-s')+T(238,110,'folded back','rd-s');
     b+=P('M196,124H232','rd-ln')+T(238,128,'insulation','rd-s')+T(238,142,'stays out','rd-s');
     b+=T(12,110,'Which wire','rd-s')+T(12,124,'on + and −:','rd-s')+T(12,138,'the warm-hand','rd-s')+T(12,152,'test decides','rd-s');
-    return {panels:[S(320,200,b,'The thermocouple in J4: each bare end folded back on itself and clamped, the insulation kept out of the clamp.')],cap:'Only folded bare wire goes under each clamp. Lead colors vary between makers, so the warm-hand test, two steps on, decides which goes on +.'};
+    return {panels:[S(320,200,b,'The thermocouple in J4: each bare end folded back on itself and clamped, the insulation kept out of the clamp.')],cap:'Only folded bare wire goes under each clamp. Lead colors vary between makers, so the warm-hand test later in this phase (Warm the thermocouple) decides which goes on +.'};
   };
 
   /* the screen cable, end to end, by pin name (colors as the official drawing; batches vary) */
@@ -259,16 +259,16 @@ var RBF=(function(){
     b+=T(X+9,24,lab,'rd-tb','middle')+T(X+9,36,'back, two sockets','rd-s','middle')+R(X,y0-8,18,86,'pcb-hd',2)+T(X+9,Y2-14,'UART1','rd-tm','middle')+R(X,Y2-8,18,86,'pcb-hd',2);
     [['GND',y0+4],['5V',y0+64],['RX',Y2+4],['TX',Y2+24]].forEach(function(r){b+=wire(r[0],y0+4+L.indexOf(r[0])*20,r[1])});
     A.forEach(function(t,i){var y=y0+4+i*20;b+=pin(X+9,y)+T(X+24,y+4,t,'rd-pn')});
-    U.forEach(function(t,i){var y=Y2+4+i*20;b+=pin(X+9,y)+T(X+24,y+4,t,'rd-pn')});
+    U.forEach(function(t,i){var y=Y2+4+i*20;b+=pin(X+9,y)+T(X+24,y+4,t,'rd-pn'+(i>1?' rd-m':''))+(i>1?T(X+60,y+4,'USB','rd-s'):'')});
     b+=TL(8,Y2+108,'5V and GND land on the socket marked\nGND, RXD, TXD, 5V. TX goes to IO18 and\nRX to IO17 on UART1.','rd-s');
-    return S(272,Y2+148,b,'Screen cable from J1 to the Gen 3 screen: J1 5V and GND to the socket marked GND, RXD, TXD, 5V; J1 TX to IO18 and RX to IO17 on the socket marked UART1.');
+    return S(292,Y2+148,b,'Screen cable from J1 to the Gen 3 screen: J1 5V and GND to the socket marked GND, RXD, TXD, 5V; J1 TX to IO18 and RX to IO17 on the socket marked UART1.');
   }
   D.scrpins=function(o){var k=o.scr||(C.screen&&C.screen())||null,list=k?[k]:['p4','s3','hl'];
     return {panels:list.map(scrPanel),wide:!k,min:230,cap:'Colors as the official drawing shows them. Yours may differ: blue and yellow have been swapped between cable batches, so go by the names beside the pins.'+(k?'':' Pick your screen at the top of the page to see only yours.')}};
 
   /* a multimeter: the zero reading, a connection, and no connection (OL) */
   function meterPanel(mode){
-    var b='',lcd=mode==='open'?'OL':mode==='zero'?'0.2':'0.4',t=mode==='zero'?['1. Probes touching','A small number: your zero']:mode==='ok'?['2. Across a good wire','Close to your zero, and it beeps']:['3. Nothing connects them','OL: open, no connection'];
+    var b='',lcd=mode==='open'?'OL':mode==='zero'?'0.2':'0.4',t=mode==='zero'?['1. Probes touching','A small number: your zero']:mode==='ok'?['2. Across a good wire','Near your zero; beeps on continuity']:['3. Nothing connects them','OL: open, no connection'];
     b+=T(10,18,t[0],'rd-tb')+T(10,35,t[1],'rd-s');
     var g='';
     g+=R(12,14,92,150,'mt-b',10)+R(22,24,72,34,'mt-lcd',4)+T(88,50,lcd,'mt-num','end');
@@ -328,7 +328,7 @@ var RBF=(function(){
     var c2=card('2','Open the web UI',R(16,48,138,30,'wf-row',15)+T(85,67,'gaggiuino.local','rd-tm','middle')+T(85,100,'in a browser: the same','rd-s','middle')+T(85,114,'controls as the screen','rd-s','middle'),'');
     var c3=card('3','Join your network',T(18,58,'Settings, then System,','rd-s')+T(18,74,'then Connect','rd-s')+R(16,86,138,26,'wf-row on',5)+T(85,104,'Home, 2.4 GHz','rd-tm','middle'),'then its password');
     var c4=card('4','From any device',P('M30,96h44v-36h-44zM24,100h56','wf-ic')+R(104,58,26,44,'wf-ic',4)+T(85,124,'gaggiuino.local','rd-tm','middle'),'on your network');
-    return {panels:[c1,c2,c3,c4],min:150,cap:'From the official user manual. Gaggiuino makes its own Wi-Fi until it joins yours, and shot history only gets the right time once it\'s on your network.'};
+    return {panels:[c1,c2,c3,c4],min:150,cap:'From the official user manual. Gaggiuino makes its own Wi-Fi until it joins yours. Shot history shows the right date and time only once it\'s on a network with internet access and the time zone offset is set (Phase 6).'};
   };
 
   /* the boot on the bench */
@@ -352,13 +352,14 @@ var RBF=(function(){
   };
 
   /* a wire label wrapped into a flag */
-  D.flag=function(){
-    var b=P('M12,112H226','fg-w')+R(226,104,48,16,'fg-sp',2)+T(250,138,'end','rd-s','middle');
-    b+=R(140,22,58,84,'fg-l',4)+P('M140,106 C140,118 198,118 198,106','fg-l2')+P('M169,26V102','fg-fold')+T(169,74,'L','fg-t','middle');
+  D.flag=function(o){
+    var t1=o.t1||'L',t2=o.t2||'J',c1=o.c1||'r',c2=o.c2||'r';
+    var b=P('M14,112H226','fg-w '+c1)+R(226,104,48,16,'fg-sp',2)+T(250,138,'end','rd-s','middle');
+    b+=R(140,22,58,84,'fg-l',4)+P('M140,106 C140,118 198,118 198,106','fg-l2')+P('M169,26V102','fg-fold')+T(169,74,t1,'fg-t'+(t1.length>2?' sm':''),'middle');
     b+=P('M169,124V140M226,124V140M169,132H226','rd-ln')+T(198,156,'about 30 mm','rd-s','middle');
     b+=TL(128,40,'Wrapped round\nthe wire, the\ntwo halves stuck\ntogether, text\noutward','rd-s','end',14);
-    var b2=P('M12,40H212','fg-w s')+R(212,31,48,18,'fg-sp',2)+T(112,45,'L','fg-mk','middle')+TL(12,80,'At the boiler: the name in\noil-based marker on the\nsilicone jacket, no paper','rd-s','start',14);
-    return {min:230,panels:[S(290,166,b,'A paper label wrapped around the wire about 30 mm from its end, the two halves stuck together with the text outward.'),S(270,124,b2,'Ends at the boiler get the name written on the silicone jacket in oil-based marker instead.')],cap:'Label each wire at both ends as you make it, and each stock connector before you move it.'};
+    var b2=P('M14,40H212','fg-w s '+c2)+R(212,31,48,18,'fg-sp',2)+T(112,45,t2,'fg-mk','middle')+TL(12,80,'At the boiler: the name in\noil-based marker on the\nsilicone jacket, no paper','rd-s','start',14);
+    return {min:230,panels:[S(290,166,b,'A paper label, '+t1+', wrapped around the wire about 30 mm from its end, the two halves stuck together with the text outward.'),S(270,124,b2,'An end at the boiler, '+t2+', gets its name written on the silicone jacket in oil-based marker instead.')],cap:o.cap||'Label each wire at both ends as you make it, and each stock connector before you move it.'};
   };
 
   /* the two front switches, and what each does on the first power-on */
@@ -367,20 +368,23 @@ var RBF=(function(){
     function sw(x,on,lab){return R(x,18,34,58,'sw-b',5)+R(x+5,on?24:44,24,26,'sw-r'+(on?' on':''),3)+T(x+17,92,lab,'rd-tm','middle')+T(x+17,106,on?'on':'off','rd-s','middle')}
     function p(on,t1,t2,t3){var x0=three?24:40,dx=three?62:56;return S(three?210:170,170,names.map(function(n,i){return sw(x0+i*dx,on.indexOf(n)>=0,n)}).join('')+T(three?105:85,128,t1,'rd-tb','middle')+T(three?105:85,144,t2,'rd-s','middle')+(t3?T(three?105:85,158,t3,'rd-s','middle'):''),t1+': '+t2+' '+(t3||''))}
     if(three)return {min:170,panels:[p(['brew'],'Brew','the pump runs: water','through the group'),p(['steam'],'Steam','the target switches','to the steam temperature'),p(['water'],'Hot water','steam knob open,','over a jug')],cap:'What each switch does at the first power-on. Steam, the wand and the group head can burn.'};
-    return {min:130,panels:[p(['brew'],'Brew','the pump runs: water','through the group'),p(['steam'],'Steam','steam target; the ring','pulses above 120 °C'),p(['brew','steam'],'Both','hot water mode,','from the wand')],cap:'From the official user manual. Above 120 °C, steam, the wand and the group can burn. Hot water mode needs the steam knob open and a cup under the wand.'};
+    return {min:130,panels:[p(['brew'],'Brew','the pump runs: water','through the group'),p(['steam'],'Steam','steam target; the ring','pulses above 120 °C'),p(['brew','steam'],'Both','hot water mode,','from the wand')],cap:'From the official user manual: brew and steam together is hot water mode, and the ring pulses above 120 °C as a warning. Steam, hot water, the wand and the group head can burn at any working temperature. For hot water, open the steam knob over a cup under the wand (this site\'s advice).'};
   };
 
   /* the mains cord: out at both ends before opening up, in at the machine first at power-on */
-  function outlet(x,y){return R(x,y,64,92,'cd-wall',8)+R(x+16,y+14,32,26,'cd-sock',6)+P('M'+(x+26)+','+(y+22)+'v10M'+(x+38)+','+(y+22)+'v10','cd-slot')+R(x+16,y+52,32,26,'cd-sock',6)+P('M'+(x+26)+','+(y+60)+'v10M'+(x+38)+','+(y+60)+'v10','cd-slot')}
-  function inlet(x,y){return R(x,y,70,92,'cd-mach',8)+R(x+20,y+30,30,24,'cd-iec',4)+P('M'+(x+28)+','+(y+42)+'h4M'+(x+38)+','+(y+42)+'h4','cd-slot')+T(x+35,y+80,'machine','rd-s','middle')}
+  function sock(x,y){return R(x+16,y,32,30,'cd-sock',6)+P('M'+(x+26)+','+(y+7)+'v10M'+(x+38)+','+(y+7)+'v10','cd-slot')+P('M'+(x+29)+','+(y+25)+'a3,3 0 0 1 6,0','cd-gnd')}
+  function outlet(x,y){return R(x,y,64,92,'cd-wall',8)+sock(x,y+10)+sock(x,y+50)}
+  function inlet(x,y){return R(x,y,70,92,'cd-mach',8)+P('M'+(x+19)+','+(y+30)+'h32v18l-6,8h-20l-6,-8z','cd-iec')+P('M'+(x+27)+','+(y+44)+'v6M'+(x+43)+','+(y+44)+'v6M'+(x+35)+','+(y+35)+'v6','cd-slot2')+T(x+35,y+80,'machine','rd-s','middle')}
+  function plug(x,y){return R(x,y,22,16,'cd-plug',3)+P('M'+(x+22)+','+(y+4)+'h10M'+(x+22)+','+(y+12)+'h10','cd-pin')}
   D.cord=function(o){
-    var outl=C.fill?C.fill('{outlet}'):'a GFCI-protected outlet',b1,b2;
+    var outl=C.fill?C.fill('{outlet}'):'GFCI-protected outlet',b1,b2;
     if(o.mode==='in'){
       b1=inlet(96,12)+P('M10,58 H84','cd-cord')+R(84,50,32,16,'cd-plug',3)+P('M60,40l14,10-14,10','cd-arr')+T(10,128,'1. Cord into the machine first','rd-tb');
-      b2=outlet(110,12)+P('M10,58 H66','cd-cord')+R(66,50,22,16,'cd-plug',3)+P('M70,58h12M70,52h0','cd-pin')+P('M92,40l12,10-12,10','cd-arr')+T(10,128,'2. Then into the wall','rd-tb');
-      return {min:180,panels:[S(190,150,b1,'Plug the cord into the machine first.'),S(190,150,b2,'Then plug it into the wall outlet: '+outl+'.')],cap:'The wall end goes into a '+esc(outl)+'. Stay within reach of the plug for the whole first session: at any smell, smoke, crackle, a tripped breaker or an odd noise, unplug at the wall first.'};
+      b2=outlet(110,12)+P('M10,58 H66','cd-cord')+plug(66,50)+P('M100,30l8,8-8,8','cd-arr')+T(10,128,'2. Then into the wall','rd-tb');
+      return {min:180,panels:[S(190,150,b1,'Plug the cord into the machine first.'),S(190,150,b2,'Then plug it into the wall outlet.')],cap:'The wall end goes into a '+esc(outl)+'. Stay within reach of the plug for the whole first session: at any smell, smoke, crackle, a tripped breaker or an odd noise, unplug at the wall first.'};
     }
-    b1=outlet(110,12)+P('M10,58 H46','cd-cord')+R(46,50,22,16,'cd-plug',3)+P('M50,58h12','cd-pin')+P('M100,40l-14,10 14,10','cd-arr')+T(10,128,'1. Out of the wall','rd-tb');
+    b1=outlet(110,12)+P('M10,58 H46','cd-cord')+plug(46,50)+P('M100,38l-12,10 12,10','cd-arr')+T(10,128,o.mode==='wall'?'Unplug at the wall':'1. Out of the wall','rd-tb');
+    if(o.mode==='wall')return {panels:[S(190,150,b1,'Pull the plug out of the wall.')],cap:o.cap||''};
     b2=inlet(96,12)+P('M10,58 H40','cd-cord')+R(40,50,32,16,'cd-plug',3)+P('M86,40l-14,10 14,10','cd-arr')+T(10,128,'2. Out of the machine too','rd-tb');
     return {min:180,panels:[S(190,150,b1,'Pull the plug out of the wall.'),S(190,150,b2,'Then pull the cord out of the machine too.')],cap:o.cap||'With the cord out at both ends, nothing in the machine can be live. Let it cool first if it\'s been on.'};
   };
@@ -389,7 +393,7 @@ var RBF=(function(){
   D.bench=function(o){
     var b=R(8,40,304,128,'bn-mat',12)+T(160,32,'Wooden board, cardboard or a silicone mat','rd-s','middle');
     b+=R(24,64,92,62,'bn-box',8)+R(36,76,68,38,'pcb-b',4)+T(70,144,'PCB in its housing','bn-t','middle');
-    if(o.screen!==false)b+=R(134,68,100,60,'bn-cloth',10)+R(144,78,80,40,'bn-scr',4)+T(184,144,'screen face up','bn-t','middle')+T(184,158,'on a cloth','bn-t','middle');
+    if(o.screen!==false&&!(C.screen&&C.screen()==='hl'))b+=R(134,68,100,60,'bn-cloth',10)+R(144,78,80,40,'bn-scr',4)+T(184,144,'screen face up','bn-t','middle')+T(184,158,'on a cloth','bn-t','middle');
     b+='<g transform="translate(274,98)">'+P('M-10,-4h16v8h-16zM6,-2h8v4h-8z','bn-screw')+P('M-14,-12L14,12M14,-12L-14,12','bn-x')+'</g>'+T(274,136,'no loose','bn-t','middle')+T(274,150,'metal','bn-t','middle');
     return {panels:[S(320,176,b,'The bench: a wooden board, cardboard or silicone mat, the PCB in its housing, the screen face up on a cloth, and no screws or wire offcuts underneath.')],cap:'Nothing metal under or around the boards while they\'re powered: a stray screw can short the PCB.'};
   };

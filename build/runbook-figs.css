@@ -79,6 +79,8 @@
 .rd .cd-wall{fill:#E9E4D8;stroke:#9C9384}
 .rd .cd-sock{fill:#F8F6F0;stroke:#9C9384}
 .rd .cd-slot{fill:none;stroke:#3A3F45;stroke-width:3;stroke-linecap:round}
+.rd .cd-gnd{fill:none;stroke:#3A3F45;stroke-width:2.6;stroke-linecap:round}
+.rd .cd-slot2{fill:none;stroke:#C9CFD4;stroke-width:3;stroke-linecap:round}
 .rd .cd-mach{fill:#C3CAD0;stroke:#6B737B}
 .rd .cd-iec{fill:#2B3036;stroke:#15181B}
 .rd .cd-cord{fill:none;stroke:#2B3036;stroke-width:6;stroke-linecap:round}
@@ -153,12 +155,15 @@
 .rd .tp-badt{fill:var(--bad);font-weight:600;font-size:11.5px}
 /* label flag */
 .rd .fg-w{fill:none;stroke:#C8392C;stroke-width:9;stroke-linecap:round}
+.rd .fg-w.k{stroke:#2B3036}
+.rd .fg-w.n{stroke:#7C858D}
 .rd .fg-w.s{stroke-width:18}
 .rd .fg-fold{fill:none;stroke:#B8C0C7;stroke-width:1;stroke-dasharray:3 3}
 .rd .fg-sp{fill:#C9CFD4;stroke:#6B737B}
 .rd .fg-l{fill:#FFFFFF;stroke:#8D959C;stroke-width:1.2}
 .rd .fg-l2{fill:#E9ECEE;stroke:#8D959C;stroke-width:1.2}
 .rd .fg-t{font:700 18px var(--f-mono);fill:#16191C}
+.rd .fg-t.sm{font-size:13px}
 .rd .fg-mk{font:700 13px var(--f-mono);fill:#FFFFFF}
 /* temperature limits */
 .rd .lm-tube{fill:var(--surface-2);stroke:var(--line)}
@@ -167,8 +172,9 @@
 .rd .lm-m.set{stroke:var(--accent);stroke-width:2.6}
 .rd .lm-m.stop{stroke:var(--bad);stroke-width:2.6}
 .rd .lm-stop{fill:var(--bad);font-weight:600}
-:root[data-theme="dark"] .rd .w-k,:root[data-theme="dark"] .rd .mt-lead.k{filter:drop-shadow(0 0 1.2px #C9D1D9)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .rd .w-k,:root:not([data-theme="light"]) .rd .mt-lead.k{filter:drop-shadow(0 0 1.2px #C9D1D9)}}
+:root[data-theme="dark"] .rd .w-k,:root[data-theme="dark"] .rd .mt-lead.k,:root[data-theme="dark"] .rd .mt-probe.k,:root[data-theme="dark"] .rd .cd-cord,:root[data-theme="dark"] .rd .cd-plug,:root[data-theme="dark"] .rd .fg-w.k{filter:drop-shadow(0 0 1.2px #C9D1D9)}
+:root[data-theme="dark"] .pw-hot{color:#1A1206}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .rd .w-k,:root:not([data-theme="light"]) .rd .mt-lead.k,:root:not([data-theme="light"]) .rd .mt-probe.k,:root:not([data-theme="light"]) .rd .cd-cord,:root:not([data-theme="light"]) .rd .cd-plug,:root:not([data-theme="light"]) .rd .fg-w.k{filter:drop-shadow(0 0 1.2px #C9D1D9)}:root:not([data-theme="light"]) .pw-hot{color:#1A1206}}
 @keyframes rbblink{0%{opacity:1}50%{opacity:.15}100%{opacity:1}}
 @keyframes rbglow{0%,100%{opacity:.55}50%{opacity:1}}
 @media (prefers-reduced-motion:reduce){.rd .ssr-led.blink,.rd .bt-led{animation:none}}
