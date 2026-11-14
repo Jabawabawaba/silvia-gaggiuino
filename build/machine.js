@@ -178,6 +178,13 @@
       else if(!over&&h)h.remove();
     });
   }
-  window.SilviaMachine={get:function(){return prof},set:set,current:current,matches:matches,decided:decided,text:text,txt:txt,label:label,forText:forText,missing:missing,summary:summary,apply:apply,shelly:function(){return !!(prof&&prof.shelly)}};
+  /* open the Your Silvia panel from elsewhere on the page (the runbook's linked steps) */
+  function openPanel(){
+    var chip=document.getElementById('mchip'),pan=document.getElementById('mpanel');
+    if(!chip||!pan)return;
+    try{window.scrollTo({top:0,behavior:'smooth'})}catch(e){window.scrollTo(0,0)}
+    if(pan.hidden)chip.click();
+  }
+  window.SilviaMachine={get:function(){return prof},openPanel:openPanel,set:set,current:current,matches:matches,decided:decided,text:text,txt:txt,label:label,forText:forText,missing:missing,summary:summary,apply:apply,shelly:function(){return !!(prof&&prof.shelly)}};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',wire);else wire();
 })();

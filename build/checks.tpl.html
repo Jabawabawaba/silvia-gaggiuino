@@ -345,6 +345,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
   return {G:G,prof:prof,famOf:famOf}})();
   %%INCLUDE:runbook-figs.js%%
   %%INCLUDE:page-figs.js%%
+  %%INCLUDE:progress-store.js%%
   RBF.init(PF());
   function mapLink(it){
     if(!(it.id in MAPS))return '';
@@ -468,12 +469,13 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     update();
   }
   function update(){
-    var r=run(),p=0,f=0,t=0;
+    var r=run(),p=0,f=0,t=0,tally={};
     SECTIONS.forEach(function(s){
       var sp=0,its=shown(s);
+      if(its.length)tally[s.id]=[its.length,0,0];
       its.forEach(function(it){
         t++;var res=result(it,r);
-        if(res==='pass'){p++;sp++}else if(res==='fail')f++;
+        if(res==='pass'){p++;sp++;tally[s.id][1]++}else if(res==='fail'){f++;tally[s.id][2]++}
         var row=document.querySelector('[data-item="'+it.id+'"]');if(!row)return;
         row.setAttribute('data-r',res||'');
         var rs=row.querySelector('[data-res]');if(rs){rs.className='res '+(res||'');rs.textContent=res==='pass'?'Pass':res==='fail'?'Fail':'—'}
@@ -484,6 +486,8 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
       var ss=document.querySelector('[data-ssum="'+s.id+'"]');if(ss)ss.textContent=sp+' of '+its.length;
     });
     var left=t-p-f;
+    /* the tally the runbook reads to tick Pass the power-on checks and the Covers on step (progress-store.js) */
+    PS.put('checks',{sig:PS.sig(window.SilviaMachine&&window.SilviaMachine.get()),run:r.label,sec:tally});
     $('c-pass').textContent=p;$('c-fail').textContent=f;$('c-left').textContent=left;
     var g=$('gate');g.className='gate '+(f?'failed':(left?(p?'going':''):'ready'));
     $('g-t').textContent=f?'Not ready to plug in':(left?(p?'Keep going':'Not started'):'Ready for first power-on');

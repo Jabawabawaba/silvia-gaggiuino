@@ -91,6 +91,14 @@ h2{font:700 clamp(28px,4.4vw,38px)/1 var(--f-display);letter-spacing:.02em;text-
 .st-meta{grid-column:2;display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;font-size:14px}
 .src{font:600 10.5px/1 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;padding:4px 6px;border-radius:4px;background:var(--surface-2);color:var(--muted)}
 .when{font:500 12.5px var(--f-mono);color:var(--good)}
+/* a step ticked from another page: the line saying where from, and the box it locks */
+.st-link{grid-column:2;display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline;font-size:14px;line-height:1.45;color:var(--muted);padding:6px 10px;border-left:3px solid var(--line);background:var(--surface-2);border-radius:0 6px 6px 0}
+.st-link.on{border-left-color:var(--good);color:var(--ink)}
+.st-link .lk-i{font:600 10.5px/1 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.st-link.on .lk-i{color:var(--good)}
+.st-link a,.st-link button{font:inherit;font-weight:600;color:var(--accent);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:2px}
+.step input:disabled{cursor:default;opacity:1}
+@media print{.st-link{display:none}}
 .step.done .st-t{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--line)}
 /* step by step: what you need, a careful note, the numbered steps, how to check, the official photos. Open on steps still to do, folded on done ones. */
 .how{grid-column:2;margin-top:8px;border:1px solid var(--line);border-radius:10px;background:var(--surface);min-width:0}
@@ -311,6 +319,8 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
   /* the step's own link plus its how-to links; one per label, the more specific address winning */
   function siteLinks(s){var a=[],order=[],best={};if(s.link)a.push(s.link);(s.links||[]).forEach(function(x){if(!x[2]||ok(x[2]))a.push(x)});a.forEach(function(x){if(!best[x[0]]){order.push(x[0]);best[x[0]]=x}else if(hrefOf(x[1]).length>hrefOf(best[x[0]][1]).length)best[x[0]]=x});return order.map(function(k){var x=best[k];return '<a href="'+esc(hrefOf(x[1]))+'" target="_blank" rel="noopener">'+esc(x[0])+'</a>'}).join('')}
 %%INCLUDE:maplink.js%%
+%%INCLUDE:progress-store.js%%
+%%INCLUDE:progress-links.js%%
   /* links to the step's wiring on the wiring map, on whatever page L.wiring points to */
   function mapLinks(s){
     if(s.map==null)return '';var m=M();
@@ -338,7 +348,19 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
   }
 
   /* ---------- render ---------- */
-  function phaseCount(i){var st=stepsOf(i),n=0;st.forEach(function(s){if(state.done[s.id])n++});return [n,st.length]}
+  /* a step is done when it's ticked here, or when the page it comes from says so (progress-links.js); LINK holds
+     those answers for the steps on show, worked out again whenever this page draws */
+  var LINK={};
+  function linkScan(){var o={};ALL.forEach(function(s){if(PL.has(s.id))o[s.id]=PL.get(s.id)});return o}
+  function auto(s){var r=LINK[s.id];return !!(r&&r.on)}
+  function isDone(s){return !!state.done[s.id]||auto(s)}
+  function linkHtml(s){
+    var r=LINK[s.id];if(!r)return '';
+    var go=r.go==='machine'?'<button type="button" data-open-machine>Your Silvia</button>':(r.go&&L[r.go[0]]?'<a href="'+esc(L[r.go[0]].split('#')[0]+(r.go[1]||''))+'" target="_blank" rel="noopener">'+esc(LKN[r.go[0]]||'Open it')+'</a>':'');
+    return '<div class="st-link'+(r.on?' on':'')+'"><span class="lk-i">'+(r.on?'Ticked for you':'Linked')+'</span><span>'+esc(r.t)+(r.on?' To untick it, change it there.':'')+'</span>'+go+'</div>';
+  }
+  var LKN={tracker:'Parts tracker',labels:'Wire labels',cut:'Cut list',checks:'Power-on checks'};
+  function phaseCount(i){var st=stepsOf(i),n=0;st.forEach(function(s){if(isDone(s))n++});return [n,st.length]}
   function renderNav(){
     $('phases').innerHTML=PHASES.map(function(p,i){
       var c=phaseCount(i),pct=c[1]?Math.round(100*c[0]/c[1]):0;
@@ -356,11 +378,11 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
       h+='<div class="settings"><table><thead><tr><th>Setting</th><th>Start at</th><th>Where</th></tr></thead><tbody>'+SETTINGS.map(function(s){return '<tr><td>'+esc(s[0])+'</td><td class="v">'+esc(s[1])+'</td><td>'+esc(s[2])+'</td></tr>'}).join('')+'</tbody><caption>Silvia starting values from the Discord thread, not official defaults; the manual recommends its defaults for Gaggia machines only. The manual also says DreamSteam is not recommended for the Silvia.</caption></table></div>';
     }
     h+='<ol class="steps">'+stepsOf(i).map(function(s){
-      var d=state.done[s.id];
+      var d=state.done[s.id],ad=auto(s),dn=!!d||ad;
       var link=siteLinks(s)+mapLinks(s);
-      return '<li class="step'+(d?' done':'')+(s.stop?' stopstep':'')+'" data-step="'+s.id+'"><input type="checkbox" id="c-'+s.id+'" data-tick="'+s.id+'"'+(d?' checked':'')+' aria-label="Done: '+esc(plain(s.t))+'"><label for="c-'+s.id+'"><span class="st-t">'+esc(fill(s.t))+wtag(s)+RBF.badge(s.pw)+'</span><span class="st-d">'+esc(fill(s.d))+'</span></label>'+
-        howHtml(s,!d)+
-        '<div class="st-meta"><span class="src">'+esc(s.src)+'</span>'+link+'<span class="when" data-done="'+s.id+'">'+(d?'Done '+fmtDate(d):'')+'</span></div></li>';
+      return '<li class="step'+(dn?' done':'')+(s.stop?' stopstep':'')+'" data-step="'+s.id+'"><input type="checkbox" id="c-'+s.id+'" data-tick="'+s.id+'"'+(dn?' checked':'')+(ad?' disabled title="Ticked from another page"':'')+' aria-label="Done: '+esc(plain(s.t))+(ad?' (ticked from another page)':'')+'"><label for="c-'+s.id+'"><span class="st-t">'+esc(fill(s.t))+wtag(s)+RBF.badge(s.pw)+'</span><span class="st-d">'+esc(fill(s.d))+'</span></label>'+
+        howHtml(s,!dn)+linkHtml(s)+
+        '<div class="st-meta"><span class="src">'+esc(s.src)+'</span>'+link+'<span class="when" data-done="'+s.id+'">'+(d?'Done '+fmtDate(d):ad?'Done':'')+'</span></div></li>';
     }).join('')+'</ol>';
     h+='<div class="notes"><label class="k" for="notes">Notes for '+esc(p.n)+'</label><textarea class="textarea" id="notes" placeholder="Readings, part numbers, what you changed">'+esc(state.notes[p.id]||'')+'</textarea></div>';
     h+='<div class="nav"><button type="button" class="btn" id="prev"'+(i===0?' disabled':'')+'>Previous phase</button><button type="button" class="btn" id="nextopen">Next open step</button><button type="button" class="btn primary" id="next"'+(i===PHASES.length-1?' disabled':'')+'>Next phase</button></div>';
@@ -370,13 +392,13 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
   }
   function markNext(){
     Array.prototype.forEach.call(document.querySelectorAll('.step.next'),function(el){el.classList.remove('next')});
-    var first=stepsOf(state.phase).filter(function(s){return !state.done[s.id]})[0];
+    var first=stepsOf(state.phase).filter(function(s){return !isDone(s)})[0];
     if(first){var el=document.querySelector('[data-step="'+first.id+'"]');if(el)el.classList.add('next')}
   }
   function renderProgress(){
-    var all=visAll(),n=all.filter(function(s){return state.done[s.id]}).length;
+    var all=visAll(),n=all.filter(isDone).length;
     $('p-v').textContent=n+' of '+all.length+' steps';
-    var next=all.filter(function(s){return !state.done[s.id]})[0];
+    var next=all.filter(function(s){return !isDone(s)})[0];
     $('p-s').textContent=next?('Next: '+PHASES[next.phase].n+', '+next.t):'Every step done. Enjoy the coffee.';
     $('p-bar').style.width=(all.length?Math.round(100*n/all.length):0)+'%';
   }
@@ -387,7 +409,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
       var h='<section class="pp"><div class="pp-h"><span class="pp-n">'+esc(p.n)+'</span><h2>'+esc(p.name)+'</h2></div><p class="pp-goal">'+esc(p.goal)+'</p>';
       if(p.stop)h+='<p class="pp-stop"><b>Stop point.</b> '+esc(p.stop)+'</p>';
       if(p.settings)h+='<table class="pp-set"><thead><tr><th>Setting</th><th>Start at</th><th>Where</th><th>Set to</th></tr></thead><tbody>'+SETTINGS.map(function(r){return '<tr><td>'+esc(r[0])+'</td><td>'+esc(r[1])+'</td><td>'+esc(r[2])+'</td><td></td></tr>'}).join('')+'</tbody></table>';
-      h+=stepsOf(i).map(function(s){var d=state.done[s.id];return '<div class="pstep"><span class="pbox">'+(d?'✓':'')+'</span><div><b>'+esc(fill(s.t))+'</b>'+(s.pw?' <span class="pp-tag">'+esc(RBF.name(s.pw))+'</span>':'')+(s.w&&!decidedW(s.w)&&wlabel(s.w)?' <span class="pp-tag">'+esc(wlabel(s.w))+'</span>':'')+'<div class="pp-d">'+esc(fill(s.d))+'</div>'+howPrint(s)+'<div class="pp-src">'+esc(s.src)+(d?' · done '+fmtDate(d):'')+'</div></div></div>'}).join('');
+      h+=stepsOf(i).map(function(s){var d=isDone(s);return '<div class="pstep"><span class="pbox">'+(d?'✓':'')+'</span><div><b>'+esc(fill(s.t))+'</b>'+(s.pw?' <span class="pp-tag">'+esc(RBF.name(s.pw))+'</span>':'')+(s.w&&!decidedW(s.w)&&wlabel(s.w)?' <span class="pp-tag">'+esc(wlabel(s.w))+'</span>':'')+'<div class="pp-d">'+esc(fill(s.d))+'</div>'+howPrint(s)+'<div class="pp-src">'+esc(s.src)+(d?' · done '+fmtDate(d):'')+'</div></div></div>'}).join('');
       var note=state.notes[p.id];
       h+='<div class="pp-notes"><b>Notes</b>'+(note?'<div class="pp-note">'+esc(note)+'</div>':'<div class="pp-lines"></div>')+'</div></section>';
       return h;
@@ -396,7 +418,12 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
   function renderScr(){
     Array.prototype.forEach.call(document.querySelectorAll('[data-scr]'),function(b){b.setAttribute('aria-checked',String(b.getAttribute('data-scr')===state.screen))});
   }
-  function renderAll(){renderScr();renderNav();renderPhase();renderProgress();renderPrint()}
+  function renderAll(){LINK=linkScan();renderScr();renderNav();renderPhase();renderProgress();renderPrint()}
+  /* a record changed in another tab, or this tab came back to the front: redraw only if a linked step changed */
+  function relink(){var n=linkScan();if(JSON.stringify(n)!==JSON.stringify(LINK))renderAll()}
+  window.addEventListener('storage',function(e){if(!e.key||PL.KEYS.indexOf(e.key)>=0)relink()});
+  document.addEventListener('visibilitychange',function(){if(!document.hidden)relink()});
+  window.addEventListener('pageshow',function(e){if(e.persisted)relink()});
   window.addEventListener('silvia-machine',function(){renderAll()});
   window.addEventListener('beforeprint',function(){renderPrint()});
 
@@ -445,12 +472,13 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     var w=document.querySelector('[data-done="'+id+'"]');if(w)w.textContent=e.target.checked?'Done '+fmtDate(state.done[id]):'';
     touch();renderNav();renderProgress();markNext();
   });
+  $('phase').addEventListener('click',function(e){if(!e.target.closest('[data-open-machine]'))return;var m=M();if(m&&m.openPanel)m.openPanel()});
   $('phase').addEventListener('input',function(e){if(e.target.id!=='notes')return;var p=PHASES[state.phase];if(e.target.value)state.notes[p.id]=e.target.value.slice(0,4000);else delete state.notes[p.id];touch()});
   $('phase').addEventListener('click',function(e){
     if(e.target.id==='prev')go(state.phase-1);
     else if(e.target.id==='next')go(state.phase+1);
     else if(e.target.id==='nextopen'){
-      var next=visAll().filter(function(s){return !state.done[s.id]})[0];if(!next)return;
+      var next=visAll().filter(function(s){return !isDone(s)})[0];if(!next)return;
       if(next.phase!==state.phase){state.phase=next.phase;touch();renderNav();renderPhase()}
       var el=document.querySelector('[data-step="'+next.id+'"]');if(el){var dt=el.querySelector('details.how');if(dt)dt.open=true;el.scrollIntoView({behavior:'smooth',block:'start'});var c=el.querySelector('input');if(c)c.focus({preventScroll:true})}
     }

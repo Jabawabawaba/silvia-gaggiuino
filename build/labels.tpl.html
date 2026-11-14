@@ -121,6 +121,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
       </div>
       <button class="btn" id="dl" type="button">Download PDF to print</button>
       <p class="msg" id="msg" aria-live="polite"></p>
+      <p class="fine dlnote">Making the PDF ticks Print the wire labels in the <a href="runbook.html#p0g">runbook</a>.</p>
     </div>
   </section>
 
@@ -161,6 +162,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
 (function(){
   %%INCLUDE:runbook-figs.js%%
   %%INCLUDE:page-figs.js%%
+  %%INCLUDE:progress-store.js%%
   RBF.init(PF());
   /* how a label goes on: a paper flag at one end, marker on silicone at the boiler */
   document.getElementById('howfig').innerHTML=RBF.figs([['d','flag',{t1:'AC1',c1:'n',t2:'AC5',c2:'n'}]]);
@@ -172,6 +174,8 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
   var prefs={groups:{mains:true,earth:true,lv:true,opt:false},paper:'letter'};
   try{var s=JSON.parse(localStorage.getItem(KEY)||'null');if(s&&s.groups){prefs.groups=Object.assign(prefs.groups,s.groups);if(s.paper==='a4'||s.paper==='letter')prefs.paper=s.paper}}catch(e){}
   function save(){try{localStorage.setItem(KEY,JSON.stringify(prefs))}catch(e){}}
+  /* a PDF made for the harness on show (with or without the Shelly) ticks the runbook's Print the wire labels step (progress-store.js) */
+  function made(){var lb=PS.read().labels||{};lb[shOn()?'sh':'base']=Date.now();PS.put('labels',lb)}
   function $(id){return document.getElementById(id)}
   function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
   function selected(){
@@ -257,11 +261,11 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     var blob,fname='silvia-wire-labels-'+prefs.paper+'.pdf';
     try{blob=LabelCore.drawPdf(window.jspdf.jsPDF,selected(),prefs.paper).output('blob')}catch(e){busy=false;$('dl').disabled=false;msg('Couldn\'t make the PDF. Reload the page and try again.','bad');return}
     if(plain){
-      try{var u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=fname;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},4000);msg('Saved. Print it at 100% scale.','ok')}catch(e){msg('Couldn\'t start the download in this browser.','bad')}
+      try{var u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=fname;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},4000);made();msg('Saved. Print it at 100% scale.','ok')}catch(e){msg('Couldn\'t start the download in this browser.','bad')}
       busy=false;$('dl').disabled=!selected().length;return;
     }
     downloads.save({filename:fname,data:blob}).then(function(){
-      msg('Saved. Print it at 100% scale.','ok');
+      made();msg('Saved. Print it at 100% scale.','ok');
     }).catch(function(e){
       var c=e&&e.code;
       if(c==='declined')msg('Download canceled.');

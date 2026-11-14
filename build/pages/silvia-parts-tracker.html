@@ -107,6 +107,9 @@ h2{font:600 22px/1.1 var(--f-display);letter-spacing:.05em;text-transform:upperc
 .p-body[hidden]{display:none}
 .p-use{margin:0;font-size:15px;line-height:1.45}
 .p-spec{margin:0;color:var(--muted);font-size:14px;line-height:1.45}
+/* the runbook step a line ticks */
+.p-rb{margin:0;font-size:14px;line-height:1.45;padding:6px 10px;border-left:3px solid var(--good);background:var(--surface-2);border-radius:0 6px 6px 0}
+.p-rb a{font-weight:600}
 .src{font-size:13.5px;color:var(--muted)}
 
 .pillwrap{position:relative;display:flex;border-radius:999px;border:1px solid var(--line);background:var(--surface-2);color:var(--muted)}
@@ -161,7 +164,7 @@ h2{font:600 22px/1.1 var(--f-display);letter-spacing:.05em;text-transform:upperc
   .p-body{padding:10px 0 6px 4px}
   .addform{grid-template-columns:minmax(0,1fr)}
 }
-@media print{.p-body[hidden]{display:grid}.p-head .chev,.expall{display:none}}
+@media print{.p-body[hidden]{display:grid}.p-head .chev,.expall,.p-rb{display:none}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
@@ -173,7 +176,7 @@ h2{font:600 22px/1.1 var(--f-display);letter-spacing:.05em;text-transform:upperc
       <span class="rivet" aria-hidden="true"></span>
     </div>
     <h1>Silvia Parts Tracker</h1>
-    <p class="lede">Every part from the build plan, one line each. Set each one's status as you buy it and enter what you actually paid. Tap a part to see what it's for, where to get it and the pieces inside it, and tick those off as they arrive. Estimates match the <a href="https://claude.ai/artifact/ArT3ks46jbJ4KEjXbDwcX7" target="_blank" rel="noopener">Silvia Build Budget</a>.</p>
+    <p class="lede">Every part from the build plan, one line each. Set each one's status as you buy it and enter what you actually paid. Tap a part to see what it's for, where to get it and the pieces inside it, and tick those off as they arrive. Estimates match the <a href="https://claude.ai/artifact/ArT3ks46jbJ4KEjXbDwcX7" target="_blank" rel="noopener">Silvia Build Budget</a>. What you mark here also ticks the runbook's Check your parts step, and its Shelly step if you add one.</p>
   </header>
 
   <section class="readouts" aria-label="Summary">
@@ -307,6 +310,9 @@ h2{font:600 22px/1.1 var(--f-display);letter-spacing:.05em;text-transform:upperc
   }
   function specT(x){if(!Array.isArray(x))return x;var m=window.SilviaMachine;if(m)return m.txt(x);return x.filter(function(s){return typeof s==='string'}).join(' ')}
   function okw(w){var m=window.SilviaMachine;if(!w)return true;if(!m)return !/(^|;)shelly/.test(w);return m.matches(w)}
+  %%INCLUDE:progress-store.js%%
+  /* the runbook steps a line ticks: [step, what ticks it, the condition it shows on] */
+  var RB={shelly:['p0s','marking this Ordered (or ticking off the Shelly itself) ticks the step to pick one.','shelly']};
   function allParts(){
     var list=[];GROUPS.forEach(function(g){g.parts.forEach(function(p){if(okw(p.when))list.push(p)})});
     state.custom.forEach(function(c){list.push({id:c.id,name:c.name,lo:c.est,hi:c.est,req:false,def:'need',group:'custom',custom:true,src:c.url?[['Link',c.url]]:null})});
@@ -337,6 +343,7 @@ h2{font:600 22px/1.1 var(--f-display);letter-spacing:.05em;text-transform:upperc
   /* ---------- render ---------- */
   var filter='all';
   var OPEN={};
+  function rbHtml(p){var r=RB[p.id];if(!r||!okw(r[2]))return '';return '<p class="p-rb">In the runbook: '+esc(r[1])+' <a href="runbook.html#'+r[0]+'">Open the step</a></p>'}
   function partHtml(p){
     var s=ps(p);
     var tags=(p.req?'':'<span class="tag">'+(p.custom?'Added':p.wtag?esc(p.wtag):'Optional')+'</span>');
@@ -357,7 +364,7 @@ h2{font:600 22px/1.1 var(--f-display);letter-spacing:.05em;text-transform:upperc
       '<span class="money p-paid"><label for="paid-'+p.id+'"><span class="pl">Paid </span><span>$</span></label><input id="paid-'+p.id+'" data-paid="'+p.id+'" aria-label="Price paid for '+esc(p.name)+'" type="number" inputmode="decimal" min="0" step="0.01" placeholder="—" value="'+(s.paid!=null?s.paid:'')+'"></span>'+
       '<div class="p-body" id="pb-'+p.id+'"'+(open?'':' hidden')+'>'+
         (p.use?'<div><div class="flabel" style="margin-bottom:2px">What it\'s for</div><p class="p-use">'+esc(p.use)+'</p></div>':'')+
-        (p.spec?'<p class="p-spec">'+esc(specT(p.spec))+'</p>':'')+src+subs+
+        (p.spec?'<p class="p-spec">'+esc(specT(p.spec))+'</p>':'')+rbHtml(p)+src+subs+
         '<div><label class="flabel" for="note-'+p.id+'">Notes</label><textarea class="textarea" id="note-'+p.id+'" data-note="'+p.id+'" rows="2" placeholder="Vendor, order number, tracking, what fits">'+esc(s.note)+'</textarea></div>'+
         (p.custom?'<div><button class="linkbtn danger" type="button" data-remove="'+p.id+'">Remove this part</button></div>':'')+
       '</div>'+
@@ -408,6 +415,8 @@ h2{font:600 22px/1.1 var(--f-display);letter-spacing:.05em;text-transform:upperc
     syncExpAll();
 
     var r=compute();
+    /* what's in hand, for the runbook's Check your parts step (progress-store.js) */
+    PS.put('tracker',{sig:PS.sig(window.SilviaMachine&&window.SilviaMachine.get()),n:r.active,hand:r.inhand});
     $('r-hand').textContent=r.inhand+' of '+r.active;
     $('r-hand-s').textContent=r.counts.ordered?(r.counts.ordered+' on order'):(r.active-r.inhand===0?'Everything is here':'Nothing on order yet');
     $('r-spent').textContent=fmt(r.spent);
@@ -557,6 +566,10 @@ h2{font:600 22px/1.1 var(--f-display);letter-spacing:.05em;text-transform:upperc
 
   state=loadLocal()||defaults();
   renderAll();setStatus('loading');
+  /* a link to one line (parts-tracker.html#shelly) opens it and scrolls to it */
+  function fromHash(){var id=(location.hash||'').slice(1),row=id&&document.querySelector('[data-part="'+id.replace(/[^a-z0-9]/g,'')+'"]');if(!row||row.hidden)return;setOpen(id,true);row.scrollIntoView({block:'start'})}
+  fromHash();window.addEventListener('hashchange',fromHash);
+  window.addEventListener('storage',function(e){if(e.key===KEY){var n=loadLocal();if(n&&n.updatedAt>state.updatedAt){state=n;renderAll()}}});
   window.addEventListener('silvia-machine',function(){renderAll()});
   connect();
 })();

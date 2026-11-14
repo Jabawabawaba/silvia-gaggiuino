@@ -362,7 +362,8 @@ def main():
         if src in gen_by_src:
             html = B.render(gen_by_src[src], "site")
         elif aid:
-            html = open(page_src(src)).read()
+            # standalone pages take %%INCLUDE:file%% too (the tracker shares progress-store.js with the runbook)
+            html = includes(open(page_src(src)).read())
         else:
             html = render_template(src)
         open(os.path.join(OUT, dst), "w").write(wrap(html, dst))
