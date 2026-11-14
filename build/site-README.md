@@ -24,10 +24,10 @@ Gaggiuino is documented for the Gaggia Classic. The Silvia works, but there is n
 | `runbook.html` | Install day | Eight phases of tickable steps, each written out step by step, with drawings, diagrams, official photos inline, a power badge on every step and notes, and a stop point before first power-on; prints as one checklist |
 | `part-guides.html` | Install day | The M3 thermocouple, the pressure sensor on its OPV tee, making the wires, the SSR and the switches, each drawn step by step |
 | `wiring.html` | Install day | realNiche's diagram redrawn with an ID per run, ends, gauge, connectors and lengths; tap to isolate a run |
-| `cut-list.html` | Install day | Wire to buy by gauge and color, connectors to crimp, and every run to cut, with adjustable extra length |
-| `wire-labels.html` | Install day | Printable flag labels per run end, PDF for Letter or A4 |
-| `power-on-checks.html` | Before plugging in | %%NCHECKS%% unplugged multimeter and visual checks that mark themselves pass or fail; prints with blanks for readings |
-| `troubleshooting.html` | After | Symptoms with likely causes and checks, linked to check and run IDs |
+| `cut-list.html` | Install day | Wire to buy by gauge and color, connectors to crimp, and every run to cut, with adjustable extra length and the wire guide's drawing of each crimp |
+| `wire-labels.html` | Install day | Printable flag labels per run end, PDF for Letter or A4, with a drawing of how they go on |
+| `power-on-checks.html` | Before plugging in | %%NCHECKS%% unplugged multimeter and visual checks that mark themselves pass or fail, with diagrams of the cord, the meter, the PCB plugs, the SSR and the pull test; prints with blanks for readings |
+| `troubleshooting.html` | After | Symptoms with likely causes and checks, linked to check and run IDs, with diagrams of the parts to check |
 | `led-mod.html` | After | mjr's switch LED conversion, drawn step by step |
 | `silvia-specifics.html`, `discord-notes.html` | Reference | The two docs below, rendered as site pages |
 | `docs/silvia-specifics.md` | Reference | The Silvia deltas from the Gaggia install, with reasoning and sources |
