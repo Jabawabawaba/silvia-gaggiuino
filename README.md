@@ -21,7 +21,7 @@ Gaggiuino is documented for the Gaggia Classic. The Silvia works, but there is n
 | `which-silvia.html` | Planning | Tell V1 to V6 and E from M apart, and what each changes for the build |
 | `parts-tracker.html` | Ordering | The Silvia BOM with links, status, price paid, box contents |
 | `test-yourself.html` | Before opening the machine | Questions on everything on the site, matched to your Silvia, each linked to where to review it; clear every topic, then pass a final exam for a certificate that you're ready to start the modifications |
-| `runbook.html` | Install day | Eight phases of tickable steps with notes, and a stop point before first power-on; prints as one checklist |
+| `runbook.html` | Install day | Eight phases of tickable steps, each written out step by step, with drawings, diagrams, official photos inline, a power badge on every step and notes, and a stop point before first power-on; prints as one checklist |
 | `part-guides.html` | Install day | The M3 thermocouple, the pressure sensor on its OPV tee, making the wires, the SSR and the switches, each drawn step by step |
 | `wiring.html` | Install day | realNiche's diagram redrawn with an ID per run, ends, gauge, connectors and lengths; tap to isolate a run |
 | `cut-list.html` | Install day | Wire to buy by gauge and color, connectors to crimp, and every run to cut, with adjustable extra length |
