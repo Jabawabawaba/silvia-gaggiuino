@@ -117,7 +117,7 @@ var RBF=(function(){
     /* which pieces show: variants, conditions, family and mains voltage, as on the part guides page */
     var d=p.d,v=p.v;
     Array.prototype.forEach.call(svg.querySelectorAll('[data-when]'),function(e){e.style.display=(!C.m||C.m(e.getAttribute('data-when')))?'':'none'});
-    Array.prototype.forEach.call(svg.querySelectorAll('[data-v]'),function(e){var dv=e.getAttribute('data-v');e.style.display=(d.vars?dv===v:(C.dv?C.dv(dv):false))?'':'none'});
+    Array.prototype.forEach.call(svg.querySelectorAll('[data-v]'),function(e){var dv=e.getAttribute('data-v');e.style.display=(d.vars?dv===v:(C.dv?(C.dv(dv)&&(dv==='SI'||!C.dv('SI'))):false))?'':'none'});
     var fam=(C.famOf&&C.famOf())||'GCP';
     Array.prototype.forEach.call(svg.querySelectorAll('[data-fam]'),function(e){e.style.display=e.getAttribute('data-fam')===fam?'':'none'});
     var volts=(C.prof&&C.prof().volts)||120;
@@ -264,7 +264,7 @@ var RBF=(function(){
     return S(292,Y2+148,b,'Screen cable from J1 to the Gen 3 screen: J1 5V and GND to the socket marked GND, RXD, TXD, 5V; J1 TX to IO18 and RX to IO17 on the socket marked UART1.');
   }
   D.scrpins=function(o){var k=o.scr||(C.screen&&C.screen())||null,list=k?[k]:['p4','s3','hl'];
-    return {panels:list.map(scrPanel),wide:!k,min:230,cap:'Colors as the official drawing shows them. Yours may differ: blue and yellow have been swapped between cable batches, so go by the names beside the pins.'+(k?'':' Pick your screen at the top of the page to see only yours.')}};
+    return {panels:list.map(scrPanel),wide:!k,min:230,cap:'Colors as the official drawing shows them. Yours may differ: blue and yellow have been swapped between cable batches, so go by the names beside the pins.'+(k||!C.screen?'':' Pick your screen at the top of the page to see only yours.')}};
 
   /* a multimeter: the zero reading, a connection, and no connection (OL) */
   function meterPanel(mode){

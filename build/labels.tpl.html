@@ -89,6 +89,8 @@ ol.steps li::before{content:counter(s);font:600 13px/26px var(--f-mono);text-ali
 .links{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:15px}
 .fine{margin:0;font-size:14px;color:var(--muted);max-width:80ch}
 a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
+%%INCLUDE:runbook-figs.css%%
+.howfig .rfigs{margin-top:22px}
 </style>
 
 <div class="wrap">
@@ -139,6 +141,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
       <p class="note">These ends sit on the boiler, where paper and tape adhesive won't last. Write the ID on the silicone jacket with an oil-based permanent marker, which the official guide recommends for silicone.</p>
     </div>
   </section>
+  <div class="howfig" id="howfig"></div>
 
   <section class="sheets" id="sheets" aria-label="Sheet preview"></section>
 
@@ -156,6 +159,11 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
 <script>
 %%CORE%%
 (function(){
+  %%INCLUDE:runbook-figs.js%%
+  %%INCLUDE:page-figs.js%%
+  RBF.init(PF());
+  /* how a label goes on: a paper flag at one end, marker on silicone at the boiler */
+  document.getElementById('howfig').innerHTML=RBF.figs([['d','flag',{t1:'AC1',c1:'n',t2:'AC5',c2:'n'}]]);
   /* the harness as drawn, and with the Shelly add-on once it's chosen in Your Silvia */
   var RUNS0=%%RUNS%%,RUNS1=%%RUNS_SH%%,RUNS=RUNS0;
   function shOn(){var m=window.SilviaMachine;return !!(m&&m.shelly&&m.shelly())}

@@ -159,7 +159,12 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
   .notes{break-inside:avoid}
   .textarea{border:.6pt solid #000;min-height:30mm;background:repeating-linear-gradient(to bottom,transparent 0,transparent 6.6mm,#bbb 6.6mm,#bbb 6.9mm)}
 }
+%%INCLUDE:part-guides.css%%
+%%INCLUDE:runbook-figs.css%%
+.sec .rfigs{margin:14px 0 6px}
 </style>
+%%INCLUDE:part-defs.svg.html%%
+<div hidden><template id="rbt-pg-wire">%%INCLUDE:part-wire.svg.html%%</template></div>
 
 <div class="wrap">
   <header class="top">
@@ -215,14 +220,14 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
       <a href="%%LINK_WIRING%%" target="_blank" rel="noopener">Wiring reference</a>
       <a href="%%LINK_LABELS%%" target="_blank" rel="noopener">Wire labels</a>
     </div>
-    <p class="fine">Built from section 8 of the build plan, the official Gaggiuino custom wiring, PCB and grounding guides, and realNiche's Silvia diagram<span data-when="shelly">, and for the Shelly, gblur's Silvia V6 E drawing and Shelly's own docs</span>. Expected readings are what a sound circuit shows on a basic meter; when a reading looks odd but passes, trust the odd feeling and trace it.</p>
+    <p class="fine">Built from section 8 of the build plan, the official Gaggiuino Plug-and-Play/custom wiring, PCB and grounding guides, and realNiche's Silvia diagram<span data-when="shelly">, and for the Shelly, gblur's Silvia V6 E drawing and Shelly's own docs</span>. Expected readings are what a sound circuit shows on a basic meter; when a reading looks odd but passes, trust the odd feeling and trace it.</p>
   </footer>
 </div>
 
 <script>
 (function(){
   var SECTIONS=[
-    {id:'a',name:'Before you measure',intro:'Get the machine safe and the meter ready.',items:[
+    {id:'a',name:'Before you measure',intro:'Get the machine safe and the meter ready.',fig:[['d','cord'],['d','meter']],items:[
       {id:'a1',t:'Cord out of the wall and out of the machine',how:'Both ends. The inlet pins are your probe points for the next sections.',type:'check'},
       {id:'a2',t:'Meter set to resistance or continuity',how:'Lowest Ω range. Touch the leads together and enter that reading under Meter leads above.',type:'check'},
       {id:'a3',t:'Harness complete and every spade seated',how:'All runs fitted, including the PCB spades J10 to J13 and the J4, J5, J7 and J9 plugs. The PCB stays connected unless a check says otherwise.',type:'check'}
@@ -277,7 +282,8 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
       {id:'e9',t:'Inlet L ↔ PCB J11 spade, switch off',how:'Same probes as e1, power switch off. Should now be open.',type:'open',tags:['Power OFF'],fix:'Line is getting around the switch: look for two runs on one spade (AC1 and AC3 together) or the inlet lead going straight to the SSR. Each pole takes the inlet on its outer spade and the load on its center spade.',w:'!shelly'},
       {id:'e10',t:'Inlet N ↔ PCB J10 spade, switch off',how:'Same probes as e2, power switch off. Should now be open.',type:'open',tags:['Power OFF'],fix:'The switch isn\'t breaking neutral.',w:'!shelly'}
     ]},
-    {id:'f',name:'Low-voltage inputs',intro:'Unplug the J7, J5 and J9 plugs from the PCB and probe the plug pins, so the board itself isn\'t in the reading.',items:[
+    {id:'f',name:'Low-voltage inputs',intro:'Unplug the J7, J5 and J9 plugs from the PCB and probe the plug pins, so the board itself isn\'t in the reading.',
+      fig:[['d','pcbw',{on:['J7','J5','J9'],note:{J7:'Brew and steam switches: unplug it, then probe its pins',J5:'Hot water switch on B15: unplug it, then probe its pins',J9:'SSR control: unplug it, then probe its pins'},cap:'J7, J5 and J9 on the PCB, laid out as the official board label drawing shows them. Probe the pins of the plugs you pulled off, not the board.'}],['d','ssr']],items:[
       {id:'f1',t:'Brew ON: J7 B ↔ J7 GND',how:'LV2 and the ground chain.',type:'low',tags:['Brew ON','Plugs off'],fix:'Check LV2, the brew switch ground pole and the ground chain.'},
       {id:'f2',t:'Brew OFF: J7 B ↔ J7 GND',how:'',type:'open',tags:['Brew OFF','Plugs off'],fix:'Signal and ground are on spades that are always connected. Signal goes on the center spade and ground on the outer spade of the same pole.'},
       {id:'f3',t:'Steam ON: J7 S ↔ J7 GND',how:'LV1 and the ground chain.',type:'low',tags:['Steam ON','Plugs off'],fix:'Check LV1 and the steam switch ground pole.'},
@@ -290,7 +296,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
       {id:'f10',t:'J7 GND pin ↔ inlet L, then inlet N',how:['Power switch on, and brew, steam and hot water all on, so every signal wire joins the ground chain.',['On an E with its push button, hold the button in.','model:E;shelly'],'Two readings test the whole switch harness against mains with the board out of the reading; enter the lower one.'],type:'open',tags:['Power ON','Brew ON','Steam ON','Hot water ON','Plugs off'],fix:'A switch wire meets mains. Don\'t power it. Look for one on a power switch spade or pinched against a mains run.'},
       {id:'f11',t:'J7 GND pin ↔ Shelly O terminal',how:'Switches as for f10, plugs still off. The switched line after the Shelly, which the inlet can\'t reach through its open relay.',type:'open',tags:['Brew ON','Steam ON','Hot water ON','Plugs off'],fix:'A switch wire meets the switched line. Don\'t power it. Look for one pinched against SH3 or AC4.',w:'shelly'}
     ]},
-    {id:'g',name:'Look and pull',intro:'The checks a meter can\'t do.',items:[
+    {id:'g',name:'Look and pull',intro:'The checks a meter can\'t do.',fig:[['g','wire',null,['Pull-test every crimp']],['d','temp',{mode:'heat'}]],items:[
       {id:'g1',t:'Every boiler and valve spade is uninsulated and wrapped in silicone tape',how:'Wrap any you left bare for the meter checks. No nylon-insulated spade within reach of the boiler; nylon is rated to 105 °C.',type:'check'},
       {id:'g2',t:'Doubled terminals use spades sized for two 18 AWG wires',how:['Never two 18 AWG wires in a red spade. Blue at',['the power switch neutral spade,','!shelly'],['the inlet\'s L and N tabs,','shelly'],'the lamp\'s neutral spade and the pump; a fork for two at SSR terminal 1; bare, sized for 16 to 14 AWG, at the safety thermostat, the solenoid\'s neutral and the boiler ground.'],type:'check'},
       {id:'g3',t:'Every crimp survives a firm tug',how:'Redo any that move.',type:'check'},
@@ -333,6 +339,13 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
   }
 %%INCLUDE:maplink.js%%
 %%INCLUDE:checks-map.js%%
+  /* figures under a section's intro: the runbook's diagrams and the wire guide's drawing */
+  var PGD=(function(){var GM=window.SilviaMachine;function prof(){return (GM&&GM.get())||{}}function famOf(){return null}
+  %%INCLUDE:part-guides-data.js%%
+  return {G:G,prof:prof,famOf:famOf}})();
+  %%INCLUDE:runbook-figs.js%%
+  %%INCLUDE:page-figs.js%%
+  RBF.init(PF());
   function mapLink(it){
     if(!(it.id in MAPS))return '';
     var u=mapHref(MAPS[it.id],{label:it.id+': '+it.t}).replace(/^wiring\.html/,'%%LINK_WIRING%%'.split('#')[0]);
@@ -447,9 +460,11 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     $('watts').value=r.watts!=null?r.watts:'';
     $('volts').value=r.volts!=null?r.volts:'';
     $('notes').value=r.notes||'';
+    RBF.reset();
     $('sections').innerHTML=SECTIONS.map(function(s){
-      return '<section class="sec" aria-labelledby="h-'+s.id+'"><div class="sec-h"><h2 id="h-'+s.id+'">'+esc(s.name)+'</h2><span class="sum" data-ssum="'+s.id+'"></span></div><p class="sec-intro">'+esc(T(s.intro))+'</p>'+shown(s).map(function(it){return itemHtml(it,r)}).join('')+'</section>';
+      return '<section class="sec" aria-labelledby="h-'+s.id+'"><div class="sec-h"><h2 id="h-'+s.id+'">'+esc(s.name)+'</h2><span class="sum" data-ssum="'+s.id+'"></span></div><p class="sec-intro">'+esc(T(s.intro))+'</p>'+(s.fig?RBF.figs(s.fig):'')+shown(s).map(function(it){return itemHtml(it,r)}).join('')+'</section>';
     }).join('');
+    RBF.mount($('sections'));
     update();
   }
   function update(){

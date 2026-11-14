@@ -56,7 +56,12 @@
   .cut .tick{width:6mm}
   .cut .tick::before{content:"";display:inline-block;width:3.6mm;height:3.6mm;border:.8pt solid #000}
 }
+%%INCLUDE:part-guides.css%%
+%%INCLUDE:runbook-figs.css%%
+.cutfig .rfigs{margin:4px 0 16px}
 </style>
+%%INCLUDE:part-defs.svg.html%%
+<div hidden><template id="rbt-pg-wire">%%INCLUDE:part-wire.svg.html%%</template></div>
 
 <div class="wrap">
   <header class="top">
@@ -88,6 +93,7 @@
 
   <section class="block" aria-labelledby="h-cut">
     <div class="sec-h"><h2 id="h-cut">Cut and crimp</h2><span class="sum" id="cut-sum"></span></div>
+    <div class="cutfig" id="cutfig"></div>
     <div class="tablewrap">
       <table class="cut"><thead><tr><th class="tick"><span class="vh">Cut</span></th><th>ID</th><th>From → to</th><th>Wire</th><th>Cut to</th><th>Ends</th></tr></thead><tbody id="cut"></tbody></table>
     </div>
@@ -122,6 +128,15 @@
   var STOCK={AC1:1,AC2:1,G1:1};
   function $(id){return document.getElementById(id)}
 %%INCLUDE:maplink.js%%
+  /* the wire guide's drawing over the cut table (runbook-figs.js, page-figs.js) */
+  var PGD=(function(){var GM=window.SilviaMachine;function prof(){return (GM&&GM.get())||{}}function famOf(){return null}
+  %%INCLUDE:part-guides-data.js%%
+  return {G:G,prof:prof,famOf:famOf}})();
+  %%INCLUDE:runbook-figs.js%%
+  %%INCLUDE:page-figs.js%%
+  RBF.init(PF());
+  $('cutfig').innerHTML=RBF.figs([['g','wire',null,'all',null,'How each end is made: the part guide\'s drawing']]);
+  RBF.mount($('cutfig'));
   function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
   var st={slack:15,stock:false,led:false,mm:{},cut:{}};
   try{var sv=JSON.parse(localStorage.getItem(KEY)||'null');if(sv&&typeof sv==='object'){st.slack=typeof sv.slack==='number'?sv.slack:15;st.stock=!!sv.stock;st.led=!!sv.led;st.mm=sv.mm&&typeof sv.mm==='object'?sv.mm:{};st.cut=sv.cut&&typeof sv.cut==='object'?sv.cut:{}}}catch(e){}

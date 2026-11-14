@@ -35,6 +35,7 @@ details.tb.danger .tb-body{border-left-color:var(--bad)}
 .tb-map{margin:8px 0 0;font-size:14.5px}
 .tb-body h3{font:600 11.5px var(--f-mono);letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
 .tb-body ol,.tb-body ul{margin:0;padding-left:20px;display:grid;gap:6px;font-size:15.5px}
+.tb-figs{grid-column:1 / -1;min-width:0}
 .tb-body .src{grid-column:1 / -1;font:500 12px var(--f-mono);color:var(--muted);letter-spacing:.04em}
 .ref{font:600 13px var(--f-mono);white-space:nowrap}
 .empty{padding:26px 0;color:var(--muted)}
@@ -45,6 +46,7 @@ details.tb.danger .tb-body{border-left-color:var(--bad)}
   details.tb{break-inside:avoid}
   .chev{display:none}
 }
+%%INCLUDE:runbook-figs.css%%
 </style>
 
 <div class="wrap">
@@ -89,6 +91,10 @@ details.tb.danger .tb-body{border-left-color:var(--bad)}
     });
   }
 %%INCLUDE:maplink.js%%
+  /* a symptom's fig: the runbook's diagrams of the parts to check, worded for Your Silvia */
+  %%INCLUDE:runbook-figs.js%%
+  %%INCLUDE:page-figs.js%%
+  RBF.init(PF());
   /* the symptom's wiring on the wiring reference's drawing (see maplink.js) */
   function tmap(t){
     if(t.map==null)return '';var m=window.SilviaMachine||null;
@@ -105,7 +111,7 @@ details.tb.danger .tb-body{border-left-color:var(--bad)}
     return q.split(/\s+/).every(function(w){return hay.indexOf(w)>=0});
   }
   function render(){
-    var shown=T.filter(visible),m=M();
+    var shown=T.filter(visible),m=M();RBF.reset();
     $('cats').innerHTML=[['all','All']].concat(CATS).map(function(c){
       var n=c[0]==='all'?T.filter(function(t){return okw(t.w)}).length:T.filter(function(t){return t.c===c[0]&&okw(t.w)}).length;
       return '<button type="button" class="chip" data-cat="'+c[0]+'" aria-pressed="'+(cat===c[0])+'">'+esc(c[1])+' <span class="n">'+n+'</span></button>';
@@ -116,10 +122,11 @@ details.tb.danger .tb-body{border-left-color:var(--bad)}
       html+='<h2 class="cat-h">'+esc(c[1])+'</h2>';
       items.forEach(function(t){
         html+='<details class="tb'+(t.d?' danger':'')+'" id="'+tslug(T.indexOf(t))+'"'+(q?' open':'')+'><summary><span class="sym">'+esc(fill(t.s))+(t.w&&!(m&&m.decided&&m.decided(t.w))?'<span class="vtag">'+esc(wlabel(t.w))+'</span>':'')+'</span><span class="first">Most likely: '+refs(t.causes[0])+'</span><span class="flag">'+(t.d?'<span class="unplug">Unplug now</span>':'')+'<span class="chev" aria-hidden="true"></span></span></summary>'+
-          '<div class="tb-body"><div><h3>Likely causes, in order</h3><ol>'+t.causes.filter(function(x){return fill(x)}).map(function(x){return '<li>'+refs(x)+'</li>'}).join('')+'</ol></div><div><h3>What to do</h3><ul>'+t.check.filter(function(x){return fill(x)}).map(function(x){return '<li>'+refs(x)+'</li>'}).join('')+'</ul>'+tmap(t)+'</div><div class="src">Source: '+esc(t.src)+'</div></div></details>';
+          '<div class="tb-body"><div><h3>Likely causes, in order</h3><ol>'+t.causes.filter(function(x){return fill(x)}).map(function(x){return '<li>'+refs(x)+'</li>'}).join('')+'</ol></div><div><h3>What to do</h3><ul>'+t.check.filter(function(x){return fill(x)}).map(function(x){return '<li>'+refs(x)+'</li>'}).join('')+'</ul>'+tmap(t)+'</div>'+(t.fig?'<div class="tb-figs">'+RBF.figs(t.fig)+'</div>':'')+'<div class="src">Source: '+esc(t.src)+'</div></div></details>';
       });
     });
     $('list').innerHTML=html||'<p class="empty">Nothing matches. Try fewer words, or pick All.</p>';
+    RBF.mount($('list'));
     $('count').textContent=shown.length+' of '+T.filter(function(t){return okw(t.w)}).length+' symptoms';
   }
   $('q').addEventListener('input',function(){q=this.value.trim().toLowerCase();render()});

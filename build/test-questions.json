@@ -960,7 +960,7 @@
    "Deciding cycle by cycle when to fire the pump",
    "Sending the SSR its 5 V signal to heat"
   ],
-  "why": "The touch screen is a small computer on an ESP32-S3. It draws the interface, stores profiles and settings, runs the Gaggiuino Wi-Fi network and gaggiuino.local, and installs updates. It talks to the PCB over a serial link on J1, while the STM32 reads the sensors and switches the loads.",
+  "why": "The touch screen is a small computer of its own, on an ESP32-P4 (the Gen 3.5 screen) or an ESP32-S3 (the Gen 3). It draws the interface, stores profiles and settings, runs the Gaggiuino Wi-Fi network and gaggiuino.local, and installs updates. It talks to the PCB over a serial link on J1, while the STM32 reads the sensors and switches the loads.",
   "r": [
    [
     "url",
