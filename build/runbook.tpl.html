@@ -292,7 +292,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     if(!items.length&&!need&&!warn&&!okt&&!pics&&!figs)return '';
     var nf=(figs.match(/<figure/g)||[]).length,np=(pics.match(/class="rph-t"/g)||[]).length,cnt=[];
     if(items.length)cnt.push(items.length+(items.length===1?' step':' steps'));if(nf)cnt.push(nf+(nf===1?' drawing':' drawings'));if(np)cnt.push(np+(np===1?' photo':' photos'));
-    var h='<details class="how"'+(open?' open':'')+'><summary>'+(items.length?'Step by step':nf?'Drawing':'Official photos')+(cnt.length?' <span class="n">· '+cnt.join(' · ')+'</span>':'')+'</summary><div class="hb">';
+    var h='<details class="how"'+(open?' open':'')+'><summary>'+(items.length?'Step by step'+(cnt.length?' <span class="n">· '+cnt.join(' · ')+'</span>':''):cnt.join(' · '))+'</summary><div class="hb">';
     if(need)h+='<p class="need"><span class="rlbl">You need</span>'+rich(s.need)+'</p>';
     if(warn)h+='<p class="warn" role="note"><span class="rlbl">Careful:</span> '+rich(s.warn)+'</p>';
     h+=figs;
@@ -322,7 +322,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
   function okg(w){var m=M();if(!w)return true;if(!m)return !/(^|;)shelly/.test(w);return m.matches(w)}
   RBF.init({G:PGD.G,ok:ok,m:okg,
     T:function(x){if(x==null)return '';if(typeof x==='string')return x;var m=M();return m&&m.txt?m.txt(x):x.filter(function(t){return typeof t==='string'||okg(t[1])}).map(function(t){return typeof t==='string'?t:t[0]}).join(' ').replace(/ ([,.;:])/g,'$1')},
-    famOf:PGD.famOf,prof:PGD.prof,dv:function(){return false},screen:function(){return state.screen},guides:L.guides,variant:function(){return null}});
+    famOf:PGD.famOf,prof:PGD.prof,fill:fill,dv:function(){return false},screen:function(){return state.screen},guides:L.guides,variant:function(){return null}});
 
   /* ---------- state ---------- */
   function defaults(){return {done:{},notes:{},phase:0,screen:null,updatedAt:0}}

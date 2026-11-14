@@ -242,29 +242,29 @@ var RBF=(function(){
   /* the screen cable, end to end, by pin name (colors as the official drawing; batches vary) */
   var WC={GND:'w-k',TX:'w-b',RX:'w-y','5V':'w-r'};
   function scrPanel(kind){
-    var b='',L=['GND','TX','RX','5V'],y0=46,X=262,lab=kind==='p4'?'Gen 3.5 screen':kind==='hl'?'Headless board':'Gen 3 screen';
+    var b='',L=['GND','TX','RX','5V'],y0=46,X=206,lab=kind==='p4'?'Gen 3.5 screen':kind==='hl'?'Headless board':'Gen 3 screen';
     function pin(x,y){return Ci(x,y,3,'pcb-pin')}
-    function wire(p,y1,y2){return P('M'+75+','+y1+' C160,'+y1+' 180,'+y2+' '+(X-8)+','+y2+' H'+(X+5),'w '+WC[p]+(p==='5V'||p==='GND'?' must':''))}
-    b+=T(66,24,'J1 on the PCB','rd-tb','middle')+R(60,y0-8,18,86,'pcb-hd',2);
-    L.forEach(function(p,i){var y=y0+4+i*20;b+=pin(69,y)+T(54,y+4,p,'rd-pn','end')});
+    function wire(p,y1,y2){return P('M'+65+','+y1+' C125,'+y1+' 150,'+y2+' '+(X-8)+','+y2+' H'+(X+5),'w '+WC[p]+(p==='5V'||p==='GND'?' must':''))}
+    b+=T(56,24,'J1 on the PCB','rd-tb','middle')+R(50,y0-8,18,86,'pcb-hd',2);
+    L.forEach(function(p,i){var y=y0+4+i*20;b+=pin(59,y)+T(44,y+4,p,'rd-pn','end')});
     if(kind!=='s3'){
       var sock=kind==='p4'?[['5V','5V'],['IO28','RX'],['IO27','TX'],['GND','GND']]:[['5V','5V'],['TX','RX'],['RX','TX'],['GND','GND']];
       b+=T(X+9,24,lab,'rd-tb','middle')+T(X+9,36,'back, its socket','rd-s','middle')+R(X,y0-8,18,86,'pcb-hd',2);
       L.forEach(function(p,i){var j=0;sock.forEach(function(s,k){if(s[1]===p)j=k});b+=wire(p,y0+4+i*20,y0+4+j*20)});
       sock.forEach(function(s,i){var y=y0+4+i*20;b+=pin(X+9,y)+T(X+24,y+4,s[0],'rd-pn')});
-      b+=TL(16,y0+108,'5V must land on 5V and GND on GND.\nThe other two wires are the data pair.','rd-s');
-      return S(330,y0+130,b,'Screen cable from J1 to the '+lab+': 5V to 5V and GND to GND; the other two wires are the data pair, '+(kind==='p4'?'RX to IO28 and TX to IO27.':'RX to TX and TX to RX.'));
+      b+=TL(8,y0+108,'5V must land on 5V and GND on GND.\nThe other two wires are the data pair.','rd-s');
+      return S(272,y0+130,b,'Screen cable from J1 to the '+lab+': 5V to 5V and GND to GND; the other two wires are the data pair, '+(kind==='p4'?'RX to IO28 and TX to IO27.':'RX to TX and TX to RX.'));
     }
     var A=['GND','RXD','TXD','5V'],U=['IO17','IO18','IO19','IO20'],Y2=y0+118;
     b+=T(X+9,24,lab,'rd-tb','middle')+T(X+9,36,'back, two sockets','rd-s','middle')+R(X,y0-8,18,86,'pcb-hd',2)+T(X+9,Y2-14,'UART1','rd-tm','middle')+R(X,Y2-8,18,86,'pcb-hd',2);
     [['GND',y0+4],['5V',y0+64],['RX',Y2+4],['TX',Y2+24]].forEach(function(r){b+=wire(r[0],y0+4+L.indexOf(r[0])*20,r[1])});
     A.forEach(function(t,i){var y=y0+4+i*20;b+=pin(X+9,y)+T(X+24,y+4,t,'rd-pn')});
     U.forEach(function(t,i){var y=Y2+4+i*20;b+=pin(X+9,y)+T(X+24,y+4,t,'rd-pn')});
-    b+=TL(16,Y2+108,'5V and GND land on the socket marked\nGND, RXD, TXD, 5V. TX goes to IO18 and\nRX to IO17 on UART1.','rd-s');
-    return S(330,Y2+148,b,'Screen cable from J1 to the Gen 3 screen: J1 5V and GND to the socket marked GND, RXD, TXD, 5V; J1 TX to IO18 and RX to IO17 on the socket marked UART1.');
+    b+=TL(8,Y2+108,'5V and GND land on the socket marked\nGND, RXD, TXD, 5V. TX goes to IO18 and\nRX to IO17 on UART1.','rd-s');
+    return S(272,Y2+148,b,'Screen cable from J1 to the Gen 3 screen: J1 5V and GND to the socket marked GND, RXD, TXD, 5V; J1 TX to IO18 and RX to IO17 on the socket marked UART1.');
   }
   D.scrpins=function(o){var k=o.scr||(C.screen&&C.screen())||null,list=k?[k]:['p4','s3','hl'];
-    return {panels:list.map(scrPanel),wide:!k,min:250,cap:'Colors as the official drawing shows them. Yours may differ: blue and yellow have been swapped between cable batches, so go by the names beside the pins.'+(k?'':' Pick your screen at the top of the page to see only yours.')}};
+    return {panels:list.map(scrPanel),wide:!k,min:230,cap:'Colors as the official drawing shows them. Yours may differ: blue and yellow have been swapped between cable batches, so go by the names beside the pins.'+(k?'':' Pick your screen at the top of the page to see only yours.')}};
 
   /* a multimeter: the zero reading, a connection, and no connection (OL) */
   function meterPanel(mode){
@@ -368,6 +368,30 @@ var RBF=(function(){
     function p(on,t1,t2,t3){var x0=three?24:40,dx=three?62:56;return S(three?210:170,170,names.map(function(n,i){return sw(x0+i*dx,on.indexOf(n)>=0,n)}).join('')+T(three?105:85,128,t1,'rd-tb','middle')+T(three?105:85,144,t2,'rd-s','middle')+(t3?T(three?105:85,158,t3,'rd-s','middle'):''),t1+': '+t2+' '+(t3||''))}
     if(three)return {min:170,panels:[p(['brew'],'Brew','the pump runs: water','through the group'),p(['steam'],'Steam','the target switches','to the steam temperature'),p(['water'],'Hot water','steam knob open,','over a jug')],cap:'What each switch does at the first power-on. Steam, the wand and the group head can burn.'};
     return {min:130,panels:[p(['brew'],'Brew','the pump runs: water','through the group'),p(['steam'],'Steam','steam target; the ring','pulses above 120 °C'),p(['brew','steam'],'Both','hot water mode,','from the wand')],cap:'From the official user manual. Above 120 °C, steam, the wand and the group can burn. Hot water mode needs the steam knob open and a cup under the wand.'};
+  };
+
+  /* the mains cord: out at both ends before opening up, in at the machine first at power-on */
+  function outlet(x,y){return R(x,y,64,92,'cd-wall',8)+R(x+16,y+14,32,26,'cd-sock',6)+P('M'+(x+26)+','+(y+22)+'v10M'+(x+38)+','+(y+22)+'v10','cd-slot')+R(x+16,y+52,32,26,'cd-sock',6)+P('M'+(x+26)+','+(y+60)+'v10M'+(x+38)+','+(y+60)+'v10','cd-slot')}
+  function inlet(x,y){return R(x,y,70,92,'cd-mach',8)+R(x+20,y+30,30,24,'cd-iec',4)+P('M'+(x+28)+','+(y+42)+'h4M'+(x+38)+','+(y+42)+'h4','cd-slot')+T(x+35,y+80,'machine','rd-s','middle')}
+  D.cord=function(o){
+    var outl=C.fill?C.fill('{outlet}'):'a GFCI-protected outlet',b1,b2;
+    if(o.mode==='in'){
+      b1=inlet(96,12)+P('M10,58 H84','cd-cord')+R(84,50,32,16,'cd-plug',3)+P('M60,40l14,10-14,10','cd-arr')+T(10,128,'1. Cord into the machine first','rd-tb');
+      b2=outlet(110,12)+P('M10,58 H66','cd-cord')+R(66,50,22,16,'cd-plug',3)+P('M70,58h12M70,52h0','cd-pin')+P('M92,40l12,10-12,10','cd-arr')+T(10,128,'2. Then into the wall','rd-tb');
+      return {min:180,panels:[S(190,150,b1,'Plug the cord into the machine first.'),S(190,150,b2,'Then plug it into the wall outlet: '+outl+'.')],cap:'The wall end goes into a '+esc(outl)+'. Stay within reach of the plug for the whole first session: at any smell, smoke, crackle, a tripped breaker or an odd noise, unplug at the wall first.'};
+    }
+    b1=outlet(110,12)+P('M10,58 H46','cd-cord')+R(46,50,22,16,'cd-plug',3)+P('M50,58h12','cd-pin')+P('M100,40l-14,10 14,10','cd-arr')+T(10,128,'1. Out of the wall','rd-tb');
+    b2=inlet(96,12)+P('M10,58 H40','cd-cord')+R(40,50,32,16,'cd-plug',3)+P('M86,40l-14,10 14,10','cd-arr')+T(10,128,'2. Out of the machine too','rd-tb');
+    return {min:180,panels:[S(190,150,b1,'Pull the plug out of the wall.'),S(190,150,b2,'Then pull the cord out of the machine too.')],cap:o.cap||'With the cord out at both ends, nothing in the machine can be live. Let it cool first if it\'s been on.'};
+  };
+
+  /* the bench: everything on something that doesn't conduct */
+  D.bench=function(o){
+    var b=R(8,40,304,128,'bn-mat',12)+T(160,32,'Wooden board, cardboard or a silicone mat','rd-s','middle');
+    b+=R(24,64,92,62,'bn-box',8)+R(36,76,68,38,'pcb-b',4)+T(70,144,'PCB in its housing','bn-t','middle');
+    if(o.screen!==false)b+=R(134,68,100,60,'bn-cloth',10)+R(144,78,80,40,'bn-scr',4)+T(184,144,'screen face up','bn-t','middle')+T(184,158,'on a cloth','bn-t','middle');
+    b+='<g transform="translate(274,98)">'+P('M-10,-4h16v8h-16zM6,-2h8v4h-8z','bn-screw')+P('M-14,-12L14,12M14,-12L-14,12','bn-x')+'</g>'+T(274,136,'no loose','bn-t','middle')+T(274,150,'metal','bn-t','middle');
+    return {panels:[S(320,176,b,'The bench: a wooden board, cardboard or silicone mat, the PCB in its housing, the screen face up on a cloth, and no screws or wire offcuts underneath.')],cap:'Nothing metal under or around the boards while they\'re powered: a stray screw can short the PCB.'};
   };
 
   /* the temperatures that limit the boiler */

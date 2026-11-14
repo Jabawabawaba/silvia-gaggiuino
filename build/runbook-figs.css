@@ -10,10 +10,12 @@
 .rfig-h{display:block;font:600 11px/1.3 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent-ink);margin-bottom:3px}
 .rfig-cap a{white-space:nowrap}
 .rfig .pg-ctl button[hidden]{display:none}
-.rfig .pg-ctl .pg-pos{white-space:nowrap;font-size:12.5px}
+.rfig .pg-ctl .pg-pos{white-space:nowrap;font-size:12.5px;min-width:0}
+.rfig,.rdia,.rfigs{min-width:0}
+@media (max-width:400px){.rfig .pg-ctl{gap:4px;padding:6px}.rfig .pg-ctl button{min-width:40px}.rfig .pg-ctl .pg-pos{white-space:normal;font-size:12px}.rdia{padding:8px 8px 10px}}
 .rdia{margin:0;width:100%;max-width:560px;border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:10px 12px 12px}
 .rdia.wide{max-width:none}
-.rdia-p{display:grid;grid-template-columns:repeat(auto-fit,minmax(var(--pmin,150px),1fr));gap:10px 14px;align-items:start}
+.rdia-p{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(var(--pmin,150px),100%),1fr));gap:10px 14px;align-items:start}
 .rdp{min-width:0}
 .rdia figcaption{margin-top:8px;font-size:14px;line-height:1.45;color:var(--muted);max-width:70ch}
 /* diagram drawing */
@@ -73,6 +75,24 @@
 .rd .sw-b{fill:#2B3036;stroke:#15181B}
 .rd .sw-r{fill:#59616A;stroke:#15181B}
 .rd .sw-r.on{fill:#E8E2D2}
+/* cord and outlet */
+.rd .cd-wall{fill:#E9E4D8;stroke:#9C9384}
+.rd .cd-sock{fill:#F8F6F0;stroke:#9C9384}
+.rd .cd-slot{fill:none;stroke:#3A3F45;stroke-width:3;stroke-linecap:round}
+.rd .cd-mach{fill:#C3CAD0;stroke:#6B737B}
+.rd .cd-iec{fill:#2B3036;stroke:#15181B}
+.rd .cd-cord{fill:none;stroke:#2B3036;stroke-width:6;stroke-linecap:round}
+.rd .cd-plug{fill:#2B3036;stroke:#15181B}
+.rd .cd-pin{fill:none;stroke:#C9CFD4;stroke-width:3}
+.rd .cd-arr{fill:none;stroke:var(--accent);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+/* the bench */
+.rd .bn-mat{fill:#C9A877;stroke:#8C6F45}
+.rd .bn-box{fill:#3A3F45;stroke:#15181B}
+.rd .bn-cloth{fill:#DCE9F2;stroke:#8DA9C0}
+.rd .bn-scr{fill:#0F1215;stroke:#3A3F45}
+.rd .bn-screw{fill:#C9CFD4;stroke:#59616A}
+.rd .bn-x{fill:none;stroke:#B13A2F;stroke-width:3.5;stroke-linecap:round}
+.rd text.bn-t{fill:#2B2118;font-size:11.5px;font-weight:500}
 /* the meter */
 .rd .mt-b{fill:#F2C230;stroke:#8A6D10;stroke-width:1.2}
 .rd .mt-lcd{fill:#C9D6C0;stroke:#5B6B52}
