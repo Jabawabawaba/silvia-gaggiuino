@@ -312,7 +312,9 @@ h2{font:600 22px/1.1 var(--f-display);letter-spacing:.05em;text-transform:upperc
   function okw(w){var m=window.SilviaMachine;if(!w)return true;if(!m)return !/(^|;)shelly/.test(w);return m.matches(w)}
   %%INCLUDE:progress-store.js%%
   /* the runbook steps a line ticks: [step, what ticks it, the condition it shows on] */
-  var RB={shelly:['p0s','marking this Ordered (or ticking off the Shelly itself) ticks the step to pick one.','shelly']};
+  var RB={shelly:['p0s','marking this Ordered, Received or Already have, or ticking off the Shelly itself, ticks the step to pick one.','shelly']};
+  /* lines the build needs that are marked Not getting (shipping isn't a part): the runbook's Check your parts waits for them */
+  function reqSkipped(){return allParts().filter(function(p){return p.req&&p.id!=='ukship'&&ps(p).status==='skip'}).map(function(p){return p.name})}
   function allParts(){
     var list=[];GROUPS.forEach(function(g){g.parts.forEach(function(p){if(okw(p.when))list.push(p)})});
     state.custom.forEach(function(c){list.push({id:c.id,name:c.name,lo:c.est,hi:c.est,req:false,def:'need',group:'custom',custom:true,src:c.url?[['Link',c.url]]:null})});
@@ -416,7 +418,7 @@ h2{font:600 22px/1.1 var(--f-display);letter-spacing:.05em;text-transform:upperc
 
     var r=compute();
     /* what's in hand, for the runbook's Check your parts step (progress-store.js) */
-    PS.put('tracker',{sig:PS.sig(window.SilviaMachine&&window.SilviaMachine.get()),n:r.active,hand:r.inhand});
+    PS.put('tracker',{sig:PS.sig(window.SilviaMachine&&window.SilviaMachine.get()),n:r.active,hand:r.inhand,skip:reqSkipped()});
     $('r-hand').textContent=r.inhand+' of '+r.active;
     $('r-hand-s').textContent=r.counts.ordered?(r.counts.ordered+' on order'):(r.active-r.inhand===0?'Everything is here':'Nothing on order yet');
     $('r-spent').textContent=fmt(r.spent);

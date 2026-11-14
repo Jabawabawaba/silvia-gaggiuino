@@ -142,6 +142,21 @@
   var st={slack:15,stock:false,led:false,mm:{},cut:{}};
   try{var sv=JSON.parse(localStorage.getItem(KEY)||'null');if(sv&&typeof sv==='object'){st.slack=typeof sv.slack==='number'?sv.slack:15;st.stock=!!sv.stock;st.led=!!sv.led;st.mm=sv.mm&&typeof sv.mm==='object'?sv.mm:{};st.cut=sv.cut&&typeof sv.cut==='object'?sv.cut:{}}}catch(e){}
   function save(){try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}}
+  /* a tick is for a run as this harness makes it: its ends and the wires it shares each end with. With the Shelly,
+     AC1, AC2, AC4, AC8 and AC9 are made differently, so a tick made for the other harness doesn't count for them */
+  function hsh(s){var x=5381;for(var i=0;i<s.length;i++)x=((x<<5)+x+s.charCodeAt(i))|0;return (x>>>0).toString(36)}
+  function sigs(list){
+    var T={},o={};
+    function tid(k){return k?String(k).split(':')[1]:null}
+    list.forEach(function(x){(x.k||[]).forEach(function(k){var t=tid(k);if(t)(T[t]=T[t]||[]).push(x.id)})});
+    list.forEach(function(r){o[r.id]=hsh((r.k||[]).map(function(k){var t=tid(k);return String(k)+(t?'['+T[t].filter(function(id){return id!==r.id}).sort().join(',')+']':'')}).join(';')+'|'+r.gauge+'|'+(r.color||''))});
+    return o;
+  }
+  var SIG0=sigs(RUNS0),SIG1=sigs(RUNS1);
+  function sig(r){return (RUNS===RUNS1?SIG1:SIG0)[r.id]}
+  function isCut(r){return st.cut[r.id]===sig(r)}
+  /* ticks saved before this, which didn't say which harness they were for, go to the one on show now */
+  (function(){var S=shOn()?SIG1:SIG0,ch=false;Object.keys(st.cut).forEach(function(id){if(st.cut[id]===true){if(S[id])st.cut[id]=S[id];else delete st.cut[id];ch=true}});if(ch)save()})();
   function wireRun(r){return r.gauge==='18 AWG'||r.gauge==='18 AWG green'||r.gauge==='22 AWG'}
   function active(r){
     if(r.sys==='OPT')return st.led&&/^OP[345]$/.test(r.id);
@@ -152,12 +167,15 @@
   function cutLen(r){var m=len(r);return m?Math.round(m*(1+st.slack/100)/5)*5:null}
   function gaugeOf(r){return r.gauge.indexOf('22')===0?'22 AWG':'18 AWG'}
   /* the tally the runbook reads (progress-store.js): rows in the cut table and how many are ticked, all of them and the
-     Shelly's, for the harness on show; every row ticked ticks the runbook's Cut and label each run */
+     ones the Shelly adds or changes, for the harness on show; every row ticked ticks the runbook's Cut and label each run */
   var TABLE=/^(L|H|N|E|LV|LVG|S|OPT)$/;
   function report(){
-    var rows=RUNS.filter(active).filter(function(r){return TABLE.test(r.sys)}),sh=rows.filter(function(r){return /^SH/.test(r.id)});
-    function t(list){return [list.length,list.filter(function(r){return !!st.cut[r.id]}).length]}
-    var c=PS.read().cut||{};c[shOn()?'sh':'base']={all:t(rows),sh:t(sh)};PS.put('cut',c);
+    var rows=RUNS.filter(active).filter(function(r){return TABLE.test(r.sys)}),sh=rows.filter(function(r){return !!r.sh});
+    /* the Shelly changes the stock inlet leads' ends too, and with them kept they aren't rows here, so the runbook
+       can't take the Shelly's step as done from this page */
+    var keep=RUNS.filter(function(r){return r.sh&&STOCK[r.id]&&!active(r)}).map(function(r){return r.id});
+    function t(list){return [list.length,list.filter(isCut).length]}
+    var c=PS.read().cut||{};c[shOn()?'sh':'base']={all:t(rows),sh:t(sh),keep:keep};PS.put('cut',c);
   }
 
   function render(){
@@ -207,7 +225,7 @@
       var rs=runs.filter(function(r){return r.sys===g[0]});if(!rs.length)return;
       html+='<tr class="grp"><td colspan="6">'+esc(g[1])+'</td></tr>';
       rs.forEach(function(r){
-        var c=cutLen(r),isWire=wireRun(r),d=!!st.cut[r.id];n++;if(d)done++;
+        var c=cutLen(r),isWire=wireRun(r),d=isCut(r);n++;if(d)done++;
         var lenCell;
         if(!isWire)lenCell='<small>'+esc(r.lenNote||'Comes with the part')+'</small>';
         else if(r.mm)lenCell=c+' mm<small>'+r.mm+' mm + '+st.slack+'%</small>';
@@ -225,7 +243,7 @@
   $('opt-led').addEventListener('change',function(){st.led=this.checked;save();render()});
   $('cut').addEventListener('change',function(e){
     var id=e.target.getAttribute('data-cut');
-    if(id){if(e.target.checked)st.cut[id]=true;else delete st.cut[id];save();report();var tr=e.target.closest('tr');if(tr)tr.classList.toggle('done',e.target.checked);var n=document.querySelectorAll('[data-cut]').length,d=document.querySelectorAll('[data-cut]:checked').length;$('cut-sum').textContent=d+' of '+n+' cut';return}
+    if(id){var rr=RUNS.filter(function(x){return x.id===id})[0];if(e.target.checked&&rr)st.cut[id]=sig(rr);else delete st.cut[id];save();report();var tr=e.target.closest('tr');if(tr)tr.classList.toggle('done',e.target.checked);var n=document.querySelectorAll('[data-cut]').length,d=document.querySelectorAll('[data-cut]:checked').length;$('cut-sum').textContent=d+' of '+n+' cut';return}
     var mid=e.target.getAttribute('data-mm');
     if(mid){var v=e.target.value;if(v==='')delete st.mm[mid];else{var x=Number(v);if(isFinite(x)&&x>0)st.mm[mid]=Math.round(x)}save();render();var el=$('mm-'+mid);if(el)el.focus()}
   });

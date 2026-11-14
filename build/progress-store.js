@@ -3,9 +3,12 @@
      name. The runbook reads it, with Your Silvia and the tracker's own record, to tick the steps those pages cover.
      put(name, value) replaces that page's summary and writes only when it changed. vkFor(profile) names the harness a
      page shows for a profile: 'sh' with the Shelly add-on, 'base' without it, as the cut list and labels pick it.
-     sig(profile) is a short fingerprint, so a summary made for another machine isn't taken for this one. */
+     sig(profile) is a short fingerprint, so a summary made for another machine isn't taken for this one. CV is a stamp of
+     the power-on check list (each check's id, kind and condition) that site.py puts in at build: the checks page saves it
+     with its tally, and the runbook counts a tally only if it matches, so checks added in a later update are never
+     taken as passed. */
   var PS=(function(){
-    var KEY='silvia-progress-v1';
+    var KEY='silvia-progress-v1',CV='%%CHECKS_VER%%';
     function read(){try{var s=JSON.parse(localStorage.getItem(KEY)||'null');return s&&typeof s==='object'?s:{}}catch(e){return {}}}
     function put(name,value){
       try{
@@ -17,5 +20,5 @@
     }
     function vkFor(p){return p&&p.shelly?'sh':'base'}
     function sig(p){p=p||{};return [p.ver||'',p.model||'',p.volts||'',p.early?'early':'',p.shelly?'sh':''].join('|')}
-    return {KEY:KEY,read:read,put:put,vkFor:vkFor,sig:sig};
+    return {KEY:KEY,CV:CV,read:read,put:put,vkFor:vkFor,sig:sig};
   })();

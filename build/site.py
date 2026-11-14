@@ -212,6 +212,8 @@ HEAD = ('<!doctype html><html lang="en"><head><meta charset="utf-8">'
 
 def wrap(body, current):
     body = body.replace('<meta name="claude:viewport-fit-sides" content="cover">\n', "")
+    # the power-on check list's stamp (progress-store.js), on every page whichever way it was built
+    body = body.replace("%%CHECKS_VER%%", checks_ver())
     for url, f in LINKMAP.items():
         body = body.replace(url, f)
     for k, v in LOCAL.items():
@@ -295,6 +297,31 @@ def n_checks():
 
 # Stock thermostats for the circuit diagram (learn-ladder.js): Rancilio's opening points, illustrative closing points
 THERMO = {"BREW_OPEN": "100", "BREW_CLOSE": "88", "STEAM_OPEN": "140", "STEAM_CLOSE": "128"}
+
+
+_CV = None
+
+
+def checks_ver():
+    """A short stamp of the power-on check list: each check's id, kind and condition. progress-store.js carries it
+    (%%CHECKS_VER%%), the checks page saves it with its tally, and the runbook only counts a tally with the same
+    stamp, so checks added or changed in a later update are never taken as passed."""
+    global _CV
+    if _CV is None:
+        import hashlib
+        src = open(os.path.join(HERE, "checks.tpl.html")).read()
+        parts = []
+        for chunk in src.split("{id:'")[1:]:
+            cid = chunk.split("'", 1)[0]
+            if not re.fullmatch(r"[a-h]\d+", cid):
+                continue
+            chunk = chunk.split("\n  ];", 1)[0]
+            ty = re.search(r"type:'(\w+)'", chunk)
+            cond = re.search(r"(?:\bwhen|,w):'([^']*)'", chunk)
+            parts.append(cid + ":" + (ty.group(1) if ty else "") + ":" + (cond.group(1) if cond else ""))
+        assert parts, "no power-on checks found"
+        _CV = hashlib.sha1("|".join(parts).encode()).hexdigest()[:10]
+    return _CV
 
 
 def includes(s, depth=0):
