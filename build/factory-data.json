@@ -1,0 +1,33 @@
+{
+ "_about": "The Silvia's stock circuit for the wiring page's Out of the box view (fac_silvia.py). There's no official drawing of the Silvia's stock wiring, from Rancilio or from the Gaggiuino docs, so this follows GaggiMate's Silvia installation diagram, a community project's, cross-checked against wesleye's Silvia wiring page and this site's own ladder diagram on the Learn page. Those drawings show what connects to what and the wire colors, not how the factory chains its wires from spade to spade, so where several wires meet, the chaining here is this site's simplification. Ends name the map's terminals: switch poles (line and neutral, each with an in and out spade), the heating lamp's two spades, the power switch's L and N poles, the safety thermostat (sf), the element (el), the brew and steam thermostats (bt, st), the boiler's ground spade, the valve, the pump and the inlet. sys: L line, H heater circuit, N neutral, E earth.",
+ "name": "Rancilio Silvia, as it leaves the factory",
+ "src": "https://docs.gaggimate.eu/docs/installation-silvia",
+ "srcname": "GaggiMate's Silvia installation diagram",
+ "src2": "https://wesleye.github.io/Rancilio_Silvia/Silvia_Wiring",
+ "src2name": "wesleye's Silvia wiring page",
+ "runs": [
+  {"id": "F1", "a": "inlet:L", "b": "pwr:Lin", "color": "brown", "sys": "L", "what": "Line from the inlet to the power switch"},
+  {"id": "F2", "a": "inlet:N", "b": "pwr:Nin", "color": "blue", "sys": "N", "what": "Neutral from the inlet to the power switch"},
+  {"id": "F3", "a": "inlet:E", "b": "gnd", "color": "yellowgreen", "sys": "E", "what": "Earth from the inlet. GaggiMate's diagram takes it to the frame; this map uses the boiler's ground spade for that point"},
+  {"id": "F4", "a": "gnd", "b": "sol:gnd", "color": "yellowgreen", "sys": "E", "what": "Earth on to the 3-way valve's body"},
+  {"id": "F5", "a": "pwr:Lout", "b": "lamp:L", "color": "black", "sys": "L", "what": "Switched line to the heating lamp"},
+  {"id": "F6", "a": "pwr:Lout", "b": "sf:1", "color": "black", "sys": "L", "what": "Switched line to the 165 °C safety thermostat"},
+  {"id": "F7", "a": "pwr:Lout", "b": "steam:Lin", "color": "black", "sys": "L", "what": "Switched line to the steam switch, which uses it only for its own lamp"},
+  {"id": "F8", "a": "steam:Lin", "b": "brew:Lin", "color": "black", "sys": "L", "what": "Switched line on to the brew switch"},
+  {"id": "F9", "a": "brew:Lin", "b": "hw:Lin", "color": "black", "sys": "L", "what": "Switched line on to the hot water switch"},
+  {"id": "F10", "a": "sf:2", "b": "el:1", "color": "black", "sys": "H", "what": "Through the safety thermostat to the element"},
+  {"id": "F11", "a": "el:2", "b": "st:a", "color": "yellow", "sys": "H", "what": "From the element's other terminal to the steam thermostat"},
+  {"id": "F12", "a": "lamp:N", "b": "el:2", "color": "yellow", "sys": "H", "what": "The heating lamp's other side, on the element terminal it shares with the steam thermostat: it lights while the thermostats are closed and the element heats"},
+  {"id": "F13", "a": "st:b", "b": "bt:a", "color": "grey", "sys": "H", "what": "Steam thermostat to the brew thermostat: in brew mode the element heats until the brew thermostat opens"},
+  {"id": "F14", "a": "steam:Nout", "b": "bt:a", "color": "grey", "sys": "H", "what": "Steam on joins this point to neutral, bypassing the brew thermostat, so the element heats until the steam thermostat opens. wesleye's page shows this wire blue"},
+  {"id": "F15", "a": "bt:b", "b": "pump:N", "color": "red", "sys": "N", "what": "The brew thermostat's neutral side, on to the pump's return (through its thermal fuse where it has one)"},
+  {"id": "F16", "a": "pwr:Nout", "b": "steam:Nin", "color": "red", "sys": "N", "what": "Switched neutral to the steam switch"},
+  {"id": "F17", "a": "steam:Nin", "b": "brew:Nin", "color": "red", "sys": "N", "what": "Neutral on to the brew switch"},
+  {"id": "F18", "a": "brew:Nin", "b": "hw:Nin", "color": "red", "sys": "N", "what": "Neutral on to the hot water switch, for its lamp"},
+  {"id": "F19", "a": "hw:Nin", "b": "bt:b", "color": "red", "sys": "N", "what": "Neutral to the brew thermostat: the heater circuit's return"},
+  {"id": "F20", "a": "hw:Lout", "b": "pump:L", "color": "white", "sys": "L", "what": "Hot water on: line to the pump only, so the valve stays shut"},
+  {"id": "F21", "a": "brew:Lout", "b": "pump:L", "color": "white", "sys": "L", "what": "Brew on: line to the pump"},
+  {"id": "F22", "a": "brew:Lout", "b": "sol:coil", "color": "white", "sys": "L", "what": "Brew on: line to the 3-way valve's coil"},
+  {"id": "F23", "a": "brew:Nout", "b": "sol:N", "color": "orange", "sys": "N", "what": "The valve's return, through the brew switch's other pole, so the valve opens only while brewing"}
+ ]
+}

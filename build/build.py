@@ -11,6 +11,7 @@ import json, os, re, sys
 sys.path.insert(0, os.path.dirname(__file__))
 from runs import RUNS, SYS, CONNECTORS, runs_for
 from wiring_svg import build as build_svg
+from fac_silvia import build as build_factory
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.dirname(HERE)
@@ -63,6 +64,7 @@ def render(name, mode="artifact"):
     extra = {}
     if name == "wiring":
         extra = {"CHECK_INDEX": check_index(), "SVG_SH": build_svg(sh=True), "SVG": build_svg(), "RUNS_SH": runs_json(True), "RUNS": runs_json(),
+                 "FAC": json.dumps(build_factory(), ensure_ascii=False).replace("</", "<\\/"),
                  "SYS": json.dumps(SYS), "CONN": json.dumps(CONNECTORS, ensure_ascii=False)}
     elif name == "labels":
         extra = {"RUNS_SH": runs_json(True), "RUNS": runs_json(), "CORE": open(os.path.join(HERE, "labels-core.js")).read()}

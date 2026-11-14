@@ -115,7 +115,7 @@ def spade(x, y, w=30, h=10, cls="sp"):
     return f'<rect x="{x - w / 2}" y="{y - h / 2}" width="{w}" height="{h}" rx="1.5" class="{cls}"/>'
 
 
-def switch(cx, name, lamp=False):
+def switch(cx, name, lamp=False, idle_b=True):
     out = []
     if lamp:
         out.append(f'<rect x="{cx - 25}" y="50" width="50" height="90" rx="6" class="box"/>')
@@ -129,8 +129,8 @@ def switch(cx, name, lamp=False):
     a, b = cx - 27, cx + 27
     out.append(spade(a, 75))
     out.append(spade(a, 115))
-    out.append(spade(b, 75, cls="sp sp-idle"))
-    out.append(spade(b, 115, cls="sp sp-idle"))
+    out.append(spade(b, 75, cls="sp sp-idle" if idle_b else "sp"))
+    out.append(spade(b, 115, cls="sp sp-idle" if idle_b else "sp"))
     out.append(text(cx, 40, name, "nm"))
     return "".join(out)
 
@@ -150,37 +150,36 @@ def build(sh=False):
     return "".join(o)
 
 
-def _build_rest(sh, paths, tags, parts, ends):
-    o = []
-
-    # ----- components (under wires) -----
-    o.append('<g class="parts">')
-    o.append(text(45, 18, "Switches viewed from the back · top row = center spades, bottom row = outer spades · order drawn for clarity", "cap", "start"))
-    o.append(switch(100, "Hot water"))
-    o.append(switch(260, "Brew"))
-    o.append(switch(420, "Steam"))
-    o.append(switch(560, "Heating lamp", lamp=True))
-    o.append(switch(720, "Power"))
-    o.append(text(693, 64, "L pole", "tiny"))
-    o.append(text(747, 64, "N pole", "tiny idle" if sh else "tiny"))
-    for cx in (100, 260, 420):
-        o.append(text(cx - 27, 64, "gnd pole", "tiny"))
-        o.append(text(cx + 27, 64, "LED pole", "tiny idle"))
-
-    # SSR
-    o.append('<rect x="160" y="300" width="160" height="140" rx="6" class="box"/>')
-    o.append('<line x1="160" y1="338" x2="320" y2="338" class="div"/><line x1="160" y1="402" x2="320" y2="402" class="div"/>')
-    for (x, y) in ((190, 316), (290, 316), (190, 424), (290, 424)):
-        o.append(f'<circle cx="{x}" cy="{y}" r="8" class="term"/>')
-    o.append(text(190, 354, "+ control", "tiny"))
-    o.append(text(290, 354, "− control", "tiny"))
-    o.append(text(240, 376, "SSR-40DA", "nm"))
-    o.append(text(240, 392, "view: top", "tiny"))
-    o.append(text(190, 398, "load 2", "tiny"))
-    o.append(text(290, 398, "load 1", "tiny"))
-
+def part_svgs(sh=False, factory=False):
+    """each part's drawing as (id, svg), in drawing order. The ids are the tap targets' (plus cap, the caption, and tc,
+    the thermocouple), so the Out of the box animation can fade and swap them one by one. factory=True draws the
+    machine as it leaves the factory: no Gaggiuino parts, the poles named for what the stock wiring puts on them, and
+    the brew and steam thermostats on the boiler."""
+    P = []
+    P.append(("cap", text(45, 18, "Switches viewed from the back · top row = center spades, bottom row = outer spades · order drawn for clarity", "cap", "start")))
+    for pid, cx, name in (("hw", 100, "Hot water"), ("brew", 260, "Brew"), ("steam", 420, "Steam")):
+        if factory:
+            lab = text(cx - 27, 64, "neutral", "tiny") + text(cx + 27, 64, "line", "tiny")
+        else:
+            lab = text(cx - 27, 64, "gnd pole", "tiny") + text(cx + 27, 64, "LED pole", "tiny idle")
+        P.append((pid, switch(cx, name, idle_b=not factory) + lab))
+    P.append(("lamp", switch(560, "Heating lamp", lamp=True)))
+    P.append(("pwr", switch(720, "Power") + text(693, 64, "L pole", "tiny") + text(747, 64, "N pole", "tiny idle" if sh else "tiny")))
+    if not factory:
+        # SSR
+        o = ['<rect x="160" y="300" width="160" height="140" rx="6" class="box"/>']
+        o.append('<line x1="160" y1="338" x2="320" y2="338" class="div"/><line x1="160" y1="402" x2="320" y2="402" class="div"/>')
+        for (x, y) in ((190, 316), (290, 316), (190, 424), (290, 424)):
+            o.append(f'<circle cx="{x}" cy="{y}" r="8" class="term"/>')
+        o.append(text(190, 354, "+ control", "tiny"))
+        o.append(text(290, 354, "− control", "tiny"))
+        o.append(text(240, 376, "SSR-40DA", "nm"))
+        o.append(text(240, 392, "view: top", "tiny"))
+        o.append(text(190, 398, "load 2", "tiny"))
+        o.append(text(290, 398, "load 1", "tiny"))
+        P.append(("ssr", "".join(o)))
     # Boiler
-    o.append('<circle cx="190" cy="660" r="112" class="box"/>')
+    o = ['<circle cx="190" cy="660" r="112" class="box"/>']
     o.append('<circle cx="190" cy="660" r="98" class="inner"/>')
     o.append('<path d="M144,700 l8,-10 l10,20 l10,-20 l10,20 l10,-20 l10,20 l10,-20 l10,20 l6,-10" class="elem"/>')
     o.append(spade(132, 700, 24, 9))
@@ -190,16 +189,16 @@ def _build_rest(sh, paths, tags, parts, ends):
     o.append(f'<circle cx="95" cy="564" r="4" class="term"/><circle cx="127" cy="564" r="4" class="term"/>')
     o.append(text(111, 579, "165 °C", "tiny"))
     o.append(text(118, 606, "safety thermostat", "tiny"))
-    o.append('<polygon points="208,584 222,584 227,592 222,600 208,600 203,592" class="term"/>')
-    o.append(text(226, 620, "thermocouple", "tiny"))
-    o.append(text(226, 632, "(brew tstat spot)", "tiny"))
     o.append(spade(297, 610, 18, 9))
     o.append(text(300, 596, "ground", "tiny"))
     o.append(text(190, 800, "Boiler", "nm"))
     o.append(text(190, 815, "view: top", "tiny"))
-
+    P.append(("boiler", "".join(o)))
+    if not factory:
+        P.append(("tc", '<polygon points="208,584 222,584 227,592 222,600 208,600 203,592" class="term"/>'
+                  + text(226, 620, "thermocouple", "tiny") + text(226, 632, "(brew tstat spot)", "tiny")))
     # Solenoid
-    o.append('<rect x="380" y="560" width="80" height="80" rx="6" class="box"/>')
+    o = ['<rect x="380" y="560" width="80" height="80" rx="6" class="box"/>']
     o.append(spade(420, 560, 18, 8))
     o.append(spade(400, 640, 8, 16))
     o.append(spade(440, 640, 8, 16))
@@ -208,9 +207,9 @@ def _build_rest(sh, paths, tags, parts, ends):
     o.append(text(420, 576, "gnd", "tiny"))
     o.append(text(400, 628, "N", "tiny"))
     o.append(text(440, 628, "coil", "tiny"))
-
+    P.append(("sol", "".join(o)))
     # Pump
-    o.append('<rect x="500" y="560" width="100" height="90" rx="6" class="box"/>')
+    o = ['<rect x="500" y="560" width="100" height="90" rx="6" class="box"/>']
     o.append(spade(524, 560, 30, 8))
     o.append(spade(580, 560, 16, 8))
     o.append('<rect x="512" y="572" width="24" height="12" rx="2" class="fuse"/>')
@@ -218,27 +217,29 @@ def _build_rest(sh, paths, tags, parts, ends):
     o.append(text(580, 580, "coil", "tiny"))
     o.append(text(550, 622, "Pump", "nm"))
     o.append(text(550, 636, "Ulka EP5", "tiny"))
-
+    P.append(("pump", "".join(o)))
     # Inlet
-    o.append('<rect x="630" y="790" width="182" height="50" rx="6" class="box"/>')
+    o = ['<rect x="630" y="790" width="182" height="50" rx="6" class="box"/>']
     for x, lab in ((656, "L"), (720, "E"), (786, "N")):
         o.append(spade(x, 790, 10, 14))
         o.append(text(x, 812, lab, "nm"))
     o.append(text(721, 832, "Power inlet · IEC C14", "tiny"))
-
+    P.append(("inlet", "".join(o)))
+    if factory:
+        return P
     # Pressure transducer
-    o.append('<rect x="818" y="560" width="54" height="46" rx="5" class="box"/>')
+    o = ['<rect x="818" y="560" width="54" height="46" rx="5" class="box"/>']
     o.append('<rect x="830" y="606" width="30" height="24" rx="2" class="box"/>')
     o.append(text(845, 588, "P sensor", "tiny"))
     o.append(text(845, 646, "pressure tee", "tiny"))
-
+    P.append(("psens", "".join(o)))
     # Screen
-    o.append('<rect x="980" y="60" width="200" height="112" rx="10" class="box"/>')
+    o = ['<rect x="980" y="60" width="200" height="112" rx="10" class="box"/>']
     o.append(text(1080, 104, "4.3 in screen", "nm"))
     o.append(text(1080, 120, "Gen 3.5 · view: back", "tiny"))
-
+    P.append(("screen", "".join(o)))
     # PCB
-    o.append('<rect x="930" y="232" width="270" height="596" rx="8" class="pcb"/>')
+    o = ['<rect x="930" y="232" width="270" height="596" rx="8" class="pcb"/>']
     o.append(text(1188, 694, "Gaggiuino PCB v4", "nm", "end"))
     o.append(text(1188, 708, "view: top", "tiny", "end"))
     pins = [
@@ -273,12 +274,23 @@ def _build_rest(sh, paths, tags, parts, ends):
         o.append(f'<circle cx="{x}" cy="232" r="3.5" class="pin"/>')
         o.append(text(x, 250, lab, "pinl"))
     o.append(text(1090, 250, "J1", "jn", "start"))
+    P.append(("pcb", "".join(o)))
     if sh:
-        o.append('<rect x="680" y="330" width="90" height="90" rx="8" class="box"/>')
+        o = ['<rect x="680" y="330" width="90" height="90" rx="8" class="box"/>']
         for (x, y, lab, lx, ly, anc) in ((680, 360, "O", 690, 364, "start"), (720, 330, "SW", 720, 346, "middle"), (700, 420, "L", 700, 410, "middle"), (750, 420, "N", 750, 410, "middle")):
             o.append(f'<circle cx="{x}" cy="{y}" r="5" class="term"/>' + text(lx, ly, lab, "tiny", anc))
         o.append(text(728, 374, "Shelly", "nm") + text(728, 388, "1PM", "tiny"))
-        o.append('<rect x="780" y="134" width="12" height="32" rx="2" class="splice"/>' + text(774, 158, "BN2", "tiny", "end"))
+        P.append(("shelly", "".join(o)))
+        P.append(("nsp", '<rect x="780" y="134" width="12" height="32" rx="2" class="splice"/>' + text(774, 158, "BN2", "tiny", "end")))
+    return P
+
+
+def _build_rest(sh, paths, tags, parts, ends):
+    o = []
+
+    # ----- components (under wires), one group each -----
+    o.append('<g class="parts">')
+    o.extend(f'<g class="ap" data-ap="{pid}">{g}</g>' for pid, g in part_svgs(sh))
     o.append('</g>')
 
     # ----- tap targets for parts, under the wires -----
