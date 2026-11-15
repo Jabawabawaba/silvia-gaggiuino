@@ -80,6 +80,21 @@ ol.steps li::before{content:counter(s);font:600 13px/26px var(--f-mono);text-ali
 .hand b{font:600 14px var(--f-mono);min-width:4.5ch}
 .note{font-size:14px;color:var(--muted);margin:8px 0 0}
 
+.lkey{margin-top:34px}
+.lkey-in{margin:0 0 14px;font-size:15.5px;max-width:80ch}
+.lkey-g{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:20px 28px;align-items:start}
+@media (max-width:760px){.lkey-g{grid-template-columns:minmax(0,1fr)}}
+.lkey-ex{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:10px 8px}
+.lkey-ex svg{display:block;width:100%;height:auto}
+.lkey-ex svg text{font-family:Helvetica,Arial,sans-serif}
+.lkey-parts{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:8px}
+.lkey-parts li{display:grid;grid-template-columns:26px minmax(0,1fr);gap:10px;align-items:start;font-size:15px}
+.lkey-parts .n{font:700 13px/24px var(--f-mono);text-align:center;width:24px;height:24px;border-radius:50%;background:var(--ink);color:var(--bg)}
+.lkey-h{font:600 11.5px var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+.lkey-cols{list-style:none;margin:0;padding:0}
+.lkey-cols li{display:grid;grid-template-columns:10px minmax(0,1fr);gap:12px;padding:8px 0;border-bottom:1px solid var(--line);font-size:15px}
+.lkey-cols i{border-radius:3px;min-height:22px}
+.lkey-mains{color:var(--ink);font-weight:600}
 .sheets{margin-top:34px;display:grid;gap:22px}
 .sheet{display:grid;gap:6px}
 .sheet .cap{font:600 11px var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
@@ -144,6 +159,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
   </section>
   <div class="howfig" id="howfig"></div>
 
+  <section class="lkey" id="lkey" aria-label="How to read a label"></section>
   <section class="sheets" id="sheets" aria-label="Sheet preview"></section>
 
   <footer class="foot">
@@ -159,6 +175,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
 %%CORE%%
+%%INCLUDE:label-key.js%%
 (function(){
   %%INCLUDE:runbook-figs.js%%
   %%INCLUDE:page-figs.js%%
@@ -225,6 +242,30 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     return o.join('');
   }
 
+  /* How to read a label: one flag from this selection, its parts, and the circuit colors in it (label-key.js) */
+  var KEYN={L:['Line','Mains live: the inlet, the power switch, the PCB, and its pump and valve outputs.'],H:['Heater line','Mains on the heating circuit, switched by the SSR.'],
+    N:['Neutral','The mains return to the inlet. Still mains.'],E:['Earth','Protective earth to the boiler and the 3-way valve.'],
+    LV:['Switch signal','From the PCB to the brew, steam and hot water switches.'],LVG:['Switch ground','The ground chain across the three switches.'],
+    S:['SSR control and sensors','The PCB to the SSR\'s control side, the pressure sensor, the thermocouple and the screen.'],
+    OPT:['Optional add-ons','The scales, the ToF sensor and the LED switch mod, if you fit them.']};
+  function keyHtml(runs){
+    var cell=null,has={};
+    runs.forEach(function(r){has[r.sys]=1;if(cell)return;var e=LabelCore.ends(r);[0,1].forEach(function(i){
+      var hot=r.hot==='both'||(r.hot==='a'&&i===0)||(r.hot==='b'&&i===1);
+      if(!hot&&!cell)cell={id:r.id,sys:r.sys,tag:r.gauge,l1:'this end: '+e[i],l2:'to: '+e[1-i]}})});
+    return LabelKey.html({cell:cell,L:LabelCore.L,color:function(s){return rgb(LabelCore.COLOR[s]||LabelCore.COLOR.LVG)},
+      sys:['L','H','N','E','LV','LVG','S','OPT'].filter(function(s){return has[s]}),names:KEYN,mains:['L','H','N'],
+      intro:'Every new wire gets a label at each end. Each one names the wire, its circuit and where both of its ends go, so you can check or rewire it without tracing it through the machine, and a wire that comes off goes back on the right spade.',
+      parts:['<b>ID</b>: the run\'s name, as on the wiring page and cut list: AC for mains, G for earth, LV for low voltage, OP for optional add-ons, SH for the Shelly.',
+        '<b>Color bar</b>: the run\'s circuit (see the colors).',
+        '<b>Tag</b>: the wire size (18 AWG or 22 AWG), or the part\'s own lead or cable.',
+        '<b>This end</b>: the terminal or spade this end goes on.',
+        '<b>To</b>: where the other end goes.',
+        '<b>Middle strip</b>: wraps around the wire about 3 cm from the end. The two halves fold together, so the label reads the same from both sides.'],
+      extra:'A dashed box on the sheet is an end at the boiler: no paper label there. Write the ID on the jacket with an oil-based marker instead (see Mark by hand).',
+      mainsNote:'Line, heater line and neutral are all mains: only handle those wires with the cord out at both ends.',
+      colorNote:'The colors match the circuit colors on the wiring drawing. They show the circuit, not the wire\'s jacket color: the cut list gives that.'});
+  }
   function render(){
     var runs=selected(),S=LabelCore.sheets(runs,prefs.paper);
     var hot=[],labels=0;
@@ -236,6 +277,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     $('s-labels').textContent=labels;
     $('s-sheets').textContent=S.pages.length;
     $('s-sheets-s').textContent=(S.pages.length===1?'sheet':'sheets')+' of '+S.paper.name;
+    $('lkey').innerHTML=keyHtml(runs);
     $('hand').innerHTML=hot.length?hot.map(function(h){return '<li><b>'+esc(h[0])+'</b><span>at '+esc(h[1])+'</span></li>'}).join(''):'<li><span>None in this selection.</span></li>';
     $('sheets').innerHTML=S.pages.length?S.pages.map(function(pg,i){return '<div class="sheet"><span class="cap">Sheet '+(i+1)+' of '+S.pages.length+' · '+S.paper.name+' · preview</span>'+sheetSvg(S,pg,i,S.pages.length)+'</div>'}).join(''):'<p class="note">Pick at least one group to see the sheets.</p>';
     Array.prototype.forEach.call(document.querySelectorAll('[data-paper]'),function(b){b.setAttribute('aria-pressed',String(b.getAttribute('data-paper')===prefs.paper))});
