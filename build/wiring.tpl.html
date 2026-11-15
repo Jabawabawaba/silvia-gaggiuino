@@ -182,6 +182,13 @@ figcaption{font-size:14px;color:var(--muted);margin-top:8px;max-width:90ch}
 .ma-cap[hidden],.mview .mseg2[hidden],.mplay[hidden],.mctl[hidden],.mbtn[hidden]{display:none}
 body.boxview #maptop,body.animating #maptop,body.animating #msel,body.animating #detail,body.animating .scroll + .swipe-hint{display:none}
 .scroll.fit .dia{min-width:0}
+/* phones and small tablets: Whole drawing shrinks it to the screen's width; Close up is full size and scrolls */
+.mzoom{display:none;margin:0 0 8px}
+@media (max-width:1139px){.mzoom{display:inline-flex}}
+.scroll.whole .dia{min-width:0}
+.scroll.whole + .swipe-hint{display:none}
+body.animating .mzoom{display:none}
+@media print{.mzoom{display:none!important}}
 .dia .tiny.ring{paint-order:stroke;stroke:var(--surface);stroke-width:3.5px;stroke-linejoin:round}
 .dia .ma-comet .mc-core{fill:#fff}
 .dia .ma-ring{fill:none;stroke-width:2.5}
@@ -270,7 +277,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
 
   <figure id="fig">
     <p class="ma-cap" id="ma-cap" aria-live="polite" hidden></p>
-    <div class="scroll" id="scroll">%%SVG%%</div><template id="svg-sh">%%SVG_SH%%</template>
+    <div class="mseg2 mzoom" id="mzoom" role="group" aria-label="Drawing size"><button type="button" data-mzoom="close" aria-pressed="true">Close up</button><button type="button" data-mzoom="whole" aria-pressed="false">Whole drawing</button></div><div class="scroll" id="scroll">%%SVG%%</div><template id="svg-sh">%%SVG_SH%%</template>
     <div class="mctl" id="mctl" hidden>
       <button type="button" class="mbtn" id="ma-pause" aria-pressed="false">Pause</button>
       <button type="button" class="mbtn" id="ma-replay">Replay</button>
@@ -511,6 +518,10 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     if(p){var id=p.getAttribute('data-part');sel=null;selSet=null;selPart=(selPart===id)?null:id;paint();return}
     if(sel||selPart||selSet){sel=null;selPart=null;selSet=null;paint()}
   });
+  var whole=false;
+  $('mzoom').addEventListener('click',function(e){var b=e.target.closest('[data-mzoom]');if(!b)return;whole=b.getAttribute('data-mzoom')==='whole';var sc=$('scroll');sc.classList.toggle('whole',whole);if(whole)sc.scrollLeft=0;$('hint').hidden=whole;
+    Array.prototype.forEach.call(document.querySelectorAll('[data-mzoom]'),function(x){x.setAttribute('aria-pressed',String((x.getAttribute('data-mzoom')==='whole')===whole))});
+    if(!whole&&svg&&sel)centerOn(svg.querySelector('.run[data-run="'+sel+'"]'))});
   $('m-prev').addEventListener('click',function(){step(-1)});
   $('m-next').addEventListener('click',function(){step(1)});
   $('chips').addEventListener('click',function(e){var b=e.target.closest('[data-layer]');if(!b)return;layer=b.getAttribute('data-layer');sel=null;selPart=null;selSet=null;paint()});

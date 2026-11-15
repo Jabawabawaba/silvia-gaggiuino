@@ -228,7 +228,14 @@ def wrap(body, current):
     machine = "<script>" + open(os.path.join(HERE, "machine.js")).read() + "</script>"
     for old, new in STICKY:
         body = body.replace(old, new)
-    return (HEAD + f"<title>{title}</title>" + NAV_CSS + "</head><body>" + nav(current) + TOP_JS + NAV_JS + machine + body + foot(current) + "</body></html>")
+    # phone and tablet fixes (mobile.css) go right after the page's own styles, which all sit before its content, so
+    # they win ties with the page's rules and are in place before anything is drawn
+    mobile = "<style>" + open(os.path.join(HERE, "mobile.css")).read() + "</style>"
+    i = body.rfind("</style>")
+    body = body[:i + 8] + mobile + body[i + 8:] if i >= 0 else mobile + body
+    # data-page names the page for the few mobile.css rules that only apply to one page
+    page = current[:-5] if current.endswith(".html") else current
+    return (HEAD + f"<title>{title}</title>" + NAV_CSS + f'</head><body data-page="{page}">' + nav(current) + TOP_JS + NAV_JS + machine + body + foot(current) + "</body></html>")
 
 
 # Sticky bars inside pages sit below the nav while it's showing: --nav-cover is the nav's height then, 0 when it's away.

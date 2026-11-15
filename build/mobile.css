@@ -1,0 +1,82 @@
+/* Phones and tablets. wrap() in site.py puts this right after each page's own styles, so it wins ties with them.
+   Text keeps the size it was set at, tapping a field never zooms the page, and every control is a finger-sized
+   target: 44 px tall for buttons and fields, and for small links in a line of text a taller hit area that moves
+   nothing on the page. Small labels get a floor of 11.5 px on narrow screens. */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+
+@media (pointer:coarse){
+  /* an iPhone zooms the page in on any field under 16 px when it gets focus */
+  input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=file]):not([type=color]),select,textarea{font-size:16px!important}
+  input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=file]):not([type=color]):not([type=hidden]),select{min-height:44px}
+  input[type=range]{height:44px}
+  /* boxes that wrap a field grow with it */
+  .read,.unitbox,.money{height:auto;min-height:44px}
+  .read select{height:auto;align-self:stretch}
+
+  /* nav, the machine panel and footer */
+  .site-nav .brand{display:inline-flex;align-items:center;min-height:44px;padding-block:0}
+  .mchip,.nav-toggle,.mseg button,.mact button{min-height:44px}
+  .mact a{padding-block:12px}
+  .foot-nav .fn-g a,.foot-nav .fn-home{padding-block:12px}
+  .foot-nav .fn-g{align-items:stretch}
+
+  /* buttons, chips and toggles */
+  .btn,.btn.sm,.btn.small,.chip,.chip.sm,.fchip,.runchip,.pbtn,.mbtn,.showall-btn,.p-head,.pg-sb,summary,
+  .tseg button,.tseg.sm button,.seg button,.mseg2 button,#mini-tray .mini-ctl .btn,.ls-act .btn,.rt .btn,.plist .chip,
+  .mini-ctl .chip,.mapview .chip,.cutkey .zoomb,.vbox .mseg button,.pill,.st-links a,.story.narrow .st-links a,
+  .how>summary,.care-w select,.olbtn,.pf,.pg-ctl button,.simbtn,.tbtn,.tgl,.stage .replay{min-height:44px}
+  .runs-t td.id .idbtn{min-height:44px;min-width:44px;text-align:left}
+  .tseg button,.tseg.sm button{min-width:44px;justify-content:center}
+  .linkbtn{min-height:44px;min-width:44px}
+  .stepper button{width:44px;height:44px}
+  .stp button{width:44px;min-height:44px}
+
+  /* checkboxes: the install runbook's step boxes, and the ticks on the cut list, the budget and the LED mod checks */
+  .steps .step input[type=checkbox]{width:44px;height:44px;margin:0;border-radius:10px}
+  .steps .step input[type=checkbox]::after{width:16px;height:8px}
+  .tick input[type=checkbox],.checks input[type=checkbox]{width:26px;height:26px}
+  .cut td.tick .tk{display:grid;place-items:center;width:44px;height:44px;margin:-9px -9px -9px 0;cursor:pointer}
+  .line:has(> .tick){grid-template-columns:26px minmax(0,1fr) auto}
+
+  /* links that stand alone or sit in a short line: a taller hit area that moves nothing */
+  .maplk,.pg-links a,.pg-map,.tb-map a,.st-link a,.st-link button,.st-meta a,.gl-see a,.gl-img a,.coach-more,.dock a{position:relative;padding-block:12px;margin-block:-12px}
+  /* short wire and check IDs in a sentence or a table cell: wider too */
+  a.ref,a.jump,.cut td.id a{position:relative;padding:12px 6px;margin:-12px -6px}
+}
+
+/* the glossary's A to Z: a full grid of letters on phones (the bar scrolls with the page there) */
+@media (pointer:coarse) and (max-width:640px){
+  .az{display:grid;grid-template-columns:repeat(auto-fill,minmax(40px,1fr));gap:2px}
+  .az a,.az span{height:44px}
+}
+@media (pointer:coarse) and (min-width:641px){
+  .az a,.az span{min-width:38px;height:40px}
+}
+/* the page list: a full-height row per page when it opens as a list, a taller hit area when it's a row of links */
+@media (pointer:coarse) and (max-width:1060px){
+  .site-nav .nav-links a{min-height:44px}
+}
+@media (pointer:coarse) and (min-width:1061px){
+  .site-nav .nav-links a{position:relative;padding-block:10px;margin-block:-6px}
+}
+
+/* a phone on its side: a bar that sticks to the top would cover half the screen, so it scrolls away with the page */
+@media (max-height:500px){
+  [data-page=glossary] .tools{position:static}
+  [data-page=glossary] .gl-sec,[data-page=glossary] .gl-e{scroll-margin-top:12px}
+}
+
+/* phones, upright or on their side: small labels no smaller than 11.5 px. Classes some other page uses for something
+   bigger are named with the page they're from (data-page on the body), and nothing inside a drawing changes. */
+@media (max-width:600px),(pointer:coarse) and (max-height:500px){
+  .k:not(svg *),th:not(svg *),.vtag:not(svg *),.site-nav .gl,.mk,.vbox .mk,.tag:not(svg *),.tag2:not(svg *),.sheet .cap,
+  .ck-tag,.ck-next .k,.ck-more summary,.cg-cols h4,.dock .k,.ro .k,.ref .k,.rfig-h,.pwlegend .k,.prog .k,
+  .settings th,.st-link .lk-i,.scrpick .k,.notes .k,.ls-k,.roi .rok,.sm-k,.rt-tag,.ct-src,.cert-dl dt,.unplug,
+  .mdetail .k,.mdetail .d-refs .rg,.detail .d-refs .rg,.off .k,.rbody h4,.si-t th,
+  [data-page=budget] .own,[data-page=parts-tracker] .cols,[data-page=parts-tracker] .flabel,
+  [data-page=used-checklist] .band-l,[data-page=used-checklist] .sev,[data-page=runbook] .pw,[data-page=runbook] .src,
+  [data-page=runbook] .rlbl,[data-page=runbook] .itag,[data-page=barista-school] .bk{font-size:11.5px}
+  [data-page=runbook] .ph .n,[data-page=barista-school] .ratio,.sm-lo,.sm-hi{font-size:12px}
+  /* a long model tag wraps inside its pill instead of running off a narrow screen */
+  .vtag:not(svg *){white-space:normal;line-height:1.2}
+}
