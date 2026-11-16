@@ -620,7 +620,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     d.innerHTML='<div class="d-head"><span class="d-id">'+esc(fsel.id)+'</span><span class="d-route">'+esc(r.frm)+' → '+esc(r.to)+'</span><span style="margin-left:auto;display:inline-flex;gap:8px;flex-wrap:wrap"><button type="button" class="chip cmpb" data-mcmp="'+esc(fsel.id)+'">Compare with your harness</button><button type="button" class="chip" id="fclear">Show everything</button></span></div>'+
       '<div class="d-grid"><div><span class="k">Circuit</span><span><span class="sysdot" style="background:'+(SYSCOLOR[r.sys]||'var(--muted)')+'"></span>'+esc(FSYS[r.sys]||r.sys)+'</span></div>'+
       '<div><span class="k">Stock color</span><span><span class="swc" style="background:'+(COLHEX[r.color]||'var(--muted)')+'"></span>'+esc(CNAME[r.color]||r.color)+'</span></div>'+
-      '<div><span class="k">With the new harness</span><span>'+(FAC.reuse&&FAC.reuse[fsel.id]?'Can stay: if it\'s sound, the harness reuses it as '+esc(FAC.reuse[fsel.id]):'Comes out: the harness replaces it')+'</span></div></div>'+
+      '<div><span class="k">With the new harness</span><span>'+(FAC.reuse&&FAC.reuse[fsel.id]?'Can stay: if it\'s sound, the harness reuses it as '+esc(FAC.reuse[fsel.id])+(((FAC.rel[SH?1:0][fsel.id]||{}).nbn)?', '+esc(FAC.rel[SH?1:0][fsel.id].nbn):''):'Comes out: the harness replaces it')+'</span></div></div>'+
       (r.what?'<p class="d-note">'+esc(r.what)+'.</p>':'')+afterHtml(fsel.id);
   }
   /* the stage: Show the change takes the stock wires off one at a time, then puts the harness in one at a time, both
@@ -707,7 +707,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     rem.forEach(function(x){(FAC.ends[x.id]||[]).forEach(function(p){if(p in left)left[p]++})});
     rem.forEach(function(x,i){
       var r=FAC.runs[x.id],R=rel[x.id]||{},s0=t;
-      b.say(t,capH('Off '+(i+1)+' of '+rem.length+(x.step?' · '+stepName(x.step):''),x.id+' · '+lc1(r.frm)+' → '+lc1(r.to)+(R.nb?' · can stay as '+R.nb:'')));
+      b.say(t,capH('Off '+(i+1)+' of '+rem.length+(x.step?' · '+stepName(x.step):''),x.id+' · '+lc1(r.frm)+' → '+lc1(r.to)+(R.nb?' · can stay as '+R.nb+(R.nbn?', with a new two-wire spade at the inlet':''):'')));
       t=b.wireOut(S.fw[x.id],t,{});
       (FAC.ends[x.id]||[]).forEach(function(p){if(p in left&&--left[p]===0&&S.fparts[p]){b.partOut(S.fparts[p],t-.1,.55);t+=.45;delete left[p]}});
       t+=G;b.step(s0,t,x.id);
@@ -758,7 +758,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
       else h='nothing from the harness lands here';
       items.push('<li><b>'+esc(e.t)+':</b> '+h+'</li>');
     });
-    if(R.nb)items.push('<li><b>The lead itself:</b> can stay if it\'s sound, as '+chips([R.nb])+'</li>');
+    if(R.nb)items.push('<li><b>The lead itself:</b> can stay if it\'s sound, as '+chips([R.nb])+(R.nbn?', '+esc(R.nbn):'')+'</li>');
     return '<div class="d-after"><span class="k">After the install</span><ul>'+items.join('')+'</ul>'+(rel.length||A!=='cmp'?'<p class="d-rel">'+(rel.length?'Tap a run to see it in your harness. ':'')+(A==='cmp'?'':'Compare plays this wire\'s change on its own.')+'</p>':'')+'</div>';
   }
   function compare(fid,at){
@@ -773,7 +773,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     S.twOrder.forEach(function(id){if(rel.indexOf(id)<0)b.fade(S.tw[id],0,.001,0,0)});
     b.say(0,capH('Out of the box',fid+' · '+lc1(r.frm)+' → '+lc1(r.to)));
     b.step(0,.9,'Out of the box');t=.9;
-    var s1=t;b.say(t,capH('The change',R.nb?'It can stay as '+R.nb+' if it\'s sound; here it comes out like the rest':'It comes out: the harness replaces it'));
+    var s1=t;b.say(t,capH('The change',R.nb?'It can stay as '+R.nb+' if it\'s sound'+(R.nbn?', '+R.nbn:'')+'; here it comes out like the rest':'It comes out: the harness replaces it'));
     t=b.wireOut(S.fw[fid],t,{})+.15;b.step(s1,t,fid);
     var s2=t;
     Object.keys(S.fw).forEach(function(id){if(id!==fid)b.fade(S.fw[id],t,.7,FAINT,0)});

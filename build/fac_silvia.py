@@ -252,24 +252,36 @@ def path_ends(d):
     return [pts[0], pts[-1]]
 
 
-def relations(m, runs, names, paths, reuse, tol=10):
-    """for each stock connection, what the harness puts at each of its ends: the harness runs whose drawn path starts
-    or ends within tol px of that terminal (both drawings share one layout). For the Out of the box view's Compare."""
-    ends = {}
+def relations(m, runs, names, paths, reuse, sh=False, tol=32):
+    """for each stock connection, what the harness puts at each of its ends. Both drawings share one layout, so each
+    end of each drawn harness path is matched to the nearest stock terminal within tol px (switch spades sit 40 px
+    apart, so the nearest one is the right one). With the Shelly the power switch's N pole stays empty. With the Shelly, the reusable inlet leads need a two-wire spade at the
+    inlet end (runs.py), and AC2's other end goes into the BN2 splice; nbn says so. For the Out of the box view's Compare."""
+    at = {}
     for rid, ds in paths.items():
         for d in ([ds] if isinstance(ds, str) else ds):
-            ends.setdefault(rid, []).extend(path_ends(d))
+            for (px, py) in path_ends(d):
+                best, bd = None, tol + 1
+                for t, (x, y, _, _) in m.term.items():
+                    if sh and t in ("pwr:Nin", "pwr:Nout"):
+                        continue  # with the Shelly the N pole stays empty: what sits there is the BN2 splice
+                    dd = max(abs(px - x), abs(py - y))
+                    if dd < bd:
+                        best, bd = t, dd
+                if best and rid not in at.setdefault(best, []):
+                    at[best].append(rid)
     rel = {}
     for r in runs:
         es = []
         for t in (r["a"], r["b"]):
             part = m.term[t][3]
-            x, y = m.term[t][:2]
-            now = [rid for rid, pts in ends.items() if any(abs(px - x) <= tol and abs(py - y) <= tol for px, py in pts)]
-            es.append({"t": names[t], "k": part if part in ("bt", "st") else "term", "now": now})
+            es.append({"t": names[t], "k": part if part in ("bt", "st") else "term", "now": list(at.get(t, []))})
         o = {"ends": es}
         if r["id"] in reuse:
             o["nb"] = reuse[r["id"]]
+            if sh and reuse[r["id"]] in ("AC1", "AC2"):
+                o["nbn"] = ("with a new two-wire spade at the inlet end, shared with " + ("SH1" if reuse[r["id"]] == "AC1" else "SH4")
+                            + ("; its other end goes into the BN2 neutral splice where the N pole was" if reuse[r["id"]] == "AC2" else ""))
         rel[r["id"]] = o
     return rel
 
@@ -386,7 +398,7 @@ def build():
         names[pid + ":Nin"] = nm + ", neutral pole, supply side"
         names[pid + ":Nout"] = nm + ", neutral pole, load side"
     meta = {r["id"]: {"color": r["color"], "sys": r["sys"], "what": r["what"], "frm": names[r["a"]], "to": names[r["b"]]} for r in runs}
-    rel = [relations(m, runs, names, PATHS, fd.get("reuse", {})), relations(m, runs, names, PATHS_SH, fd.get("reuse", {}))]
+    rel = [relations(m, runs, names, PATHS, fd.get("reuse", {})), relations(m, runs, names, PATHS_SH, fd.get("reuse", {}), sh=True)]
     ends = {r["id"]: [pof[r["a"]], pof[r["b"]]] for r in runs}
     return {"svg": "".join(o), "runs": meta, "ends": ends,
             "parts": {pid: {"name": NAMES[pid], "note": NOTES.get(pid, "")} for pid in boxes},
