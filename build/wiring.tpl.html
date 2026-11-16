@@ -125,6 +125,27 @@ figcaption{font-size:14px;color:var(--muted);margin-top:8px;max-width:90ch}
 .jhit{fill:transparent;cursor:pointer}
 .jhit:hover{fill:var(--accent);fill-opacity:.1}
 .jhit.on{fill:var(--accent);fill-opacity:.16;stroke:var(--accent);stroke-width:2}
+.mnhw{appearance:none;display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:8px 14px;font:600 13.5px/1 var(--f-body);cursor:pointer;min-height:38px}
+.mnhw-i{width:12px;height:12px;border-radius:3px;border:2px solid var(--accent);background:var(--accent-soft)}
+.mnhw[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.mnhw[aria-pressed="true"] .mnhw-i{border-color:var(--on-accent);background:transparent}
+body.nhw #chips,body.nhw .stepper,body.nhw .mjchips{display:none!important}
+.dia.nhw .run,.dia.nhw .tag,.dia.nhw .jhit{display:none}
+.dia .nhb{display:none;pointer-events:none}
+.dia.nhw .nhb{display:inline}
+.dia .nhb rect{fill:var(--accent)}
+.dia .nhb rect.nhr{fill:var(--accent-soft);fill-opacity:.5;stroke:var(--accent);stroke-width:2.5}
+.dia .nhb text{fill:var(--on-accent);font:700 10.5px/1 var(--f-mono);letter-spacing:.06em}
+.dia.nhw .ap{opacity:.5}
+.dia.nhw .ap.nh{opacity:1}
+.dia.nhw .phit.nh{fill:var(--accent-soft);fill-opacity:.5;stroke:var(--accent);stroke-width:2.5}
+.dia.nhw .phit.nh.sel{fill-opacity:.85;stroke-width:3.5}
+.lg-nh{width:16px!important;height:12px!important;border:2px solid var(--accent)!important;background:var(--accent-soft);border-radius:3px}
+.lg-nh0{width:16px!important;height:12px!important;border:1px solid var(--muted)!important;opacity:.5;border-radius:3px}
+.nhlist{list-style:none;margin:6px 0 10px;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px 22px}
+.nhlist li{display:flex;flex-direction:column;gap:3px;line-height:1.45}
+.detail .nhlist .lnk{align-self:flex-start;text-align:left;font-weight:600;color:var(--accent-ink)}
+@media print{.mnhw{display:none!important}}
 .mjchips{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:8px 0 0}
 .mjchips .mj-k{font:600 11.5px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-right:4px}
 .detail button.lnk{all:unset;cursor:pointer;font:inherit;color:var(--accent);text-decoration:underline;text-underline-offset:2px}
@@ -278,7 +299,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
   </div>
   <div class="toolbar" id="maptop" style="scroll-margin-top:12px">
     <div class="chips" id="chips" role="group" aria-label="Show circuit"></div>
-    <div class="tright"><div class="stepper" role="group" aria-label="Step through the runs"><button type="button" id="m-prev" aria-label="Previous run">‹</button><span id="m-step" aria-live="polite"></span><button type="button" id="m-next" aria-label="Next run">›</button></div><span class="hint" id="hint">On a small screen, scroll the drawing sideways.</span></div>
+    <div class="tright"><button type="button" class="mnhw" id="m-nhw" aria-pressed="false"><span class="mnhw-i" aria-hidden="true"></span>New hardware</button><div class="stepper" role="group" aria-label="Step through the runs"><button type="button" id="m-prev" aria-label="Previous run">‹</button><span id="m-step" aria-live="polite"></span><button type="button" id="m-next" aria-label="Next run">›</button></div><span class="hint" id="hint">On a small screen, scroll the drawing sideways.</span></div>
   </div>
   <div class="mjchips" id="mjchips" role="group" aria-label="PCB sockets: light every wire on one" hidden></div>
   <p class="msel" id="msel" aria-live="polite"></p>
@@ -416,6 +437,23 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
   $('conn').innerHTML=CONN.map(function(c){return '<tr><td class="id">'+c[0]+'</td><td>'+esc(c[1])+'</td><td>'+esc(c[2])+'</td><td>'+esc(c[3])+'</td></tr>'}).join('');
 
   /* state */
+  /* New hardware: every wire and tag hidden, the parts the install adds lit, the Silvia's own parts left in place */
+  var nhw=false,NEWHW=['pcb','screen','ssr','tc','psens','shelly','nsp','pled'],NEWN={tc:'Thermocouple'};
+  function nhOn(){return nhw&&(view||'mine')==='mine'&&!A}
+  function nhIds(){return NEWHW.filter(function(id){return svg&&svg.querySelector('.ap[data-ap="'+id+'"]')})}
+  function nhName(id){return NEWN[id]||PARTN[id]||id}
+  function nhBadges(){
+    if(!svg||svg.querySelector('.nhb'))return;
+    var g=document.createElementNS('http://www.w3.org/2000/svg','g');g.setAttribute('class','nhb');g.setAttribute('aria-hidden','true');
+    nhIds().forEach(function(id){
+      var r=svg.querySelector('.phit[data-part="'+id+'"]'),x,y,w,h,ring='';
+      if(r){x=+r.getAttribute('x');y=+r.getAttribute('y');w=+r.getAttribute('width');h=+r.getAttribute('height')}
+      else{try{var bb=svg.querySelector('.ap[data-ap="'+id+'"]').getBBox();x=bb.x-6;y=bb.y-6;w=bb.width+12;h=bb.height+12;ring='<rect class="nhr" x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="6"/>'}catch(e){return}}
+      var sm=w<60||h<40,bx=sm?x-2:x+4,by=sm?y-21:y+4;
+      g.insertAdjacentHTML('beforeend',ring+'<g transform="translate('+bx+','+by+')"><rect width="38" height="17" rx="8.5"/><text x="19" y="12.5" text-anchor="middle">NEW</text></g>');
+    });
+    svg.appendChild(g);
+  }
   var svg=null,layer='all',sel=null,selPart=null,selSet=null,setLabel='',selJ=null,selJoined=[],PARTN={},ENDS={},ORDER=[];
   /* show the variant Your Silvia asks for: its drawing, runs, readouts and list */
   function load(){
@@ -456,8 +494,15 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     var f=svg.querySelector('.jhit[data-j="'+J+'"]');if(f)centerOn(f);
   }
   function paint(){
-    var any=layer!=='all'||!!sel||!!selPart||!!selSet;
-    svg.classList.toggle('dim',any);
+    var any=layer!=='all'||!!sel||!!selPart||!!selSet,nh=nhOn();
+    if(nh)nhBadges();
+    svg.classList.toggle('nhw',nh);document.body.classList.toggle('nhw',nh);
+    $('m-nhw').hidden=(view||'mine')!=='mine'||!nhIds().length;$('m-nhw').setAttribute('aria-pressed',String(nh));
+    Array.prototype.forEach.call(svg.querySelectorAll('.ap'),function(g){g.classList.toggle('nh',NEWHW.indexOf(g.getAttribute('data-ap'))>=0)});
+    Array.prototype.forEach.call(svg.querySelectorAll('.phit'),function(g){g.classList.toggle('nh',NEWHW.indexOf(g.getAttribute('data-part'))>=0)});
+    var lg=$('mlegend');if(legend0==null&&lg)legend0=lg.innerHTML;
+    if(lg&&(view||'mine')==='mine'&&!A)lg.innerHTML=nh?'<span><i class="lg-nh"></i>New with the install</span><span><i class="lg-nh0"></i>The Silvia\'s own part, stays</span>':legend0;
+    svg.classList.toggle('dim',any&&!nh);
     Array.prototype.forEach.call(svg.querySelectorAll('.run,.tag'),function(el){
       var id=el.getAttribute('data-run'),r=byId[id];
       var on=sel?id===sel:selSet?inSet(id):selPart?atPart(id):inLayer(r,layer);
@@ -478,6 +523,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     var ms=$('msel');
     if(sel){var rr=byId[sel];ms.innerHTML='<b>'+rr.id+'</b><span class="rt">'+esc(rr.short||(rr.frm+' → '+rr.to))+'</span> · '+lenText(rr)}
     else if(selSet){ms.innerHTML=(setLabel?'<span class="rt">'+esc(setLabel)+'</span>: ':'')+selSet.map(function(id){return '<b>'+esc(id)+'</b>'}).join(' ')}
+    else if(nh&&!selPart){ms.innerHTML='<span class="rt">New hardware</span>: '+nhIds().length+' parts the install adds, wires hidden'}
     else if(selPart){var n=ORDER.filter(atPart).length;ms.innerHTML='<span class="rt">'+esc(PARTN[selPart]||selPart)+'</span>: '+n+(n===1?' run lands here':' runs land here')}
     else ms.textContent='';
     renderDetail();
@@ -508,11 +554,19 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
         '<div><span class="k">'+selSet.length+' runs, in order</span><div class="ids">'+selSet.map(function(id){return '<button type="button" data-mrun="'+id+'">'+id+'</button>'}).join('')+'</div></div><p class="d-note" style="color:var(--muted)">Tap one to see it on its own.</p>';
       return;
     }
+    if(nhOn()&&!selPart&&!sel){
+      d.className='detail';d.style.borderLeftColor='var(--accent)';
+      d.innerHTML='<div class="d-head"><span class="d-route">New hardware</span><button type="button" class="chip" data-mnhw style="margin-left:auto">Show the wiring</button></div>'+
+        '<ul class="nhlist">'+nhIds().map(function(id){var pi=partInfo(id==='tc'?'boiler':id),w=id==='tc'?'A K-type thermocouple on the boiler, in place of the brew thermostat. It reads the boiler temperature for the PCB.':(pi&&pi.w)||'',m=/^(.+?[.:])\s/.exec(w+' ');w=m?m[1].replace(/:$/,'.'):w;
+          return '<li>'+(PARTN[id]?'<button type="button" class="lnk" data-mpart="'+id+'">'+esc(nhName(id))+'</button>':'<b>'+esc(nhName(id))+'</b>')+'<span>'+esc(w)+'</span></li>'}).join('')+'</ul>'+
+        '<p class="d-note" style="color:var(--muted)">Everything else on the drawing is the Silvia\'s own and stays where it is. The thermocouple sits on the boiler, so tap the boiler for its runs. Tap a part for what it does and what lands on it.</p>';
+      return;
+    }
     if(selPart&&!sel){
       var ids=ORDER.filter(atPart);
       d.className='detail';d.style.borderLeftColor='var(--accent)';
       var pi=partInfo(selPart);
-      d.innerHTML='<div class="d-head"><span class="d-route">'+esc(PARTN[selPart]||selPart)+'</span><button type="button" class="chip" id="clear" style="margin-left:auto">Show all runs</button></div>'+
+      d.innerHTML='<div class="d-head"><span class="d-route">'+esc(PARTN[selPart]||selPart)+'</span><button type="button" class="chip" id="clear" style="margin-left:auto">'+(nhOn()?'All new hardware':'Show all runs')+'</button></div>'+
         (pi?'<p class="d-note">'+esc(pi.w)+'</p>'+(pi.p?'<p class="d-note"><span class="k" style="margin-right:6px">With Gaggiuino</span>'+esc(pi.p)+'</p>':''):'')+
         '<div><span class="k">'+ids.length+(ids.length===1?' run lands':' runs land')+' here</span><div class="ids">'+ids.map(function(id){return '<button type="button" data-mrun="'+id+'">'+id+'</button>'}).join('')+'</div></div>';
       return;
@@ -532,7 +586,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
       (svg.querySelector('[data-run="'+r.id+'"]')?'':'<p class="d-note" style="color:var(--muted)">Not drawn; optional runs are listed here only.</p>');
   }
   function pick(id,scroll,keep){
-    sel=(sel===id&&!keep)?null:id;selPart=null;selSet=null;
+    nhw=false;sel=(sel===id&&!keep)?null:id;selPart=null;selSet=null;
     paint();
     if(sel&&scroll){
       var g=svg.querySelector('.run[data-run="'+sel+'"]');
@@ -565,6 +619,8 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
   $('mzoom').addEventListener('click',function(e){var b=e.target.closest('[data-mzoom]');if(!b)return;whole=b.getAttribute('data-mzoom')==='whole';var sc=$('scroll');sc.classList.toggle('whole',whole);if(whole)sc.scrollLeft=0;$('hint').hidden=whole;
     Array.prototype.forEach.call(document.querySelectorAll('[data-mzoom]'),function(x){x.setAttribute('aria-pressed',String((x.getAttribute('data-mzoom')==='whole')===whole))});
     if(!whole&&svg&&sel)centerOn(svg.querySelector('.run[data-run="'+sel+'"]'))});
+  $('m-nhw').addEventListener('click',function(){nhw=!nhw;sel=null;selPart=null;selSet=null;layer='all';paint();
+    var sc=$('scroll');if(nhw&&!whole&&sc.scrollWidth>sc.clientWidth+2){var z=document.querySelector('[data-mzoom="whole"]');if(z)z.click()}});
   $('m-prev').addEventListener('click',function(){step(-1)});
   $('m-next').addEventListener('click',function(){step(1)});
   $('chips').addEventListener('click',function(e){var b=e.target.closest('[data-layer]');if(!b)return;layer=b.getAttribute('data-layer');sel=null;selPart=null;selSet=null;paint()});
@@ -572,6 +628,8 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
   $('detail').addEventListener('click',function(e){
     if(view==='box'){if(e.target.id==='fclear'){fsel=null;facPaint();return}var fr=e.target.closest('[data-frun]');if(fr){fsel={t:'run',id:fr.getAttribute('data-frun')};facPaint()}return}
     if(e.target.id==='clear'){sel=null;selPart=null;selSet=null;paint();return}
+    if(e.target.closest('[data-mnhw]')){nhw=false;sel=null;selPart=null;selSet=null;paint();return}
+    var mpn=e.target.closest('[data-mpart]');if(mpn){selPart=mpn.getAttribute('data-mpart');sel=null;selSet=null;paint();return}
     var m=e.target.closest('[data-mrun]');if(m){pick(m.getAttribute('data-mrun'),false,true);centerOn(svg.querySelector('.run[data-run="'+m.getAttribute('data-mrun')+'"]'))}
   });
   $('runs').addEventListener('click',function(e){var tr=e.target.closest('[data-row]');if(tr){if(view!=='mine'||A)setView('mine');pick(tr.getAttribute('data-row'),true)}});
@@ -615,6 +673,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     var box=view==='box';
     document.body.classList.toggle('boxview',box&&!A);
     if(box||A)$('mjchips').hidden=true;
+    if(box||A){$('m-nhw').hidden=true;document.body.classList.remove('nhw')}
     Array.prototype.forEach.call(document.querySelectorAll('[data-mview]'),function(b){b.setAttribute('aria-pressed',String(b.getAttribute('data-mview')===view&&!A))});
     $('m-play').hidden=!box||!!A;
     var n=$('mview-note');
@@ -624,7 +683,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     if(box&&!A){
       lg.innerHTML=[['L','Line'],['H','Heater circuit, through the thermostats'],['N','Neutral'],['E','Earth']].map(function(x){return '<span><i class="lg-'+x[0]+'"></i>'+x[1]+'</span>'}).join('');
       fc.innerHTML='The Silvia\'s own parts sit where the harness drawing has them, so the change lines up part for part. Where several stock wires meet, the source drawings show only that they connect, so how they chain from spade to spade here is a simplification. The E model\'s push button and energy-saver module aren\'t drawn.';
-    }else{lg.innerHTML=legend0;fc.innerHTML=cap0}
+    }else{lg.innerHTML=legend0;fc.innerHTML=cap0;if(nhOn()&&svg)paint()}
   }
   function setView(v){
     var was=!!A;stopAnim();
