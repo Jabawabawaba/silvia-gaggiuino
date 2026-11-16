@@ -628,7 +628,7 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
       /* the Shelly add-on: listed only once it's chosen in Your Silvia (when, see machine.js) */
       {id:'shelly',when:'shelly',wtag:'Shelly add-on',name:'Shelly smart relay and its enclosure',use:'Switches the machine on and off from your phone or on a schedule; the power switch becomes its input. An unofficial add-on.',spec:['A Shelly 1PM Gen4: it switches 16 A and reports the power the machine draws. In North America, the UL-certified version, rated 15 A. Not a Mini, which switches 8 A. It goes outside the case, in a closed enclosure made for mains wiring: Shelly rates it for 40 °C around it at most. Rough total.',['On an E, the emptied GICAR box can stand in for the enclosure and grommet: an unofficial second choice, inside the case. See the Shelly guide.','model:E']],lo:50,hi:85,req:false,def:'need',
         src:[['Shelly 1PM Gen4 specs','https://www.shelly.com/blogs/documentation/shelly-1pm-gen4']],
-        subs:[['relay','Shelly 1PM Gen4, UL-certified in North America ($32.99 from Shelly US)','https://us.shelly.com/products/shelly-1pm-gen4-ul-certified-list'],['encl','A closed enclosure made for mains wiring, with room for air around the Shelly and screws to fix it to the back panel'],['grom','A rubber grommet for where its wires pass the back panel'],['ferr','Insulated bootlace ferrules, 0.75 mm² (18 AWG), with 6 mm sleeves, and a ferrule crimper'],['spl','Two blue spades for two wires each, for the inlet\'s L and N tabs, a BN2 butt splice and silicone heat shrink']]}
+        subs:[['relay','Shelly 1PM Gen4, UL-certified in North America ($32.99 from Shelly US)','https://us.shelly.com/products/shelly-1pm-gen4-ul-certified-list'],['encl','A closed enclosure made for mains wiring, with room for air around the Shelly and screws to fix it to the back panel'],['grom','A rubber grommet for where its wires pass the back panel'],['ferr','Insulated bootlace ferrules, 0.75 mm² (18 AWG), with 6 mm sleeves, and a ferrule crimper'],['spl','Two blue spades for two wires each, for the inlet\'s L and N tabs, a BN2 butt splice and silicone heat shrink'],['led','A power light: a 5 V panel indicator LED with a built-in resistor (or a plain LED and a 1 kΩ resistor), 22 AWG wire and four BN1.25 butt splices. With the Shelly, the stock power light goes dark']]}
     ]}
   ];
   var STATUSES=[['need','To buy'],['ordered','Ordered'],['received','Received'],['have','Already have'],['skip','Not getting']];
@@ -681,7 +681,7 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
      with its tally, and the runbook counts a tally only if it matches, so checks added in a later update are never
      taken as passed. */
   var PS=(function(){
-    var KEY='silvia-progress-v1',CV='c287c01db5';
+    var KEY='silvia-progress-v1',CV='23c3b73d31';
     function read(){try{var s=JSON.parse(localStorage.getItem(KEY)||'null');return s&&typeof s==='object'?s:{}}catch(e){return {}}}
     function put(name,value){
       try{
