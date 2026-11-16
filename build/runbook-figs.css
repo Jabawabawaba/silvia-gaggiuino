@@ -213,3 +213,13 @@
 .pwl{display:inline-flex;align-items:center;gap:6px}
 .pwl .pw{margin-left:0}
 @media print{.rfigs,.rph,.pwlegend,.rbx{display:none!important}}
+
+/* the photo diagram (scrsock): fixed colors on the photo, since it looks the same in either theme */
+.rd.rd-photo{max-height:none;max-width:620px;border-radius:10px}
+.rd .sp-tag{stroke:#0E1115;stroke-width:4}
+.rd .sp-tag.sp-g{fill:#3DDC84}.rd .sp-tag.sp-r{fill:#FF5A4D}.rd .sp-tag.sp-w{fill:#E8E2D2}
+.rd text.sp-n{font:800 38px var(--f-body);fill:#0E1115}
+.rd text.sp-n2{font:800 14px var(--f-body);fill:#0E1115}
+.rd .sp-ok{fill:none;stroke:#3DDC84;stroke-width:7}
+.rd .sp-no{fill:none;stroke:#FF5A4D;stroke-width:7;stroke-dasharray:16 9}
+.rd .sp-not{fill:none;stroke:#E8E2D2;stroke-width:5;stroke-dasharray:12 9}

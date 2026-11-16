@@ -189,6 +189,7 @@
         "A pre-made screen cable stays as it is. Don't take it apart or move its pins to make the colors match.",
         "On the PCB, J1's pins are marked GND, TX, RX and 5V.",
         ["On the Gen 3.5 screen, the socket is marked 5V, IO28, IO27, GND. Follow the 5V wire and the GND wire from J1: each must land on the pin with the same name. The other two wires are the data pair.","scr:p4"],
+        ["The Gen 3.5 screen has four small sockets, and only one is right: the one on the right edge printed 5V, IO28, IO27, GND (the photo below). Not CN2 at the top, printed 5V, TX0, RX0, GND. In CN2 the screen lights and looks normal, but it never hears the PCB: the core build reads 0000 and the temperature stays at 0.0 °C.","scr:p4"],
         ["On the Gen 3 screen, J1's 5V and GND go to the socket marked GND, RXD, TXD, 5V, and the data pair (TX and RX) to IO18 and IO17 on the socket marked UART1. Follow the 5V and GND wires: each must land on the pin with the same name.","scr:s3"],
         ["On the headless board, the socket is marked 5V, TX, RX, GND. Follow the 5V and GND wires from J1: each must land on the pin with the same name.","scr:hl"],
         "If the colors don't match the official drawing, that's normal: blue and yellow have been swapped between cable batches. Where each wire lands is what counts."
@@ -207,7 +208,8 @@
         ["The screen lights and shows \"Initialization in progress\" for a few seconds, then it clears.","scr:p4,s3"],
         ["Headless: you'll see these messages in the web UI, so join its Wi-Fi first (the Wi-Fi step below), then come back to this step and the next two.","scr:hl"],
         "A few seconds after boot, \"Filling boiler\" shows, and a red LED on the underside of the PCB lights at the same moment. On the bench that's expected: there's no boiler to fill.",
-        "Stuck on \"Initialization in progress\"? Recheck J1 pin by pin (the screen cable step above), then see the firmware step at the end of this phase: the core and screen firmware may be from different releases."
+        "Stuck on \"Initialization in progress\"? Recheck J1 pin by pin (the screen cable step above), then see the firmware step at the end of this phase: the core and screen firmware may be from different releases.",
+        ["Screen up but the temperature reads 0.0 °C, and Settings, About shows the core build as 0000? The cable is most likely in the screen's CN2 socket (5V, TX0, RX0, GND). Unplug the USB-C and move it to the socket printed 5V, IO28, IO27, GND (the photo in the screen cable step).","scr:p4"]
       ],
       ok:"Initialization clears, Filling boiler shows, and the red LED under the PCB is on.",
       links:[["Troubleshooting","trouble"]]
@@ -754,7 +756,7 @@
     p5g:[['d','cord',{mode:'wall',cap:'Before you open it after the first power-on: switch off, unplug at the wall and let it cool. The boiler top and the thermocouple stay hot for a long time.'}]],
     p1b:[['d','pcbw',{on:['J4','J6','J1','J9','J2'],x:['J7','J5','MAINS'],note:{J2:'ToF board, if you have one: on the back',J7:'Leave it empty: its wires come in Phase 4',J5:'Leave it empty: the hot water switch, Phase 4',MAINS:'The mains tabs stay empty on the bench'}}],['d','ssr',{}]],
     p1c:[['d','j4']],
-    p1d:[['d','scrpins']],
+    p1d:[['d','scrpins'],['d','scrsock',{},'scr:p4']],
     p1e:[['d','pcbw',{on:['USB'],x:['MAINS'],note:{USB:'A USB-C cable to a charger or a computer',MAINS:'Nothing on the mains tabs'}}]],
     p1f:[['d','boot']],
     p1g:[['d','temp']],

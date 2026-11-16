@@ -399,6 +399,20 @@ var RBF=(function(){
   };
 
   /* the temperatures that limit the boiler */
+  /* a photo of the Gen 3.5 screen's back (JC4880P443, this site's own build): the right socket, and the CN2 trap */
+  D.scrsock=function(){
+    var W=760,H=909,b='<image href="img/screen-p4-back.webp" x="0" y="0" width="'+W+'" height="'+H+'" preserveAspectRatio="xMidYMid slice"/>';
+    function ell(cx,cy,rx,ry,cls){return '<ellipse cx="'+cx+'" cy="'+cy+'" rx="'+rx+'" ry="'+ry+'" class="'+cls+'"/>'}
+    function tag(x,y,n,cls){return Ci(x,y,30,'sp-tag '+cls)+T(x,y+13,n,'sp-n','middle')}
+    b+=ell(712,455,42,48,'sp-ok')+tag(626,455,'1','sp-g');
+    b+=ell(572,163,66,38,'sp-no')+tag(468,163,'2','sp-r');
+    b+=ell(712,600,38,44,'sp-not')+ell(712,790,38,44,'sp-not')+tag(628,600,'3','sp-w')+tag(628,790,'3','sp-w');
+    var photo='<svg class="rd rd-photo" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+esc('Back of the Gen 3.5 screen (JC4880P443): 1, the socket on the right edge marked 5V, IO28, IO27, GND, where the screen cable goes; 2, CN2 at the top, marked 5V, TX0, RX0, GND, not this one; 3, the two sockets lower on the right edge, not these either.')+'">'+b+'</svg>';
+    var k='',rows=[['1','sp-g','Screen cable here','5V, IO28, IO27, GND','on the right edge'],['2','sp-r','Not here: CN2','5V, TX0, RX0, GND','at the top. Lights the screen,','but no data reaches the PCB'],['3','sp-w','Not these either','','the two sockets lower','on the right edge']],y=24;
+    rows.forEach(function(r){k+=Ci(18,y+4,13,'sp-tag '+r[1])+T(18,y+9,r[0],'sp-n2','middle')+T(42,y+2,r[2],'rd-tb')+(r[3]?T(42,y+19,r[3],'rd-pn'):'');var o=r[3]?0:-1;for(var i=4;i<r.length;i++)k+=T(42,y+19+(i-3+o)*16,r[i],'rd-s');y+=26+16*(r.length-3+o)+18});
+    return {wide:true,min:220,panels:[photo,S(260,y-6,k,'Key: 1, screen cable here, 5V IO28 IO27 GND on the right edge. 2, not here: CN2, 5V TX0 RX0 GND, at the top. 3, not the two sockets lower on the right edge.')],
+      cap:'The back of a Gen 3.5 screen (JC4880P443), from this site\'s own build. The cable goes in the socket on the right edge printed <b>5V, IO28, IO27, GND</b>, with its 5V wire on 5V. <b>Plugged into CN2 at the top</b> (printed 5V, TX0, RX0, GND) the screen still lights and shows its home screen, because that socket also carries 5V, but it never hears the PCB: Settings, About shows the core build as 0000 and the temperature sits at 0.0 °C. Unplug the USB-C and move the plug. Go by the printed names: a different batch may lay the board out differently.'};
+  };
   D.limits=function(o){
     var b='',y=function(t){return 172-(t-80)*1.6};
     b+=R(52,16,16,166,'lm-tube',8)+Ci(60,186,12,'lm-bulb');
