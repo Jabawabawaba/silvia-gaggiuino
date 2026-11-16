@@ -122,6 +122,13 @@ figcaption{font-size:14px;color:var(--muted);margin-top:8px;max-width:90ch}
 @keyframes wflow{to{stroke-dashoffset:-17}}
 .phit{fill:transparent;cursor:pointer}
 .phit.sel{fill:var(--accent-soft);fill-opacity:.55;stroke:var(--accent);stroke-width:2}
+.jhit{fill:transparent;cursor:pointer}
+.jhit:hover{fill:var(--accent);fill-opacity:.1}
+.jhit.on{fill:var(--accent);fill-opacity:.16;stroke:var(--accent);stroke-width:2}
+.mjchips{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:8px 0 0}
+.mjchips .mj-k{font:600 11.5px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-right:4px}
+.detail button.lnk{all:unset;cursor:pointer;font:inherit;color:var(--accent);text-decoration:underline;text-underline-offset:2px}
+.detail button.lnk:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .stepper{display:inline-flex;align-items:center;gap:6px}
 .stepper button{appearance:none;border:1px solid var(--line);background:var(--surface);border-radius:999px;width:38px;height:38px;font:600 18px/1 var(--f-body);cursor:pointer;color:var(--ink)}
 .stepper span{font:500 13px var(--f-mono);color:var(--muted);min-width:9ch;text-align:center}
@@ -249,7 +256,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
       <span class="rivet" aria-hidden="true"></span>
     </div>
     <h1>Silvia Wiring Reference</h1>
-    <p class="lede">Every run in the custom harness, with its ID, ends, wire and starting length. The IDs match the printed wire labels. Tap a wire, a tag or a row to see that run on its own, tap a part to see every run that lands on it, or step through the runs with the arrows.</p>
+    <p class="lede">Every run in the custom harness, with its ID, ends, wire and starting length. The IDs match the printed wire labels. Tap a wire, a tag or a row to see that run on its own, tap a part to see every run that lands on it, tap a socket on the PCB (J7, say) to see every wire it connects to, or step through the runs with the arrows.</p>
     <div class="warn" role="note">
       <strong>Cross-check, not a validated schematic</strong>
       <p>There is no official Silvia schematic. This is redrawn from realNiche's community diagram (PCB v3.1/v4.0) with lengths from Talon's harness and the older RS diagram. Check each run against <a href="https://github.com/thejobbitt/gaggiuino_resources/tree/main/wiring_diagrams/rancilio_silvia" target="_blank" rel="noopener">realNiche's original</a> before you crimp, and pass the <a href="%%LINK_CHECKS%%" target="_blank" rel="noopener">power-on checks</a> before the machine is plugged in.</p>
@@ -273,6 +280,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     <div class="chips" id="chips" role="group" aria-label="Show circuit"></div>
     <div class="tright"><div class="stepper" role="group" aria-label="Step through the runs"><button type="button" id="m-prev" aria-label="Previous run">‹</button><span id="m-step" aria-live="polite"></span><button type="button" id="m-next" aria-label="Next run">›</button></div><span class="hint" id="hint">On a small screen, scroll the drawing sideways.</span></div>
   </div>
+  <div class="mjchips" id="mjchips" role="group" aria-label="PCB sockets: light every wire on one" hidden></div>
   <p class="msel" id="msel" aria-live="polite"></p>
 
   <figure id="fig">
@@ -408,7 +416,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
   $('conn').innerHTML=CONN.map(function(c){return '<tr><td class="id">'+c[0]+'</td><td>'+esc(c[1])+'</td><td>'+esc(c[2])+'</td><td>'+esc(c[3])+'</td></tr>'}).join('');
 
   /* state */
-  var svg=null,layer='all',sel=null,selPart=null,selSet=null,setLabel='',PARTN={},ENDS={},ORDER=[];
+  var svg=null,layer='all',sel=null,selPart=null,selSet=null,setLabel='',selJ=null,selJoined=[],PARTN={},ENDS={},ORDER=[];
   /* show the variant Your Silvia asks for: its drawing, runs, readouts and list */
   function load(){
     SH=shOn();
@@ -426,6 +434,27 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
   load();
   function atPart(id){return !!(selPart&&ENDS[id]&&ENDS[id].indexOf(selPart)>=0)}
   function inSet(id){return !!(selSet&&selSet.indexOf(id)>=0)}
+  /* a PCB socket: every run on it, and every run joined to those at a shared end (the ground chain, the rest of a
+     neutral or line node), so J7 shows all it connects to */
+  var JN={J1:'Screen',J2:'ToF sensor',J4:'Thermocouple',J5:'Hot water switch',J6:'Pressure sensor',J7:'Switches',J8:'Scales',J9:'SSR control',J10:'AC neutral',J11:'AC line',J12:'Pump',J13:'3-way valve'};
+  function jIn(t){var m=/\bJ(\d+)\b/.exec(String(t||''));return m?'J'+m[1]:null}
+  function endKey(t){return String(t||'').toLowerCase().trim()}
+  function jNet(J){
+    var rs=RUNS.filter(function(r){return ENDS[r.id]}),direct=rs.filter(function(r){return jIn(r.frm)===J||jIn(r.to)===J}).map(function(r){return r.id}),S=direct.slice(),grow=true;
+    while(grow){
+      grow=false;var ts={};
+      rs.forEach(function(r){if(S.indexOf(r.id)>=0)[r.frm,r.to].forEach(function(t){if(!jIn(t))ts[endKey(t)]=1})});
+      rs.forEach(function(r){if(S.indexOf(r.id)<0&&(ts[endKey(r.frm)]||ts[endKey(r.to)])){S.push(r.id);grow=true}});
+    }
+    return {direct:direct,joined:S.filter(function(id){return direct.indexOf(id)<0})};
+  }
+  function jList(){if(!svg)return [];return Array.prototype.map.call(svg.querySelectorAll('.jhit'),function(r){return r.getAttribute('data-j')}).filter(function(J){return jNet(J).direct.length}).sort(function(a,b){return +a.slice(1)-+b.slice(1)})}
+  function pickJ(J){
+    if(selJ===J){selJ=null;selSet=null;setLabel='';paint();return}
+    var n=jNet(J);if(!n.direct.length)return;
+    sel=null;selPart=null;layer='all';selJ=J;selJoined=n.joined;selSet=n.direct.concat(n.joined);setLabel=J+', '+(JN[J]||'socket');paint();
+    var f=svg.querySelector('.jhit[data-j="'+J+'"]');if(f)centerOn(f);
+  }
   function paint(){
     var any=layer!=='all'||!!sel||!!selPart||!!selSet;
     svg.classList.toggle('dim',any);
@@ -435,7 +464,11 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
       el.classList.toggle('off',!on);
       el.classList.toggle('sel',id===sel||inSet(id));
     });
+    if(!selSet)selJ=null;
     Array.prototype.forEach.call(svg.querySelectorAll('.phit'),function(p){p.classList.toggle('sel',p.getAttribute('data-part')===selPart)});
+    Array.prototype.forEach.call(svg.querySelectorAll('.jhit'),function(r){r.classList.toggle('on',r.getAttribute('data-j')===selJ)});
+    var js=jList(),jc=$('mjchips');jc.hidden=!js.length||(view||'mine')!=='mine';
+    jc.innerHTML=js.length?'<span class="mj-k">On the PCB</span>'+js.map(function(J){return '<button type="button" class="chip" data-mj="'+J+'" aria-pressed="'+(selJ===J)+'" title="'+esc(JN[J]||'')+'">'+J+'</button>'}).join(''):'';
     Array.prototype.forEach.call(document.querySelectorAll('tr.row'),function(tr){var id=tr.getAttribute('data-row');tr.classList.toggle('sel',id===sel||atPart(id)||inSet(id))});
     $('chips').innerHTML=LAYERS.map(function(l){
       return '<button type="button" class="chip" data-layer="'+l[0]+'" aria-pressed="'+(layer===l[0]&&!sel&&!selPart&&!selSet)+'">'+(l[2]?'<span class="sw" style="background:'+l[2]+'"></span>':'')+l[1]+'</button>';
@@ -460,6 +493,15 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
   }
   function renderDetail0(){
     var d=$('detail');
+    if(selSet&&selJ&&!sel){
+      var J=selJ,row=function(id,joined){var r=byId[id];if(!r)return '';var a=jIn(r.frm)===J?0:jIn(r.to)===J?1:-1,far=a===1?r.frm:r.to,pin=a<0?'':String(a===1?r.to:r.frm).replace(/^.*\bJ\d+\s*/,'').replace(/^\((.*)\)$/,'$1');
+        return '<div><span class="k">'+(joined?'Joined: ':'')+'<button type="button" class="lnk" data-mrun="'+id+'">'+id+'</button>'+(pin?' · '+esc(J+' '+pin):'')+'</span><span>'+esc(joined?r.frm+' → '+r.to:'to '+far)+'</span></div>'};
+      d.className='detail';d.style.borderLeftColor='var(--accent)';
+      d.innerHTML='<div class="d-head"><span class="d-id">'+esc(J)+'</span><span class="d-route">'+esc(JN[J]||'')+'</span><button type="button" class="chip" id="clear" style="margin-left:auto">Show all runs</button></div>'+
+        '<div class="d-grid">'+selSet.filter(function(id){return selJoined.indexOf(id)<0}).map(function(id){return row(id,false)}).join('')+selJoined.map(function(id){return row(id,true)}).join('')+'</div>'+
+        '<p class="d-note" style="color:var(--muted)">'+(selJoined.length?'Joined runs share an end with one of '+esc(J)+'\'s runs, so they\'re on the same connection. ':'')+'Tap an ID to see that run on its own.</p>';
+      return;
+    }
     if(selSet&&!sel){
       d.className='detail';d.style.borderLeftColor='var(--accent)';
       d.innerHTML='<div class="d-head"><span class="d-route">'+esc(setLabel||'The runs that page pointed to')+'</span><button type="button" class="chip" id="clear" style="margin-left:auto">Show all runs</button></div>'+
@@ -475,7 +517,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
         '<div><span class="k">'+ids.length+(ids.length===1?' run lands':' runs land')+' here</span><div class="ids">'+ids.map(function(id){return '<button type="button" data-mrun="'+id+'">'+id+'</button>'}).join('')+'</div></div>';
       return;
     }
-    if(!sel){d.className='detail empty';d.innerHTML='<p class="d-note" style="color:var(--muted)">Tap any wire or tag in the drawing, or an ID in the list below, to see where that run starts and ends, what goes on each end, and how long to cut it. Tap a part to see every run that lands on it, or step through the runs with the arrows above the drawing.</p>';return}
+    if(!sel){d.className='detail empty';d.innerHTML='<p class="d-note" style="color:var(--muted)">Tap any wire or tag in the drawing, or an ID in the list below, to see where that run starts and ends, what goes on each end, and how long to cut it. Tap a part to see every run that lands on it, or a socket on the PCB (J7, say) to see every wire it connects to. Step through the runs with the arrows above the drawing.</p>';return}
     var r=byId[sel];
     d.className='detail';d.style.borderLeftColor=SYSCOLOR[r.sys];
     d.innerHTML='<div class="d-head"><span class="d-id">'+r.id+'</span><span class="d-route">'+esc(r.frm)+' → '+esc(r.to)+shTag(r)+'</span><button type="button" class="chip" id="clear" style="margin-left:auto">Show all runs</button></div>'+
@@ -514,6 +556,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     if(view==='box'){facClick(e);return}
     var g=e.target.closest('[data-run]');
     if(g){pick(g.getAttribute('data-run'),false);return}
+    var jh=e.target.closest('[data-j]');if(jh){pickJ(jh.getAttribute('data-j'));return}
     var p=e.target.closest('[data-part]');
     if(p){var id=p.getAttribute('data-part');sel=null;selSet=null;selPart=(selPart===id)?null:id;paint();return}
     if(sel||selPart||selSet){sel=null;selPart=null;selSet=null;paint()}
@@ -525,6 +568,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
   $('m-prev').addEventListener('click',function(){step(-1)});
   $('m-next').addEventListener('click',function(){step(1)});
   $('chips').addEventListener('click',function(e){var b=e.target.closest('[data-layer]');if(!b)return;layer=b.getAttribute('data-layer');sel=null;selPart=null;selSet=null;paint()});
+  $('mjchips').addEventListener('click',function(e){var b=e.target.closest('[data-mj]');if(b)pickJ(b.getAttribute('data-mj'))});
   $('detail').addEventListener('click',function(e){
     if(view==='box'){if(e.target.id==='fclear'){fsel=null;facPaint();return}var fr=e.target.closest('[data-frun]');if(fr){fsel={t:'run',id:fr.getAttribute('data-frun')};facPaint()}return}
     if(e.target.id==='clear'){sel=null;selPart=null;selSet=null;paint();return}
@@ -570,6 +614,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
   function viewUI(){
     var box=view==='box';
     document.body.classList.toggle('boxview',box&&!A);
+    if(box||A)$('mjchips').hidden=true;
     Array.prototype.forEach.call(document.querySelectorAll('[data-mview]'),function(b){b.setAttribute('aria-pressed',String(b.getAttribute('data-mview')===view&&!A))});
     $('m-play').hidden=!box||!!A;
     var n=$('mview-note');

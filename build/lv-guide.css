@@ -1,0 +1,23 @@
+/* the low-voltage cable guide (lv-guide.js) */
+.lvg{margin:16px 0 0;border:1px solid var(--line);border-radius:10px;background:var(--surface);padding:14px 14px 12px}
+.lvg-head{display:flex;flex-wrap:wrap;gap:4px 16px;align-items:baseline;margin-bottom:4px}
+.lvg-head b{font-size:17px}
+.lvg-head span{color:var(--muted);font-size:14px}
+.lvg-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;border-top:1px solid var(--line);padding-top:6px;margin-top:8px}
+.lvg-svg{display:block;width:100%;min-width:560px;max-width:780px;height:auto}
+.lvg-svg text{font-family:var(--f-body);fill:var(--ink)}
+.lvg-svg .lvg-h{font-size:15px;font-weight:700}
+.lvg-svg .lvg-t{font-size:13.5px}
+.lvg-svg .lvg-s{font-size:12px;fill:var(--muted)}
+.lvg-svg .lvg-id{font-size:13px;font-weight:700}
+.lvg-svg .lvg-pin{font-size:13px;font-weight:700;font-family:var(--f-mono)}
+.lvg-svg .lvg-len{font-size:12px;fill:var(--muted)}
+.lvg-svg .lvg-w{fill:none;stroke-width:5;stroke-linejoin:round}
+.lvg-svg .lvg-wo{fill:none;stroke:var(--ink);stroke-width:6;stroke-linejoin:round}
+.lvg-svg .lvg-wi{fill:none;stroke:var(--surface);stroke-width:3;stroke-linejoin:round}
+.lvg-svg .lvg-plug{fill:var(--surface);stroke:var(--ink);stroke-width:3}
+.lvg-svg .lvg-dot{fill:var(--ink)}
+.lvg-svg .lvg-sp{fill:var(--ink)}
+.lvg-svg .lvg-fk{fill:none;stroke:var(--ink);stroke-width:4;stroke-linecap:round}
+.lvg .fine{margin-top:8px}
+@media print{.lvg-scroll{overflow:visible}.lvg-svg{min-width:0}}
