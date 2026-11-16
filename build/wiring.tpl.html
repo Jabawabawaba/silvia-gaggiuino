@@ -459,7 +459,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
   function stwOn(){return stw&&view==='box'&&!A}
   function stwParts(){return Object.keys(FAC.parts).filter(function(p){return (FAC.out||[]).indexOf(p)<0})}
   function stwLegend(){return '<span><i class="lg-sp"></i>Part that stays</span><span><i class="lg-sye"></i>Stock lead the harness can reuse, if sound</span><span>What comes out is hidden</span>'}
-  var nhw=false,NEWHW=['pcb','screen','ssr','tc','psens','shelly','nsp','pled'],NEWN={tc:'Thermocouple'};
+  var nhw=false,NEWHW=['pcb','screen','ssr','tc','psens','shelly','pled'],NEWN={tc:'Thermocouple'};
   function nhOn(){return nhw&&(view||'mine')==='mine'&&!A}
   function nhIds(){return NEWHW.filter(function(id){return svg&&svg.querySelector('.ap[data-ap="'+id+'"]')})}
   function nhName(id){return NEWN[id]||PARTN[id]||id}
