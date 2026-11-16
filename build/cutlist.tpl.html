@@ -119,7 +119,7 @@
     lv2:['6.3 mm female spade, insulated, red','two 22 AWG wires'],
     jst:['JST-PH 2.0 crimp terminal',''],
     jst3:['JST-PH 2.0 crimp terminal',''],
-    bn:['BN1.25 butt splice','LED mod 5 V tap'],
+    bn:['BN1.25 butt splice','5 V taps and LED leads'],
     bn2:['BN2 butt splice, bare','the neutral splice: AC2 on one side, AC8 and AC9 on the other'],
     fer:['Bootlace ferrule, insulated, 0.75 mm² (18 AWG)','one per wire in the Shelly\'s screw terminals']
   };
@@ -159,7 +159,7 @@
   (function(){var S=shOn()?SIG1:SIG0,ch=false;Object.keys(st.cut).forEach(function(id){if(st.cut[id]===true){if(S[id])st.cut[id]=S[id];else delete st.cut[id];ch=true}});if(ch)save()})();
   function wireRun(r){return r.gauge==='18 AWG'||r.gauge==='18 AWG green'||r.gauge==='22 AWG'}
   function active(r){
-    if(r.sys==='OPT')return st.led&&/^OP[345]$/.test(r.id);
+    if(r.sys==='OPT')return r.sh?true:st.led&&/^OP[345]$/.test(r.id);
     if(STOCK[r.id])return st.stock;
     return true;
   }
@@ -195,7 +195,7 @@
       var p=k.split('|'),mm=tot[k],buy=Math.max(1,Math.ceil(mm/500)*0.5);
       return '<tr><td><span class="swatch" style="background:'+(SWATCH[p[1]]||'transparent')+'"></span>'+esc(p[0])+' '+esc(p[1])+'</td><td class="num">'+(mm/1000).toFixed(2)+' m</td><td class="num big">'+buy.toFixed(1)+' m</td></tr>';
     }).join('');
-    $('wire-note').textContent='Colors are a suggestion: line red, heater orange, neutral blue, earth green, switch signals white, switch ground black'+(st.led?', LED 5 V yellow':'')+'. Any distinct colors work if you label both ends. 200 °C silicone wire throughout.'+(sh&&!st.stock?' With the Shelly, a reused AC1 or AC2 needs a new two-wire spade at the inlet end, shared with SH1 or SH4, and AC2\'s other end goes into the neutral splice.':'')+(missing.length?' Not counted yet, no length entered: '+missing.join(', ')+'.':'');
+    $('wire-note').textContent='Colors are a suggestion: line red, heater orange, neutral blue, earth green, switch signals white, switch ground black'+(st.led||shOn()?', LED 5 V yellow':'')+'. Any distinct colors work if you label both ends. 200 °C silicone wire throughout.'+(sh&&!st.stock?' With the Shelly, a reused AC1 or AC2 needs a new two-wire spade at the inlet end, shared with SH1 or SH4, and AC2\'s other end goes into the neutral splice.':'')+(missing.length?' Not counted yet, no length entered: '+missing.join(', ')+'.':'');
     /* connectors: shared terminals once */
     var seen={},cnt={},housings={};
     runs.forEach(function(r){

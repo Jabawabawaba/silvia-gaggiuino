@@ -36,7 +36,7 @@
         return {w:'The hot water switch, now low voltage: the signal goes on its center spade and the ground chain on its outer spade. Keep it off mains: switching the pump around the PCB would short its pump output.',
           p:'On, it joins J5 B15 to the 5 V ground and the PCB starts hot water mode. Talon confirmed on Discord that Gen 3 reads it there.'};
       case 'pwr':
-        if(sh)return {w:'The power switch, still on mains but now only a signal: AC1 brings line to the L pole\'s outer spade and SH2 takes it from the center spade to the Shelly\'s SW input. The N pole stays empty; neutral meets in the splice beside it instead.',
+        if(sh)return {w:'The power switch, still on mains but now only a signal: AC1 brings line to the L pole\'s outer spade and SH2 takes it from the center spade to the Shelly\'s SW input. The N pole stays empty; neutral meets in the splice beside it instead. So a light fed from it goes dark: the power LED (SH5, SH6) replaces it.',
           p:'The PCB has no input from it: it powers up when the Shelly switches on.'};
         return {w:'The power switch, still on mains: it breaks both line and neutral, one per pole. Supply goes on the outer spades, the loads come off the center ones.',
           p:'The PCB has no input from it: it simply powers up with the machine.'};
@@ -46,6 +46,9 @@
       case 'nsp':
         return {w:'A BN2 butt splice by the power switch, with the Shelly: inlet neutral (AC2) on one side, the neutral chain (AC8) and the element\'s neutral (AC9) on the other. Neutral isn\'t switched any more.',
           p:'J10 gets its neutral through it, by way of the chain.'};
+      case 'pled':
+        return {w:'A 5 V power LED, with the Shelly: the power switch has no neutral now, so the stock power light goes dark, and this takes its place. SH5 brings 5 V from a splice in the screen cable\'s 5V wire, SH6 returns to a splice in its GND wire. Use one with a built-in resistor, or add 1 kΩ in its + lead. From gblur\'s V6 E drawing.',
+          p:'It lights whenever the PCB has power, so whenever the Shelly has the machine on. It\'s on the PCB\'s floating 5 V side: never join it to earth.'};
       case 'lamp':
         return {w:'The heating lamp, wired across the element: it lights whenever the SSR is feeding the element.',
           p:'So it shows the PCB\'s heat pulses: on while it heats, off when the boiler is at temperature.'};

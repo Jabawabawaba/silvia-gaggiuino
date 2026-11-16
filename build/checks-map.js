@@ -9,4 +9,4 @@
     g1:'part:boiler',g4:'part:ssr',g5:'runs:AC5,AC6',g6:'part:pcb',g7:'part:boiler',g8:'run:LV10',g9:'run:LV11',g12:'',g13:'part:pcb',g14:'run:LV10',g15:'part:pwr',h2:'layer:E',
     /* the Shelly add-on */
     d8:'runs:SH3,AC4',d9:'runs:SH3,AC4',d10:'part:shelly',e11:'run:SH1',e12:'runs:SH3,AC4',e13:'runs:SH1,SH3,AC4',e14:'runs:AC1,SH2',e15:'runs:AC1,SH2',e16:'run:SH4',
-    e17:'runs:AC2,AC8,AC10,AC11,AC12',e18:'runs:AC2,AC9',f11:SWL,g16:'part:pwr',g17:'part:shelly',g18:'part:shelly',g19:'part:shelly',g20:'part:nsp',h7:'runs:SH3,AC4'};
+    e17:'runs:AC2,AC8,AC10,AC11,AC12',e18:'runs:AC2,AC9',f11:SWL,g16:'part:pwr',g17:'part:shelly',g18:'part:shelly',g19:'part:shelly',g20:'part:nsp',g21:'part:pled',h7:'runs:SH3,AC4'};

@@ -159,7 +159,7 @@ KINDS = {
 }
 HEADER = {"LV1": "J7", "LV2": "J7", "LV4": "J7", "LV3": "J5", "LV7": "J9", "LV8": "J9", "LV9": "J6"}
 COLOR = {"L": "red", "H": "orange", "N": "blue", "E": "green", "LV": "white", "LVG": "black", "S": "", "OPT": ""}
-COLOR_OVERRIDE = {"LV7": "red", "LV8": "black", "OP3": "yellow", "OP4": "yellow", "OP5": "yellow"}
+COLOR_OVERRIDE = {"LV7": "red", "LV8": "black", "OP3": "yellow", "OP4": "yellow", "OP5": "yellow", "SH5": "yellow", "SH6": "black"}
 for _r in RUNS:
     _r["k"] = KINDS[_r["id"]]
     _r["color"] = COLOR_OVERRIDE.get(_r["id"], COLOR[_r["sys"]])
@@ -207,6 +207,19 @@ SHELLY = dict(
                      gauge="18 AWG", mm=None, lenNote="Measure: it depends on where the Shelly sits",
                      ends=[SPADE2 + ", shared with AC2", FER.format("N")], k=["f2:INN", "fer"], src="gblur's V6 E drawing / this site",
                      note="Powers the Shelly itself. The machine's neutral (AC2) shares the inlet's N spade and never runs through the Shelly: Shelly's own docs warn that using its L and N terminals as a bridge doubles the current through them and can overheat it.")),
+        # a power light: with the Shelly the power switch has no neutral, so a light fed from it goes dark. gblur's V6 E
+        # drawing puts a 5 V LED on the screen's 5 V line instead; its ground goes on the switch ground chain there, and on
+        # the screen cable's GND wire here (the same PCB ground, and the splices sit together).
+        ("LV11", dict(id="SH5", sys="OPT", short="Screen 5V → Power LED +", frm="4.3 in screen cable, 5V wire (BN1.25 butt splice)",
+                      to="Power LED, + lead", gauge="22 AWG", mm=None, lenNote="Measure: from the screen cable to the power light's hole",
+                      ends=["BN1.25 butt splice into the screen cable's 5V wire", "BN1.25 butt splice to the LED's + lead"], k=["bn", "bn"],
+                      src="gblur's V6 E drawing",
+                      note="A power light that works with the Shelly: lit whenever the PCB has power, so whenever the Shelly has the machine on. Use a 5 V indicator LED with a built-in resistor, or an LED with a 1 kΩ resistor in its + lead. With the LED switch mod, it can share OP3's splice.")),
+        ("SH5", dict(id="SH6", sys="OPT", short="Power LED − → Screen GND", frm="Power LED, − lead",
+                     to="4.3 in screen cable, GND wire (BN1.25 butt splice)", gauge="22 AWG", mm=None, lenNote="Measure: as SH5",
+                     ends=["BN1.25 butt splice to the LED's − lead", "BN1.25 butt splice into the screen cable's GND wire"], k=["bn", "bn"],
+                     src="gblur's V6 E drawing / this site",
+                     note="The LED's ground. The drawing takes it from the switch ground chain; the screen cable's GND wire is the same PCB ground and sits beside SH5's splice. Never earth: the 5 V ground floats.")),
     ])
 
 
@@ -223,7 +236,7 @@ def runs_for(shelly=False):
         if rid != "AC4":  # AC4 only gets a new neighbor in its fork
             by[rid]["sh"] = "chg"
     for after, r in SHELLY["add"]:
-        r = dict(copy.deepcopy(r), sh="new", color=COLOR[r["sys"]])
+        r = dict(copy.deepcopy(r), sh="new", color=COLOR_OVERRIDE.get(r["id"], COLOR[r["sys"]]))
         i = next(i for i, x in enumerate(runs) if x["id"] == after) + 1
         runs.insert(i, r)
     return runs

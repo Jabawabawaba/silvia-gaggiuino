@@ -197,14 +197,15 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
   function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
   function selected(){
     var sys=[];GROUPS.forEach(function(g){if(prefs.groups[g[0]])sys=sys.concat(g[2])});
-    return RUNS.filter(function(r){return sys.indexOf(r.sys)>=0});
+    /* the Shelly's power LED leads (SH5, SH6) print with the low-voltage group: they're part of the Shelly build, not an option */
+    return RUNS.filter(function(r){return sys.indexOf(r.sys)>=0||(r.sys==='OPT'&&r.sh&&prefs.groups.lv)});
   }
   function rgb(c){return 'rgb('+c.join(',')+')'}
 
   function chips(){
     RUNS=shOn()?RUNS1:RUNS0;
     $('groups').innerHTML=GROUPS.map(function(g){
-      var n=RUNS.filter(function(r){return g[2].indexOf(r.sys)>=0}).length;
+      var n=RUNS.filter(function(r){return g[2].indexOf(r.sys)>=0?!(r.sys==='OPT'&&r.sh):g[0]==='lv'&&r.sys==='OPT'&&!!r.sh}).length;
       return '<label class="chip"><input type="checkbox" id="g-'+g[0]+'" data-g="'+g[0]+'"'+(prefs.groups[g[0]]?' checked':'')+'><span class="box" aria-hidden="true"></span>'+g[1]+' <span class="n">'+n+'</span></label>';
     }).join('');
   }
@@ -247,7 +248,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     N:['Neutral','The mains return to the inlet. Still mains.'],E:['Earth','Protective earth to the boiler and the 3-way valve.'],
     LV:['Switch signal','From the PCB to the brew, steam and hot water switches.'],LVG:['Switch ground','The ground chain across the three switches.'],
     S:['SSR control and sensors','The PCB to the SSR\'s control side, the pressure sensor, the thermocouple and the screen.'],
-    OPT:['Optional add-ons','The scales, the ToF sensor and the LED switch mod, if you fit them.']};
+    OPT:['Optional and low-voltage add-ons','The scales, the ToF sensor, the LED switch mod and the Shelly\'s power LED, if you fit them.']};
   function keyHtml(runs){
     var cell=null,has={};
     runs.forEach(function(r){has[r.sys]=1;if(cell)return;var e=LabelCore.ends(r);[0,1].forEach(function(i){

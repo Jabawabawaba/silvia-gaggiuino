@@ -57,6 +57,9 @@ PATHS_SH.update({
     "SH2": "M708,75 H720 V330",
     "SH3": "M680,360 H344 V452 H298 V424",
     "SH4": "M783,790 V436 H750 V420",
+    # the power LED, on two splices in the screen cable (5V and GND)
+    "SH5": "M1070,202 H1196 V44 H946 V68",
+    "SH6": "M1010,202 H946 V152",
 })
 
 TAGS = {
@@ -70,7 +73,8 @@ TAGS = {
 }
 
 TAGS_SH = {k: v for k, v in TAGS.items() if k != "AC3"}
-TAGS_SH.update({"AC2": (789, 380), "SH1": (680, 436), "SH2": (720, 240), "SH3": (480, 360), "SH4": (766, 436)})
+TAGS_SH.update({"AC2": (789, 380), "SH1": (680, 436), "SH2": (720, 240), "SH3": (480, 360), "SH4": (766, 436),
+                "SH5": (1196, 124), "SH6": (972, 202)})
 
 SYS_CLASS = {r["id"]: r["sys"] for r in RUNS + runs_for(True)}
 
@@ -84,12 +88,13 @@ PARTS = [
     ("inlet", "Power inlet", (630, 790, 812, 840)), ("psens", "Pressure sensor and tee", (818, 560, 872, 650)),
     ("screen", "4.3 in screen", (980, 60, 1180, 172)), ("pcb", "Gaggiuino PCB", (930, 232, 1200, 828)),
 ]
-PARTS_SH = PARTS + [("shelly", "Shelly smart relay", (676, 326, 774, 424)), ("nsp", "BN2 neutral splice", (744, 128, 796, 172))]
+PARTS_SH = PARTS + [("shelly", "Shelly smart relay", (676, 326, 774, 424)), ("nsp", "BN2 neutral splice", (744, 128, 796, 172)),
+                    ("pled", "Power LED (5 V)", (918, 56, 974, 164))]
 PART_WORDS = [("Power inlet", "inlet"), ("Power switch", "pwr"), ("SSR", "ssr"), ("Safety thermostat", "boiler"),
               ("Boiler", "boiler"), ("Thermocouple", "boiler"), ("Heating lamp", "lamp"), ("Pump", "pump"),
               ("Solenoid", "sol"), ("PCB", "pcb"), ("Steam switch", "steam"), ("Brew switch", "brew"),
               ("Hot water switch", "hw"), ("Pressure", "psens"), ("4.3 in", "screen"), ("Shelly", "shelly"),
-              ("BN2 neutral splice", "nsp")]
+              ("BN2 neutral splice", "nsp"), ("Power LED", "pled")]
 
 
 def part_of(end):
@@ -141,7 +146,7 @@ def build(sh=False):
     o = [f'<svg viewBox="0 0 {W} {H}" class="dia{" dia-sh" if sh else ""}" role="img" aria-labelledby="dia-title{sfx} dia-desc{sfx}" xmlns="http://www.w3.org/2000/svg">']
     if sh:
         o.append('<title id="dia-title-sh">Silvia Gaggiuino harness with the Shelly smart relay, run by run</title>')
-        o.append('<desc id="dia-desc-sh">As realNiche\'s diagram, with the Shelly add-on: the inlet\'s line feeds the Shelly, whose O output feeds SSR terminal 1 and PCB J11. The power switch\'s line pole only feeds the Shelly\'s SW input, and its neutral pole is unused: inlet neutral runs to a splice by the switch, where the neutral chain and the element\'s neutral start. The Shelly takes its own leads from the inlet.</desc>')
+        o.append('<desc id="dia-desc-sh">As realNiche\'s diagram, with the Shelly add-on: the inlet\'s line feeds the Shelly, whose O output feeds SSR terminal 1 and PCB J11. The power switch\'s line pole only feeds the Shelly\'s SW input, and its neutral pole is unused: inlet neutral runs to a splice by the switch, where the neutral chain and the element\'s neutral start. The Shelly takes its own leads from the inlet. A 5 V power LED, spliced into the screen cable\'s 5V and GND wires, lights whenever the PCB has power.</desc>')
         o.append(_build_rest(sh, paths, tags, parts, ends))
         return "".join(o)
     o.append('<title id="dia-title">Silvia Gaggiuino harness, run by run</title>')
@@ -285,6 +290,15 @@ def part_svgs(sh=False, factory=False):
         o.append(text(728, 374, "Shelly", "nm") + text(728, 388, "1PM", "tiny"))
         P.append(("shelly", "".join(o)))
         P.append(("nsp", '<rect x="780" y="134" width="12" height="32" rx="2" class="splice"/>' + text(774, 158, "BN2", "tiny", "end")))
+        # the power LED, with its two butt splices in the screen cable
+        o = ['<rect x="922" y="68" width="48" height="84" rx="6" class="box"/>']
+        o.append('<circle cx="946" cy="96" r="9" class="term"/>')
+        o.append(text(958, 82, "+", "tiny", "start") + text(958, 148, "−", "tiny", "start"))
+        o.append(text(946, 122, "Power", "tiny") + text(946, 134, "LED 5 V", "tiny"))
+        for x in (1010, 1070):
+            o.append(f'<rect x="{x - 5}" y="194" width="10" height="16" rx="2" class="splice"/>')
+        o.append(text(1040, 222, "splices", "tiny"))
+        P.append(("pled", "".join(o)))
     return P
 
 
@@ -308,7 +322,7 @@ def _build_rest(sh, paths, tags, parts, ends):
              "G1", "G2", "AC2", "AC8", "AC9", "AC10", "AC11", "AC12", "AC5", "AC6", "AC7",
              "AC1", "AC3", "AC4", "AC13", "AC14"]
     if sh:
-        order = [x for x in order if x != "AC3"] + ["SH4", "SH1", "SH2", "SH3"]
+        order = [x for x in order if x != "AC3"] + ["SH4", "SH1", "SH2", "SH3", "SH5", "SH6"]
     for rid in order:
         ds = paths[rid]
         if isinstance(ds, str):
