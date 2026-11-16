@@ -752,7 +752,8 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     function chips(ids){return ids.map(function(id){return '<button type="button" class="rchip" data-mgo="'+esc(id)+'" title="See it in your harness">'+esc(id)+'</button>'}).join(' ')}
     R.ends.forEach(function(e){
       var h;
-      if(e.k==='bt'||e.k==='st')h=esc(lc1((FAC.parts[e.k]||{}).note||'comes out'));
+      if(e.k==='bt')h='comes out: the PCB takes over brew temperature, reading a thermocouple in one of the boiler-top holes a thermostat\'s clamp used';
+      else if(e.k==='st')h='the harness doesn\'t wire it, so it can stay in the boiler unwired or come out';
       else if(e.now.length)h='now '+chips(e.now);
       else h='nothing from the harness lands here';
       items.push('<li><b>'+esc(e.t)+':</b> '+h+'</li>');
