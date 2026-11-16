@@ -1,0 +1,22 @@
+/* the change player's controls and the per-wire compare (shared by both sites: keep the two copies identical) */
+.mctl{display:flex;flex-direction:column;align-items:stretch;gap:8px;margin-top:10px}
+.mctl-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px}
+.mbtn[disabled]{opacity:.45;cursor:default}
+.mscrub{flex:1 1 160px;min-width:120px;accent-color:var(--accent);height:28px;margin:0}
+.mpos{font:600 13px var(--f-body);color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.ma-cap .ma-k{display:block;font-size:12px;font-weight:600;opacity:.72;margin-bottom:1px}
+.mcmp{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;margin:0 0 10px}
+.mcmp[hidden]{display:none}
+.mcmp-nav{display:inline-flex;align-items:center;gap:6px}
+.mcmp-nav .mbtn{padding:7px 12px}
+#cmp-id{font:600 13px var(--f-body);color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.d-after{margin-top:10px;padding-top:10px;border-top:1px dashed var(--line)}
+.d-after ul{margin:4px 0 0;padding-left:18px}
+.d-after li{margin:3px 0}
+.d-rel{margin:8px 0 0;color:var(--muted);font-size:14px}
+.d-rel .k,.d-after>.k{margin-right:6px}
+.rchip{appearance:none;border:1px solid var(--line);background:var(--surface-2,var(--surface));color:var(--ink);border-radius:6px;padding:1px 7px;font:600 13px var(--f-mono,ui-monospace,monospace);cursor:pointer;vertical-align:baseline}
+.rchip:hover{border-color:var(--accent)}
+.chip.cmpb{border-color:var(--accent);color:var(--accent-ink,var(--accent))}
+@media (pointer:coarse){.rchip{min-height:32px;padding:4px 9px}}
+@media print{.mcmp{display:none!important}}

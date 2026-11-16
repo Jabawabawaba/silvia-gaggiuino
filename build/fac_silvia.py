@@ -5,7 +5,8 @@ factory=True), so every machine part sits where the harness drawing has it, and 
 small grid router (the Gaggia site's, wiring_map.py). It returns the drawing and what the page needs to show it:
 each connection's ends, color and job, and each part's name and note."""
 import heapq, json, os
-from wiring_svg import W, H, part_svgs, esc, text, spade
+from wiring_svg import W, H, part_svgs, esc, text, spade, PATHS, PATHS_SH
+import re
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 G = 8  # router grid, px
@@ -236,6 +237,43 @@ def fac_thermostat(pid, cx, cy, w1, w2):
     return s
 
 
+def path_ends(d):
+    """the first and last points of an orthogonal path"""
+    x = y = None
+    pts = []
+    for c, a, b in re.findall(r"([MHVL])\s*([-\d.]+)(?:,([-\d.]+))?", d):
+        if c in "ML":
+            x, y = float(a), float(b)
+        elif c == "H":
+            x = float(a)
+        else:
+            y = float(a)
+        pts.append((x, y))
+    return [pts[0], pts[-1]]
+
+
+def relations(m, runs, names, paths, reuse, tol=10):
+    """for each stock connection, what the harness puts at each of its ends: the harness runs whose drawn path starts
+    or ends within tol px of that terminal (both drawings share one layout). For the Out of the box view's Compare."""
+    ends = {}
+    for rid, ds in paths.items():
+        for d in ([ds] if isinstance(ds, str) else ds):
+            ends.setdefault(rid, []).extend(path_ends(d))
+    rel = {}
+    for r in runs:
+        es = []
+        for t in (r["a"], r["b"]):
+            part = m.term[t][3]
+            x, y = m.term[t][:2]
+            now = [rid for rid, pts in ends.items() if any(abs(px - x) <= tol and abs(py - y) <= tol for px, py in pts)]
+            es.append({"t": names[t], "k": part if part in ("bt", "st") else "term", "now": now})
+        o = {"ends": es}
+        if r["id"] in reuse:
+            o["nb"] = reuse[r["id"]]
+        rel[r["id"]] = o
+    return rel
+
+
 def build():
     fd = json.load(open(os.path.join(HERE, "factory-data.json")))
     m = Map("silvia-factory")
@@ -348,11 +386,12 @@ def build():
         names[pid + ":Nin"] = nm + ", neutral pole, supply side"
         names[pid + ":Nout"] = nm + ", neutral pole, load side"
     meta = {r["id"]: {"color": r["color"], "sys": r["sys"], "what": r["what"], "frm": names[r["a"]], "to": names[r["b"]]} for r in runs}
+    rel = [relations(m, runs, names, PATHS, fd.get("reuse", {})), relations(m, runs, names, PATHS_SH, fd.get("reuse", {}))]
     ends = {r["id"]: [pof[r["a"]], pof[r["b"]]] for r in runs}
     return {"svg": "".join(o), "runs": meta, "ends": ends,
             "parts": {pid: {"name": NAMES[pid], "note": NOTES.get(pid, "")} for pid in boxes},
             "name": fd["name"], "src": fd["src"], "srcname": fd["srcname"], "src2": fd["src2"], "src2name": fd["src2name"],
-            "reuse": fd.get("reuse", {}),
+            "reuse": fd.get("reuse", {}), "rel": rel,
             "out": ["bt", "st"]}
 
 

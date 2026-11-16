@@ -175,13 +175,10 @@ figcaption{font-size:14px;color:var(--muted);margin-top:8px;max-width:90ch}
 .mplay-i::after{content:"";position:absolute;left:8px;top:6px;border-left:8px solid currentColor;border-top:5px solid transparent;border-bottom:5px solid transparent}
 .ma-cap{display:inline-block;margin:0 0 10px;max-width:100%;padding:7px 14px;border-radius:999px;background:var(--ink);color:var(--bg);
   font:600 14px/1.35 var(--f-body);box-shadow:0 4px 14px -8px rgba(0,0,0,.4)}
-.mctl{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;margin-top:10px}
 .mbtn{appearance:none;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:7px 14px;min-height:38px;font:600 13.5px var(--f-body);cursor:pointer}
 .mbtn.primary{background:var(--ink);border-color:var(--ink);color:var(--bg)}
-.mprog{flex:1 1 140px;height:4px;border-radius:2px;background:var(--line);overflow:hidden;min-width:100px}
-.mprog span{display:block;height:100%;width:0;background:var(--accent)}
 .ma-cap[hidden],.mview .mseg2[hidden],.mplay[hidden],.mctl[hidden],.mbtn[hidden]{display:none}
-body.boxview #maptop,body.animating #maptop,body.animating #msel,body.animating #detail,body.animating .scroll + .swipe-hint{display:none}
+body.boxview #maptop,body.animating #maptop,body.comparing #maptop,body.animating #msel,body.animating #detail,body.animating .scroll + .swipe-hint{display:none}
 .scroll.fit .dia{min-width:0}
 /* phones and small tablets: Whole drawing shrinks it to the screen's width; Close up is full size and scrolls */
 .mzoom{display:none;margin:0 0 8px}
@@ -189,6 +186,7 @@ body.boxview #maptop,body.animating #maptop,body.animating #msel,body.animating 
 .scroll.whole .dia{min-width:0}
 .scroll.whole + .swipe-hint{display:none}
 body.animating .mzoom{display:none}
+body.comparing #mlegend{display:none}
 @media print{.mzoom{display:none!important}}
 .dia .tiny.ring{paint-order:stroke;stroke:var(--surface);stroke-width:3.5px;stroke-linejoin:round}
 .dia .ma-comet .mc-core{fill:#fff}
@@ -240,6 +238,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
   .runs-t td.len{white-space:normal}
   .runs-t td.len small{display:inline;margin-left:6px}
 }
+%%INCLUDE:change-player.css%%
 </style>
 
 <div class="wrap">
@@ -277,16 +276,15 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
   <p class="msel" id="msel" aria-live="polite"></p>
 
   <figure id="fig">
+    <div class="mcmp" id="mcmp" hidden>
+      <div class="mseg2" role="group" aria-label="Which wiring to show for this wire"><button type="button" data-cmpv="box" aria-pressed="true">Out of the box</button><button type="button" data-cmpv="after" aria-pressed="false">After the install</button></div>
+      <button type="button" class="mbtn" id="cmp-play">Play this change</button>
+      <span class="mcmp-nav"><button type="button" class="mbtn" id="cmp-prev" aria-label="Compare the previous stock wire">‹</button><span id="cmp-id" aria-live="polite"></span><button type="button" class="mbtn" id="cmp-next" aria-label="Compare the next stock wire">›</button></span>
+      <button type="button" class="mbtn" id="cmp-close">Back to Out of the box</button>
+    </div>
     <p class="ma-cap" id="ma-cap" aria-live="polite" hidden></p>
     <div class="mseg2 mzoom" id="mzoom" role="group" aria-label="Drawing size"><button type="button" data-mzoom="close" aria-pressed="true">Close up</button><button type="button" data-mzoom="whole" aria-pressed="false">Whole drawing</button></div><div class="scroll" id="scroll">%%SVG%%</div><template id="svg-sh">%%SVG_SH%%</template>
-    <div class="mctl" id="mctl" hidden>
-      <button type="button" class="mbtn" id="ma-pause" aria-pressed="false">Pause</button>
-      <button type="button" class="mbtn" id="ma-replay">Replay</button>
-      <button type="button" class="mbtn" id="ma-skip">Skip to the end</button>
-      <button type="button" class="mbtn primary" id="ma-done" hidden>Back to the drawing</button>
-      <div class="mseg2" role="group" aria-label="Speed"><button type="button" data-speed="1" aria-pressed="true">1×</button><button type="button" data-speed="2" aria-pressed="false">2×</button></div>
-      <div class="mprog" aria-hidden="true"><span id="ma-bar"></span></div>
-    </div>
+%%INCLUDE:change-player.html%%
     <div class="legend" id="mlegend" aria-label="Legend">
       <span><i class="lg-L"></i>Line, incl. PCB pump and valve outputs</span>
       <span><i class="lg-H"></i>Heater line after the SSR</span>
@@ -360,6 +358,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
 (function(){
 %%INCLUDE:wiring-refs.js%%
 %%INCLUDE:wiring-parts.js%%
+%%INCLUDE:change-player.js%%
   /* the harness as drawn, and with the Shelly add-on, which shows once it's chosen in Your Silvia */
   var VAR=[{runs:%%RUNS%%,svg:''},{runs:%%RUNS_SH%%,svg:''}];
   /* the Silvia as it leaves the factory (fac_silvia.py): its stock circuit on this drawing's layout */
@@ -511,7 +510,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     pick(ORDER[i],false,true);centerOn(svg.querySelector('.run[data-run="'+ORDER[i]+'"]'));
   }
   $('scroll').addEventListener('click',function(e){
-    if(A)return;
+    if(A){var fg=A==='cmp'&&e.target.closest('.st-fw [data-run]');if(fg&&fg.getAttribute('data-run')!==cmp)compare(fg.getAttribute('data-run'),'play');return}
     if(view==='box'){facClick(e);return}
     var g=e.target.closest('[data-run]');
     if(g){pick(g.getAttribute('data-run'),false);return}
@@ -606,7 +605,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     });
     Array.prototype.forEach.call(svg.querySelectorAll('.phit'),function(p){p.classList.toggle('sel',!!fsel&&fsel.t==='part'&&p.getAttribute('data-part')===fsel.id)});
     var ms=$('msel'),d=$('detail');
-    if(!fsel){ms.textContent='';d.className='detail empty';d.style.borderLeftColor='';d.innerHTML='<p class="d-note" style="color:var(--muted)">Tap a stock wire to see where it runs and what it does, or a part to see every stock wire that lands on it.</p>';return}
+    if(!fsel){ms.textContent='';d.className='detail empty';d.style.borderLeftColor='';d.innerHTML='<p class="d-note" style="color:var(--muted)">Tap a stock wire to see where it runs, what it does and what the harness puts in its place, then Compare to switch between the two. Tap a part to see every stock wire that lands on it.</p>';return}
     if(fsel.t==='part'){
       var p=FAC.parts[fsel.id]||{name:fsel.id,note:''},ids=Object.keys(FAC.ends).filter(function(id){return FAC.ends[id].indexOf(fsel.id)>=0});
       ms.innerHTML='<span class="rt">'+esc(p.name)+'</span>: '+ids.length+(ids.length===1?' stock wire lands here':' stock wires land here');
@@ -618,146 +617,205 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     var r=FAC.runs[fsel.id];
     ms.innerHTML='<b>'+esc(fsel.id)+'</b><span class="rt">'+esc(r.frm+' → '+r.to)+'</span> · stock wire, '+esc(CNAME[r.color]||r.color);
     d.className='detail';d.style.borderLeftColor=SYSCOLOR[r.sys]||'var(--accent)';
-    d.innerHTML='<div class="d-head"><span class="d-id">'+esc(fsel.id)+'</span><span class="d-route">'+esc(r.frm)+' → '+esc(r.to)+'</span><button type="button" class="chip" id="fclear" style="margin-left:auto">Show everything</button></div>'+
+    d.innerHTML='<div class="d-head"><span class="d-id">'+esc(fsel.id)+'</span><span class="d-route">'+esc(r.frm)+' → '+esc(r.to)+'</span><span style="margin-left:auto;display:inline-flex;gap:8px;flex-wrap:wrap"><button type="button" class="chip cmpb" data-mcmp="'+esc(fsel.id)+'">Compare with your harness</button><button type="button" class="chip" id="fclear">Show everything</button></span></div>'+
       '<div class="d-grid"><div><span class="k">Circuit</span><span><span class="sysdot" style="background:'+(SYSCOLOR[r.sys]||'var(--muted)')+'"></span>'+esc(FSYS[r.sys]||r.sys)+'</span></div>'+
       '<div><span class="k">Stock color</span><span><span class="swc" style="background:'+(COLHEX[r.color]||'var(--muted)')+'"></span>'+esc(CNAME[r.color]||r.color)+'</span></div>'+
       '<div><span class="k">With the new harness</span><span>'+(FAC.reuse&&FAC.reuse[fsel.id]?'Can stay: if it\'s sound, the harness reuses it as '+esc(FAC.reuse[fsel.id]):'Comes out: the harness replaces it')+'</span></div></div>'+
-      (r.what?'<p class="d-note">'+esc(r.what)+'.</p>':'');
+      (r.what?'<p class="d-note">'+esc(r.what)+'.</p>':'')+afterHtml(fsel.id);
   }
-  function reduced(){try{return window.matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){return false}}
+  /* the stage: Show the change takes the stock wires off one at a time, then puts the harness in one at a time, both
+     in the runbook's order (ChangePlayer runs it: pause, a quarter speed, back and forward a step, or drag to any
+     point). Compare does the same for one stock wire: that wire, then what the harness puts at each of its ends
+     (FAC.rel, from fac_silvia.py), everything else faint, and a switch between the two. */
+  var cmp=null,mk=ChangePlayer.mk;
   function stopAnim(){
     if(!A)return;
-    cancelAnimationFrame(A.raf);A=null;
-    $('scroll').classList.remove('fit');$('mctl').hidden=true;$('ma-cap').hidden=true;document.body.classList.remove('animating');
+    ChangePlayer.stop();A=null;cmp=null;
+    $('scroll').classList.remove('fit');document.body.classList.remove('animating','comparing');$('mcmp').hidden=true;
   }
-  function ctlUI(){
-    if(!A)return;
-    var done=A.t>=A.end;
-    $('ma-pause').hidden=done;$('ma-pause').textContent=A.paused?'Play':'Pause';$('ma-pause').setAttribute('aria-pressed',String(A.paused));
-    $('ma-skip').hidden=done;$('ma-done').hidden=!done;
-    Array.prototype.forEach.call($('mctl').querySelectorAll('[data-speed]'),function(b){b.setAttribute('aria-pressed',String(Number(b.getAttribute('data-speed'))===A.speed))});
-  }
-  function ease(p){return p<.5?4*p*p*p:1-Math.pow(-2*p+2,3)/2}
-  function clamp(p){return p<0?0:p>1?1:p}
-  function mk(tag,attrs,parent){var n=document.createElementNS(NS,tag);for(var k in attrs)n.setAttribute(k,attrs[k]);if(parent)parent.appendChild(n);return n}
+  function colOf(g){return SYSCOLOR[(/ s-([A-Z]+)/.exec(' '+g.getAttribute('class'))||[])[1]]||'var(--accent)'}
   function parseSvg(str){var d=document.createElement('div');d.innerHTML=str;return d.querySelector('svg')}
-  function boxOf(g){try{var b=g.getBBox();return {x:b.x,y:b.y,w:b.width,h:b.height,cx:b.x+b.width/2,cy:b.y+b.height/2}}catch(e){return null}}
-  function setScale(g,b,k){if(b)g.setAttribute('transform','translate('+b.cx+' '+b.cy+') scale('+k+') translate('+(-b.cx)+' '+(-b.cy)+')')}
-  function play(){
-    var keepSpeed=A&&A.speed||1;
-    stopAnim();
-    var sc=$('scroll'),RM=reduced();
+  function stage(label){
     var fs=parseSvg(FAC.svg),ts=parseSvg(VAR[SH?1:0].svg);
-    var st=mk('svg',{viewBox:'0 0 1240 860','class':'dia stage',role:'img','aria-label':'The stock wiring turning into the new harness'});
+    var st=mk('svg',{viewBox:'0 0 1240 860','class':'dia stage',role:'img','aria-label':label});
     var defs=mk('defs',{},st),fl=mk('filter',{id:'ma-glow',x:'-50%',y:'-50%',width:'200%',height:'200%'},defs);mk('feGaussianBlur',{stdDeviation:'3.2'},fl);
     var gTP=mk('g',{'class':'st-tp'},st),gFP=mk('g',{'class':'st-fp'},st),gFW=mk('g',{'class':'st-fw'},st),gTW=mk('g',{'class':'st-tw'},st),gTG=mk('g',{'class':'st-tg'},st),gFX=mk('g',{'class':'st-fx'},st);
-    var fparts={},tparts={},fw={},tw=[],tags={};
-    Array.prototype.slice.call(ts.querySelectorAll('.parts > .ap')).forEach(function(g){tparts[g.getAttribute('data-ap')]=g;gTP.appendChild(g)});
-    Array.prototype.slice.call(fs.querySelectorAll('.parts > .ap')).forEach(function(g){fparts[g.getAttribute('data-ap')]=g;gFP.appendChild(g)});
-    Array.prototype.slice.call(fs.querySelectorAll('.wires > .run')).forEach(function(g){g.classList.remove('off','sel');fw[g.getAttribute('data-run')]=g;gFW.appendChild(g)});
-    Array.prototype.slice.call(ts.querySelectorAll('.wires > .run')).forEach(function(g){tw.push(g);gTW.appendChild(g)});
-    Array.prototype.slice.call(ts.querySelectorAll('.tags > .tag')).forEach(function(g){tags[g.getAttribute('data-run')]=g;gTG.appendChild(g)});
-    sc.innerHTML='';sc.appendChild(st);sc.classList.add('fit');sc.scrollLeft=0;svg=null;document.body.classList.add('animating');
-    $('m-play').hidden=true;$('mctl').hidden=false;$('ma-cap').hidden=false;
-    Object.keys(tparts).forEach(function(id){tparts[id].style.opacity=0});
-    Object.keys(tags).forEach(function(id){tags[id].style.opacity=0});
-    /* every stroke keeps its own length: a sensor cable's legs differ */
-    function plen(pth){if(pth._L==null){try{pth._L=pth.getTotalLength()}catch(e){pth._L=400}}return pth._L}
-    function strokes(g){return Array.prototype.slice.call(g.querySelectorAll('.wire,.halo'))}
-    function lenOf(g){var m=0;Array.prototype.forEach.call(g.querySelectorAll('.wire'),function(w){m=Math.max(m,plen(w))});return m||400}
-    function dash(pth,frac,sign){var L=plen(pth);pth.style.strokeDasharray=L+' '+L;pth.style.strokeDashoffset=sign*L*frac}
-    tw.forEach(function(g){g._L=lenOf(g);strokes(g).forEach(function(pth){dash(pth,1,1)});if(RM)g.style.opacity=0});
-    var tl=[],cap=[];
-    function at(s2,d,fn){tl.push({s:s2,d:Math.max(d,.001),fn:fn,p:-1})}
-    function say(s2,txt){cap.push({s:s2,txt:txt})}
-    function colOf(g){return SYSCOLOR[(/ s-([A-Z]+)/.exec(' '+g.getAttribute('class'))||[])[1]]||'var(--accent)'}
-    function comet(c){var k=mk('g',{'class':'ma-comet'},gFX);mk('circle',{r:'7','class':'mc-glow',filter:'url(#ma-glow)',style:'fill:'+c},k);mk('circle',{r:'2.6','class':'mc-core'},k);k.style.opacity=0;return k}
-    function ring(x,y,c,s2){var n=null;at(s2,.55,function(p){if(!n)n=mk('circle',{cx:x,cy:y,r:'4','class':'ma-ring',style:'stroke:'+c},gFX);n.setAttribute('r',4+12*ease(p));n.style.opacity=(1-p)*.9;if(p>=1&&n.parentNode)n.parentNode.removeChild(n)})}
-    /* a stock wire leaves: it lights, then unzips with a bright head */
-    function wireOut(g,s2){
-      var L=lenOf(g),ps=strokes(g),halo=g.querySelector('.halo'),wire=g.querySelector('.wire'),c=colOf(g),k=null;
-      if(RM){at(s2,.4,function(p){g.style.opacity=1-p});return}
-      at(s2,.3,function(p){halo.style.stroke=c;halo.style.opacity=.45*p});
-      at(s2+.3,.6,function(p){
-        var e=ease(p);ps.forEach(function(pth){dash(pth,e,-1)});
-        if(!k)k=comet(c);var pt=wire.getPointAtLength(L*e);k.setAttribute('transform','translate('+pt.x+' '+pt.y+')');k.style.opacity=p<.95?1:0;
-        if(p>=1){g.style.opacity=0;if(k.parentNode)k.parentNode.removeChild(k)}
-      });
-      try{var q=wire.getPointAtLength(L);ring(q.x,q.y,c,s2+.88)}catch(e){}
-    }
-    /* a harness run arrives: drawn from its first end with a bright head, then a pulse where it lands */
-    function wireIn(g,s2){
-      var wire=g.querySelector('.wire'),L=plen(wire),ps=strokes(g),c=colOf(g),k=null,dur=Math.min(1.1,.45+g._L/1400),id=g.getAttribute('data-run');
-      if(RM){at(s2,.5,function(p){g.style.opacity=p;if(p>=1)ps.forEach(function(pth){pth.style.strokeDasharray='';pth.style.strokeDashoffset=''});if(tags[id])tags[id].style.opacity=p});return s2+.5}
-      at(s2,dur,function(p){
-        var e=ease(p);ps.forEach(function(pth){pth.style.strokeDashoffset=plen(pth)*(1-e)});
-        if(!k)k=comet(c);var pt=wire.getPointAtLength(L*e);k.setAttribute('transform','translate('+pt.x+' '+pt.y+')');k.style.opacity=p<.97?1:0;
-        if(p>=1){ps.forEach(function(pth){pth.style.strokeDasharray='';pth.style.strokeDashoffset=''});if(k.parentNode)k.parentNode.removeChild(k)}
-      });
-      try{var q=wire.getPointAtLength(L);ring(q.x,q.y,c,s2+dur-.05)}catch(e){}
-      if(tags[id])at(s2+dur*.6,.35,function(p){tags[id].style.opacity=p});
-      return s2+dur;
-    }
-    function partOut(g,s2,d){var b=boxOf(g);at(s2,d,function(p){var e=ease(p);g.style.opacity=1-e;if(!RM)setScale(g,b,1-.12*e)})}
-    function partIn(g,s2,d,ringIt){var b=boxOf(g);if(!RM)setScale(g,b,.9);at(s2,d,function(p){var e=ease(p);g.style.opacity=e;if(!RM)setScale(g,b,.9+.1*e)});if(ringIt&&b&&!RM){var n=null;at(s2+d*.4,.7,function(p){if(!n)n=mk('rect',{x:b.x,y:b.y,width:b.w,height:b.h,rx:'10','class':'ma-pring'},gFX);var gr=10*ease(p);n.setAttribute('x',b.x-gr);n.setAttribute('y',b.y-gr);n.setAttribute('width',b.w+2*gr);n.setAttribute('height',b.h+2*gr);n.style.opacity=(1-p)*.85;if(p>=1&&n.parentNode)n.parentNode.removeChild(n)})}}
-    function fade(g,s2,d,a,b2){at(s2,d,function(p){g.style.opacity=a+(b2-a)*ease(p)})}
-    /* ---- the script ---- */
-    var t=0,ids=Object.keys(fw);
-    say(0,'Out of the box: the Silvia\'s stock circuit, '+ids.length+' connections');
-    t=1.0;
-    say(t,'Unplugging the stock wiring');
-    var goes=ids.map(function(id){var g=fw[id],b=null;try{b=g.querySelector('.wire').getBBox()}catch(e){}return {g:g,k:b?(b.x+b.width/2)+(b.y+b.height/2)*1.2:0}}).sort(function(a,b){return a.k-b.k});
-    var step=RM?0:Math.min(.09,2.6/Math.max(1,goes.length));
-    goes.forEach(function(x,i){wireOut(x.g,t+i*step)});
-    t+=goes.length*step+(RM?.5:1.0);
-    var outs=['bt','st'].filter(function(id){return fparts[id]});
-    var common=Object.keys(fparts).filter(function(id){return tparts[id]});
-    var ins=Object.keys(tparts).filter(function(id){return !fparts[id]});
-    var RANK={pcb:0,screen:1,ssr:2,tc:3,psens:4,shelly:5,nsp:6,pled:7};
-    ins.sort(function(a,b){return (RANK[a]!=null?RANK[a]:9)-(RANK[b]!=null?RANK[b]:9)});
-    say(t,'Out: the brew thermostat. The steam thermostat stays unwired or comes out');
-    outs.forEach(function(id,i){partOut(fparts[id],t+i*(RM?0:.08),.6)});
-    t+=.6+outs.length*(RM?0:.08)+.2;
-    common.forEach(function(id){fade(tparts[id],t,.6,0,1);fade(fparts[id],t,.6,1,0)});
-    say(t,'In: the Gaggiuino PCB, screen, SSR, thermocouple and pressure sensor'+(ins.indexOf('shelly')>=0?', and the Shelly':''));
-    ins.forEach(function(id,i){partIn(tparts[id],t+i*(RM?0:.1),.55,id!=='nsp')});
-    t+=.55+ins.length*(RM?0:.1)+.3;
-    var GROUPS=[['L','Line'],['H','Heater line'],['N','Neutral'],['E','Earth'],['LV','Switch signals'],['S','SSR control and sensors'],['OPT','the power LED']];
-    var bySys={};tw.forEach(function(g){var m=/ s-([A-Z]+)/.exec(' '+g.getAttribute('class'));var s2=m?m[1]:'S';if(s2==='LVG')s2='LV';(bySys[s2]=bySys[s2]||[]).push(g)});
-    GROUPS.forEach(function(gr){
-      var list=bySys[gr[0]];if(!list||!list.length)return;
-      say(t,'Wiring in the new harness: '+gr[1].toLowerCase());
-      var gap=RM?0:Math.min(.13,2/list.length),last=t;
-      list.forEach(function(g,i){last=Math.max(last,wireIn(g,t+i*gap))});
-      t=(RM?last:t+list.length*gap+.45)+.1;
-    });
-    if(!RM)at(t,1.8,function(p){st.classList.toggle('flowing',p>0&&p<1)});
-    say(t,'Your harness: '+tw.length+' runs'+(SH?', with the Shelly':''));
-    t+=RM?.5:1.9;
-    tl.sort(function(a,b){return a.s-b.s});cap.sort(function(a,b){return a.s-b.s});
-    A={t:0,end:t,tl:tl,cap:cap,paused:false,speed:keepSpeed,last:null,raf:0,ci:-1};
-    ctlUI();viewUI();
-    function frame(now){
-      if(!A)return;
-      var dt=A.last==null?0:Math.min(.1,(now-A.last)/1000);A.last=now;
-      if(!A.paused)A.t=Math.min(A.end,A.t+dt*A.speed);
-      for(var i=0;i<A.tl.length;i++){var it=A.tl[i];if(it.s>A.t)break;var p=clamp((A.t-it.s)/it.d);if(p!==it.p){it.p=p;it.fn(p)}}
-      var ci=-1;for(var j=0;j<A.cap.length;j++)if(A.cap[j].s<=A.t)ci=j;
-      if(ci!==A.ci){A.ci=ci;$('ma-cap').textContent=ci>=0?A.cap[ci].txt:''}
-      $('ma-bar').style.width=(100*A.t/A.end).toFixed(1)+'%';
-      if(A.t>=A.end){ctlUI();return}
-      A.raf=requestAnimationFrame(frame);
-    }
-    A.raf=requestAnimationFrame(frame);
+    var S={st:st,fx:gFX,fparts:{},tparts:{},fw:{},tw:{},tags:{},twOrder:[]};
+    Array.prototype.slice.call(ts.querySelectorAll('.parts > .ap')).forEach(function(g){S.tparts[g.getAttribute('data-ap')]=g;gTP.appendChild(g)});
+    Array.prototype.slice.call(fs.querySelectorAll('.parts > .ap')).forEach(function(g){S.fparts[g.getAttribute('data-ap')]=g;gFP.appendChild(g)});
+    Array.prototype.slice.call(fs.querySelectorAll('.wires > .run')).forEach(function(g){g.classList.remove('off','sel');S.fw[g.getAttribute('data-run')]=g;gFW.appendChild(g)});
+    Array.prototype.slice.call(ts.querySelectorAll('.wires > .run')).forEach(function(g){var id=g.getAttribute('data-run');S.tw[id]=g;S.twOrder.push(id);gTW.appendChild(g)});
+    Array.prototype.slice.call(ts.querySelectorAll('.tags > .tag')).forEach(function(g){S.tags[g.getAttribute('data-run')]=g;gTG.appendChild(g)});
+    S.ends={};S.twOrder.forEach(function(id){S.ends[id]=[S.tw[id].getAttribute('data-a'),S.tw[id].getAttribute('data-b')]});
+    return S;
   }
+  function mount(S,cls){
+    var sc=$('scroll');sc.innerHTML='';sc.appendChild(S.st);if(cls==='animating')sc.classList.add('fit');sc.scrollLeft=0;svg=null;document.body.classList.add(cls);
+    $('m-play').hidden=true;
+    Array.prototype.forEach.call(document.querySelectorAll('[data-mview]'),function(b){b.setAttribute('aria-pressed','false')});
+  }
+  function capH(k,main){return '<span class="ma-k">'+esc(k)+'</span>'+esc(main)}
+  function stepName(s){return s?'Phase '+s.phase+': '+s.t:''}
+  function lc1(t){return t.charAt(0).toLowerCase()+t.slice(1)}
+  function runText(id){var r=byId[id];return r?(r.short||(r.frm+' → '+r.to)):''}
+  var TAKES_OUT={p2c:1,p2d:1};
+  /* the runbook's order for the harness: [{s: step or null, runs, parts}] and each run's place in it */
+  function installPlan(S){
+    var all=REFS.order({runs:RUNS,hasRun:function(id){return !!S.tw[id]},hasPart:function(id){return !!S.tparts[id]}});
+    var seq=all.filter(function(st){return st.phase>=3}),claimed={};
+    seq.forEach(function(st){st.runs.forEach(function(id){if(!(id in claimed))claimed[id]=st})});
+    var lo=[];groups.forEach(function(g){RUNS.forEach(function(r){if(r.sys===g[0]&&S.tw[r.id])lo.push(r.id)})});
+    S.twOrder.forEach(function(id){if(lo.indexOf(id)<0)lo.push(id)});
+    var fb=seq.filter(function(st){return st.id==='p4a'})[0]||null,done={},plan=[],rank={};
+    function isNew(p){return S.tparts[p]&&!S.fparts[p]}
+    seq.forEach(function(st,si){
+      var ids=st.runs.filter(function(id){return claimed[id]===st&&!done[id]});
+      if(st===fb)ids=ids.concat(lo.filter(function(id){return !(id in claimed)&&!done[id]&&ids.indexOf(id)<0}));
+      var parts=st.parts.filter(isNew);
+      if(!ids.length&&!parts.length)return;
+      ids.forEach(function(id,k){done[id]=1;rank[id]={k:si*1000+k,step:st}});
+      plan.push({s:st,runs:ids,parts:parts});
+    });
+    var rest=lo.filter(function(id){return !done[id]});
+    if(rest.length){rest.forEach(function(id,k){rank[id]={k:1e8+k,step:null}});plan.push({s:null,runs:rest,parts:[]})}
+    return {plan:plan,rank:rank,all:all};
+  }
+  /* the stock wires come out in Phase 2: the brew thermostat's at its own step, the steam thermostat's when you decide
+     on it, the rest as you label and pull them, in the order the harness runs that take their place go in */
+  function removalPlan(S,ip){
+    var rel=FAC.rel[SH?1:0],by={};ip.all.forEach(function(st){by[st.id]=st});
+    var list=Object.keys(S.fw).map(function(id,ix){
+      var R=rel[id]||{ends:[]},step=by.p2b||null,k=1e9;
+      R.ends.forEach(function(e){if(e.k==='bt'&&by.p2c)step=by.p2c;else if(e.k==='st'&&by.p2d&&step!==by.p2c)step=by.p2d});
+      var cand=[];if(R.nb)cand.push(R.nb);R.ends.forEach(function(e){cand=cand.concat(e.now)});
+      cand.forEach(function(rid){var x=ip.rank[rid];if(x&&x.k<k)k=x.k});
+      return {id:id,k:k,ix:ix,step:step,si:ip.all.indexOf(step)};
+    });
+    list.sort(function(a,b){return a.si-b.si||a.k-b.k||a.ix-b.ix});
+    return list;
+  }
+  function play(){
+    stopAnim();
+    var S=stage('The stock wiring turning into the new harness');
+    mount(S,'animating');A='play';
+    var b=new ChangePlayer.Builder(S.fx,colOf),RM=b.RM,t=0,ip=installPlan(S),rem=removalPlan(S,ip),G=RM?.15:.22,rel=FAC.rel[SH?1:0];
+    Object.keys(S.tparts).forEach(function(id){b.fade(S.tparts[id],0,.001,0,0)});
+    Object.keys(S.tags).forEach(function(id){b.fade(S.tags[id],0,.001,0,0)});
+    b.say(0,capH('Out of the box','The Silvia\'s stock circuit, '+rem.length+' connections'));
+    b.step(0,1.2,'Out of the box');t=1.2;
+    var outs={bt:0,st:0},left={bt:0,st:0};
+    rem.forEach(function(x){(FAC.ends[x.id]||[]).forEach(function(p){if(p in left)left[p]++})});
+    rem.forEach(function(x,i){
+      var r=FAC.runs[x.id],R=rel[x.id]||{},s0=t;
+      b.say(t,capH('Off '+(i+1)+' of '+rem.length+(x.step?' · '+stepName(x.step):''),x.id+' · '+lc1(r.frm)+' → '+lc1(r.to)+(R.nb?' · can stay as '+R.nb:'')));
+      t=b.wireOut(S.fw[x.id],t,{});
+      (FAC.ends[x.id]||[]).forEach(function(p){if(p in left&&--left[p]===0&&S.fparts[p]){b.partOut(S.fparts[p],t-.1,.55);t+=.45;delete left[p]}});
+      t+=G;b.step(s0,t,x.id);
+    });
+    var still=Object.keys(left).filter(function(p){return S.fparts[p]});
+    if(still.length){var s1=t;b.say(t,capH('Off','The thermostats come out of the drawing'));still.forEach(function(p){b.partOut(S.fparts[p],t,.6)});t+=.8;b.step(s1,t,'Parts out')}
+    var common=Object.keys(S.fparts).filter(function(id){return S.tparts[id]}),s2=t;
+    b.say(t,capH('In','The Silvia\'s own parts stay where they are. Now the harness, in the runbook\'s order'));
+    common.forEach(function(id){b.fade(S.tparts[id],t,.7,0,null);b.fade(S.fparts[id],t,.7,null,0)});
+    t+=.9;b.step(s2,t,'Parts');
+    var arrived={},RING={pcb:1,screen:1,ssr:1,tc:1,psens:1,shelly:1,pled:1};common.forEach(function(id){arrived[id]=1});
+    function bring(p,s){if(arrived[p]||!S.tparts[p])return s;arrived[p]=1;b.partIn(S.tparts[p],s,.55,!!RING[p]);return s+(RING[p]?.6:.3)}
+    var nIn=0,total=0;ip.plan.forEach(function(pl){total+=pl.runs.length});
+    ip.plan.forEach(function(pl){
+      var need=pl.parts.filter(function(p){return !arrived[p]});
+      if(need.length&&!pl.runs.length){var s3=t;b.say(t,capH(stepName(pl.s),need.map(function(p){return PARTN[p]||p}).join(', ')));need.forEach(function(p){t=bring(p,t)});t+=G;b.step(s3,t,pl.s?pl.s.id:'')}
+      pl.runs.forEach(function(id){
+        var g=S.tw[id];if(!g)return;nIn++;var s0=t;
+        b.say(t,capH('In '+nIn+' of '+total+(pl.s?' · '+stepName(pl.s):' · Also on the drawing'),id+' · '+runText(id)));
+        need.forEach(function(p){t=bring(p,t)});
+        (S.ends[id]||[]).forEach(function(p){t=bring(p,t)});
+        t=b.wireIn(g,t,{tag:S.tags[id]})+G;b.step(s0,t,id);
+      });
+    });
+    var late=Object.keys(S.tparts).filter(function(p){return !arrived[p]});
+    if(late.length){var s4=t;b.say(t,capH('In','The rest of the new parts'));late.forEach(function(p,i){bring(p,t+i*.08)});t+=.8+late.length*.08;b.step(s4,t,'Parts in')}
+    var s5=t;if(!RM)b.cls(S.st,t,t+1.8,'flowing');
+    b.say(t,capH('Your harness',S.twOrder.length+' runs'+(SH?', with the Shelly':'')));
+    t+=RM?.6:1.9;b.step(s5,t,'Your harness');
+    ChangePlayer.start(b,t,{replay:play,done:function(){setView('mine')}});
+    viewUI();
+  }
+  function related(fid){
+    var R=FAC.rel[SH?1:0][fid],out=[];if(!R)return out;
+    function add(id){if(id&&out.indexOf(id)<0&&byId[id])out.push(id)}
+    add(R.nb);R.ends.forEach(function(e){e.now.forEach(add)});
+    return out;
+  }
+  function afterHtml(fid){
+    var R=FAC.rel[SH?1:0][fid];if(!R)return '';
+    var rel=related(fid),items=[];
+    function chips(ids){return ids.map(function(id){return '<button type="button" class="rchip" data-mgo="'+esc(id)+'" title="See it in your harness">'+esc(id)+'</button>'}).join(' ')}
+    R.ends.forEach(function(e){
+      var h;
+      if(e.k==='bt'||e.k==='st')h=esc(lc1((FAC.parts[e.k]||{}).note||'comes out'));
+      else if(e.now.length)h='now '+chips(e.now);
+      else h='nothing from the harness lands here';
+      items.push('<li><b>'+esc(e.t)+':</b> '+h+'</li>');
+    });
+    if(R.nb)items.push('<li><b>The lead itself:</b> can stay if it\'s sound, as '+chips([R.nb])+'</li>');
+    return '<div class="d-after"><span class="k">After the install</span><ul>'+items.join('')+'</ul>'+(rel.length||A!=='cmp'?'<p class="d-rel">'+(rel.length?'Tap a run to see it in your harness. ':'')+(A==='cmp'?'':'Compare plays this wire\'s change on its own.')+'</p>':'')+'</div>';
+  }
+  function compare(fid,at){
+    if(!FAC.runs[fid])return;
+    stopAnim();view='box';
+    var S=stage('Stock wire '+fid+' and what the harness puts in its place');
+    mount(S,'comparing');A='cmp';cmp=fid;
+    var b=new ChangePlayer.Builder(S.fx,colOf),t=0,R=FAC.rel[SH?1:0][fid]||{ends:[]},rel=related(fid),r=FAC.runs[fid],FAINT=.14;
+    Object.keys(S.fw).forEach(function(id){if(id!==fid)b.fade(S.fw[id],0,.001,FAINT,FAINT)});
+    Object.keys(S.tparts).forEach(function(id){b.fade(S.tparts[id],0,.001,0,0)});
+    Object.keys(S.tags).forEach(function(id){b.fade(S.tags[id],0,.001,0,0)});
+    S.twOrder.forEach(function(id){if(rel.indexOf(id)<0)b.fade(S.tw[id],0,.001,0,0)});
+    b.say(0,capH('Out of the box',fid+' · '+lc1(r.frm)+' → '+lc1(r.to)));
+    b.step(0,.9,'Out of the box');t=.9;
+    var s1=t;b.say(t,capH('The change',R.nb?'It can stay as '+R.nb+' if it\'s sound; here it comes out like the rest':'It comes out: the harness replaces it'));
+    t=b.wireOut(S.fw[fid],t,{})+.15;b.step(s1,t,fid);
+    var s2=t;
+    Object.keys(S.fw).forEach(function(id){if(id!==fid)b.fade(S.fw[id],t,.7,FAINT,0)});
+    ['bt','st'].forEach(function(p){if(S.fparts[p])b.partOut(S.fparts[p],t,.6)});
+    var relParts={};rel.forEach(function(id){(S.ends[id]||[]).forEach(function(p){relParts[p]=1})});
+    Object.keys(S.fparts).forEach(function(id){if(S.tparts[id]){b.fade(S.tparts[id],t,.7,0,null);b.fade(S.fparts[id],t,.7,null,0)}});
+    Object.keys(S.tparts).forEach(function(id){if(!S.fparts[id])b.fade(S.tparts[id],t,.7,0,relParts[id]?null:.35)});
+    S.twOrder.forEach(function(id){if(rel.indexOf(id)<0)b.fade(S.tw[id],t+.2,.7,0,FAINT)});
+    b.say(t,capH('The change',rel.length?'The rest of the machine changes too (faint). What lands where '+fid+' was:':'The rest of the machine changes too (faint)'));
+    t+=1;b.step(s2,t,'The rest');
+    rel.forEach(function(id){var s0=t;b.say(t,capH('After the install',id+' · '+runText(id)));t=b.wireIn(S.tw[id],t,{tag:S.tags[id]})+.2;b.step(s0,t,id)});
+    var s4=t;b.say(t,capH('After the install',rel.length?rel.length+(rel.length===1?' run':' runs')+' where '+fid+' was':'Nothing from the harness lands where it was'));t+=.8;b.step(s4,t,'After');
+    ChangePlayer.start(b,t,{paused:at!=='play',at:at==='after'?t:0,noDone:true,replay:function(){ChangePlayer.seek(0,true);ChangePlayer.play()},onState:cmpUI});
+    if(at==='play')ChangePlayer.play();
+    cmpUI();viewUI();
+    var sc=$('scroll');if(sc.scrollWidth>sc.clientWidth+2)try{var bb=S.fw[fid].getBBox(),ratio=S.st.clientWidth/1240;sc.scrollLeft=Math.max(0,(bb.x+bb.width/2)*ratio-sc.clientWidth/2)}catch(e){}
+    var d=$('detail');d.className='detail';d.style.borderLeftColor=SYSCOLOR[r.sys]||'var(--accent)';
+    d.innerHTML='<div class="d-head"><span class="d-id">'+esc(fid)+'</span><span class="d-route">'+esc(r.frm)+' → '+esc(r.to)+'</span></div>'+
+      '<div class="d-grid"><div><span class="k">Out of the box</span><span><span class="swc" style="background:'+(COLHEX[r.color]||'var(--muted)')+'"></span>'+esc(CNAME[r.color]||r.color)+', '+esc(lc1(FSYS[r.sys]||r.sys))+(r.what?'. '+esc(r.what):'')+'</span></div></div>'+afterHtml(fid);
+    $('msel').innerHTML='<b>'+esc(fid)+'</b><span class="rt">Compare: out of the box and after the install</span>';
+  }
+  function cmpUI(){
+    if(A!=='cmp')return;
+    var t=ChangePlayer.time(),end=ChangePlayer.end();
+    Array.prototype.forEach.call(document.querySelectorAll('[data-cmpv]'),function(x){var w=x.getAttribute('data-cmpv');x.setAttribute('aria-pressed',String(w==='box'?t<=.9:t>=end-1e-3))});
+    var ids=Object.keys(FAC.runs),i=ids.indexOf(cmp);
+    $('cmp-id').textContent=cmp+' · '+(i+1)+' of '+ids.length;$('mcmp').hidden=false;
+  }
+  function cmpStep(n){var ids=Object.keys(FAC.runs),i=ids.indexOf(cmp);compare(ids[(i+n+ids.length)%ids.length],ChangePlayer.time()>=ChangePlayer.end()-1e-3?'after':'box')}
+  function closeCmp(){var id=cmp;stopAnim();view='box';$('scroll').innerHTML=FAC.svg;svg=$('scroll').querySelector('.dia');fsel=id?{t:'run',id:id}:null;facPaint();viewUI()}
   $('mview').addEventListener('click',function(e){var b=e.target.closest('[data-mview]');if(b){setView(b.getAttribute('data-mview'));return}if(e.target.closest('#m-play'))play()});
-  $('mctl').addEventListener('click',function(e){
-    if(!A)return;var b=e.target.closest('button');if(!b)return;
-    if(b.id==='ma-pause'){A.paused=!A.paused;A.last=null;ctlUI()}
-    else if(b.id==='ma-replay')play();
-    else if(b.id==='ma-skip'){A.t=A.end;A.paused=false}
-    else if(b.id==='ma-done')setView('mine');
-    else if(b.hasAttribute('data-speed')){A.speed=Number(b.getAttribute('data-speed'))||1;ctlUI()}
+  ChangePlayer.wire();
+  $('mcmp').addEventListener('click',function(e){
+    var b=e.target.closest('button');if(!b||A!=='cmp')return;
+    if(b.hasAttribute('data-cmpv')){ChangePlayer.seek(b.getAttribute('data-cmpv')==='box'?0:ChangePlayer.end());cmpUI()}
+    else if(b.id==='cmp-play'){ChangePlayer.seek(0);ChangePlayer.play()}
+    else if(b.id==='cmp-prev')cmpStep(-1);
+    else if(b.id==='cmp-next')cmpStep(1);
+    else if(b.id==='cmp-close')closeCmp();
+  });
+  document.addEventListener('click',function(e){
+    var c=e.target.closest('[data-mcmp]');if(c){compare(c.getAttribute('data-mcmp'),'play');$('fig').scrollIntoView({behavior:'smooth',block:'start'});return}
+    var gx=e.target.closest('[data-mgo]');if(gx){var rid=gx.getAttribute('data-mgo');setView('mine');pick(rid,true,true);return}
   });
   viewUI();
   paint();

@@ -1,0 +1,15 @@
+      <div class="mctl" id="mctl" hidden>
+        <div class="mctl-row">
+          <button type="button" class="mbtn" id="ma-back" aria-label="Back one step">‹ Back</button>
+          <button type="button" class="mbtn primary" id="ma-pause" aria-pressed="false">Pause</button>
+          <button type="button" class="mbtn" id="ma-fwd" aria-label="Play the next step, then pause">Next ›</button>
+          <input type="range" class="mscrub" id="ma-scrub" min="0" max="1000" step="1" value="0" aria-label="Move through the change">
+          <span class="mpos" id="ma-pos" aria-live="polite"></span>
+        </div>
+        <div class="mctl-row">
+          <div class="mseg2" role="group" aria-label="Speed"><button type="button" data-speed="0.25" aria-pressed="false">¼×</button><button type="button" data-speed="0.5" aria-pressed="false">½×</button><button type="button" data-speed="1" aria-pressed="true">1×</button><button type="button" data-speed="2" aria-pressed="false">2×</button></div>
+          <button type="button" class="mbtn" id="ma-replay">Replay</button>
+          <button type="button" class="mbtn" id="ma-skip">Skip to the end</button>
+          <button type="button" class="mbtn primary" id="ma-done" hidden>Back to the drawing</button>
+        </div>
+      </div>

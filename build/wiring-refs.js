@@ -110,5 +110,26 @@
         return '<li><span class="rg">'+g[0]+'</span>'+g[1].join(g[0]==='Power-on checks'?' ':'<span class="sep"> · </span>')+'</li>';
       }).join('')+'</ul></div>';
     }
-    return {html:html};
+    /* the runbook's steps in order, from Phase 2 on, each with the runs and parts its map field names on the drawing
+       c describes: what the Show the change animation follows. Steps that name nothing keep their place. */
+    function order(c){
+      var out=[];
+      RB.forEach(function(p,pi){
+        if(pi<2)return;
+        p.steps.forEach(function(s){
+          if(!ok(s.w))return;
+          var runs=[],parts=[];
+          targets(s.map).forEach(function(x){
+            if(!ok(x[2]))return;
+            var r=resolve(x[1],c);
+            r.runs.forEach(function(id){if(runs.indexOf(id)<0)runs.push(id)});
+            if(r.part&&parts.indexOf(r.part)<0)parts.push(r.part);
+          });
+          var t=Array.isArray(s.t)?s.t.map(function(x){return typeof x==='string'?x:x[0]}).join(' '):s.t;
+          out.push({id:s.id,phase:pi,t:fillT(t),runs:runs,parts:parts});
+        });
+      });
+      return out;
+    }
+    return {html:html,order:order};
   })();
