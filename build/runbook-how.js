@@ -673,9 +673,10 @@
         ["The official low-voltage drawing shows the slot on the back of the Gen 3.5 screen.","scr:p4"],
         ["The official low-voltage drawing shows the slot on the back of the headless board.","scr:hl"],
         ["The official drawing doesn't show where the Gen 3 screen's slot is: ask in your help thread if you can't find it.","scr:s3"],
-        "Plug back in and switch on. The official manual says a microSD card is required to record and show shot history."
+        "Plug back in and switch on. The official manual says a microSD card is required to record and show shot history.",
+        "Shot history still asks for an SD card after this, and that's expected: the message stays until the first shot is recorded on the card. A builder on the Gaggiuino Discord says that takes a shot of at least 10 seconds (the official docs count shots of 5 s or more), so any normal shot clears it. This is from Discord, not the official docs."
       ],
-      ok:"The card is fully in its slot, and the machine is back on."
+      ok:"The card is fully in its slot, and the machine is back on. Shot history's SD card message stays until your first shot."
     },
     /* ---------------- Phase 7 ---------------- */
     p7a:{
@@ -691,7 +692,8 @@
         "Pick a profile on the home screen: swipe across the profile names.",
         "Dial in by the profile's targets, not a stock shot time.",
         "Profiles with pre-infusion and soak need a finer grind than stock to reach the same pressure.",
-        "With stop-on-weight, the shot stops a little early on purpose: the last of it is still on its way to the cup."
+        "With stop-on-weight, the shot stops a little early on purpose: the last of it is still on its way to the cup.",
+        "Check Shot history: your first shot should be listed, and the SD card message gone. If the message is still there after a full shot, reseat the card with the machine unplugged and check it's FAT32."
       ],
       pics:[["Home screen: profiles and shot weight", "uiHome"]]
     },
