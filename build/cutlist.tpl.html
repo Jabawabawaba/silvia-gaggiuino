@@ -58,6 +58,7 @@
 }
 %%INCLUDE:part-guides.css%%
 %%INCLUDE:runbook-figs.css%%
+%%INCLUDE:lv-guide.css%%
 .cutfig .rfigs{margin:4px 0 16px}
 </style>
 %%INCLUDE:part-defs.svg.html%%
@@ -94,6 +95,7 @@
   <section class="block" aria-labelledby="h-cut">
     <div class="sec-h"><h2 id="h-cut">Cut and crimp</h2><span class="sum" id="cut-sum"></span></div>
     <div class="cutfig" id="cutfig"></div>
+  <div id="lvguide"></div>
     <div class="tablewrap">
       <table class="cut"><thead><tr><th class="tick"><span class="vh">Cut</span></th><th>ID</th><th>From → to</th><th>Wire</th><th>Cut to</th><th>Ends</th></tr></thead><tbody id="cut"></tbody></table>
     </div>
@@ -134,6 +136,7 @@
   return {G:G,prof:prof,famOf:famOf}})();
   %%INCLUDE:runbook-figs.js%%
   %%INCLUDE:page-figs.js%%
+  %%INCLUDE:lv-guide.js%%
   %%INCLUDE:progress-store.js%%
   RBF.init(PF());
   $('cutfig').innerHTML=RBF.figs([['g','wire',null,'all',null,'How each end is made: the part guide\'s drawing']]);
@@ -183,6 +186,7 @@
     $('slack').value=st.slack;$('slack-o').textContent=st.slack+'%';
     $('opt-stock').checked=st.stock;$('opt-led').checked=st.led;
     var runs=RUNS.filter(active);
+    $('lvguide').innerHTML=LVG.html(RUNS,{cap:'Drawn from this site\'s harness, in the style of the official HV wire guide for the Gaggia (there is no official Silvia one). Lengths are starting points from Talon\'s harness and the older RS diagram; cut a little long and trim once fitted. Colors follow realNiche\'s harness, and kits vary: go by the pin name printed beside each socket on the PCB, not the color. On each switch the signal goes on the center spade and the ground on the outer spade of the same pole. The screen, thermocouple and pressure sensor cables come made up and plug straight in. On the <a href=\"wiring.html\">wiring page</a>, tap a socket such as J7 to see these on the machine.'});
     /* wire totals */
     var tot={},missing=[];
     runs.forEach(function(r){

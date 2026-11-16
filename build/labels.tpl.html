@@ -105,6 +105,7 @@ ol.steps li::before{content:counter(s);font:600 13px/26px var(--f-mono);text-ali
 .fine{margin:0;font-size:14px;color:var(--muted);max-width:80ch}
 a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
 %%INCLUDE:runbook-figs.css%%
+%%INCLUDE:lv-guide.css%%
 .howfig .rfigs{margin-top:22px}
 </style>
 
@@ -158,6 +159,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     </div>
   </section>
   <div class="howfig" id="howfig"></div>
+  <div id="lvguide"></div>
 
   <section class="lkey" id="lkey" aria-label="How to read a label"></section>
   <section class="sheets" id="sheets" aria-label="Sheet preview"></section>
@@ -179,6 +181,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
 (function(){
   %%INCLUDE:runbook-figs.js%%
   %%INCLUDE:page-figs.js%%
+  %%INCLUDE:lv-guide.js%%
   %%INCLUDE:progress-store.js%%
   RBF.init(PF());
   /* how a label goes on: a paper flag at one end, marker on silicone at the boiler */
@@ -279,6 +282,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     $('s-sheets').textContent=S.pages.length;
     $('s-sheets-s').textContent=(S.pages.length===1?'sheet':'sheets')+' of '+S.paper.name;
     $('lkey').innerHTML=keyHtml(runs);
+    $('lvguide').innerHTML=LVG.html(RUNS,{cap:'Drawn from this site\'s harness, in the style of the official HV wire guide for the Gaggia (there is no official Silvia one). Lengths are starting points from Talon\'s harness and the older RS diagram; cut a little long and trim once fitted. Colors follow realNiche\'s harness, and kits vary: go by the pin name printed beside each socket on the PCB, not the color. On each switch the signal goes on the center spade and the ground on the outer spade of the same pole. The screen, thermocouple and pressure sensor cables come made up and plug straight in. On the <a href=\"wiring.html\">wiring page</a>, tap a socket such as J7 to see these on the machine.'});
     $('hand').innerHTML=hot.length?hot.map(function(h){return '<li><b>'+esc(h[0])+'</b><span>at '+esc(h[1])+'</span></li>'}).join(''):'<li><span>None in this selection.</span></li>';
     $('sheets').innerHTML=S.pages.length?S.pages.map(function(pg,i){return '<div class="sheet"><span class="cap">Sheet '+(i+1)+' of '+S.pages.length+' · '+S.paper.name+' · preview</span>'+sheetSvg(S,pg,i,S.pages.length)+'</div>'}).join(''):'<p class="note">Pick at least one group to see the sheets.</p>';
     Array.prototype.forEach.call(document.querySelectorAll('[data-paper]'),function(b){b.setAttribute('aria-pressed',String(b.getAttribute('data-paper')===prefs.paper))});

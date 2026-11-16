@@ -302,6 +302,15 @@ def part_svgs(sh=False, factory=False):
     return P
 
 
+# the PCB sockets' tap areas, from the pin layout in part_svgs()
+JHITS = [("J1", 998, 222, 116, 36)]
+for _j, _ys in (("J7", (262, 298)), ("J5", (330, 366)), ("J9", (398, 434)), ("J6", (466, 502)), ("J4", (534, 552)), ("J8", (590, 662))):
+    JHITS.append((_j, 926, _ys[0] - 12, 270, _ys[1] - _ys[0] + 24))
+for _j, _y in (("J13", 730), ("J12", 752), ("J11", 774), ("J10", 796)):
+    JHITS.append((_j, 926, _y - 11, 270, 22))
+JHITS.append(("J2", 1096, 582, 88, 34))
+
+
 def _build_rest(sh, paths, tags, parts, ends):
     o = []
 
@@ -314,6 +323,12 @@ def _build_rest(sh, paths, tags, parts, ends):
     o.append('<g class="phits">')
     for pid, name, (x0, y0, x1, y1) in parts:
         o.append(f'<rect x="{x0}" y="{y0}" width="{x1 - x0}" height="{y1 - y0}" rx="8" class="phit" data-part="{pid}"><title>{esc(name)}</title></rect>')
+    o.append('</g>')
+
+    # ----- tap targets for the PCB sockets: J7 lights every run on it (wiring.tpl.html pickJ) -----
+    o.append('<g class="jhits">')
+    for j, x, y, w, h in JHITS:
+        o.append(f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="4" class="jhit" data-j="{j}"><title>{j}: tap to light every wire on it</title></rect>')
     o.append('</g>')
 
     # ----- wires -----
