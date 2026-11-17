@@ -800,8 +800,10 @@ var LabelCore=(function(){
     var rows=Math.floor((P.h-L.top-L.bottom+L.gapY)/(L.h+L.gapY));
     var pages=[],page=null;
     runs.forEach(function(r,idx){
-      if(!page||page.rows.length>=rows){page={rows:[]};pages.push(page)}
+      /* a divider row ({divider:[title, line]}) never sits alone at the foot of a sheet */
+      if(!page||page.rows.length>=rows||(r.divider&&page.rows.length>=rows-1)){page={rows:[]};pages.push(page)}
       var y=L.top+page.rows.length*(L.h+L.gapY);
+      if(r.divider){page.rows.push({y:y,divider:r.divider,cells:[]});return}
       var e=ends(r);
       page.rows.push({y:y,run:r,cells:[0,1].map(function(i){
         return {x:left+i*(L.w+L.gapX),y:y,end:i,here:e[i],there:e[1-i],hot:hotAt(r,i)};
@@ -825,6 +827,12 @@ var LabelCore=(function(){
       doc.setDrawColor(22,25,28);doc.setLineWidth(0.4);doc.line(bx,8,bx+50,8);doc.line(bx,6.8,bx,9.2);doc.line(bx+50,6.8,bx+50,9.2);
       doc.setFontSize(6.5);doc.text('This bar should measure 50 mm',bx,11.5);
       pg.rows.forEach(function(row){
+          if(row.divider){
+            var dy=row.y+3.2;doc.setDrawColor(22,25,28);doc.setLineWidth(0.6);doc.line(S.left,dy,P.w-S.left,dy);
+            doc.setTextColor(22,25,28);doc.setFont('helvetica','bold');doc.setFontSize(9);doc.text(pdfText(row.divider[0]),S.left,dy+4.6);
+            doc.setFont('helvetica','normal');doc.setFontSize(6.8);doc.setTextColor(90,96,104);doc.text(pdfText(row.divider[1]),S.left,dy+8.2,{maxWidth:P.w-2*S.left});
+            doc.setTextColor(22,25,28);return;
+          }
         row.cells.forEach(function(c){
           var r=row.run,col=COLOR[r.sys]||COLOR.LVG;
           if(c.hot){
@@ -1499,6 +1507,13 @@ var RBF=(function(){
   function made(){var lb=PS.read().labels||{};lb[shOn()?'sh':'base']=Date.now();PS.put('labels',lb)}
   function $(id){return document.getElementById(id)}
   function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+  /* the Silvia's own inlet leads that can stay (AC1, AC2, G1) go last on the sheets, under a divider */
+  var KEPT=['AC1','AC2','G1'];
+  function withDivider(runs){
+    var a=runs.filter(function(r){return KEPT.indexOf(r.id)<0}),k=runs.filter(function(r){return KEPT.indexOf(r.id)>=0});
+    if(!k.length||!a.length)return a.concat(k);
+    return a.concat([{divider:['Leads that can stay in the machine','The Silvia\'s own inlet leads, if they\'re sound: label them where they are. If you make new ones instead, these labels go on those.']}],k);
+  }
   function selected(){
     var sys=[];GROUPS.forEach(function(g){if(prefs.groups[g[0]])sys=sys.concat(g[2])});
     /* the Shelly's power LED leads (SH5, SH6) print with the low-voltage group: they're part of the Shelly build, not an option */
@@ -1524,6 +1539,11 @@ var RBF=(function(){
     o.push('<path d="M'+bx+',8 h50 M'+bx+',6.8 v2.4 M'+(bx+50)+',6.8 v2.4" stroke="var(--paper-ink)" stroke-width=".4" fill="none"/>');
     o.push('<text x="'+bx+'" y="11.5" font-size="2.3" fill="var(--paper-ink)">This bar should measure 50 mm</text>');
     pg.rows.forEach(function(row){
+      if(row.divider){var dy=row.y+3.2;
+        o.push('<path d="M'+S.left+','+dy+' H'+(P.w-S.left)+'" stroke="var(--paper-ink)" stroke-width=".6"/>');
+        o.push('<text x="'+S.left+'" y="'+(dy+4.6)+'" font-size="3.2" font-weight="700" fill="var(--paper-ink)">'+esc(row.divider[0])+'</text>');
+        o.push('<text x="'+S.left+'" y="'+(dy+8.2)+'" font-size="2.4" fill="var(--paper-muted)">'+esc(row.divider[1])+'</text>');
+        return;}
       row.cells.forEach(function(c){
         var r=row.run,col=rgb(LabelCore.COLOR[r.sys]||LabelCore.COLOR.LVG);
         if(c.hot){
@@ -1572,7 +1592,7 @@ var RBF=(function(){
       colorNote:'The colors match the circuit colors on the wiring drawing. They show the circuit, not the wire\'s jacket color: the cut list gives that.'});
   }
   function render(){
-    var runs=selected(),S=LabelCore.sheets(runs,prefs.paper);
+    var runs=selected(),S=LabelCore.sheets(withDivider(runs),prefs.paper);
     var hot=[],labels=0;
     runs.forEach(function(r){var e=LabelCore.ends(r);[0,1].forEach(function(i){
       var isHot=r.hot==='both'||(r.hot==='a'&&i===0)||(r.hot==='b'&&i===1);
@@ -1607,7 +1627,7 @@ var RBF=(function(){
     if(!downloads&&!plain){msg('Downloading isn\'t available in this view. Open this page on claude.ai in a browser to get the PDF.','bad');return}
     busy=true;$('dl').disabled=true;msg('Making the PDF…');
     var blob,fname='silvia-wire-labels-'+prefs.paper+'.pdf';
-    try{blob=LabelCore.drawPdf(window.jspdf.jsPDF,selected(),prefs.paper).output('blob')}catch(e){busy=false;$('dl').disabled=false;msg('Couldn\'t make the PDF. Reload the page and try again.','bad');return}
+    try{blob=LabelCore.drawPdf(window.jspdf.jsPDF,withDivider(selected()),prefs.paper).output('blob')}catch(e){busy=false;$('dl').disabled=false;msg('Couldn\'t make the PDF. Reload the page and try again.','bad');return}
     if(plain){
       try{var u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=fname;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},4000);made();msg('Saved. Print it at 100% scale.','ok')}catch(e){msg('Couldn\'t start the download in this browser.','bad')}
       busy=false;$('dl').disabled=!selected().length;return;
