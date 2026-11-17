@@ -96,7 +96,7 @@ RUNS = [
          ends=["Screw terminal; fold the bare wire over, don't clamp insulation", "M3 thermocouple"], src="Official PCB guide / Discord",
          note="Ungrounded K-type. Route it around the front of the boiler. If the bench test shows temperature falling when you warm it, swap the two leads."),
     dict(id="LV11", sys="S", short="J1 → Screen", frm="PCB J1 (GND, TX, RX, 5V)", to="4.3 in Gen 3.5 screen",
-         gauge="Screen cable", mm=600, lenNote="DIY-EFI cable is 60 cm and Peak Coffee's 45 cm. The older diagram used 650 mm for a front mount; a funnel mount needs more (open question)",
+         gauge="Screen cable", mm=600, lenNote="DIY-EFI cable is 60 cm. The older diagram used 650 mm for a front mount; a funnel mount needs more (open question)",
          ends=["JST-PH 4-pin", "Screen connector"], src="DIY-EFI / RS lengths / Talon",
          note="Check connection points, not colors: blue and yellow can be swapped between cable revisions. Don't take pre-made cables apart."),
     # ---- Optional ----
