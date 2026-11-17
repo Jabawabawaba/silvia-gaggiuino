@@ -66,7 +66,7 @@
     p0c:{
       how:[
         "**Where the pressure sensor goes:** on a tee at the OPV, which this site has a parts list and steps for, or the 3-way valve's bottom port, as Talon's build does.",
-        "**How long the screen cable must be:** DIY-EFI's screen comes with a 600 mm cable and Peak Coffee lists 450 mm. An older, untested Silvia diagram lists about 650 mm for a front mount, and the funnel mount needs more.",
+        "**How long the screen cable must be:** DIY-EFI's screen comes with a 600 mm cable. An older, untested Silvia diagram lists about 650 mm for a front mount, and the funnel mount needs more.",
         "**Which screen housing and mount:** the official Gen 3 housing has been used on a Silvia with the funnel mount; its three mounts are all designed for Gaggias.",
         "Read the open questions on the [Silvia specifics](silvia-specifics.html) page, and ask in your help thread (later in this phase) if one is unclear for your version."
       ]
@@ -437,7 +437,7 @@
     p3e:{
       need:["The screen cable,",["the screen and its housing and mount, Kapton tape,","scr:p4,s3"],["the headless board and its housing,","scr:hl"],"and a short piece of heat shrink."],
       how:[
-        "Check the cable is long enough for where the screen will sit: DIY-EFI's is 600 mm and Peak Coffee's 450 mm, and a Silvia's funnel mount needs more than an older diagram's 650 mm front-mount figure.",
+        "Check the cable is long enough for where the screen will sit: DIY-EFI's is 600 mm, and a Silvia's funnel mount needs more than an older diagram's 650 mm front-mount figure.",
         "Plug the cable into the PCB's J1 first, as on the bench: the small screen-end plugs slip through the housing gaps, the PCB end often can't.",
         ["Assemble the screen housing: the screen goes into the printed housing with four small screws, as the official photo shows. Dry-fit it first and peel the adhesive's release liner only when everything lines up: once it's stuck, it's hard to take apart.","scr:p4"],
         ["Feed the cable through the mount, if it has a hole for it, then plug it into the screen's socket marked 5V, IO28, IO27, GND, pin by pin.","scr:p4"],

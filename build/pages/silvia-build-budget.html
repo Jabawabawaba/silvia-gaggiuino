@@ -170,9 +170,10 @@ h1{font:700 clamp(36px,6.4vw,56px)/.95 var(--f-display);letter-spacing:.01em;mar
 
       <section class="group" aria-labelledby="g-parts">
         <div class="group-h"><h2 id="g-parts"><span class="sw" style="background:var(--c-parts)"></span>Gaggiuino parts</h2><span class="sum" id="sum-parts"></span></div>
-        <p class="group-intro">The PCB and screen from DIY-EFI or Peak Coffee, the rest of the electronics from the official parts list, and the Silvia-specific parts. Required lines stay in the total; set a price of $0 if you already have one.</p>
+        <p class="group-intro">The PCB and screen from an approved supplier, the rest of the electronics from the official parts list, and the Silvia-specific parts. Required lines stay in the total; set a price of $0 if you already have one.</p>
         <p class="pick-l" id="sup-l">Where to buy the PCB and screen</p>
         <div class="choices" id="suppliers" role="radiogroup" aria-labelledby="sup-l"></div>
+        <p class="fine sup-avoid">Gaggiuino.co is the other approved supplier; if you buy there, enter what you paid on each line. Steer away from Peak Coffee: it was taken off the official docs&#39; approved supplier list in October 2025, the docs say the screen must come from an approved supplier, and builders report problems with its kits.</p>
         <div class="lines" id="lines-parts"></div>
       </section>
 
@@ -204,7 +205,7 @@ h1{font:700 clamp(36px,6.4vw,56px)/.95 var(--f-display);letter-spacing:.01em;mar
         <div class="bar" id="bar" aria-hidden="true"></div>
         <ul class="legend" id="legend"></ul>
         <div class="compare" id="compare"></div>
-        <p class="fine">Excludes shipping. Peak Coffee prices include US tax and its 5.2% card fee; DIY-EFI prices exclude UK shipping and any import duty. Prices checked October 14 and 15, 2026.</p>
+        <p class="fine">Excludes shipping. DIY-EFI prices exclude UK shipping and any import duty. Prices checked October 14 and 15, 2026.</p>
         <div class="foot">
           <span class="status" id="status"><span class="lamp"></span><span id="status-text">Loading</span></span>
           <button class="btn" id="reset" type="button">Reset to plan defaults</button>
@@ -228,11 +229,9 @@ h1{font:700 clamp(36px,6.4vw,56px)/.95 var(--f-display);letter-spacing:.01em;mar
   var LINES=[
     /* the PCB and screen price, note and link follow the supplier picked above them (see SUPPLIERS) */
     {id:'pcb',cat:'parts',name:'Gaggiuino V4 PCB',req:true,by:{
-      diyefi:{sub:'DIY-EFI',lo:88,hi:95,note:'£68 before VAT, in stock October 14. There is no Silvia kit, so Discord recommends the PCB and screen from an approved supplier. Assumes no UK VAT and $1.30 to $1.40 per pound.',src:[['DIY-EFI','https://diy-efi.co.uk/product/gaggiuino-4-0-pcb-stm32u585']]},
-      peak:{sub:'Peak Coffee',lo:72,hi:72,note:'$68 with US tax included, plus the 5.2% card fee. In stock October 15. Sold as a non-returnable prototype.',src:[['Peak Coffee','https://www.peakcoffee.cc/product/gaggiuino-pcb/']]}}},
+      diyefi:{sub:'DIY-EFI',lo:88,hi:95,note:'£68 before VAT, in stock October 14. There is no Silvia kit, so Discord recommends the PCB and screen from an approved supplier. Assumes no UK VAT and $1.30 to $1.40 per pound.',src:[['DIY-EFI','https://diy-efi.co.uk/product/gaggiuino-4-0-pcb-stm32u585']]}}},
     {id:'screen',cat:'parts',name:'4.3" touchscreen',req:true,by:{
-      diyefi:{sub:'DIY-EFI',lo:61,hi:66,note:'£47 before VAT, in stock. The Gen 3.5 screen, which the official docs define as the ESP32-P4 one. Includes firmware and a 60 cm cable. Shipping from the UK is extra and not included here.',src:[['DIY-EFI','https://diy-efi.co.uk/product/gaggiuino-4-3-screen-gen3-5']]},
-      peak:{sub:'Peak Coffee',lo:61,hi:68,note:'A Gen 3 (ESP32-S3) screen: $58 with one cable or $65 with two, plus the card fee (the product page still says $42 or $48; checkout decides). Pre-flashed and activated. Peak isn\'t on the docs\' current approved list, and the docs say the screen must come from an approved supplier. Its kit listings give the cable as 45 cm, likely too short for a Silvia, so plan on a longer one.',src:[['Peak Coffee','https://www.peakcoffee.cc/product/4-3-iot-gaggiuino-lcd/']]}}},
+      diyefi:{sub:'DIY-EFI',lo:61,hi:66,note:'£47 before VAT, in stock. The Gen 3.5 screen, which the official docs define as the ESP32-P4 one. Includes firmware and a 60 cm cable. Shipping from the UK is extra and not included here.',src:[['DIY-EFI','https://diy-efi.co.uk/product/gaggiuino-4-3-screen-gen3-5']]}}},
     {id:'elec',cat:'parts',name:'Electronics from the official parts list',lo:45,hi:80,req:true,note:'SSR-40DA, pressure sensor, ST-Link, JST connectors and 22 AWG wire. Rough prices; AliExpress listings change often.',src:[['Official BOM','https://gaggiuino.github.io/README.md']]},
     {id:'tc',cat:'parts',name:'M3 thermocouple and thermal paste',lo:15,hi:25,req:true,note:'Talon confirmed on Discord that the Silvia needs M3, not the M4 in the official parts list.'},
     {id:'elbow',cat:'parts',name:'Pressure sensor tee, elbow and sealant',lo:15,hi:35,req:true,note:'A 1/8" tee at the OPV and a 1/4" to 1/8" elbow, sealed with Loctite 55. Rough prices.'},
@@ -251,8 +250,7 @@ h1{font:700 clamp(36px,6.4vw,56px)/.95 var(--f-display);letter-spacing:.01em;mar
   /* a line counts when it's required or ticked, and fits Your Silvia */
   function counts(l){return okw(l.when)&&(l.req||!!state.on[l.id])}
   var SUPPLIERS=[
-    {id:'diyefi',name:'DIY-EFI (UK)',note:'An approved supplier in the official docs. The screen comes with a 60 cm cable. UK shipping and any import duty come on top.',src:[['DIY-EFI','https://diy-efi.co.uk/product-category/gaggiuino/']]},
-    {id:'peak',name:'Peak Coffee',note:'Ships weekly from Asia with US tax included. Talon OK\'d its PCB and screen for a Silvia build in 2025. Not on the docs\' current approved list; no warranty, and no refunds once an order is packed.',src:[['Peak Coffee','https://www.peakcoffee.cc/product-category/gaggiuino/']]}
+    {id:'diyefi',name:'DIY-EFI (UK)',note:'An approved supplier in the official docs. The screen comes with a 60 cm cable. UK shipping and any import duty come on top.',src:[['DIY-EFI','https://diy-efi.co.uk/product-category/gaggiuino/']]}
   ];
   var SCALES=[
     {id:'scale-none',name:'Predictive only',lo:0,hi:0,note:'Built into Gaggiuino. Estimates weight from pump flow, with no extra hardware.'},
@@ -412,7 +410,7 @@ h1{font:700 clamp(36px,6.4vw,56px)/.95 var(--f-display);letter-spacing:.01em;mar
 
     var other=state.machine==='used'?'new':'used';
     var ro=compute(other);
-    var otherSup=state.supplier==='peak'?'diyefi':'peak',rs=compute(null,otherSup);
+    var otherSup=SUPPLIERS.filter(function(s){return s.id!==state.supplier})[0],rs=otherSup?compute(null,otherSup.id):null;
     var side={lo:r.all.lo-r.cats.machine.lo,hi:r.all.hi-r.cats.machine.hi};
     var owns=Object.keys(state.price).filter(function(k){
       if(k===other) return false;
@@ -422,7 +420,7 @@ h1{font:700 clamp(36px,6.4vw,56px)/.95 var(--f-display);letter-spacing:.01em;mar
     }).length;
     $('compare').innerHTML=
       '<div class="cmp"><span>Same build with '+(other==='new'?'a new Silvia M':'a used Silvia')+'</span><b>'+rng(ro.all.lo,ro.all.hi)+'</b></div>'+
-      '<div class="cmp"><span>PCB and screen from '+(otherSup==='peak'?'Peak Coffee':'DIY-EFI')+' instead</span><b>'+rng(rs.all.lo,rs.all.hi)+'</b></div>'+
+      (otherSup?'<div class="cmp"><span>PCB and screen from '+otherSup.name+' instead</span><b>'+rng(rs.all.lo,rs.all.hi)+'</b></div>':'')+
       '<div class="cmp"><span>Everything except the machine</span><b>'+rng(side.lo,side.hi)+'</b></div>'+
       (owns?'<p class="fine">Includes '+owns+' price'+(owns===1?'':'s')+' you entered.</p>':'');
   }

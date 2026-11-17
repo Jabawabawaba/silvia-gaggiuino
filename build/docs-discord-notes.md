@@ -262,7 +262,7 @@ Remaining steps follow the standard GC/P HW scales install instructions.
 A US Silvia V6 on PCB v4 and Gen 3. After wiring, everything worked except the hardware scales, which turned out to be a wiring slip.
 
 - **Parts list:** a public Google Sheet, the most complete Silvia V6 list found so far: https://docs.google.com/spreadsheets/d/1xjcB6rN2AdtnimUDdN68e9jHE2p5eL-skKkFtvtA_5I
-- **PCB, screen and pressure sensor from Peak Coffee.** Talon: if you order from Peak, those items work; the sensor can come from wherever is cheapest. Peak's complete kit adds the Gaggia ToFnLED, which is no use with the Silvia's covered tank, so he bought load cells and a plain ToF instead.
+- **PCB, screen and pressure sensor from Peak Coffee.** Talon: if you order from Peak, those items work; the sensor can come from wherever is cheapest. Peak's complete kit adds the Gaggia ToFnLED, which is no use with the Silvia's covered tank, so he bought load cells and a plain ToF instead. (Since then Peak Coffee has come off the official approved supplier list, and this site steers away from it.)
 - **Pressure sensor at the OPV** with Juun's parts: 1/8" FFM tee, 1/4"F to 1/8"M elbow, Loctite 55. No 3-way valve clip anywhere in the list. Talon's review: "Quick review looks fine", plus a reminder to plan crimp tools (spades, butt connectors, JST unless you use pigtails) and insulation (self-adhering silicone tape or silicone heat shrink).
 - **Housings:** screen in Loogle's Gen 3 screen housing (Printables 356026); PCB in Loogle's hinged PCB v3.1/v4 housing (Printables 894339), held with velcro.
 - **ToFnLED on a Silvia:** set different min/max values; Talon thinks 20/200 works ("don't quote me"). Matches the ranges in section 5.
