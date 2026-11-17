@@ -13,8 +13,10 @@ var LabelCore=(function(){
     var rows=Math.floor((P.h-L.top-L.bottom+L.gapY)/(L.h+L.gapY));
     var pages=[],page=null;
     runs.forEach(function(r,idx){
-      if(!page||page.rows.length>=rows){page={rows:[]};pages.push(page)}
+      /* a divider row ({divider:[title, line]}) never sits alone at the foot of a sheet */
+      if(!page||page.rows.length>=rows||(r.divider&&page.rows.length>=rows-1)){page={rows:[]};pages.push(page)}
       var y=L.top+page.rows.length*(L.h+L.gapY);
+      if(r.divider){page.rows.push({y:y,divider:r.divider,cells:[]});return}
       var e=ends(r);
       page.rows.push({y:y,run:r,cells:[0,1].map(function(i){
         return {x:left+i*(L.w+L.gapX),y:y,end:i,here:e[i],there:e[1-i],hot:hotAt(r,i)};
@@ -38,6 +40,12 @@ var LabelCore=(function(){
       doc.setDrawColor(22,25,28);doc.setLineWidth(0.4);doc.line(bx,8,bx+50,8);doc.line(bx,6.8,bx,9.2);doc.line(bx+50,6.8,bx+50,9.2);
       doc.setFontSize(6.5);doc.text('This bar should measure 50 mm',bx,11.5);
       pg.rows.forEach(function(row){
+          if(row.divider){
+            var dy=row.y+3.2;doc.setDrawColor(22,25,28);doc.setLineWidth(0.6);doc.line(S.left,dy,P.w-S.left,dy);
+            doc.setTextColor(22,25,28);doc.setFont('helvetica','bold');doc.setFontSize(9);doc.text(pdfText(row.divider[0]),S.left,dy+4.6);
+            doc.setFont('helvetica','normal');doc.setFontSize(6.8);doc.setTextColor(90,96,104);doc.text(pdfText(row.divider[1]),S.left,dy+8.2,{maxWidth:P.w-2*S.left});
+            doc.setTextColor(22,25,28);return;
+          }
         row.cells.forEach(function(c){
           var r=row.run,col=COLOR[r.sys]||COLOR.LVG;
           if(c.hot){
