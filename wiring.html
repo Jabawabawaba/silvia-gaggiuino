@@ -442,6 +442,9 @@ body.flowing #chips,body.flowing .stepper,body.flowing #mjchips{display:none!imp
 .mflow{display:flex}
 .mflow[hidden]{display:none}
 .dia.elec .jhit{display:none}
+.dia .epulse{fill:none;stroke:#ffd23f;stroke-width:7;stroke-linecap:round;stroke-linejoin:round;pointer-events:none;filter:drop-shadow(0 0 5px #ffb300)}
+.dia .ebig .epulse{stroke-width:9}
+
 .dia.elec .run,.dia.elec .phit{cursor:default}
 .dia.elec .run.ecur .flow{stroke:var(--surface);stroke-width:1.6;stroke-dasharray:2 15;animation:wflow 1.6s linear infinite}
 .dia.elec .run.ecur.ebig .wire{stroke-width:5}
@@ -454,6 +457,7 @@ body.flowing #chips,body.flowing .stepper,body.flowing #mjchips{display:none!imp
 .detail .eids span{display:inline-block;border:1px solid var(--line);border-radius:8px;padding:3px 8px;font:500 12.5px/1.3 var(--f-mono);background:var(--surface)}
 .detail .eids{display:flex;flex-wrap:wrap;gap:6px}
 .lg-ecur{border-top:4px dotted var(--ink)!important}
+.lg-epulse{border-top:5px solid #ffd23f!important;border-radius:3px;box-shadow:0 0 5px #ffb300}
 .lg-elive{border-top:4px solid var(--ink)!important;box-shadow:0 0 0 4px rgba(217,43,43,.38)}
 .lg-eoff{border-top:4px solid var(--muted)!important;opacity:.3}
 @media (prefers-reduced-motion:reduce){.dia.elec .run.ecur .flow{animation:none;stroke:var(--surface)}}
@@ -1763,7 +1767,49 @@ var FLOW=(function(){
       }else if(e.k==='run'&&S.mains&&V[e.a]>0.02)out.live[e.id]=1;
     });
   }
-  return {solve:solve};
+  /* Pulses: a bright packet leaves each source, runs down every wire that carries current in the direction it flows,
+     splits where the path splits, and as it reaches the far end the next one sets off. Each wire's pulse is timed by
+     its distance from the source along the current's path. FLOW.pulses(svg, model, result) draws them (and clears the
+     last ones); FLOW.pulses(svg) only clears. */
+  function pulses(svg,M,R){
+    Array.prototype.forEach.call(svg.querySelectorAll('.epulse'),function(p){p.remove()});
+    if(!M||!R||!svg.animate)return;
+    try{if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches)return}catch(e){}
+    var len={},grp={};
+    M.runs.forEach(function(r){
+      if(!R.cur[r.id])return;
+      var g=svg.querySelector('.run[data-run="'+r.id+'"],.frun[data-run="'+r.id+'"]'),w=g&&g.querySelector('.wire');
+      if(!w||!w.getTotalLength)return;grp[r.id]=[g,w];len[r.id]=w.getTotalLength();
+    });
+    /* distance of every terminal from a source, along wires in the current's direction; inside a part (a join, a
+       closed contact, a load that's on) the pulse crosses at once */
+    var D={},links=[];
+    (M.src||[]).forEach(function(x){D[x.from]=0});
+    (M.joins||[]).forEach(function(j){links.push([j[0],j[1]])});
+    (M.closed||[]).forEach(function(c){if(R.sw[c.id])links.push([c.a,c.b])});
+    (M.loads||[]).forEach(function(l){if(R.loads[l.id])links.push([l.a,l.b])});
+    var ch=true,guard=0;
+    function relax(a,b,d){if(a in D&&(!(b in D)||D[b]>D[a]+d+1e-6)){D[b]=D[a]+d;ch=true}}
+    while(ch&&guard++<500){
+      ch=false;
+      M.runs.forEach(function(r){var c=R.cur[r.id];if(!c||!(r.id in len))return;if(c>0)relax(r.a,r.b,len[r.id]);else relax(r.b,r.a,len[r.id])});
+      links.forEach(function(k){relax(k[0],k[1],0);relax(k[1],k[0],0)});
+    }
+    var maxD=0,T0={};
+    M.runs.forEach(function(r){var c=R.cur[r.id];if(!c||!(r.id in len))return;var u=c>0?r.a:r.b;if(!(u in D))return;T0[r.id]=D[u];maxD=Math.max(maxD,D[u]+len[r.id])});
+    if(!maxD)return;
+    var SPEED=560,PL=36,T=(maxD+PL*2)/SPEED*1000;
+    Object.keys(T0).forEach(function(id){
+      var g=grp[id][0],w=grp[id][1],L=len[id],c=R.cur[id];
+      var p=w.cloneNode(false);p.setAttribute('class','epulse');p.removeAttribute('style');
+      p.setAttribute('stroke-dasharray',PL+' '+(L+PL*2));
+      g.appendChild(p);
+      var hid0=c>0?PL:-(L+PL),hid1=c>0?-(L+PL):PL,a=T0[id]/SPEED*1000/T,b=Math.min(1,(T0[id]+L+PL)/SPEED*1000/T);
+      p.style.strokeDashoffset=hid0;
+      try{p.animate([{strokeDashoffset:hid0,offset:0},{strokeDashoffset:hid0,offset:a},{strokeDashoffset:hid1,offset:b},{strokeDashoffset:hid1,offset:1}],{duration:T,iterations:Infinity})}catch(e){p.remove()}
+    });
+  }
+  return {solve:solve,pulses:pulses};
 })();
 
 /* What's inside the Silvia's parts, for the electricity flow view on the harness drawing.
@@ -2177,6 +2223,7 @@ var FLOWM=(function(){
     });
     Array.prototype.forEach.call(svg.querySelectorAll('.ap'),function(g){g.classList.toggle('eon',fo&&!!parts[g.getAttribute('data-ap')])});
     Array.prototype.forEach.call(svg.querySelectorAll('.phit'),function(g){g.classList.toggle('eon',fo&&!!parts[g.getAttribute('data-part')]);if(fo)g.classList.remove('sel')});
+    if(FLOW.pulses){if(fo)FLOW.pulses(svg,M,Rz);else FLOW.pulses(svg)}
     if(!fo)return false;
     svg.classList.add('dim');endLabels(null);
     var tx=FLOWM.text(M,fmode),lab=P.modes.filter(function(m){return m[0]===fmode})[0][1],fac=M.kind==='factory';
@@ -2194,7 +2241,7 @@ var FLOWM=(function(){
       '<p class="d-note" style="color:var(--muted)">'+(fac?'This is a picture of the stock circuit as community drawings show it, not a meter, and how the stock wires chain where several meet is this site\'s simplification.':'This is a picture of the circuit as this harness wires it, not a meter.')+' Mains is alternating current: the dots run from line to neutral only to show the path. The earth wires carry nothing unless there\'s a fault. '+(fac?'A dimmed wire isn\'t proof of a dead one: a reversed outlet':'The sensor and screen cables are read by the PCB all the time it\'s on. A dimmed wire isn\'t proof of a dead one: the SSR and the PCB\'s outputs switch off electronically, and a reversed outlet')+' can put line on the neutral side. Always unplug before you touch a wire.</p>';
     var nc=Object.keys(Rz.cur).length,nl=live.length;
     $('msel').innerHTML='<span class="rt">Electricity flow</span>: '+nc+(nc===1?' wire carries':' wires carry')+' current'+(nl?', '+nl+' more '+(nl===1?'is':'are')+' live':'');
-    var lg=$('mlegend');if(lg)lg.innerHTML='<span><i class="lg-ecur"></i>Carrying current: the dots move from line to neutral, thick for a heavy current (heater, pump, valve), thin for a small one</span><span><i class="lg-elive"></i>Live at mains voltage, no current</span><span><i class="lg-eoff"></i>Not powered in this state</span>';
+    var lg=$('mlegend');if(lg)lg.innerHTML='<span><i class="lg-ecur"></i>Carrying current: the dots move from line to neutral, thick for a heavy current (heater, pump, valve), thin for a small one</span><span><i class="lg-epulse"></i>A bright pulse follows the current\'s path from line to neutral; as it arrives the next one sets off</span><span><i class="lg-elive"></i>Live at mains voltage, no current</span><span><i class="lg-eoff"></i>Not powered in this state</span>';
     return true;
   }
   function pick(id,scroll,keep){

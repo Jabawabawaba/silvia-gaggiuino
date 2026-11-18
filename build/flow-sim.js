@@ -59,5 +59,47 @@ var FLOW=(function(){
       }else if(e.k==='run'&&S.mains&&V[e.a]>0.02)out.live[e.id]=1;
     });
   }
-  return {solve:solve};
+  /* Pulses: a bright packet leaves each source, runs down every wire that carries current in the direction it flows,
+     splits where the path splits, and as it reaches the far end the next one sets off. Each wire's pulse is timed by
+     its distance from the source along the current's path. FLOW.pulses(svg, model, result) draws them (and clears the
+     last ones); FLOW.pulses(svg) only clears. */
+  function pulses(svg,M,R){
+    Array.prototype.forEach.call(svg.querySelectorAll('.epulse'),function(p){p.remove()});
+    if(!M||!R||!svg.animate)return;
+    try{if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches)return}catch(e){}
+    var len={},grp={};
+    M.runs.forEach(function(r){
+      if(!R.cur[r.id])return;
+      var g=svg.querySelector('.run[data-run="'+r.id+'"],.frun[data-run="'+r.id+'"]'),w=g&&g.querySelector('.wire');
+      if(!w||!w.getTotalLength)return;grp[r.id]=[g,w];len[r.id]=w.getTotalLength();
+    });
+    /* distance of every terminal from a source, along wires in the current's direction; inside a part (a join, a
+       closed contact, a load that's on) the pulse crosses at once */
+    var D={},links=[];
+    (M.src||[]).forEach(function(x){D[x.from]=0});
+    (M.joins||[]).forEach(function(j){links.push([j[0],j[1]])});
+    (M.closed||[]).forEach(function(c){if(R.sw[c.id])links.push([c.a,c.b])});
+    (M.loads||[]).forEach(function(l){if(R.loads[l.id])links.push([l.a,l.b])});
+    var ch=true,guard=0;
+    function relax(a,b,d){if(a in D&&(!(b in D)||D[b]>D[a]+d+1e-6)){D[b]=D[a]+d;ch=true}}
+    while(ch&&guard++<500){
+      ch=false;
+      M.runs.forEach(function(r){var c=R.cur[r.id];if(!c||!(r.id in len))return;if(c>0)relax(r.a,r.b,len[r.id]);else relax(r.b,r.a,len[r.id])});
+      links.forEach(function(k){relax(k[0],k[1],0);relax(k[1],k[0],0)});
+    }
+    var maxD=0,T0={};
+    M.runs.forEach(function(r){var c=R.cur[r.id];if(!c||!(r.id in len))return;var u=c>0?r.a:r.b;if(!(u in D))return;T0[r.id]=D[u];maxD=Math.max(maxD,D[u]+len[r.id])});
+    if(!maxD)return;
+    var SPEED=560,PL=36,T=(maxD+PL*2)/SPEED*1000;
+    Object.keys(T0).forEach(function(id){
+      var g=grp[id][0],w=grp[id][1],L=len[id],c=R.cur[id];
+      var p=w.cloneNode(false);p.setAttribute('class','epulse');p.removeAttribute('style');
+      p.setAttribute('stroke-dasharray',PL+' '+(L+PL*2));
+      g.appendChild(p);
+      var hid0=c>0?PL:-(L+PL),hid1=c>0?-(L+PL):PL,a=T0[id]/SPEED*1000/T,b=Math.min(1,(T0[id]+L+PL)/SPEED*1000/T);
+      p.style.strokeDashoffset=hid0;
+      try{p.animate([{strokeDashoffset:hid0,offset:0},{strokeDashoffset:hid0,offset:a},{strokeDashoffset:hid1,offset:b},{strokeDashoffset:hid1,offset:1}],{duration:T,iterations:Infinity})}catch(e){p.remove()}
+    });
+  }
+  return {solve:solve,pulses:pulses};
 })();
