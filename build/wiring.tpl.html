@@ -146,6 +146,39 @@ body.nhw #chips,body.nhw .stepper,body.nhw .mjchips{display:none!important}
 .nhlist li{display:flex;flex-direction:column;gap:3px;line-height:1.45}
 .detail .nhlist .lnk{align-self:flex-start;text-align:left;font-weight:600;color:var(--accent-ink)}
 @media print{.mnhw{display:none!important}}
+.mpick{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin:0 0 10px}
+.mpick label{font:600 13px/1.2 var(--f-body);color:var(--muted)}
+.mpick select{appearance:auto;flex:1 1 280px;max-width:560px;min-height:40px;padding:6px 10px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);font:500 15px/1.3 var(--f-body)}
+body.nhw .mpick,body.stw .mpick,body.animating .mpick,body.comparing .mpick,body.flowing .mpick{display:none}
+.detail .d-step{margin:10px 0 0}
+.detail .d-ba{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px 24px;margin:10px 0 0}
+.detail .d-ba ul{margin:4px 0 0;padding-left:18px}
+.detail .d-ba li{margin:3px 0;line-height:1.45}
+.detail .d-ba p{margin:4px 0 0}
+.detail .d-walk{display:flex;gap:8px;margin:12px 0 0}
+.mflowb .mflow-i{width:14px;height:0;border-top:3px dotted var(--accent)}
+.mflowb[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.mflowb[aria-pressed="true"] .mflow-i{border-top-color:var(--on-accent)}
+body.flowing #chips,body.flowing .stepper,body.flowing #mjchips{display:none!important}
+.mflow{display:flex}
+.mflow[hidden]{display:none}
+.dia.elec .jhit{display:none}
+.dia.elec .run,.dia.elec .phit{cursor:default}
+.dia.elec .run.ecur .flow{stroke:var(--surface);stroke-width:1.6;stroke-dasharray:2 15;animation:wflow 1.6s linear infinite}
+.dia.elec .run.ecur.ebig .wire{stroke-width:5}
+.dia.elec .run.ecur.ebig .flow{stroke-width:2.8;stroke-dasharray:4 13;animation-duration:.7s}
+.dia.elec .run.ecur.erev .flow{animation-direction:reverse}
+.dia.elec .run.elive .halo{stroke:#d92b2b;stroke-opacity:.38;stroke-width:11}
+.dia.elec .ap{opacity:.4}
+.dia.elec .ap.eon,.dia.elec .ap[data-ap="cap"]{opacity:1}
+.dia.elec .phit.eon{fill:var(--accent-soft);fill-opacity:.35;stroke:var(--accent);stroke-width:2.5}
+.detail .eids span{display:inline-block;border:1px solid var(--line);border-radius:8px;padding:3px 8px;font:500 12.5px/1.3 var(--f-mono);background:var(--surface)}
+.detail .eids{display:flex;flex-wrap:wrap;gap:6px}
+.lg-ecur{border-top:4px dotted var(--ink)!important}
+.lg-elive{border-top:4px solid var(--ink)!important;box-shadow:0 0 0 4px rgba(217,43,43,.38)}
+.lg-eoff{border-top:4px solid var(--muted)!important;opacity:.3}
+@media (prefers-reduced-motion:reduce){.dia.elec .run.ecur .flow{animation:none;stroke:var(--surface)}}
+@media print{.mpick,.detail .d-walk,.mflowb,.mflow{display:none!important}}
 .mhwrow{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 10px}
 body.animating .mhwrow,body.comparing .mhwrow{display:none}
 .mstw .mnhw-i{border-color:var(--ink);background:transparent}
@@ -315,12 +348,14 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     <button type="button" class="mplay" id="m-play" hidden><span class="mplay-i" aria-hidden="true"></span>Show the change</button>
     <p class="mview-note" id="mview-note">Out of the box shows how the Silvia is wired before the install, and plays the change.</p>
   </div>
-  <div class="mhwrow" role="group" aria-label="Highlight hardware"><button type="button" class="mnhw" id="m-nhw" aria-pressed="false"><span class="mnhw-i" aria-hidden="true"></span>New hardware</button><button type="button" class="mnhw mstw" id="m-stw" aria-pressed="false"><span class="mnhw-i" aria-hidden="true"></span>What stays</button></div>
+  <div class="mhwrow" role="group" aria-label="Highlight hardware"><button type="button" class="mnhw" id="m-nhw" aria-pressed="false"><span class="mnhw-i" aria-hidden="true"></span>New hardware</button><button type="button" class="mnhw mstw" id="m-stw" aria-pressed="false"><span class="mnhw-i" aria-hidden="true"></span>What stays</button><button type="button" class="mnhw mflowb" id="m-flow" aria-pressed="false"><span class="mflow-i" aria-hidden="true"></span>Electricity flow</button></div>
   <div class="toolbar" id="maptop" style="scroll-margin-top:12px">
     <div class="chips" id="chips" role="group" aria-label="Show circuit"></div>
     <div class="tright"><div class="stepper" role="group" aria-label="Step through the runs"><button type="button" id="m-prev" aria-label="Previous run">‹</button><span id="m-step" aria-live="polite"></span><button type="button" id="m-next" aria-label="Next run">›</button></div><span class="hint" id="hint">On a small screen, scroll the drawing sideways.</span></div>
   </div>
   <div class="mjchips" id="mjchips" role="group" aria-label="PCB sockets: light every wire on one" hidden></div>
+  <div class="mjchips mflow" id="mflow" role="group" aria-label="What the machine is doing" hidden></div>
+  <div class="mpick" id="mpick"><label for="m-wire" id="m-wire-l">Wire, in install order</label><select id="m-wire"></select></div>
   <p class="msel" id="msel" aria-live="polite"></p>
 
   <figure id="fig">
@@ -407,6 +442,8 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
 %%INCLUDE:wiring-refs.js%%
 %%INCLUDE:wiring-parts.js%%
 %%INCLUDE:change-player.js%%
+%%INCLUDE:flow-sim.js%%
+%%INCLUDE:flow-model.js%%
   /* the harness as drawn, and with the Shelly add-on, which shows once it's chosen in Your Silvia */
   var VAR=[{runs:%%RUNS%%,svg:''},{runs:%%RUNS_SH%%,svg:''}];
   /* the Silvia as it leaves the factory (fac_silvia.py): its stock circuit on this drawing's layout */
@@ -491,6 +528,11 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     ENDS={};Array.prototype.forEach.call(svg.querySelectorAll('.run'),function(g){ENDS[g.getAttribute('data-run')]=[g.getAttribute('data-a'),g.getAttribute('data-b')]});
     /* the stepper walks the drawn runs in the list's order */
     ORDER=[];groups.forEach(function(g){RUNS.forEach(function(r){if(r.sys===g[0]&&ENDS[r.id])ORDER.push(r.id)})});
+    pickP=null;
+    if((view||'mine')==='mine'){try{var tw={},tp={};Object.keys(ENDS).forEach(function(id){tw[id]=1});Object.keys(PARTN).forEach(function(p){tp[p]=1});
+      var IP=installPlan({tw:tw,twOrder:Object.keys(ENDS),tparts:tp,fparts:FAC.parts}),po=[];IP.plan.forEach(function(g){g.runs.forEach(function(id){po.push(id)})});
+      if(po.length){pickP=IP;ORDER=po}}catch(e){pickP=null}}
+    pickUI();
     tables();
   }
   load();
@@ -540,7 +582,8 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     P.forEach(function(c){h+='<g transform="translate('+c.x.toFixed(1)+','+c.y.toFixed(1)+')"><rect x="'+(-c.w/2)+'" y="-6" width="'+c.w+'" height="12" rx="3"/><text y="3.6" text-anchor="middle">'+esc(c.t)+'</text></g>'});
     g.innerHTML=h;svg.appendChild(g);
   }
-  function paint(){
+  function paint(){paint0();pickSync();flowPaint()}
+  function paint0(){
     var any=layer!=='all'||!!sel||!!selPart||!!selSet,nh=nhOn();
     if(nh)nhBadges();
     svg.classList.toggle('nhw',nh);document.body.classList.toggle('nhw',nh);
@@ -632,10 +675,74 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
       '<div><span class="k">Source</span><span>'+esc(r.src)+'</span></div></div>'+
       (r.hot?'<p class="d-note"><b>Boiler end:</b> mark this wire with an oil-based marker on the silicone jacket; keep paper labels and tape away from the boiler.</p>':'')+
       (r.note?'<p class="d-note">'+esc(r.note)+'</p>':'')+
-      (svg.querySelector('[data-run="'+r.id+'"]')?'':'<p class="d-note" style="color:var(--muted)">Not drawn; optional runs are listed here only.</p>');
+      (svg.querySelector('[data-run="'+r.id+'"]')?'':'<p class="d-note" style="color:var(--muted)">Not drawn; optional runs are listed here only.</p>')+
+      (svg.querySelector('[data-run="'+r.id+'"]')?walkHtml(r):'');
+  }
+  /* The wire picker: every run in the runbook's install order, grouped by step; the arrows follow the same order.
+     Out of the box lists the stock wires. */
+  var pickP=null;
+  function pickUI(){
+    var w=$('m-wire');if(!w)return;var box=view==='box',h='<option value="">Pick a wire…</option>';
+    if(box)Object.keys(FAC.runs).forEach(function(id){var r=FAC.runs[id];h+='<option value="'+id+'">'+esc(id+' · '+r.frm+' → '+r.to)+'</option>'});
+    else if(pickP)pickP.plan.forEach(function(g){if(!g.runs.length)return;h+='<optgroup label="'+esc(g.s?stepName(g.s):'Other runs')+'">'+g.runs.map(function(id){return '<option value="'+id+'">'+esc(id+' · '+runText(id))+'</option>'}).join('')+'</optgroup>'});
+    else ORDER.forEach(function(id){h+='<option value="'+id+'">'+esc(id+' · '+runText(id))+'</option>'});
+    w.innerHTML=h;$('m-wire-l').textContent=box?'Stock wire':'Wire, in install order';
+  }
+  function pickSync(){var w=$('m-wire');if(!w)return;var v=view==='box'?(fsel&&fsel.t==='run'?fsel.id:''):(sel||'');if(w.value!==v)w.value=v;if(w.value!==v)w.value=''}
+  /* when a run goes in, what its ends replaced out of the box, and how it lands now */
+  function lcs(t){t=String(t);return /^[A-Z][a-z]/.test(t)?t.charAt(0).toLowerCase()+t.slice(1):t}
+  function walkHtml(r){
+    var h='',st=pickP&&pickP.rank[r.id]&&pickP.rank[r.id].step,i=ORDER.indexOf(r.id);
+    if(st)h+='<p class="d-step"><span class="k">When</span> <a href="runbook.html#'+st.id+'">'+esc(stepName(st))+'</a>'+(i>=0?' <span style="color:var(--muted)">· wire '+(i+1)+' of '+ORDER.length+' in install order</span>':'')+'</p>';
+    var rel=FAC.rel[SH?1:0]||{},by={};
+    Object.keys(rel).forEach(function(fid){(rel[fid].ends||[]).forEach(function(e){if((e.now||[]).indexOf(r.id)>=0)(by[e.t]=by[e.t]||[]).push(fid)})});
+    var ks=Object.keys(by);
+    h+='<div class="d-ba"><div><span class="k">Before, out of the box</span>'+(ks.length?'<ul>'+ks.map(function(t){return '<li>At '+esc(lcs(t))+': '+by[t].map(function(fid){var fr=FAC.runs[fid]||{};return '<button type="button" class="rchip" data-mbox="'+fid+'" title="See it out of the box">'+fid+'</button> <span style="color:var(--muted)">'+esc((fr.frm||'')+' → '+(fr.to||''))+'</span>'}).join('; ')+'</li>'}).join('')+'</ul>':'<p>No stock wire sat on these ends: it\'s a new connection, to a part the install adds or a spade that was empty.</p>')+'</div>'+
+      '<div><span class="k">After</span><ul><li>On '+esc(lcs(r.frm))+': '+esc(lcs(r.ends[0]||'plugged in'))+'</li><li>On '+esc(lcs(r.to))+': '+esc(lcs(r.ends[1]||'plugged in'))+'</li></ul></div></div>';
+    if(i>=0&&ORDER.length>1)h+='<p class="d-walk"><button type="button" class="chip" data-mstep="-1">‹ Previous wire</button><button type="button" class="chip" data-mstep="1">Next wire ›</button></p>';
+    return h;
+  }
+  /* Electricity flow: pick what the machine is doing; the drawing shows which wires carry current (moving dots, from
+     line to neutral), which are live but carry none, and which parts are on. */
+  var flow=false,fmode='on';
+  function flowOn(){return flow&&(view||'mine')==='mine'&&!A&&typeof FLOWM!=='undefined'&&!!FLOWM.model(RUNS,'on')}
+  function flowPaint(){
+    var fo=flowOn(),M=fo?FLOWM.model(RUNS,fmode):null,Rz=fo?FLOW.solve(M):null,parts={};
+    if(fo){Object.keys(Rz.loads).forEach(function(k){if(M.parts[k]&&Rz.loads[k]>0.3)parts[M.parts[k]]=1});
+      Object.keys(Rz.sw).forEach(function(k){if(M.parts[k]&&(!(M.passive||{})[k]||Rz.sw[k]>0.02))parts[M.parts[k]]=1});parts.inlet=1}
+    svg.classList.toggle('elec',fo);document.body.classList.toggle('flowing',fo);
+    $('m-flow').hidden=(view||'mine')!=='mine'||!!A;$('m-flow').setAttribute('aria-pressed',String(fo));
+    var bar=$('mflow');bar.hidden=!fo;
+    if(fo)bar.innerHTML='<span class="mj-k">The machine is</span>'+FLOWM.modes.map(function(m){return '<button type="button" class="chip" data-mfm="'+m[0]+'" aria-pressed="'+(fmode===m[0])+'">'+esc(m[1])+'</button>'}).join('');
+    Array.prototype.forEach.call(svg.querySelectorAll('.run,.tag'),function(g){
+      var id=g.getAttribute('data-run'),c=fo&&Rz.cur[id],lv=fo&&Rz.live[id],sig=fo&&M.state.pw&&M.sig.indexOf(id)>=0;
+      g.classList.toggle('ecur',!!c);g.classList.toggle('erev',c===-1);g.classList.toggle('elive',!!lv&&!c);g.classList.toggle('ebig',!!c&&(Rz.amp[id]||0)>0.02);
+      if(fo){g.classList.toggle('off',!(c||lv||sig));g.classList.remove('sel')}
+    });
+    Array.prototype.forEach.call(svg.querySelectorAll('.ap'),function(g){g.classList.toggle('eon',fo&&!!parts[g.getAttribute('data-ap')])});
+    Array.prototype.forEach.call(svg.querySelectorAll('.phit'),function(g){g.classList.toggle('eon',fo&&!!parts[g.getAttribute('data-part')]);if(fo)g.classList.remove('sel')});
+    if(!fo)return false;
+    svg.classList.add('dim');endLabels(null);
+    var tx=FLOWM.text(M,fmode),lab=FLOWM.modes.filter(function(m){return m[0]===fmode})[0][1];
+    var cur=ORDER.filter(function(id){return Rz.cur[id]}),live=ORDER.filter(function(id){return Rz.live[id]&&!Rz.cur[id]});
+    var mains=cur.filter(function(id){var s=byId[id].sys;return s==='L'||s==='H'||s==='N'}),lvs=cur.filter(function(id){return mains.indexOf(id)<0});
+    var pn=Object.keys(parts).filter(function(p){return PARTN[p]}).map(function(p){return PARTN[p]});
+    function ids(a){return a.length?'<div class="ids eids">'+a.map(function(id){return '<span>'+id+'</span>'}).join('')+'</div>':'<span style="color:var(--muted)">None</span>'}
+    var d=$('detail');d.className='detail';d.style.borderLeftColor='var(--accent)';
+    d.innerHTML='<div class="d-head"><span class="d-route">Electricity flow: '+esc(lab)+'</span><button type="button" class="chip" data-mflow style="margin-left:auto">Back to the wiring</button></div>'+
+      '<p class="d-note">'+esc(tx[0])+'</p><p class="d-note">'+esc(tx[1])+'</p><p class="d-note">'+esc(tx[2])+'</p>'+
+      '<div class="stw-sec"><span class="k">Mains wires carrying current ('+mains.length+')</span>'+ids(mains)+'</div>'+
+      '<div class="stw-sec"><span class="k">Low-voltage signals flowing ('+lvs.length+')</span>'+ids(lvs)+'</div>'+
+      '<div class="stw-sec"><span class="k">Live at mains voltage, no current ('+live.length+')</span>'+ids(live)+'</div>'+
+      '<div class="stw-sec"><span class="k">Parts on or passing current</span><span>'+(pn.length?esc(pn.join(', ')):'None')+'</span></div>'+
+      '<p class="d-note" style="color:var(--muted)">This is a picture of the circuit as this harness wires it, not a meter. Mains is alternating current: the dots run from line to neutral only to show the path. The earth wires carry nothing unless there\'s a fault. The sensor and screen cables are read by the PCB all the time it\'s on. A dimmed wire isn\'t proof of a dead one: the SSR and the PCB\'s outputs switch off electronically, and a reversed outlet can put line on the neutral side. Always unplug before you touch a wire.</p>';
+    var nc=Object.keys(Rz.cur).length,nl=live.length;
+    $('msel').innerHTML='<span class="rt">Electricity flow</span>: '+nc+(nc===1?' wire carries':' wires carry')+' current'+(nl?', '+nl+' more '+(nl===1?'is':'are')+' live':'');
+    var lg=$('mlegend');if(lg)lg.innerHTML='<span><i class="lg-ecur"></i>Carrying current: the dots move from line to neutral, thick for a heavy current (heater, pump, valve), thin for a small one</span><span><i class="lg-elive"></i>Live at mains voltage, no current</span><span><i class="lg-eoff"></i>Not powered in this state</span>';
+    return true;
   }
   function pick(id,scroll,keep){
-    nhw=false;sel=(sel===id&&!keep)?null:id;selPart=null;selSet=null;
+    nhw=false;flow=false;sel=(sel===id&&!keep)?null:id;selPart=null;selSet=null;
     paint();
     if(sel&&scroll){
       var g=svg.querySelector('.run[data-run="'+sel+'"]');
@@ -657,6 +764,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
   $('scroll').addEventListener('click',function(e){
     if(A){var fg=A==='cmp'&&e.target.closest('.st-fw [data-run]');if(fg&&fg.getAttribute('data-run')!==cmp)compare(fg.getAttribute('data-run'),'play');return}
     if(view==='box'){facClick(e);return}
+    if(flowOn())return;
     var g=e.target.closest('[data-run]');
     if(g){pick(g.getAttribute('data-run'),false);return}
     var jh=e.target.closest('[data-j]');if(jh){pickJ(jh.getAttribute('data-j'));return}
@@ -668,16 +776,26 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
   $('mzoom').addEventListener('click',function(e){var b=e.target.closest('[data-mzoom]');if(!b)return;whole=b.getAttribute('data-mzoom')==='whole';var sc=$('scroll');sc.classList.toggle('whole',whole);if(whole)sc.scrollLeft=0;$('hint').hidden=whole;
     Array.prototype.forEach.call(document.querySelectorAll('[data-mzoom]'),function(x){x.setAttribute('aria-pressed',String((x.getAttribute('data-mzoom')==='whole')===whole))});
     if(!whole&&svg&&sel)centerOn(svg.querySelector('.run[data-run="'+sel+'"]'))});
-  $('m-stw').addEventListener('click',function(){stw=!stw;nhw=false;
+  $('m-stw').addEventListener('click',function(){stw=!stw;nhw=false;flow=false;
     if(stw&&view!=='box')setView('box');else if(view==='box'){fsel=null;facPaint();viewUI()}
     var sc=$('scroll');if(stw&&!whole&&sc.scrollWidth>sc.clientWidth+2){var z=document.querySelector('[data-mzoom="whole"]');if(z)z.click()}});
-  $('m-nhw').addEventListener('click',function(){nhw=!nhw;stw=false;sel=null;selPart=null;selSet=null;layer='all';if(nhw&&(view||'mine')!=='mine')setView('mine');else{paint();viewUI()}
+  $('m-nhw').addEventListener('click',function(){nhw=!nhw;stw=false;flow=false;sel=null;selPart=null;selSet=null;layer='all';if(nhw&&(view||'mine')!=='mine')setView('mine');else{paint();viewUI()}
     var sc=$('scroll');if(nhw&&!whole&&sc.scrollWidth>sc.clientWidth+2){var z=document.querySelector('[data-mzoom="whole"]');if(z)z.click()}});
+  $('m-flow').addEventListener('click',function(){flow=!flowOn();nhw=false;sel=null;selPart=null;selSet=null;layer='all';paint();
+    var sc=$('scroll');if(flow&&!whole&&sc.scrollWidth>sc.clientWidth+2){var z=document.querySelector('[data-mzoom="whole"]');if(z)z.click()}});
+  $('mflow').addEventListener('click',function(e){var b=e.target.closest('[data-mfm]');if(b){fmode=b.getAttribute('data-mfm');paint()}});
+  $('m-wire').addEventListener('change',function(){var id=this.value;
+    if(view==='box'){fsel=id?{t:'run',id:id}:null;facPaint();return}
+    if(id)pick(id,false,true);else{sel=null;paint()}
+    if(id)centerOn(svg.querySelector('.run[data-run="'+id+'"]'))});
   $('m-prev').addEventListener('click',function(){step(-1)});
   $('m-next').addEventListener('click',function(){step(1)});
   $('chips').addEventListener('click',function(e){var b=e.target.closest('[data-layer]');if(!b)return;layer=b.getAttribute('data-layer');sel=null;selPart=null;selSet=null;paint()});
   $('mjchips').addEventListener('click',function(e){var b=e.target.closest('[data-mj]');if(b)pickJ(b.getAttribute('data-mj'))});
   $('detail').addEventListener('click',function(e){
+    if(e.target.closest('[data-mflow]')){flow=false;paint();return}
+    var ms=e.target.closest('[data-mstep]');if(ms){step(+ms.getAttribute('data-mstep'));return}
+    var mbx=e.target.closest('[data-mbox]');if(mbx){var bid=mbx.getAttribute('data-mbox');stw=false;nhw=false;setView('box');fsel={t:'run',id:bid};facPaint();return}
     if(view==='box'){if(e.target.id==='fclear'){fsel=null;facPaint();return}if(e.target.closest('[data-mstw]')){stw=false;fsel=null;facPaint();viewUI();return}var fp=e.target.closest('[data-fpart]');if(fp){fsel={t:'part',id:fp.getAttribute('data-fpart')};facPaint();return}var fr=e.target.closest('[data-frun]');if(fr){fsel={t:'run',id:fr.getAttribute('data-frun')};facPaint()}return}
     if(e.target.id==='clear'){sel=null;selPart=null;selSet=null;paint();return}
     if(e.target.closest('[data-mnhw]')){nhw=false;sel=null;selPart=null;selSet=null;paint();return}
@@ -727,6 +845,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     if(box||A)$('mjchips').hidden=true;
     if(box||A)document.body.classList.remove('nhw');
     if(A){$('m-nhw').hidden=true}else if(box)$('m-nhw').hidden=false;
+    $('m-flow').hidden=box||!!A;if(box||A)document.body.classList.remove('flowing');
     $('m-stw').hidden=!!A;$('m-stw').setAttribute('aria-pressed',String(stwOn()));if(box)$('m-nhw').setAttribute('aria-pressed','false');
     document.body.classList.toggle('stw',stwOn());
     Array.prototype.forEach.call(document.querySelectorAll('[data-mview]'),function(b){b.setAttribute('aria-pressed',String(b.getAttribute('data-mview')===view&&!A))});
@@ -744,7 +863,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
     var was=!!A;stopAnim();
     if(v===view&&!was){viewUI();return}
     view=v;fsel=null;
-    if(v==='box'){$('scroll').innerHTML=FAC.svg;svg=$('scroll').querySelector('.dia');facPaint()}
+    if(v==='box'){$('scroll').innerHTML=FAC.svg;svg=$('scroll').querySelector('.dia');pickUI();facPaint()}
     else{sel=null;selPart=null;selSet=null;load();paint()}
     viewUI();
   }
@@ -769,7 +888,7 @@ a[href="#"]{pointer-events:none;color:var(--muted);text-decoration:none}
       var id=g.getAttribute('data-run'),on=!fsel||(fsel.t==='run'?id===fsel.id:(FAC.ends[id]||[]).indexOf(fsel.id)>=0);
       g.classList.toggle('off',!on);g.classList.toggle('sel',!!fsel&&fsel.t==='run'&&id===fsel.id);if(on)flit[id]=1;
     });
-    endLabels(fsel&&!A?flit:null);
+    endLabels(fsel&&!A?flit:null);pickSync();
     Array.prototype.forEach.call(svg.querySelectorAll('.phit'),function(p){p.classList.toggle('sel',!!fsel&&fsel.t==='part'&&p.getAttribute('data-part')===fsel.id)});
     var ms=$('msel'),d=$('detail');
     if(!fsel&&st){
