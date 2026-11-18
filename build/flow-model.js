@@ -47,7 +47,60 @@ var FLOWM=(function(){
     }
     return {runs:runs,joins:joins,closed:closed,loads:loads,src:[{from:'power inlet, l pin',to:'power inlet, n pin',mains:true}].concat(lv),parts:parts,passive:{safety:1},state:st,shelly:sh,sig:SIG};
   }
+  /* ---- the stock machine, for Out of the box (FAC.runs[id].n = a wire's two terminals) ---- */
+  var FMODES=[['off','Plugged in, switch off'],['heatup','On, heating up'],['ready','On, at brew temperature'],['brew','Brewing'],['steamheat','Steam on, heating'],['steamready','At steam temperature'],['water','Hot water']];
+  var FSTATE={off:{},heatup:{pw:1,btc:1,stc:1},ready:{pw:1,stc:1},brew:{pw:1,btc:1,stc:1,brew:1},steamheat:{pw:1,steam:1,stc:1},steamready:{pw:1,steam:1},water:{pw:1,btc:1,stc:1,water:1}};
+  function factoryModel(FAC,mode){
+    if(!FAC||!FAC.runs)return null;
+    var st=FSTATE[mode]||{},T={},runs=[];
+    Object.keys(FAC.runs).forEach(function(id){var r=FAC.runs[id];if(!r.n||r.sys==='E')return;T[r.n[0]]=1;T[r.n[1]]=1;runs.push({id:id,a:r.n[0],b:r.n[1]})});
+    if(!T['inlet:L']||!T['inlet:N'])return null;
+    var closed=[],loads=[],parts={};
+    function sw(id,a,b,on,part){if(T[a]&&T[b]){parts[id]=part;if(on)closed.push({id:id,a:a,b:b})}}
+    function load(id,a,b,r,part){if(T[a]&&T[b]){parts[id]=part;loads.push({id:id,a:a,b:b,r:r})}}
+    sw('powerL','pwr:Lin','pwr:Lout',st.pw,'pwr');sw('powerN','pwr:Nin','pwr:Nout',st.pw,'pwr');
+    sw('safety','sf:1','sf:2',true,'boiler');
+    sw('st','st:a','st:b',st.stc,'st');sw('bt','bt:a','bt:b',st.btc,'bt');
+    /* the steam switch bridges the brew thermostat; the brew switch has a line pole (pump and valve) and a neutral pole (the valve's return); hot water feeds the pump only */
+    sw('steam','steam:Nin','steam:Nout',st.steam,'steam');
+    sw('brewL','brew:Lin','brew:Lout',st.brew,'brew');sw('brewN','brew:Nin','brew:Nout',st.brew,'brew');
+    sw('water','hw:Lin','hw:Lout',st.water,'hw');
+    load('elem','el:1','el:2',1,'boiler');load('lamp','lamp:L','lamp:N',800,'lamp');
+    load('pump','pump:L','pump:N',6,'pump');load('valve','sol:coil','sol:N',25,'sol');
+    return {runs:runs,joins:[],closed:closed,loads:loads,src:[{from:'inlet:L',to:'inlet:N',mains:true}],parts:parts,passive:{safety:1,st:1,bt:1},state:st,kind:'factory',sig:[]};
+  }
+  function pick(RUNS,FAC,box){
+    if(box)return factoryModel(FAC,'off')?{kind:'factory',modes:FMODES,model:function(m){return factoryModel(FAC,m)}}:null;
+    return model(RUNS,'on')?{kind:'harness',modes:MODES,model:function(m){return model(RUNS,m)}}:null;
+  }
+  function textFactory(mode){
+    var T={
+      off:['The cord is in and the power switch is off. This is the stock machine, before the install.',
+        'Line and neutral reach the power inlet and the power switch, and stop at its two open poles.',
+        'The inlet and the switch\'s input spades stay live until the cord is out, so unplug before you touch anything.'],
+      heatup:['The machine is on and cold, so both thermostats are closed and the boiler heats.',
+        'Line passes the power switch and the 165 °C safety thermostat into the element, and returns through the steam thermostat and then the brew thermostat to neutral. The thermostats sit in the element\'s return, so the element\'s line side is live whenever the machine is on.',
+        'The heating lamp is lit: one side is on line, the other on the element\'s return, which the closed thermostats hold at neutral.'],
+      ready:['The boiler is at brew temperature: the brew thermostat has opened (at about 100 °C on most versions).',
+        'The heater is off. With the return open, both sides of the heating lamp sit at line voltage, so it goes dark. So does the element\'s far side: treat the whole heater circuit as live.',
+        'When the boiler has cooled some way (typically 10 °C or more, not an official figure) the thermostat closes and the heater and the lamp come back on. That swing is why people temperature-surf a stock Silvia.'],
+      brew:['The brew switch is on. On a stock machine it switches mains itself.',
+        'One pole of the brew switch sends line to the pump and the 3-way valve. Its other pole joins the valve to neutral. The pump returns to neutral on its own wire.',
+        'Shown with the heater on, as it soon is once cold water enters the boiler.'],
+      steamheat:['The steam switch is on and the boiler is heating toward steam temperature.',
+        'The steam switch bridges the brew thermostat, so the heater stays on past brew temperature and the steam thermostat (about 140 °C) alone decides when it stops.',
+        'The heating lamp stays lit until the steam thermostat opens.'],
+      steamready:['The boiler is at steam temperature: the steam thermostat has opened.',
+        'The heater is off and the heating lamp is dark. The heater wires sit at line voltage.',
+        'Opening the steam knob cools the boiler; the thermostat closes and the heater returns.'],
+      water:['The hot water switch is on.',
+        'It sends line to the pump only. The brew switch is off, so the 3-way valve stays shut and the pumped water leaves through the steam wand when the knob is open.',
+        'Shown with the heater on.']
+    };
+    return T[mode]||['','',''];
+  }
   function text(m,mode){
+    if(m.kind==='factory')return textFactory(mode);
     var sh=m.shelly;
     var T={
       off:['The cord is in and the power switch is off.',
@@ -71,5 +124,5 @@ var FLOWM=(function(){
     };
     return T[mode]||['','',''];
   }
-  return {modes:MODES,model:model,text:text};
+  return {modes:MODES,model:model,text:text,pick:pick};
 })();
