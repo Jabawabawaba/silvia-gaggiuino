@@ -397,7 +397,7 @@ def build():
         names[pid + ":Lout"] = nm + ", line pole, load side"
         names[pid + ":Nin"] = nm + ", neutral pole, supply side"
         names[pid + ":Nout"] = nm + ", neutral pole, load side"
-    meta = {r["id"]: {"color": r["color"], "sys": r["sys"], "what": r["what"], "frm": names[r["a"]], "to": names[r["b"]]} for r in runs}
+    meta = {r["id"]: {"color": r["color"], "sys": r["sys"], "what": r["what"], "frm": names[r["a"]], "to": names[r["b"]], "n": [r["a"], r["b"]]} for r in runs}
     rel = [relations(m, runs, names, PATHS, fd.get("reuse", {})), relations(m, runs, names, PATHS_SH, fd.get("reuse", {}), sh=True)]
     ends = {r["id"]: [pof[r["a"]], pof[r["b"]]] for r in runs}
     return {"svg": "".join(o), "runs": meta, "ends": ends,
